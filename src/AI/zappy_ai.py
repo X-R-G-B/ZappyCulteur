@@ -1,3 +1,5 @@
 #!/usr/bin/env python3
 
-print("ok")
+from zappy_ia.somefile import somefunc
+
+somefunc()

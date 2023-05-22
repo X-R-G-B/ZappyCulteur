@@ -1,0 +1,2 @@
+def somefunc():
+    print("ok")
