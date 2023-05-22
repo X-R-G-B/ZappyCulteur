@@ -7,24 +7,50 @@
 
 TARGET			=			zappy_server
 
-CFLAGS			=			-Wall -Wextra -Wpedantic
-LDFLAGS			=			
+LIBS_DIR		=			./libs
 
-SRC				=			src/main.c
+CFLAGS			=			-Wall \
+							-Wextra \
+							-Wpedantic \
+							-Iinclude \
+							-Ilibs/tinylibc/includes \
+							-Ilibs/circularbuffer/includes
+LDFLAGS			=			-L $(LIBS_DIR)/tinylibc/ -l tinylibc	\
+							-L $(LIBS_DIR)/circularbuffer/ -l circularbuffer
+
+SRC				=												\
+							src/network/ntw_destroy.c			\
+							src/network/ntw_init.c				\
+							src/network/ntw_wait_till_events.c	\
+							src/main.c
 
 OBJ				=			$(SRC:.c=.o)
 
 RM				?=			rm -f
 
+all: $(LIBS_DIR)/tinylibc/libtinylibc.a
+all: $(LIBS_DIR)/circularbuffer/libcircularbuffer.a
 all: $(TARGET)
 
 $(TARGET):	$(OBJ)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ) -o $(TARGET)
+	$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) -o $(TARGET)
 
-clean:
+$(LIBS_DIR)/tinylibc/libtinylibc.a:
+	$(MAKE) -C $(LIBS_DIR)
+
+$(LIBS_DIR)/circularbuffer/libcircularbuffer.a:
+	$(MAKE) -C $(LIBS_DIR)
+
+$(LIBS_DIR)_clean:
+	$(MAKE) -C $(LIBS_DIR) clean
+
+clean: $(LIBS_DIR)_clean
 	$(RM) $(OBJ)
 
-fclean:
+$(LIBS_DIR)_fclean:
+	$(MAKE) -C $(LIBS_DIR) fclean
+
+fclean: clean $(LIBS_DIR)_fclean
 	$(RM) $(TARGET)
 
 re: fclean all

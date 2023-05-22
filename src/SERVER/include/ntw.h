@@ -1,0 +1,78 @@
+/*
+** EPITECH PROJECT, 2023
+** zappy server
+** File description:
+** network include
+*/
+
+#ifndef NTW_H_
+    #define NTW_H_
+
+    #include <stdbool.h>
+    #include "tlcllists.h"
+    #include "circular_buffer.h"
+
+struct ntw_s {
+    int main_sock;
+    list_t *clients;
+    list_t *clients_to_remove;
+};
+typedef struct ntw_s ntw_t;
+
+/**
+** @brief Initialize the network module
+**
+** @param port the port to listen
+** @param max_connected_clients the maximum number of clients
+**
+** @return the network module
+**/
+ntw_t *ntw_init(int port, int max_connected_clients);
+
+/**
+** @brief Destroy the network module
+**
+** @param ntw the network module
+**/
+void ntw_destroy(ntw_t *ntw);
+
+/**
+** @brief Wait for events (ex: write to socket client)
+**
+** @param ntw the network module
+** @param seconds_timeout the number of maximum seconds to wait for events
+**/
+void ntw_wait_till_events(ntw_t *ntw, int seconds_timeout);
+
+/**
+** @brief Functon that update all its internal datas (better to call this
+** after ntw_wait_till_events)
+**
+** @param ntw the network module
+**/
+void ntw_loop(ntw_t *ntw);
+
+struct ntw_client_s {
+    int fd;
+    circular_buffer_t *read_from_outside;
+    circular_buffer_t *write_to_outside;
+};
+typedef struct ntw_client_s ntw_client_t;
+
+/**
+** @brief Initialize a new client
+**
+** @param fd the socket descriptor
+**
+** @return the new client
+**/
+ntw_client_t *ntw_client_init(int fd);
+
+/**
+** @brief Destroy a client
+**
+** @param client the client
+**/
+void ntw_client_destroy(ntw_client_t *client);
+
+#endif

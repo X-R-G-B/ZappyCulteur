@@ -1,0 +1,6 @@
+-Wall
+-Wextra
+-Wpedantic
+-Iinclude
+-Ilibs/tinylibc/includes
+-Ilibs/circularbuffer/includes
