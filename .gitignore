@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/c,c++,cmake,python,pycharm,clion,clion+all,clion+iml,vim,visualstudio,visualstudiocode,lua
-# Edit at https://www.toptal.com/developers/gitignore?templates=c,c++,cmake,python,pycharm,clion,clion+all,clion+iml,vim,visualstudio,visualstudiocode,lua
+# Created by https://www.toptal.com/developers/gitignore/api/c,c++,python,pycharm,clion,clion+all,clion+iml,vim,visualstudio,visualstudiocode,lua
+# Edit at https://www.toptal.com/developers/gitignore?templates=c,c++,python,pycharm,clion,clion+all,clion+iml,vim,visualstudio,visualstudiocode,lua
 
 ### C ###
 # Prerequisites
@@ -301,23 +301,6 @@ fabric.properties
 modules.xml
 .idea/misc.xml
 *.ipr
-
-### CMake ###
-CMakeLists.txt.user
-CMakeCache.txt
-CMakeFiles
-CMakeScripts
-Testing
-Makefile
-cmake_install.cmake
-install_manifest.txt
-compile_commands.json
-CTestTestfile.cmake
-_deps
-
-### CMake Patch ###
-# External projects
-*-prefix/
 
 ### Lua ###
 # Compiled Lua sources
@@ -1015,8 +998,8 @@ FodyWeavers.xsd
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
-# End of https://www.toptal.com/developers/gitignore/api/c,c++,cmake,python,pycharm,clion,clion+all,clion+iml,vim,visualstudio,visualstudiocode,lua
+# End of https://www.toptal.com/developers/gitignore/api/c,c++,python,pycharm,clion,clion+all,clion+iml,vim,visualstudio,visualstudiocode,lua
 
-zappy_ia
+zappy_ai
 zappy_gui
 zappy_server
