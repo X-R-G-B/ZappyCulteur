@@ -9,7 +9,8 @@ TARGET			=			zappy_server
 
 LIBS_DIR		=			./libs
 
-CFLAGS			=			-Wall											\
+CFLAGS			=															\
+							-Wall											\
 							-Wextra											\
 							-Wpedantic										\
 							-Iinclude										\
@@ -23,6 +24,9 @@ LDFLAGS			=															\
 							-l tinylibc
 
 SRC				=															\
+							src/args/args_debug.c							\
+							src/args/args_destroy.c							\
+							src/args/args_init.c							\
 							src/network/internal_read_command.c				\
 							src/network/internal_remove_client_clean.c		\
 							src/network/internal_write_command.c			\
