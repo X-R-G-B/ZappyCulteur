@@ -9,6 +9,8 @@
     #define NTW_H_
 
     #include <stdbool.h>
+    #include <sys/select.h>
+    #include <time.h>
     #include "tlcllists.h"
     #include "circular_buffer.h"
 
@@ -16,6 +18,10 @@ struct ntw_s {
     int main_sock;
     list_t *clients;
     list_t *clients_to_remove;
+    fd_set write_fds;
+    fd_set read_fds;
+    fd_set except_fds;
+    int max_fd;
 };
 typedef struct ntw_s ntw_t;
 
@@ -41,8 +47,10 @@ void ntw_destroy(ntw_t *ntw);
 **
 ** @param ntw the network module
 ** @param seconds_timeout the number of maximum seconds to wait for events
+**
+** @return true if there are events (false if there is timeout)
 **/
-void ntw_wait_till_events(ntw_t *ntw, int seconds_timeout);
+bool ntw_wait_till_events(ntw_t *ntw, time_t seconds_timeout, suseconds_t microseconds_timeout);
 
 /**
 ** @brief Functon that update all its internal datas (better to call this
