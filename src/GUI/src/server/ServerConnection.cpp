@@ -80,7 +80,9 @@ namespace Server {
 
     void ServerConnection::sendCommand()
     {
-        send(_socket, _toSend.back().c_str(), BUFFER_SIZE, 0);
+        if (send(_socket, _toSend.back().c_str(), _toSend.back().size(), 0) < 0) {
+            throw ServerConnectionException("Send error");
+        }
         _toSend.pop_back();
     }
 
