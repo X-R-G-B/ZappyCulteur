@@ -2,9 +2,11 @@
 
 import socket
 import sys
+import argparse
 
 class IAClient:
     def __init__(self):
+        self.argParse = Argparse(description="Zappy AI", add_help=False)
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_ip = "127.0.0.1"
         self.messToSend = ""
@@ -16,34 +18,14 @@ class IAClient:
         self.level = 1
     
     def parseArgs(self):
-        if (len(sys.argv) != 7 and len(sys.argv) != 5):
-            print("Bad usage: not enough arguments")
-            usage()
-            return 84
-        i = 1
-        while (i < len(sys.argv)):
-            if (sys.argv[i] == "-p"):
-                if (sys.argv[i + 1].isdigit() == False):
-                    print("Bad usage: port must be a number")
-                    return 84
-                self.port = int(sys.argv[i + 1])
-                i += 2
-                continue
-            if (sys.argv[i] == "-n"):
-                self.teamName = sys.argv[i + 1]
-                i += 2
-                continue
-            if (sys.argv[i] == "-h"):
-                self.nameMachine = sys.argv[i + 1]
-                i += 2
-                continue
-            print("Bad usage: unknown argument")
-            usage()
-            return 84
-        if (self.port == 0 or self.teamName == ""):
-            print("Bad usage: mandatory arguments missing")
-            usage()
-            return 84
+        self.argParse.add_argument("-p", type=int, help="port number", required=True)
+        self.argParse.add_argument("-n", type=str, help="name of the team", required=True)
+        self.argParse.add_argument("-h", type=str, help="name of the machine", default="localhost")
+        self.argParse.add_argument("-help", action="help", help="show this help message and exit")
+        args = self.argParse.parse_args()
+        self.port = args.p
+        self.teamName = args.n
+        self.nameMachine = args.h
         return self.connectToServer()
     
     def connectToServer(self):
@@ -81,11 +63,11 @@ class IAClient:
                     continue
         return 0
         
-def usage():
-    print("USAGE: ./zappy_ai -p port -n name -h machine")
-    print("       port     is the port number")
-    print("       name     is the name of the team")
-    print("       machine  is the name of the machine; localhost by default")
+class Argparse(argparse.ArgumentParser):
+    def error(self, message):
+        sys.stderr.write('error: %s\n' % message)
+        self.print_help()
+        sys.exit(84)
 
 if __name__ == '__main__':
     iaCli = IAClient()
