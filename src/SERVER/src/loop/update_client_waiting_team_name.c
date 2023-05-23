@@ -58,6 +58,11 @@ static bool update(char *tmp, client_t *cc, ntw_client_t *cl, args_t *args)
     send_id(cc, cl);
     send_size(args, cl);
     cc->state = CONNECTED;
+    if (strcmp(cc->name, "GRAPHIC") == 0) {
+        cc->type = GRAPHIC;
+    } else {
+        cc->type = AI;
+    }
     printf("%s\n", "INFO: receving team name, sending id + x y...");
     return true;
 }
