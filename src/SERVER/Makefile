@@ -9,19 +9,29 @@ TARGET			=			zappy_server
 
 LIBS_DIR		=			./libs
 
-CFLAGS			=			-Wall \
-							-Wextra \
-							-Wpedantic \
-							-Iinclude \
-							-Ilibs/tinylibc/includes \
+CFLAGS			=			-Wall											\
+							-Wextra											\
+							-Wpedantic										\
+							-Iinclude										\
+							-Ilibs/tinylibc/includes						\
 							-Ilibs/circularbuffer/includes
-LDFLAGS			=			-L $(LIBS_DIR)/tinylibc/ -l tinylibc	\
-							-L $(LIBS_DIR)/circularbuffer/ -l circularbuffer
 
-SRC				=												\
-							src/network/ntw_destroy.c			\
-							src/network/ntw_init.c				\
-							src/network/ntw_wait_till_events.c	\
+LDFLAGS			=															\
+							-L $(LIBS_DIR)/circularbuffer/					\
+							-l circularbuffer								\
+							-L $(LIBS_DIR)/tinylibc/						\
+							-l tinylibc
+
+SRC				=															\
+							src/network/internal_read_command.c				\
+							src/network/internal_remove_client_clean.c		\
+							src/network/internal_write_command.c			\
+							src/network/ntw_client_destroy.c				\
+							src/network/ntw_client_init.c					\
+							src/network/ntw_destroy.c						\
+							src/network/ntw_init.c							\
+							src/network/ntw_loop.c							\
+							src/network/ntw_wait_till_events.c				\
 							src/main.c
 
 OBJ				=			$(SRC:.c=.o)
@@ -32,25 +42,27 @@ all: $(LIBS_DIR)/tinylibc/libtinylibc.a
 all: $(LIBS_DIR)/circularbuffer/libcircularbuffer.a
 all: $(TARGET)
 
-$(TARGET):	$(OBJ)
+$(TARGET):												$(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) -o $(TARGET)
 
-$(LIBS_DIR)/tinylibc/libtinylibc.a:
+$(LIBS_DIR)/tinylibc/libtinylibc.a:						$(LIBS_DIR)
 	$(MAKE) -C $(LIBS_DIR)
 
-$(LIBS_DIR)/circularbuffer/libcircularbuffer.a:
+$(LIBS_DIR)/circularbuffer/libcircularbuffer.a:			$(LIBS_DIR)
 	$(MAKE) -C $(LIBS_DIR)
 
-$(LIBS_DIR)_clean:
+$(LIBS_DIR)_clean:										$(LIBS_DIR)
 	$(MAKE) -C $(LIBS_DIR) clean
 
-clean: $(LIBS_DIR)_clean
+clean:													$(LIBS_DIR)_clean
 	$(RM) $(OBJ)
 
-$(LIBS_DIR)_fclean:
+$(LIBS_DIR)_fclean:										$(LIBS_DIR)
 	$(MAKE) -C $(LIBS_DIR) fclean
 
-fclean: clean $(LIBS_DIR)_fclean
+fclean:													clean
+fclean:													$(LIBS_DIR)_fclean
 	$(RM) $(TARGET)
 
-re: fclean all
+re:														fclean
+re:														all

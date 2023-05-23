@@ -18,6 +18,7 @@ enum ntw_error_e {
     OK = 0,
     TIMEOUT,
     ERROR,
+    ERR_NEW_CON,
 };
 
 struct ntw_s {
