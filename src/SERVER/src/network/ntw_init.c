@@ -25,7 +25,7 @@ static int create_socket(int port, int max_connected_clients)
         return (-1);
     }
     addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    if (bind(fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+    if (bind(fd, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
         perror("bind");
         return (-1);
     }
@@ -33,6 +33,7 @@ static int create_socket(int port, int max_connected_clients)
         perror("listen");
         return (-1);
     }
+    printf("INFO: listen on port: %d", ntohs(addr.sin_port));
     return (fd);
 }
 
