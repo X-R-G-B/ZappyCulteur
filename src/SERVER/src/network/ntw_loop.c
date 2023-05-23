@@ -34,6 +34,7 @@ static void accept_new_connection(ntw_t *ntw)
         return;
     }
     list_append(ntw->clients, cl, (void (*)(void *)) ntw_client_destroy, NULL);
+    ntw->on_new_conn(cl);
 }
 
 static void events_clients(ntw_t *ntw)

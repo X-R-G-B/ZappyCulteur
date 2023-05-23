@@ -24,6 +24,12 @@ LDFLAGS			=															\
 							-l tinylibc
 
 SRC				=															\
+							src/client/client_destroy.c						\
+							src/client/client_init.c						\
+							src/loop/state_connected/update.c				\
+							src/loop/loop.c									\
+							src/loop/update_client_not_connected.c			\
+							src/loop/update_client_waiting_team_name.c		\
 							src/args/args_debug.c							\
 							src/args/args_destroy.c							\
 							src/args/args_init.c							\
@@ -36,7 +42,9 @@ SRC				=															\
 							src/network/ntw_init.c							\
 							src/network/ntw_loop.c							\
 							src/network/ntw_wait_till_events.c				\
-							src/main.c
+							src/get_id.c									\
+							src/main.c										\
+							src/on_new_conn.c
 
 OBJ				=			$(SRC:.c=.o)
 

@@ -33,7 +33,7 @@ static int create_socket(int port, int max_connected_clients)
         perror("listen");
         return (-1);
     }
-    printf("INFO: listen on port: %d", ntohs(addr.sin_port));
+    printf("INFO: listen on port: %d\n", ntohs(addr.sin_port));
     return (fd);
 }
 
@@ -50,7 +50,8 @@ static bool init_lists(ntw_t *ntw)
     return (true);
 }
 
-ntw_t *ntw_init(int port, int max_connected_clients)
+ntw_t *ntw_init(int port, int max_connected_clients,
+    void (*on_new_conn)(ntw_client_t *new_client))
 {
     ntw_t *ntw = NULL;
     int fd = 0;
@@ -69,5 +70,6 @@ ntw_t *ntw_init(int port, int max_connected_clients)
         ntw_destroy(ntw);
         return NULL;
     }
+    ntw->on_new_conn = on_new_conn;
     return ntw;
 }
