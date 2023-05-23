@@ -47,10 +47,13 @@ static bool wait_ntw_events(ntw_t *ntw, time_t seconds_timeout,
         &ntw->except_fds, &timeout);
     if (status == -1) {
         perror("select");
+        ntw->error = ERROR;
         return false;
     } else if (status == 0) {
+        ntw->error = TIMEOUT;
         return false;
     } else {
+        ntw->error = OK;
         return true;
     }
 }

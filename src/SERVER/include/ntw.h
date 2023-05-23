@@ -14,6 +14,12 @@
     #include "tlcllists.h"
     #include "circular_buffer.h"
 
+enum ntw_error_e {
+    OK = 0,
+    TIMEOUT,
+    ERROR,
+};
+
 struct ntw_s {
     int main_sock;
     list_t *clients;
@@ -22,6 +28,7 @@ struct ntw_s {
     fd_set read_fds;
     fd_set except_fds;
     int max_fd;
+    enum ntw_error_e error;
 };
 typedef struct ntw_s ntw_t;
 
@@ -48,7 +55,8 @@ void ntw_destroy(ntw_t *ntw);
 ** @param ntw the network module
 ** @param seconds_timeout the number of maximum seconds to wait for events
 **
-** @return true if there are events (false if there is timeout)
+** @return true if there are events (false if there is timeout). For better
+** result, check the enum `ntw_t.error` for more information
 **/
 bool ntw_wait_till_events(ntw_t *ntw, time_t seconds_timeout, suseconds_t microseconds_timeout);
 
