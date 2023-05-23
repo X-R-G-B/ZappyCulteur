@@ -23,7 +23,7 @@ RM				?=			rm -f
 all: $(TARGET)
 
 $(TARGET):	$(OBJ)
-	$(CXX) $(CFLAGS) $(LDFLAGS) $(OBJ) $(SRC_INCLUDE) -o $(TARGET)
+	$(CXX) $(CFLAGS) $(LDFLAGS) $(OBJ) -o $(TARGET)
 
 clean:
 	$(RM) $(OBJ)
