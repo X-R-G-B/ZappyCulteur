@@ -5,13 +5,14 @@
 ** ServerConnection
 */
 
-#pragma once
-
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <sys/select.h>
 #include <string>
+#include <array>
 #include <vector>
+
+#pragma once
 
 namespace Server {
 
@@ -24,7 +25,7 @@ namespace Server {
                 public:
                     explicit ServerConnectionException(const std::string &message);
 
-                    const std::string &callWhat() const noexcept;
+                    const std::string callWhat() const noexcept;
                 private:
                     const char *what() const noexcept override;
 

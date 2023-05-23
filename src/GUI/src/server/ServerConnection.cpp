@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <unistd.h>
-#include <array>
 #include "ServerConnection.hpp"
 
 namespace Server {
@@ -20,7 +19,7 @@ namespace Server {
         return (_Msg.c_str());
     }
 
-    const std::string &ServerConnection::ServerConnectionException::callWhat() const noexcept
+    const std::string ServerConnection::ServerConnectionException::callWhat() const noexcept
     {
         return (std::string(what()));
     }

@@ -7,10 +7,14 @@
 
 TARGET			=			zappy_gui
 
+CXX             =           g++
 CFLAGS			=			-Wall -Wextra -Wpedantic
 LDFLAGS			=			
 
-SRC				=			src/Main.cpp
+SRC				=			src/Main.cpp						\
+							src/server/ServerConnection.cpp		\
+
+SRC_INCLUDE		=			src/server/ServerConnection.hpp
 
 OBJ				=			$(SRC:.cpp=.o)
 
@@ -19,7 +23,7 @@ RM				?=			rm -f
 all: $(TARGET)
 
 $(TARGET):	$(OBJ)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ) -o $(TARGET)
+	$(CXX) $(CFLAGS) $(LDFLAGS) $(OBJ) $(SRC_INCLUDE) -o $(TARGET)
 
 clean:
 	$(RM) $(OBJ)
