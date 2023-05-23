@@ -34,6 +34,7 @@ namespace Server {
         if (connect(_socket, (struct sockaddr *)&_addr, len) < 0) {
             throw ServerConnectionException("Connection failed");
         }
+        isRead = false;
     }
 
     ServerConnection::~ServerConnection()
@@ -82,10 +83,12 @@ namespace Server {
 
     void ServerConnection::sendCommand()
     {
-        if (send(_socket, _toSend.back().c_str(), _toSend.back().size(), 0) < 0) {
-            throw ServerConnectionException("Send error");
+        if (_toSend.empty()) {
+            return;
         }
+        write(_socket, _toSend.back().data(), _toSend.back().size());
         _toSend.pop_back();
+        isRead = false;
     }
 
     void ServerConnection::update()
@@ -97,7 +100,7 @@ namespace Server {
         FD_ZERO(&_rfds);
         FD_ZERO(&_wfds);
         FD_ZERO(&_efds);
-        if (_toSend.empty()) {
+        if (!isRead) {
             FD_SET(_socket, &_rfds);
         } else {
             FD_SET(_socket, &_wfds);
@@ -111,6 +114,7 @@ namespace Server {
         }
         if (FD_ISSET(_socket, &_rfds)) {
             receive();
+            isRead = true;
         }
         if (FD_ISSET(_socket, &_wfds)) {
             sendCommand();
