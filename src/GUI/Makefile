@@ -12,7 +12,7 @@ CFLAGS			=			-Wall -Wextra -Wpedantic
 LDFLAGS			=			
 
 SRC				=			src/Main.cpp						\
-							src/server/ServerConnection.cpp		\
+							src/server/ServerConnection.cpp
 
 SRC_INCLUDE		=			src/server/ServerConnection.hpp
 
