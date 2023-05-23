@@ -16,7 +16,7 @@
 
 namespace Server {
 
-    static constexpr std::size_t BUFFER_SIZE = 2028;
+    static constexpr std::size_t BUFFER_SIZE = 2048;
 
     class ServerConnection {
         public:
