@@ -1,6 +1,10 @@
 from zappy_ia.CoreIA import IAPersonnality, State
 
 class cheaterIA(IAPersonnality):
+    def __init__(self):
+        self.bctWork = State.NONE
+        self.mctWork = State.NONE
+
     def input(self):
         if (self.bctWork == State.NONE):
             self.bctWork = State.TESTING
@@ -9,7 +13,7 @@ class cheaterIA(IAPersonnality):
             self.mctWork = State.TESTING
             return "mct\n"
         else:
-            return "\n"
+            return "quit"
     
     def output(self, message):
         if (self.bctWork == State().TESTING):
