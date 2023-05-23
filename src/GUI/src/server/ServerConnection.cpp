@@ -22,6 +22,8 @@ namespace Server {
     ServerConnection::ServerConnection(const std::string &ip, const std::string &port)
         : _port(port), _ip(ip)
     {
+        socklen_t len = sizeof(struct sockaddr);
+
         _socket = socket(AF_INET, SOCK_STREAM, 0);
         if (_socket < 0) {
             throw ServerConnectionException("Socket initialization failed");
@@ -29,7 +31,7 @@ namespace Server {
         _addr.sin_port = htons(std::stoul(port));
         _addr.sin_family = AF_INET;
         _addr.sin_addr.s_addr = INADDR_ANY;
-        if (connect(_socket, (struct sockaddr *)&_addr, sizeof(struct sockaddr)) < 0) {
+        if (connect(_socket, (struct sockaddr *)&_addr, len) < 0) {
             throw ServerConnectionException("Connection failed");
         }
     }
@@ -47,9 +49,9 @@ namespace Server {
         return (_responses);
     }
     
-    const std::string &ServerConnection::getResponse()
+    const std::string ServerConnection::getResponse()
     {
-        return (_responses.back());
+        return (_responses.empty() ? "" : _responses.back());
     }
 
     void ServerConnection::addCommand(const std::string &command)
@@ -64,7 +66,7 @@ namespace Server {
 
     void ServerConnection::receive()
     {
-        std::array<char, BUFFER_SIZE> buffer;
+        std::array<char, BUFFER_SIZE> buffer = {0};
         int bytes = 0;
 
         bytes = read(_socket, buffer.data(), BUFFER_SIZE);

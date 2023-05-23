@@ -37,7 +37,7 @@ namespace Server {
 
             bool isConnected();
 
-            const std::string &getResponse();
+            const std::string getResponse();
 
             const std::vector<std::string> &getResponses();
 
