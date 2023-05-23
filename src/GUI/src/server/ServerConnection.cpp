@@ -19,72 +19,90 @@ namespace Server {
         return (_Msg.c_str());
     }
 
-    const std::string ServerConnection::ServerConnectionException::callWhat() const noexcept
+    ServerConnection::ServerConnection(const std::string &ip, const std::string &port)
+        : _port(port), _ip(ip)
     {
-        return (std::string(what()));
-    }
-
-    ServerConnection::ServerConnection(const std::string &port, const std::string &ip)
-        : _Port(port), _Ip(ip)
-    {
-        _Socket = socket(AF_INET, SOCK_STREAM, 0);
-        if (_Socket < 0) {
+        _socket = socket(AF_INET, SOCK_STREAM, 0);
+        if (_socket < 0) {
             throw ServerConnectionException("Socket initialization failed");
         }
-        _Addr.sin_port = htons(std::stoul(port));
-        _Addr.sin_family = AF_INET;
-        _Addr.sin_addr.s_addr = INADDR_ANY;
-        if (connect(_Socket, (struct sockaddr *)&_Addr, sizeof(struct sockaddr))) {
+        _addr.sin_port = htons(std::stoul(port));
+        _addr.sin_family = AF_INET;
+        _addr.sin_addr.s_addr = INADDR_ANY;
+        if (connect(_socket, (struct sockaddr *)&_addr, sizeof(struct sockaddr))) {
             throw ServerConnectionException("Connection failed");
         }
     }
 
     ServerConnection::~ServerConnection()
     {
-        if (_Socket > 0) {
-            close(_Socket);
+        if (_socket > 0) {
+            shutdown(_socket, SHUT_RDWR);
+            close(_socket);
         }
     }
-
-    void ServerConnection::sendCommand(const std::string &command)
+    
+    const std::string ServerConnection::getResponse()
     {
-        write(_Socket, command.c_str(), command.size());
+        return (std::string(_buffer.data()));
+    }
+
+    void ServerConnection::addCommand(const std::string &command)
+    {
+        _toSend.push_back(command);
     }
 
     bool ServerConnection::isConnected()
     {
-        return (_Socket);
+        return (_socket);
     }
 
     void ServerConnection::receive()
     {
         int bytes = 0;
 
-        bytes = read(_Socket, _Buffer.data(), BUFFER_SIZE);
+        bytes = read(_socket, _buffer.data(), BUFFER_SIZE);
         if (bytes < 0) {
             throw ServerConnectionException("Failed to read");
         } else if (bytes == 0) {
-            close(_Socket);
-            _Socket = 0;
+            shutdown(_socket, SHUT_RDWR);
+            close(_socket);
+            _socket = 0;
         }
+    }
+
+    void ServerConnection::sendCommand()
+    {
+        send(_socket, _toSend.back().c_str(), BUFFER_SIZE, 0);
+        _toSend.pop_back();
     }
 
     void ServerConnection::update()
     {
-        FD_ZERO(&_Rfds);
-        FD_ZERO(&_Wfds);
-        FD_ZERO(&_Efds);
-        FD_SET(_Socket, &_Rfds);
-        FD_SET(_Socket, &_Wfds);
-        FD_SET(_Socket, &_Efds);
-        if (select(_Socket + 1, &_Rfds, &_Wfds, &_Efds, 0) < 0) {
+        struct timeval tv;
+
+        tv.tv_sec = 5;
+        tv.tv_usec = 0;
+        FD_ZERO(&_rfds);
+        FD_ZERO(&_wfds);
+        FD_ZERO(&_efds);
+        if (_toSend.empty()) {
+            FD_SET(_socket, &_rfds);
+        } else {
+            FD_SET(_socket, &_wfds);
+        }
+        FD_SET(_socket, &_efds);
+        if (select(_socket + 1, &_rfds, &_wfds, &_efds, &tv) < 0) {
             throw ServerConnectionException("Failed to select");
         }
-        if (FD_ISSET(_Socket, &_Efds)) {
+        if (FD_ISSET(_socket, &_efds)) {
             throw ServerConnectionException("Error detected");
         }
-        if (FD_ISSET(_Socket, &_Rfds)) {
+        if (FD_ISSET(_socket, &_rfds)) {
             receive();
+        }
+        if (FD_ISSET(_socket, &_wfds)) {
+            sendCommand();
         }
     }
 }
