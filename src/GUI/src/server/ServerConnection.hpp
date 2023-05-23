@@ -27,7 +27,7 @@ namespace Server {
 
                     const char *what() const noexcept override;
                 private:
-                    std::string _Msg;
+                    std::string _msg;
             };
 
             ServerConnection(const std::string &ip, const std::string &port);
@@ -35,10 +35,11 @@ namespace Server {
 
             void addCommand(const std::string &command);
 
-
             bool isConnected();
 
-            const std::string getResponse();
+            const std::string &getResponse();
+
+            const std::vector<std::string> &getResponses();
 
             void update();
 
@@ -51,8 +52,8 @@ namespace Server {
 
             std::string _port;
             std::string _ip;
-            std::array<char, BUFFER_SIZE> _buffer;
             int _socket;
+            std::vector<std::string> _responses;
             std::vector<std::string> _toSend;
             fd_set _rfds;
             fd_set _wfds;

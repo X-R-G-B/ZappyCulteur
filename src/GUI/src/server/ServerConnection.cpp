@@ -12,11 +12,11 @@
 namespace Server {
 
     ServerConnection::ServerConnectionException::ServerConnectionException(const std::string &message)
-        : _Msg(message) {}
+        : _msg(message) {}
 
     const char *ServerConnection::ServerConnectionException::what() const noexcept
     {
-        return (_Msg.c_str());
+        return (_msg.c_str());
     }
 
     ServerConnection::ServerConnection(const std::string &ip, const std::string &port)
@@ -29,7 +29,7 @@ namespace Server {
         _addr.sin_port = htons(std::stoul(port));
         _addr.sin_family = AF_INET;
         _addr.sin_addr.s_addr = INADDR_ANY;
-        if (connect(_socket, (struct sockaddr *)&_addr, sizeof(struct sockaddr))) {
+        if (connect(_socket, (struct sockaddr *)&_addr, sizeof(struct sockaddr)) < 0) {
             throw ServerConnectionException("Connection failed");
         }
     }
@@ -41,10 +41,15 @@ namespace Server {
             close(_socket);
         }
     }
-    
-    const std::string ServerConnection::getResponse()
+
+    const std::vector<std::string> &ServerConnection::getResponses()
     {
-        return (std::string(_buffer.data()));
+        return (_responses);
+    }
+    
+    const std::string &ServerConnection::getResponse()
+    {
+        return (_responses.back());
     }
 
     void ServerConnection::addCommand(const std::string &command)
@@ -59,9 +64,10 @@ namespace Server {
 
     void ServerConnection::receive()
     {
+        std::array<char, BUFFER_SIZE> buffer;
         int bytes = 0;
 
-        bytes = read(_socket, _buffer.data(), BUFFER_SIZE);
+        bytes = read(_socket, buffer.data(), BUFFER_SIZE);
         if (bytes < 0) {
             throw ServerConnectionException("Failed to read");
         } else if (bytes == 0) {
@@ -69,6 +75,7 @@ namespace Server {
             close(_socket);
             _socket = 0;
         }
+        _responses.push_back(std::string(buffer.data()));
     }
 
     void ServerConnection::sendCommand()
@@ -81,7 +88,7 @@ namespace Server {
     {
         struct timeval tv;
 
-        tv.tv_sec = 5;
+        tv.tv_sec = 0;
         tv.tv_usec = 0;
         FD_ZERO(&_rfds);
         FD_ZERO(&_wfds);
