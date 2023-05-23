@@ -32,7 +32,7 @@ namespace Server {
                     std::string _Msg;
             };
 
-            ServerConnection(const std::string& port, const std::string& ip);
+            ServerConnection(const std::string &ip, const std::string &port);
             ~ServerConnection();
 
             void sendCommand(const std::string &command);
