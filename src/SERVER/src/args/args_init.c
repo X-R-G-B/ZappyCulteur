@@ -29,7 +29,8 @@ static bool arg_team_name(int ac, int index, const char *const av[],
     return true;
 }
 
-static bool check_arg3(int ac, int index, const char *const av[], args_t *args)
+static bool check_arg_team_height(int ac, int index, const char *const av[],
+    args_t *args)
 {
     if (args->is_ok == true && strcmp(av[index] + 1, "n") == 0) {
         return arg_team_name(ac, index, av, args);
@@ -46,7 +47,8 @@ static bool check_arg3(int ac, int index, const char *const av[], args_t *args)
     return false;
 }
 
-static bool check_arg2(int ac, int index, const char *const av[], args_t *args)
+static bool check_arg_nb_freq(int ac, int index, const char *const av[],
+    args_t *args)
 {
     if (args->is_ok == true && strcmp(av[index] + 1, "c") == 0) {
         args->clients_per_teams = atoi(av[index + 1]);
@@ -67,10 +69,11 @@ static bool check_arg2(int ac, int index, const char *const av[], args_t *args)
         }
         return true;
     }
-    return check_arg3(ac, index, av, args);
+    return check_arg_team_height(ac, index, av, args);
 }
 
-static bool check_arg1(int ac, int index, const char *const av[], args_t *args)
+static bool check_arg_port_width(int ac, int index, const char *const av[],
+    args_t *args)
 {
     if (args->is_ok == true && strcmp(av[index] + 1, "p") == 0) {
         args->port = atoi(av[index + 1]);
@@ -90,7 +93,7 @@ static bool check_arg1(int ac, int index, const char *const av[], args_t *args)
         }
         return true;
     }
-    return check_arg2(ac, index, av, args);
+    return check_arg_nb_freq(ac, index, av, args);
 }
 
 args_t *args_init(int ac, const char *const av[])
@@ -106,7 +109,8 @@ args_t *args_init(int ac, const char *const av[])
     args->is_ok = true;
     for (int i = 1; i < ac - 1 && args->is_ok == true; i++) {
         if (av[i][0] == '-') {
-            nb_args = (check_arg1(ac, i, av, args)) ? nb_args + 1 : nb_args;
+            nb_args = (check_arg_port_width(ac, i, av, args))
+                ? nb_args + 1 : nb_args;
         }
     }
     if (nb_args != 6) {
