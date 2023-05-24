@@ -22,7 +22,7 @@ namespace Server {
     ServerConnection::ServerConnection(const std::string &ip, const std::string &port)
         : _port(port), _ip(ip)
     {
-        socklen_t len = sizeof(struct sockaddr);
+        socklen_t len = sizeof(_addr);
 
         _socket = socket(AF_INET, SOCK_STREAM, 0);
         if (_socket < 0) {
