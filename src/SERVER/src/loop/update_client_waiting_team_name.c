@@ -25,7 +25,6 @@ static void send_id(client_t *cc, ntw_client_t *cl)
     if (id_to_str == NULL) {
         return;
     }
-    circular_buffer_write(cl->write_to_outside, "<--");
     circular_buffer_write(cl->write_to_outside, id_to_str);
     free(id_to_str);
     circular_buffer_write(cl->write_to_outside, "\n");
@@ -35,7 +34,6 @@ static void send_size(args_t *args, ntw_client_t *cl)
 {
     char *size_to_str = NULL;
 
-    circular_buffer_write(cl->write_to_outside, "<-- ");
     size_to_str = x_itoa(args->width);
     if (size_to_str == NULL) {
         return;
@@ -58,17 +56,20 @@ static bool update(char *tmp, client_t *cc, ntw_client_t *cl, args_t *args)
     send_id(cc, cl);
     send_size(args, cl);
     cc->state = CONNECTED;
-    if (strcmp(cc->name, "GRAPHIC") == 0) {
+    printf("%s%s%s\n", "INFO: receving team name'", cc->name,
+        "', sending id + x y...");
+    if (strcmp(cc->name, "GRAPHIC\n") == 0) {
         cc->type = GRAPHIC;
+        printf("%s\n", "INFO: client is graphic");
     } else {
         cc->type = AI;
+        printf("%s\n", "INFO: client is ai");
     }
-    printf("%s\n", "INFO: receving team name, sending id + x y...");
     return true;
 }
 
-bool update_client_waiting_team_name(ntw_t *ntw, ntw_client_t *cl,
-    args_t *args)
+bool update_client_waiting_team_name(__attribute__((unused)) ntw_t *ntw,
+    ntw_client_t *cl, args_t *args)
 {
     char *tmp = NULL;
     client_t *cc = cl->data;
@@ -80,10 +81,6 @@ bool update_client_waiting_team_name(ntw_t *ntw, ntw_client_t *cl,
     tmp = circular_buffer_read(cl->read_from_outside);
     if (tmp == NULL) {
         return false;
-    }
-    if (strncmp(tmp, "-->", strlen("-->")) != 0) {
-        list_append(ntw->clients_to_remove, cl, NULL, NULL);
-        return true;
     }
     status = update(tmp, cc, cl, args);
     free(tmp);
