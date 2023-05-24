@@ -1,21 +1,24 @@
 #!/usr/bin/env python3
 
+from zappy_ia import CoreIA, cheater
 import socket
 import sys
 import argparse
 
 class IAClient:
     def __init__(self):
+        self.personnality = CoreIA.IAPersonnality()
         self.argParse = Argparse(description="Zappy AI", add_help=False)
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_ip = "127.0.0.1"
         self.messToSend = ""
         self.messReceived = ""
-        self.teamName = ""
-        self.nameMachine = "localhost"
+        self.nameMachine = ""
         self.isConnected = False
         self.port = 0
-        self.level = 1
+        
+    def setPersonnality(self, perso: CoreIA.IAPersonnality):
+        self.personnality = perso
     
     def parseArgs(self):
         self.argParse.add_argument("-p", type=int, help="port number", required=True)
@@ -24,8 +27,8 @@ class IAClient:
         self.argParse.add_argument("-help", action="help", help="show this help message and exit")
         args = self.argParse.parse_args()
         self.port = args.p
-        self.teamName = args.n
-        self.nameMachine = args.h
+        self.personnality.teamName = args.n
+        self.machineName = args.h
         return self.connectToServer()
     
     def connectToServer(self):
@@ -40,18 +43,9 @@ class IAClient:
 
     def commWithServer(self):
         while (self.isConnected):
-            self.messToSend = input()
-            if (self.messToSend == "quit"):
-                self.client_socket.close()
-                self.isConnected = False
-                continue
-            try:
-                self.client_socket.send(self.messToSend.encode())
-            except:
-                print("Error while sending message")
             try:
                 self.messReceived = self.client_socket.recv(4096)
-                print(self.messReceived.decode())
+                self.personnality.output(self.messReceived.decode())
             except:
                 print("Error while receiving message")
                 self.messReceived = ""
@@ -61,6 +55,15 @@ class IAClient:
                     self.client_socket.close()
                     self.isConnected = False
                     continue
+            self.messToSend = self.personnality.input()
+            if (self.messToSend == "quit"):
+                self.client_socket.close()
+                self.isConnected = False
+                continue
+            try:
+                self.client_socket.send(self.messToSend.encode())
+            except:
+                print("Error while sending message")
         return 0
         
 class Argparse(argparse.ArgumentParser):
