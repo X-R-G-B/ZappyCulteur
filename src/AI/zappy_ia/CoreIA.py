@@ -26,15 +26,16 @@ class IAPersonnality:
         if (self.state == State.MSETUP):
             return ""
         return "quit"
-    
+
     def output(self, message: str):
+        print(message)
         if (message == "<--WELCOME\n"):
             self.state = State.WSETUP
         elif (self.state == State.NSETUP):
             self.clientNum = int(message[3:-1])
             self.state = State.MSETUP
         elif (self.state == State.MSETUP):
-            maps = message[-1].split(' ')
+            maps = message[:-1].split(' ')
             self.mapSize[0] = int(maps[1])
             self.mapSize[1] = int(maps[2])
             self.state = State.NONE
