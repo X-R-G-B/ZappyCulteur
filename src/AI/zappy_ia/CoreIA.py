@@ -19,17 +19,21 @@ class IAPersonnality:
         self.clientNum = 0
         self.switch = False
 
-    def input(self) -> str:
+    def input_base(self) -> str:
         if (self.state == State.WSETUP):
-            print("Welcome to the game")
             self.state = State.NSETUP
             return (self.teamName + "\n")
         if (self.state == State.ERROR):
             return "quit"
         return ""
-
-    def output(self, message: str):
-        print(message)
+        
+    def input(self) -> str:
+        if (self.switch == False):
+            return self.input_base()
+        else:
+            return ""
+    
+    def output_base(self, message: str):
         if (message == "WELCOME\n"):
             self.state = State.WSETUP
         elif (self.state == State.NSETUP):
@@ -40,4 +44,13 @@ class IAPersonnality:
             self.mapSize[0] = int(maps[0])
             self.mapSize[1] = int(maps[1])
             self.state = State.NONE
+            self.switch = True
         return
+
+    def output(self, message: str):
+        print(message)
+        if (self.switch == False):
+            self.output_base(message)
+        else:
+            return
+        
