@@ -43,18 +43,9 @@ class IAClient:
 
     def commWithServer(self):
         while (self.isConnected):
-            self.messToSend = self.personnality.input()
-            if (self.messToSend == "quit"):
-                self.client_socket.close()
-                self.isConnected = False
-                continue
-            try:
-                self.client_socket.send(self.messToSend.encode())
-            except:
-                print("Error while sending message")
             try:
                 self.messReceived = self.client_socket.recv(4096)
-                print(self.messReceived.decode())
+                self.personnality.output(self.messReceived.decode())
             except:
                 print("Error while receiving message")
                 self.messReceived = ""
@@ -64,6 +55,15 @@ class IAClient:
                     self.client_socket.close()
                     self.isConnected = False
                     continue
+            self.messToSend = self.personnality.input()
+            if (self.messToSend == "quit"):
+                self.client_socket.close()
+                self.isConnected = False
+                continue
+            try:
+                self.client_socket.send(self.messToSend.encode())
+            except:
+                print("Error while sending message")
         return 0
         
 class Argparse(argparse.ArgumentParser):

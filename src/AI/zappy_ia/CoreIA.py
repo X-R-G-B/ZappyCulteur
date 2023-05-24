@@ -21,11 +21,12 @@ class IAPersonnality:
 
     def input(self) -> str:
         if (self.state == State.WSETUP):
+            print("Welcome to the game")
             self.state = State.NSETUP
             return ("-->" + self.teamName + "\n")
-        if (self.state == State.MSETUP):
-            return ""
-        return "quit"
+        if (self.state == State.ERROR):
+            return "quit"
+        return ""
 
     def output(self, message: str):
         print(message)
