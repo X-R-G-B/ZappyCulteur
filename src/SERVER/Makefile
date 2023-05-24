@@ -23,28 +23,75 @@ LDFLAGS			=															\
 							-L $(LIBS_DIR)/tinylibc/						\
 							-l tinylibc
 
-SRC				=															\
-							src/client/client_destroy.c						\
-							src/client/client_init.c						\
-							src/loop/state_connected/update.c				\
-							src/loop/loop.c									\
-							src/loop/update_client_not_connected.c			\
-							src/loop/update_client_waiting_team_name.c		\
-							src/args/args_debug.c							\
-							src/args/args_destroy.c							\
-							src/args/args_init.c							\
-							src/network/internal_read_command.c				\
-							src/network/internal_remove_client_clean.c		\
-							src/network/internal_write_command.c			\
-							src/network/ntw_client_destroy.c				\
-							src/network/ntw_client_init.c					\
-							src/network/ntw_destroy.c						\
-							src/network/ntw_init.c							\
-							src/network/ntw_loop.c							\
-							src/network/ntw_wait_till_events.c				\
-							src/get_id.c									\
-							src/main.c										\
-							src/on_new_conn.c
+# ----------------------------------------------------------------------------
+# SRC
+# ----------------------------------------------------------------------------
+
+
+# ARGS -----------------------------------------------------------------------
+SRC_ARGS		:=															\
+							args_debug.c									\
+							args_destroy.c									\
+							args_init.c
+SRC_ARGS		:=			$(addprefix args/, $(SRC_ARGS))
+
+# CLIENT ---------------------------------------------------------------------
+SRC_CLIENT		:=															\
+							client_destroy.c								\
+							client_init.c
+SRC_CLIENT		:=			$(addprefix client/, $(SRC_CLIENT))
+
+
+# LOOP -----------------------------------------------------------------------
+SRC_LOOP_AICMD	=															\
+							update_ai_cmd.c
+SRC_LOOP_AICMD	:=			$(addprefix ai_cmd/, $(SRC_LOOP_AICMD))
+
+SRC_LOOP_GRCMD	=															\
+							cmd_msz.c										\
+							update_graphic_cmd.c
+SRC_LOOP_GRCMD	:=			$(addprefix graphic_cmd/, $(SRC_LOOP_GRCMD))
+
+SRC_LOOP_CONN	=															\
+							$(SRC_LOOP_AICMD)								\
+							$(SRC_LOOP_GRCMD)								\
+							update.c
+SRC_LOOP_CONN	:=			$(addprefix state_connected/, $(SRC_LOOP_CONN))
+
+SRC_LOOP		:=															\
+							$(SRC_LOOP_CONN)								\
+							loop.c											\
+							update_client_not_connected.c					\
+							update_client_waiting_team_name.c
+SRC_LOOP		:=			$(addprefix loop/, $(SRC_LOOP))
+
+# ----------------------------------------------------------------------------
+# network
+# ----------------------------------------------------------------------------
+SRC_NTW			:=															\
+							internal_read_command.c							\
+							internal_remove_client_clean.c					\
+							internal_write_command.c						\
+							ntw_client_destroy.c							\
+							ntw_client_init.c								\
+							ntw_destroy.c									\
+							ntw_init.c										\
+							ntw_loop.c										\
+							ntw_wait_till_events.c
+SRC_NTW			:=			$(addprefix network/, $(SRC_NTW))
+
+# ----------------------------------------------------------------------------
+# SRC
+# ----------------------------------------------------------------------------
+SRC				:=															\
+							$(SRC_ARGS)										\
+							$(SRC_CLIENT)									\
+							$(SRC_LOOP)										\
+							$(SRC_NTW)										\
+							get_id.c										\
+							main.c											\
+							on_new_conn.c
+SRC				:=			$(addprefix src/, $(SRC))
 
 OBJ				=			$(SRC:.c=.o)
 

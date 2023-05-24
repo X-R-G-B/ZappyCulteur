@@ -16,7 +16,7 @@ bool update_client_not_connected(__attribute__((unused)) ntw_t *ntw,
 {
     client_t *cc = cl->data;
 
-    circular_buffer_write(cl->write_to_outside, "<--WELCOME\n");
+    circular_buffer_write(cl->write_to_outside, "WELCOME\n");
     cc->state = WAITING_TEAM_NAME;
     printf("%s\n", "INFO: new connection, sending welcome...");
     return true;

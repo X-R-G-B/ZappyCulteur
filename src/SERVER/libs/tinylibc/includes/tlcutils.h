@@ -22,4 +22,11 @@ void free_ifnotnull(void *ptr);
 **/
 void return_void(void);
 
+/**
+** @brief free char 2d
+**
+** @param arr array of string (null terminated)
+**/
+void free_char_2d(char **arr);
+
 #endif
