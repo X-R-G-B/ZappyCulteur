@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "zappy_ia"
+version = "0.0.1"
+authors = [
+  { name="Luca Deltort", email="author@example.com" },
+  { name="Guillaume Abel", email="author@example.com" },
+]
+description = "zappy_ia package for the project"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/X-R-G-B/ZappyCulteur/tree/main/src/AI"
+"Bug Tracker" = "https://github.com/X-R-G-B/ZappyCulteur/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["zappy_ia"]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "Makefile",
+  "/zappy_ai.py"
+]
