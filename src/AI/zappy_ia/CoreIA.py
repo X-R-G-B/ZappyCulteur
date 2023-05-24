@@ -23,21 +23,21 @@ class IAPersonnality:
         if (self.state == State.WSETUP):
             print("Welcome to the game")
             self.state = State.NSETUP
-            return ("-->" + self.teamName + "\n")
+            return (self.teamName + "\n")
         if (self.state == State.ERROR):
             return "quit"
         return ""
 
     def output(self, message: str):
         print(message)
-        if (message == "<--WELCOME\n"):
+        if (message == "WELCOME\n"):
             self.state = State.WSETUP
         elif (self.state == State.NSETUP):
-            self.clientNum = int(message[3:-1])
+            self.clientNum = int(message[:-1])
             self.state = State.MSETUP
         elif (self.state == State.MSETUP):
             maps = message[:-1].split(' ')
-            self.mapSize[0] = int(maps[1])
-            self.mapSize[1] = int(maps[2])
+            self.mapSize[0] = int(maps[0])
+            self.mapSize[1] = int(maps[1])
             self.state = State.NONE
         return
