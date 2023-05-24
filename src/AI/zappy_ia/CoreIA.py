@@ -19,7 +19,7 @@ class IAPersonnality:
         self.clientNum = 0
         self.switch = False
 
-    def input_base(self) -> str:
+    def inputBase(self) -> str:
         if (self.state == State.WSETUP):
             self.state = State.NSETUP
             return (self.teamName + "\n")
@@ -29,11 +29,11 @@ class IAPersonnality:
         
     def input(self) -> str:
         if (self.switch == False):
-            return self.input_base()
+            return self.inputBase()
         else:
             return ""
     
-    def output_base(self, message: str):
+    def outputBase(self, message: str):
         if (message == "WELCOME\n"):
             self.state = State.WSETUP
         elif (self.state == State.NSETUP):
@@ -47,10 +47,9 @@ class IAPersonnality:
             self.switch = True
         return
 
-    def output(self, message: str):
+    def output(self, message: str):        
         print(message)
         if (self.switch == False):
-            self.output_base(message)
+            self.outputBase(message)
         else:
             return
-        

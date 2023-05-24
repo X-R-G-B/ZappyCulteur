@@ -7,7 +7,7 @@ class cheaterIA(IAPersonnality):
 
     def input(self):
         if (self.state == False):
-            return self.input_base()
+            return self.inputBase()
         else:
             if (self.bctTest == State.NONE):
                 self.bctTest = State.TESTING
@@ -17,10 +17,10 @@ class cheaterIA(IAPersonnality):
                 return "mct\n"
             else:
                 return ""
-    
+
     def output(self, message):
         if (self.state == False):
-            return self.output_base(message)
+            return self.outputBase(message)
         else :
             if (self.bctTest == State().TESTING):
                 if (message != "ko\n"):
