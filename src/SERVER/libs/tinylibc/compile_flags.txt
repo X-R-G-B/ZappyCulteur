@@ -1,0 +1,13 @@
+-xc
+-Ilib/include
+-Iinclude
+-I../include
+-I../lib/include
+-Ilib/includes
+-Iincludes
+-I../includes
+-I../lib/includes
+-Ilib/libbgs/include
+-Wall
+-Wextra
+-Wpedantic
