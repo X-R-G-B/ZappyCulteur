@@ -139,7 +139,8 @@ SRC_STRINGS			:=		memcpy.c									\
 SRC_STRINGS			:=		$(addprefix strings/,$(SRC_STRINGS))
 
 # Lib for utils (includes/tlcutils.h)
-SRC_UTILS			:=		free_ifnotnull.c							\
+SRC_UTILS			:=		free_char_2d.c								\
+							free_ifnotnull.c							\
 							return_void.c
 SRC_UTILS			:=		$(addprefix utils/,$(SRC_UTILS))
 

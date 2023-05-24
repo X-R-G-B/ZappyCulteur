@@ -36,9 +36,16 @@ int get_id(void);
 
 // ---------------------------------------------------------------------------
 
+// Update in states
+
 bool update_client_not_connected(ntw_t *ntw, ntw_client_t *cl, args_t *args);
 bool update_client_waiting_team_name(ntw_t *ntw, ntw_client_t *cl,
     args_t *args);
 bool update_client_connected(ntw_t *ntw, ntw_client_t *cl, args_t *args);
+
+// update by types in state connected
+
+bool update_ai_cmd(ntw_t *ntw, ntw_client_t *cl, args_t *args);
+bool update_graphic_cmd(ntw_t *ntw, ntw_client_t *cl, args_t *args);
 
 #endif
