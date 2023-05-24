@@ -37,7 +37,7 @@ namespace Server {
 
             bool isConnected();
 
-            const std::string &getResponse();
+            const std::string getResponse();
 
             const std::vector<std::string> &getResponses();
 
@@ -59,5 +59,6 @@ namespace Server {
             fd_set _wfds;
             fd_set _efds;
             sockaddr_in _addr;
+            bool isRead;
     };
 }
