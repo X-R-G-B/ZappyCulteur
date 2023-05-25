@@ -1,4 +1,5 @@
 from enum import Enum
+import random
 
 class State(Enum):
         ERROR = -1
@@ -18,6 +19,12 @@ class Action(Enum):
         TESTING = 11
         WORK = 12
         NOTWORK = 13
+        
+move_choices = {
+    Action.FORWARD: "Forward",
+    Action.RIGHT: "Right",
+    Action.LEFT: "Left"
+}
 
 class IAPersonnality:
     def __init__(self):
@@ -30,14 +37,8 @@ class IAPersonnality:
         self.clientNum = 0
         
     def inputMovement(self) -> str:
-        if (self.action == Action.NONE or self.action == Action.LEFT):
-            self.action = Action.FORWARD
-            return "Forward\n"
-        elif (self.action == Action.FORWARD):
-            self.action = Action.LEFT
-            return "Left\n"
-        else:
-            return "\n"
+        self.action = random.choice(list(move_choices.keys()))
+        return move_choices[self.action] + "\n"
 
     def inputSetup(self) -> str:
         if (self.action == Action.WSETUP):
