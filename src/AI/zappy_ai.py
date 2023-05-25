@@ -2,6 +2,7 @@
 
 from zappy_ia import CoreIA, cheater
 import socket
+import select
 import sys
 import argparse
 
@@ -12,7 +13,6 @@ class IAClient:
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_ip = "127.0.0.1"
         self.messToSend = ""
-        self.messReceived = ""
         self.nameMachine = ""
         self.isConnected = False
         self.port = 0
@@ -33,38 +33,30 @@ class IAClient:
     
     def connectToServer(self):
         try:
-            self.client_socket.connect((self.nameMachine, self.port))
-        except:
-            print("Connection error")
-            return 1
-        print("Connection established")
-        self.isConnected = True
-        return self.commWithServer()
-
-    def commWithServer(self):
-        while (self.isConnected):
-            try:
-                self.messReceived = self.client_socket.recv(4096)
-                self.personnality.output(self.messReceived.decode())
-            except:
-                print("Error while receiving message")
-                self.messReceived = ""
-            if (self.messReceived != ""):
-                if (self.messReceived.decode() == "dead"):
-                    print("You died")
-                    self.client_socket.close()
-                    self.isConnected = False
-                    continue
-            self.messToSend = self.personnality.input()
-            if (self.messToSend == "quit"):
-                self.client_socket.close()
-                self.isConnected = False
-                continue
-            try:
-                self.client_socket.send(self.messToSend.encode())
-            except:
-                print("Error while sending message")
-        return 0
+            self.client_socket.connect((self.machineName, self.port))
+            print("Connected to server")
+            
+            self.client_socket.setblocking(0)
+            
+            while True:
+                read_sockets, _, _ = select.select([self.client_socket], [], [], 0)
+                
+                for socket in read_sockets:
+                    if (socket == self.client_socket):
+                        message = socket.recv(2048).decode()
+                        if message:
+                            self.personnality.output(message)
+                        else:
+                            self.client_socket.close()
+                            return 0
+                message = self.personnality.input()
+                self.client_socket.sendall(message.encode())
+        except ConnectionRefusedError:
+            print("Connection refused")
+        except KeyboardInterrupt:
+            print("Disconnected from server")
+        finally:
+            self.client_socket.close()
         
 class Argparse(argparse.ArgumentParser):
     def error(self, message):
