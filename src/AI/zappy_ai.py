@@ -52,7 +52,9 @@ class IAClient:
                 for socket in write_sockets:
                     if (socket == self.client_socket):
                         message = self.personnality.input()
-                        self.client_socket.sendall(message.encode())
+                        if (message != '\n'):
+                            print("Send: " + message, end='')
+                            self.client_socket.sendall(message.encode())
         except ConnectionRefusedError:
             print("Connection refused")
         except KeyboardInterrupt:

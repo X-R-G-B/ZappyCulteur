@@ -23,15 +23,19 @@ class IAPersonnality:
     def __init__(self):
         self.state = State.NONE
         self.action = Action.NONE
+        self.isWaiting = False
         self.teamName = "Cultureux"
         self.level = 1
         self.mapSize = [0, 0]
         self.clientNum = 0
         
     def inputMovement(self) -> str:
-        if (self.action == Action.NONE or self.action == Action.FORWARD):
+        if (self.action == Action.NONE or self.action == Action.LEFT):
             self.action = Action.FORWARD
             return "Forward\n"
+        elif (self.action == Action.FORWARD):
+            self.action = Action.LEFT
+            return "Left\n"
         else:
             return "\n"
 
@@ -42,12 +46,18 @@ class IAPersonnality:
         return "\n"
         
     def input(self) -> str:
-        if (self.state == State.ERROR):
-            return "quit"
-        elif (self.state == State.SETUP):
-            return self.inputSetup()
-        elif (self.state == State.MOVEMENT):
-            return self.inputMovement()
+        if (self.isWaiting == False):
+            if (self.state == State.ERROR):
+                self.isWaiting = True
+                return "quit"
+            elif (self.state == State.SETUP):
+                self.isWaiting = True
+                return self.inputSetup()
+            elif (self.state == State.MOVEMENT):
+                self.isWaiting = True
+                return self.inputMovement()
+            else:
+                return "\n"
         else:
             return "\n"
     
@@ -65,8 +75,10 @@ class IAPersonnality:
             return
 
     def output(self, message: str):
-        print(message)   
         cmds = message.split('\n')
+        print("Recv: ", end='')
+        print(cmds[:-1], end="\n\n")   
+        self.isWaiting = False
         for cmd in cmds:
             if (cmd == "ko"):
                 self.state = State.ERROR
