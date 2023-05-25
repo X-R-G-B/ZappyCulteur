@@ -12,7 +12,6 @@ class IAClient:
         self.argParse = Argparse(description="Zappy AI", add_help=False)
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_ip = "127.0.0.1"
-        self.messToSend = ""
         self.nameMachine = ""
         self.isConnected = False
         self.port = 0
@@ -35,11 +34,12 @@ class IAClient:
         try:
             self.client_socket.connect((self.machineName, self.port))
             print("Connected to server")
-            
+            self.isConnected = True
+
             self.client_socket.setblocking(0)
             
-            while True:
-                read_sockets, _, _ = select.select([self.client_socket], [], [], 0)
+            while self.isConnected:
+                read_sockets, write_sockets, _ = select.select([self.client_socket], [self.client_socket], [], 0)
                 
                 for socket in read_sockets:
                     if (socket == self.client_socket):
@@ -48,9 +48,11 @@ class IAClient:
                             self.personnality.output(message)
                         else:
                             self.client_socket.close()
-                            return 0
-                message = self.personnality.input()
-                self.client_socket.sendall(message.encode())
+                            self.isConnected = False
+                for socket in write_sockets:
+                    if (socket == self.client_socket):
+                        message = self.personnality.input()
+                        self.client_socket.sendall(message.encode())
         except ConnectionRefusedError:
             print("Connection refused")
         except KeyboardInterrupt:
