@@ -14,10 +14,10 @@
 #include "tlcllists.h"
 #include "zappy.h"
 
-static bool update_client(ntw_t *ntw, ntw_client_t *cl, args_t *args)
+static bool update_client(zappy_t *zappy, ntw_client_t *cl)
 {
     client_t *cc = NULL;
-    bool (*funcs[3])(ntw_t *ntw, ntw_client_t *cl, args_t *args) = {
+    bool (*funcs[3])(zappy_t *zappy, ntw_client_t *cl) = {
         update_client_not_connected,
         update_client_waiting_team_name,
         update_client_connected
@@ -27,17 +27,17 @@ static bool update_client(ntw_t *ntw, ntw_client_t *cl, args_t *args)
         return false;
     }
     cc = cl->data;
-    return funcs[cc->state](ntw, cl, args);
+    return funcs[cc->state](zappy, cl);
 }
 
-bool loop(ntw_t *ntw, args_t *args)
+bool loop(zappy_t *zappy)
 {
     ntw_client_t *cl = NULL;
     bool status = true;
 
-    for (L_EACH(client, ntw->clients)) {
+    for (L_EACH(client, zappy->ntw->clients)) {
         cl = L_DATA(client);
-        status = update_client(ntw, cl, args) & status;
+        status = update_client(zappy, cl) & status;
     }
     return !status;
 }

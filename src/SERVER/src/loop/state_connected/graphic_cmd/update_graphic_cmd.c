@@ -14,25 +14,29 @@
 #include "tlcutils.h"
 #include "zappy.h"
 
-static const char cmds_graphic[2][4] = {
+static const char cmds_graphic[4][6] = {
     "msz\n",
+    "mct\n",
+    "bct",
     "",
 };
 
 static bool
-(*graphic_funcs[2])
-(ntw_t *ntw, ntw_client_t *cl, args_t *args, char **) = {
+(*graphic_funcs[4])
+(zappy_t *zappy, ntw_client_t *cl, char **) = {
     cmd_msz,
+    cmd_mct,
+    cmd_bct,
     NULL,
 };
 
-static bool update_cmd(ntw_t *ntw, ntw_client_t *cl, args_t *args, char **cmd_split)
+static bool update_cmd(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
 {
     bool status = false;
 
     for (int i = 0; cmds_graphic[i][0] != '\0'; i++) {
         if (strcmp(cmd_split[0], cmds_graphic[i]) == 0) {
-            status = graphic_funcs[i](ntw, cl, args, cmd_split);
+            status = graphic_funcs[i](zappy, cl, cmd_split);
             break;
         }
     }
@@ -43,7 +47,7 @@ static bool update_cmd(ntw_t *ntw, ntw_client_t *cl, args_t *args, char **cmd_sp
     return status;
 }
 
-bool update_graphic_cmd(ntw_t *ntw, ntw_client_t *cl, args_t *args)
+bool update_graphic_cmd(zappy_t *zappy, ntw_client_t *cl)
 {
     char **cmd_split = NULL;
     char *tmp = NULL;
@@ -59,7 +63,7 @@ bool update_graphic_cmd(ntw_t *ntw, ntw_client_t *cl, args_t *args)
         free_char_2d(cmd_split);
         return true;
     }
-    status = update_cmd(ntw, cl, args, cmd_split);
+    status = update_cmd(zappy, cl, cmd_split);
     free_char_2d(cmd_split);
     return status;
 }
