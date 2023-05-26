@@ -33,8 +33,7 @@ void on_new_conn(ntw_client_t *new_client);
 /**
 ** @brief Function called each frame
 **
-** @param ntw the network module
-** @param args the arguments
+** @param zappy the zappy
 **
 ** @return false if the loop should be called next time
 **/
