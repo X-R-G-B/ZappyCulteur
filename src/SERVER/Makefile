@@ -15,7 +15,8 @@ CFLAGS			=															\
 							-Wpedantic										\
 							-Iinclude										\
 							-Ilibs/tinylibc/includes						\
-							-Ilibs/circularbuffer/includes
+							-Ilibs/circularbuffer/includes					\
+							-MMD
 
 LDFLAGS			=															\
 							-L $(LIBS_DIR)/circularbuffer/					\
@@ -51,6 +52,7 @@ SRC_LOOP_GRCMD	=															\
 							cmd_bct.c										\
 							cmd_mct.c										\
 							cmd_msz.c										\
+							cmd_ppo.c										\
 							update_graphic_cmd.c
 SRC_LOOP_GRCMD	:=			$(addprefix graphic_cmd/, $(SRC_LOOP_GRCMD))
 
@@ -88,6 +90,12 @@ SRC_NTW			:=															\
 							ntw_wait_till_events.c
 SRC_NTW			:=			$(addprefix network/, $(SRC_NTW))
 
+# TRANTORIEN -----------------------------------------------------------------
+SRC_TRNT		:=															\
+							trantorien_destroy.c							\
+							trantorien_init.c
+SRC_TRNT		:=			$(addprefix trantorien/, $(SRC_TRNT))
+
 # ----------------------------------------------------------------------------
 # SRC
 # ----------------------------------------------------------------------------
@@ -97,14 +105,17 @@ SRC				:=															\
 							$(SRC_LOOP)										\
 							$(SRC_MAP)										\
 							$(SRC_NTW)										\
+							$(SRC_TRNT)										\
 							get_id.c										\
 							main.c											\
 							on_new_conn.c									\
 							zappy_destroy.c									\
+							zappy_find_trantorien_by_id.c					\
 							zappy_init.c
 SRC				:=			$(addprefix src/, $(SRC))
 
-OBJ				=			$(SRC:.c=.o)
+OBJ				:=			$(SRC:.c=.o)
+DEPENDS			:=			$(SRC:.c=.d)
 
 RM				?=			rm -f
 
@@ -136,3 +147,5 @@ fclean:													$(LIBS_DIR)_fclean
 
 re:														fclean
 re:														all
+
+-include $(DEPENDS)

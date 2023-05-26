@@ -12,6 +12,7 @@
     #include "args.h"
     #include "map.h"
     #include "ntw.h"
+    #include "trantorien.h"
 
 struct zappy_s {
     ntw_t *ntw;
@@ -20,9 +21,31 @@ struct zappy_s {
 };
 typedef struct zappy_s zappy_t;
 
+/**
+** @brief Initialize a zappy
+**
+** @param args the arguments
+**
+** @return the initialized zappy
+**/
 zappy_t *zappy_init(args_t *args);
 
+/**
+** @brief Destroy a zappy
+**
+** @param zappy the zappy
+**/
 void zappy_destroy(zappy_t *zappy);
+
+/**
+** @brief Find a trantorien by id
+**
+** @param zappy the zappy
+** @param id the id
+**
+** @return the trantorien
+**/
+trantorien_t *zappy_trantorien_find_by_id(zappy_t *zappy, int id);
 
 /**
 ** @brief Function called each time a new connection

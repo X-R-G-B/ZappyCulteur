@@ -8,7 +8,8 @@
 #ifndef CLIENT_H_
     #define CLIENT_H_
 
-    #include <stdbool.h>
+    #include "trantorien.h"
+#include <stdbool.h>
     #define NAME_MAX 200
 
 enum client_type_e {
@@ -30,7 +31,7 @@ struct client_graphic_s {
 
 // TODO: modify this struct
 struct client_ai_s {
-    int tmp;
+    trantorien_t *trantorien;
 };
 
 struct client_s {

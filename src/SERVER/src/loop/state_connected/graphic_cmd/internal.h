@@ -13,9 +13,12 @@
     #include "args.h"
     #include "zappy.h"
 
+    #define NB_CMD_AVAILIBLE 5
+
 bool cmd_msz(zappy_t *zappy, ntw_client_t *cl, char **cmd_split);
 bool cmd_mct(zappy_t *zappy, ntw_client_t *cl, char **cmd_split);
 bool cmd_bct(zappy_t *zappy, ntw_client_t *cl, char **cmd_split);
+bool cmd_ppo(zappy_t *zappy, ntw_client_t *cl, char **cmd_split);
 
 bool cmd_bct_x_y(zappy_t *zappy, ntw_client_t *cl, int x, int y);
 

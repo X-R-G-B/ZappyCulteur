@@ -10,6 +10,7 @@
 #include "args.h"
 #include "map.h"
 #include "ntw.h"
+#include "tlcllists.h"
 #include "zappy.h"
 
 zappy_t *zappy_init(args_t *args)
