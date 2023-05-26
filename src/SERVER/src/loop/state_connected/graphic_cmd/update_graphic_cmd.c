@@ -60,7 +60,6 @@ bool update_graphic_cmd(zappy_t *zappy, ntw_client_t *cl)
     cmd_split = x_strsplit(tmp, " ");
     free(tmp);
     if (cmd_split == NULL) {
-        free_char_2d(cmd_split);
         return true;
     }
     status = update_cmd(zappy, cl, cmd_split);
