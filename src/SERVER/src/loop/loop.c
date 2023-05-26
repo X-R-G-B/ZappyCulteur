@@ -37,6 +37,9 @@ bool loop(zappy_t *zappy)
 
     for (L_EACH(client, zappy->ntw->clients)) {
         cl = L_DATA(client);
+        if (cl == NULL) {
+            continue;
+        }
         status = update_client(zappy, cl) & status;
     }
     return !status;
