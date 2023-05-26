@@ -53,6 +53,9 @@ bool update_graphic_cmd(zappy_t *zappy, ntw_client_t *cl)
     char *tmp = NULL;
     bool status = false;
 
+    if (zappy == NULL || cl == NULL) {
+        return true;
+    }
     tmp = circular_buffer_read(cl->read_from_outside);
     if (tmp == NULL) {
         return true;
