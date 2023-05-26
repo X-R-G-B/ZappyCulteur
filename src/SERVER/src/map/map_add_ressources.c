@@ -84,6 +84,9 @@ void map_add_ressources(map_t *map)
     int nb_step_int[MAX_NB_RESOURCES] = {0, 0, 0, 0, 0, 0, 0};
     int nb_step[MAX_NB_RESOURCES] = {0, 0, 0, 0, 0, 0, 0};
 
+    if (map == NULL || map->tiles == NULL) {
+        return;
+    }
     for (int i = 0; i < MAX_NB_RESOURCES; i++) {
         nb_spawn_max[i] = density[i] * map->width * map->height;
         printf("INFO: nb_spawn_max[%d] = %d\n", i, nb_spawn_max[i]);
