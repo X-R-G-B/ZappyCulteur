@@ -45,6 +45,17 @@ SRC_CLIENT		:=			$(addprefix client/, $(SRC_CLIENT))
 
 # LOOP -----------------------------------------------------------------------
 SRC_LOOP_AICMD	=															\
+							cmd_broadcast.c									\
+							cmd_eject.c										\
+							cmd_fork.c										\
+							cmd_forward.c									\
+							cmd_inventory.c									\
+							cmd_invocation.c								\
+							cmd_left.c										\
+							cmd_look.c										\
+							cmd_right.c										\
+							cmd_set.c										\
+							cmd_take.c										\
 							update_ai_cmd.c
 SRC_LOOP_AICMD	:=			$(addprefix ai_cmd/, $(SRC_LOOP_AICMD))
 
@@ -92,8 +103,16 @@ SRC_NTW			:=			$(addprefix network/, $(SRC_NTW))
 
 # TRANTORIEN -----------------------------------------------------------------
 SRC_TRNT		:=															\
+							action_destroy.c								\
+							action_init.c									\
+							trantorien_add_act.c							\
+							trantorien_add_act_broadcast.c					\
+							trantorien_add_act_set.c						\
+							trantorien_add_act_take.c						\
 							trantorien_destroy.c							\
-							trantorien_init.c
+							trantorien_init.c								\
+							trantorien_is_cmd_availible.c					\
+							trantorien_place_cmd.c
 SRC_TRNT		:=			$(addprefix trantorien/, $(SRC_TRNT))
 
 # ----------------------------------------------------------------------------
@@ -136,7 +155,7 @@ $(LIBS_DIR)_clean:										$(LIBS_DIR)
 	$(MAKE) -C $(LIBS_DIR) clean
 
 clean:													$(LIBS_DIR)_clean
-	$(RM) $(OBJ)
+	$(RM) $(OBJ) $(SRC:.c=.d)
 
 $(LIBS_DIR)_fclean:										$(LIBS_DIR)
 	$(MAKE) -C $(LIBS_DIR) fclean
