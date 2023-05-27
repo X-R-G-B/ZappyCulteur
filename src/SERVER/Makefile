@@ -142,14 +142,17 @@ all: $(LIBS_DIR)/tinylibc/libtinylibc.a
 all: $(LIBS_DIR)/circularbuffer/libcircularbuffer.a
 all: $(TARGET)
 
-$(TARGET):												$(OBJ)
+$(TARGET):
+	$(MAKE) -j -C . $(TARGET)_fast
+
+$(TARGET)_fast:											$(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) -o $(TARGET)
 
 $(LIBS_DIR)/tinylibc/libtinylibc.a:						$(LIBS_DIR)
-	$(MAKE) -C $(LIBS_DIR)
+	$(MAKE) -j -C $(LIBS_DIR)
 
 $(LIBS_DIR)/circularbuffer/libcircularbuffer.a:			$(LIBS_DIR)
-	$(MAKE) -C $(LIBS_DIR)
+	$(MAKE) -j -C $(LIBS_DIR)
 
 $(LIBS_DIR)_clean:										$(LIBS_DIR)
 	$(MAKE) -C $(LIBS_DIR) clean
