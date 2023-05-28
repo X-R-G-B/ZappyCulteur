@@ -17,10 +17,8 @@ if (WIN32)
         sfml-system
     )
 else()
-    find_library(SFML_GRAPHICS sfml-graphics)
+    find_library(SFML sfml-graphics sfml-window sfml-system)
     target_link_libraries(${PROJECT_NAME} PRIVATE
-        sfml-graphics
-        sfml-window
-        sfml-system
+        ${SFML}
     )
 endif()
