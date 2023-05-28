@@ -196,7 +196,7 @@ namespace Zappy {
 
         while (true)
         {
-            int nbBytes = recv(_serverSocket, buffer.data(), BUFFER_SIZE, NULL);
+            int nbBytes = recv(_serverSocket, buffer.data(), BUFFER_SIZE, 0);
             if (nbBytes <= 0)
             {
                 _isConnected = false;
@@ -218,7 +218,7 @@ namespace Zappy {
         while (_dataToSend.empty() == false)
         {
             toSend = _dataToSend.front();
-            if (send(_serverSocket, toSend.c_str(), static_cast<int>(toSend.size()), NULL) == -1)
+            if (send(_serverSocket, toSend.c_str(), static_cast<int>(toSend.size()), 0) == -1)
             {
                 _isConnected = false;
                 throw NetworkException("Error: write failed");
