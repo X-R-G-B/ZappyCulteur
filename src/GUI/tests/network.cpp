@@ -16,6 +16,7 @@
 //  - With a server, send up, down, left, right                //
 //  - Move cube with ZQSD to se if the network is not blocking //
 //  - You can press space to send a message to the server      //
+//  - You can press R to reconnect to the server               //
 //-------------------------------------------------------------//
 
 int main()
@@ -82,6 +83,12 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
         {
             networkManager.sendToServer("testEnvoi\n");
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) &&
+            networkManager.isConnected() == false)
+        {
+            networkManager.reconnectToServer();
         }
 
         for (const auto &response : networkManager.getServerMessages()) {
