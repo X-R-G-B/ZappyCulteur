@@ -26,7 +26,8 @@ $(TARGET_server):	$(TARGET_server_DIR)
 	$(CP) $(TARGET_server_DIR)/$(TARGET_server) $(TARGET_server)
 
 $(TARGET_gui):		$(TARGET_gui_DIR)
-	$(MAKE) -C $(TARGET_gui_DIR)
+	cmake -S $(TARGET_gui_DIR) -B $(TARGET_gui_DIR)/build
+	$(MAKE) -C $(TARGET_gui_DIR)/build
 	$(CP) $(TARGET_gui_DIR)/$(TARGET_gui) $(TARGET_gui)
 
 $(TARGET_ai):		$(TARGET_ai_DIR)
@@ -54,7 +55,7 @@ $(TARGET_server)_fclean:	$(TARGET_server)_clean
 	$(MAKE) -C $(TARGET_server_DIR) fclean
 
 $(TARGET_gui)_fclean:		$(TARGET_gui)_clean
-	$(MAKE) -C $(TARGET_gui_DIR) fclean
+	$(MAKE) -C $(TARGET_gui_DIR) clean
 
 $(TARGET_ai)_fclean:		$(TARGET_ai)_clean
 	$(MAKE) -C $(TARGET_ai_DIR) fclean
