@@ -7,13 +7,18 @@
 
 #pragma once
 
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <sys/select.h>
-#include <arpa/inet.h>
-#include <sys/types.h>
-#include <string.h>
-#include <unistd.h>
+#ifdef _WIN32
+    #include <ws2tcpip.h>
+    #include <winsock2.h>
+#else
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <sys/select.h>
+    #include <arpa/inet.h>
+    #include <sys/types.h>
+    #include <string.h>
+    #include <unistd.h>
+#endif
 
 #include <string>
 #include <vector>
@@ -57,6 +62,18 @@ namespace Zappy {
         void update();
 
         /**
+         * @brief init the connection with the server
+         * 
+         */
+        void initConnection();
+
+        /**
+         * @brief reconnect to the server if the connection is lost
+         * 
+         */
+        bool reconnectToServer();
+
+        /**
          * @brief get the messages received from the server
          *  
          * @return std::vector<std::string> 
@@ -84,6 +101,12 @@ namespace Zappy {
          */
         bool isConnected() const;
 
+        /**
+         * @brief close the connection with the server
+         * 
+         */
+        void deconnectFromServer();
+
     private:
 
         void clearServerMessages();
@@ -92,19 +115,26 @@ namespace Zappy {
         void receiveData();
         void sendData();
         void updateFds();
+        void createSocket();
+        void connectSocket();
+
+        // Attributes //
+
+        #ifdef _WIN32
+            SOCKET _serverSocket;
+            WSADATA _wsa;
+        #else 
+            int _serverSocket;
+        #endif
 
         fd_set _readfds;
-        int _serverSocket;
+        std::string _ip;
+        std::string _port;
+        bool _isConnected;
         struct sockaddr_in _addr;
         struct timeval _tv = {0, 0};
 
-        std::vector<std::string> _serverMessages;
         std::vector<std::string> _dataToSend;
-
-        std::string _port;
-        std::string _ip;
-
-        bool _isConnected;
+        std::vector<std::string> _serverMessages;
     };
-
 }

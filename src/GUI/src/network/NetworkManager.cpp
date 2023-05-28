@@ -22,13 +22,37 @@ namespace Zappy {
         _isConnected(false)
     {
         setIp(ip);
-        connectToServer();
+        try {
+            initConnection();
+            connectToServer();
+        } catch (const std::exception &e) {
+            std::cerr << e.what() << std::endl;
+        }
     }
 
     NetworkManager::~NetworkManager()
     {
-        shutdown(_serverSocket, SHUT_RDWR);
-        close(_serverSocket);
+        deconnectFromServer();
+        #ifdef _WIN32
+            WSACleanup();
+        #endif
+    }
+
+    void NetworkManager::deconnectFromServer()
+    {
+        #ifdef _WIN32
+            if (_serverSocket != INVALID_SOCKET)
+            {
+                shutdown(_serverSocket, SD_BOTH);
+                closesocket(_serverSocket);
+            }
+        #else
+            if (_serverSocket != -1)
+            {
+                shutdown(_serverSocket, SHUT_RDWR);
+                close(_serverSocket);
+            }
+        #endif
     }
 
     void NetworkManager::sendToServer(const std::string& data)
@@ -42,7 +66,7 @@ namespace Zappy {
 
     void NetworkManager::update()
     {
-        if (_isConnected == true || connectToServer() == true)
+        if (_isConnected == true)
         {
             updateFds();
             if (select(_serverSocket + 1, &_readfds, nullptr, nullptr, &_tv) == -1)
@@ -97,24 +121,59 @@ namespace Zappy {
     bool NetworkManager::connectToServer()
     {
         try {
-            _addr.sin_family = AF_INET;
-            _addr.sin_port = htons(std::stoul(_port));
-            _addr.sin_addr.s_addr = inet_addr(_ip.c_str());
-            _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-            if (_serverSocket == -1)
-            {
-                throw NetworkException("Error: cannot create socket");
-            }
-            if (connect(_serverSocket, reinterpret_cast<struct sockaddr*>(&_addr), sizeof(_addr)) == -1)
-            {
-                throw NetworkException("Error: cannot connect to server");
-            }
+            createSocket();
+            connectSocket();
             _isConnected = true;
         } catch (const std::exception &e) {
             _isConnected = false;
             std::cerr << e.what() << std::endl;
         }
         return _isConnected;
+    }
+
+    bool NetworkManager::reconnectToServer()
+    {
+        if (_isConnected == true)
+        {
+            return true;
+        }
+        else
+        {
+            deconnectFromServer();
+            return connectToServer();
+        }
+    }
+
+    void NetworkManager::initConnection()
+    {
+        #ifdef _WIN32
+            _wsa = {0};
+            if (WSAStartup(MAKEWORD(2, 2), &_wsa) != 0)
+            {
+                throw NetworkException("Error: WSAStartup failed");
+            }
+        #endif
+        _addr.sin_family = AF_INET;
+        _addr.sin_port = htons(static_cast<u_short>(std::stoul(_port)));
+        _addr.sin_addr.s_addr = inet_addr(_ip.c_str());
+    }
+
+    void NetworkManager::createSocket()
+    {
+        _serverSocket = socket(_addr.sin_family, SOCK_STREAM, IPPROTO_TCP);
+        if (_serverSocket == -1)
+        {
+            throw NetworkException("Error: cannot create socket");
+        }
+    }
+
+    void NetworkManager::connectSocket()
+    {
+        if (connect(_serverSocket, reinterpret_cast<struct sockaddr*>(&_addr), sizeof(_addr)) == -1)
+        {
+            deconnectFromServer();
+            throw NetworkException("Error: cannot connect to server");
+        }
     }
 
     void NetworkManager::addMessagesToVector(std::string &message)
@@ -137,14 +196,15 @@ namespace Zappy {
 
         while (true)
         {
-            int nbBytes = read(_serverSocket, buffer.data(), BUFFER_SIZE);
+            int nbBytes = recv(_serverSocket, buffer.data(), BUFFER_SIZE, NULL);
             if (nbBytes <= 0)
             {
                 _isConnected = false;
                 throw NetworkException("Error: read failed");
             }
             message += std::string(buffer.data(), nbBytes);
-            if (message.back() == '\n') {
+            if (message.back() == '\n')
+            {
                 break;
             }
         }
@@ -154,11 +214,11 @@ namespace Zappy {
     void NetworkManager::sendData()
     {
         std::string toSend = "";
-        
+    
         while (_dataToSend.empty() == false)
         {
             toSend = _dataToSend.front();
-            if (write(_serverSocket, toSend.c_str(), toSend.size()) == -1)
+            if (send(_serverSocket, toSend.c_str(), static_cast<int>(toSend.size()), NULL) == -1)
             {
                 _isConnected = false;
                 throw NetworkException("Error: write failed");
