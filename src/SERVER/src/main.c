@@ -12,19 +12,19 @@
 
 static int server_start(args_t *args)
 {
-    ntw_t *ntw = NULL;
     bool is_end = false;
+    zappy_t *zappy = NULL;
 
-    ntw = ntw_init(args->port, args->teams_name->len, on_new_conn);
-    if (ntw == NULL) {
+    zappy = zappy_init(args);
+    if (zappy == NULL) {
         return (84);
     }
     while (is_end == false) {
-        ntw_wait_till_events(ntw, 0, 0);
-        ntw_loop(ntw);
-        is_end = loop(ntw, args);
+        ntw_wait_till_events(zappy->ntw, 0, 0);
+        ntw_loop(zappy->ntw);
+        is_end = loop(zappy);
     }
-    ntw_destroy(ntw);
+    zappy_destroy(zappy);
     return 0;
 }
 

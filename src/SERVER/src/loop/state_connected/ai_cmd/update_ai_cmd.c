@@ -11,7 +11,7 @@
 #include "client.h"
 #include "zappy.h"
 
-bool update_ai_cmd(ntw_t *ntw, ntw_client_t *cl, args_t *args)
+bool update_ai_cmd(__attribute__((unused)) zappy_t *zappy, ntw_client_t *cl)
 {
     char *tmp = NULL;
 

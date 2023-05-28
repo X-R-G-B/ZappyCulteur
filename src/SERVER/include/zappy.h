@@ -10,7 +10,19 @@
 
     #include <stdbool.h>
     #include "args.h"
+    #include "map.h"
     #include "ntw.h"
+
+struct zappy_s {
+    ntw_t *ntw;
+    map_t *map;
+    args_t *args;
+};
+typedef struct zappy_s zappy_t;
+
+zappy_t *zappy_init(args_t *args);
+
+void zappy_destroy(zappy_t *zappy);
 
 /**
 ** @brief Function called each time a new connection
@@ -21,12 +33,11 @@ void on_new_conn(ntw_client_t *new_client);
 /**
 ** @brief Function called each frame
 **
-** @param ntw the network module
-** @param args the arguments
+** @param zappy the zappy
 **
 ** @return false if the loop should be called next time
 **/
-bool loop(ntw_t *ntw, args_t *args);
+bool loop(zappy_t *zappy);
 /**
 ** @brief Function to get an uniq int
 **
@@ -38,14 +49,13 @@ int get_id(void);
 
 // Update in states
 
-bool update_client_not_connected(ntw_t *ntw, ntw_client_t *cl, args_t *args);
-bool update_client_waiting_team_name(ntw_t *ntw, ntw_client_t *cl,
-    args_t *args);
-bool update_client_connected(ntw_t *ntw, ntw_client_t *cl, args_t *args);
+bool update_client_not_connected(zappy_t *zappy, ntw_client_t *cl);
+bool update_client_waiting_team_name(zappy_t *zappy, ntw_client_t *cl);
+bool update_client_connected(zappy_t *zappy, ntw_client_t *cl);
 
 // update by types in state connected
 
-bool update_ai_cmd(ntw_t *ntw, ntw_client_t *cl, args_t *args);
-bool update_graphic_cmd(ntw_t *ntw, ntw_client_t *cl, args_t *args);
+bool update_ai_cmd(zappy_t *zappy, ntw_client_t *cl);
+bool update_graphic_cmd(zappy_t *zappy, ntw_client_t *cl);
 
 #endif

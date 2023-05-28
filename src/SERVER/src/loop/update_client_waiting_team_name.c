@@ -68,13 +68,16 @@ static bool update(char *tmp, client_t *cc, ntw_client_t *cl, args_t *args)
     return true;
 }
 
-bool update_client_waiting_team_name(__attribute__((unused)) ntw_t *ntw,
-    ntw_client_t *cl, args_t *args)
+bool update_client_waiting_team_name(zappy_t *zappy, ntw_client_t *cl)
 {
     char *tmp = NULL;
-    client_t *cc = cl->data;
+    client_t *cc = NULL;
     bool status = false;
 
+    if (cl == NULL || zappy == NULL) {
+        return true;
+    }
+    cc = cl->data;
     if (circular_buffer_is_read_ready(cl->read_from_outside) == false) {
         return true;
     }
@@ -82,7 +85,7 @@ bool update_client_waiting_team_name(__attribute__((unused)) ntw_t *ntw,
     if (tmp == NULL) {
         return false;
     }
-    status = update(tmp, cc, cl, args);
+    status = update(tmp, cc, cl, zappy->args);
     free(tmp);
     return status;
 }

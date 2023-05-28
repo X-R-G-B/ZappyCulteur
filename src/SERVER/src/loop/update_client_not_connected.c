@@ -11,11 +11,15 @@
 #include "client.h"
 #include "zappy.h"
 
-bool update_client_not_connected(__attribute__((unused)) ntw_t *ntw,
-    ntw_client_t *cl, __attribute__((unused)) args_t *args)
+bool update_client_not_connected(__attribute__((unused)) zappy_t *zappy,
+    ntw_client_t *cl)
 {
-    client_t *cc = cl->data;
+    client_t *cc = NULL;
 
+    if (cl == NULL) {
+        return true;
+    }
+    cc = cl->data;
     circular_buffer_write(cl->write_to_outside, "WELCOME\n");
     cc->state = WAITING_TEAM_NAME;
     printf("%s\n", "INFO: new connection, sending welcome...");
