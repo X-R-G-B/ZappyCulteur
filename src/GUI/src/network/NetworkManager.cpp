@@ -193,7 +193,8 @@ namespace Zappy {
     {
         std::string message;
         std::array<char, BUFFER_SIZE> buffer = {0};
-
+       int nbBytes = 0;
+        
         while (true)
         {
             nbBytes = recv(_serverSocket, buffer.data(), BUFFER_SIZE, 0);
