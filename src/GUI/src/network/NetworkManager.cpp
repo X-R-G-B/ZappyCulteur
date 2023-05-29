@@ -196,7 +196,7 @@ namespace Zappy {
 
         while (true)
         {
-            int nbBytes = recv(_serverSocket, buffer.data(), BUFFER_SIZE, 0);
+            nbBytes = recv(_serverSocket, buffer.data(), BUFFER_SIZE, 0);
             if (nbBytes <= 0)
             {
                 _isConnected = false;
