@@ -1,11 +1,37 @@
 #!/usr/bin/env python3
 
 from zappy_ia.Client import Client
+from zappy_ia import IA
+import argparse
 import sys
-
+ 
+class Argparse(argparse.ArgumentParser):
+    def error(self, message):
+        sys.stderr.write('error: %s\n' % message)
+        self.print_help()
+        sys.exit(84)
+        
 if __name__ == "__main__":
-    client = Client(int(sys.argv[2]))
-    client.input(sys.argv[4] + "\n")
-    print(client.output())
-    print(client.output())
+    argparse = Argparse()
+    port = 0
+    teamName = ""
+    machineName = ""
+
+    argParse.add_argument("-p", type=int, help="port number", required=True)
+    argParse.add_argument("-n", type=str, help="name of the team", required=True)
+    argParse.add_argument("-h", type=str, help="name of the machine", default="localhost")
+    argParse.add_argument("-help", action="help", help="show this help message and exit")
+    
+    args = self.argParse.parse_args()
+    port = args.p
+    teamName = args.n
+    machineName = args.h
+
+    client = Client(port)
+    client.input(teamName + "\n")
+    client.output()
+    serverRes = client.output().split()
+
     client.stopClient()
+    ia = IA(port, machineName, teamName)
+    ia.run()

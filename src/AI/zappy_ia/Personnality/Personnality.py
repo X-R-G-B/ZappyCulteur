@@ -1,5 +1,4 @@
 from enum import Enum
-import random
 
 class State(Enum):
         ERROR = -1
@@ -19,3 +18,12 @@ class Action(Enum):
         TESTING = 11
         WORK = 12
         NOTWORK = 13
+        
+class Personnality:
+        def __init__(self):
+                self.state = State.NONE
+                self.action = Action.NONE
+                
+        def run():
+                pass
+        
