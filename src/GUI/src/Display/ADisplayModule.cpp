@@ -52,4 +52,10 @@ namespace GUI {
     {
         return _windowTitle;
     }
+
+    void ADisplayModule::setWindowMode(WINDOW_MODE windowMode)
+    {
+        _windowMode = windowMode;
+        switchWindowMode();
+    }
 }

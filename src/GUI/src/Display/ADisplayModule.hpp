@@ -24,10 +24,12 @@ namespace GUI {
             void setWindowTitle(std::string windowTitle) override;
             unsigned int getFramerateLimit() override;
             void setFramerateLimit(unsigned int framerateLimit) override;
+            void setWindowMode(WINDOW_MODE windowMode) override;
         protected:
             virtual void clear() = 0;
             virtual void closeWindow() = 0;
             virtual void createWindow() = 0;
+            virtual void switchWindowMode() = 0;
             bool _isOpen;
             unsigned int _width;
             unsigned int _height;

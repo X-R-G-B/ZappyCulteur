@@ -11,7 +11,11 @@ int main(void)
 {
     GUI::SFML sfml(
         nullptr,
-        "Zappy bzz bzz"
+        "Zappy bzz bzz",
+        1920,
+        1080,
+        120,
+        GUI::WINDOW_MODE::FULLSCREEN
     );
 
     while (sfml.isOpen()) {

@@ -36,22 +36,6 @@ namespace GUI {
         return _windowMode;
     }
 
-    void SFML::setWindowStyle()
-    {
-        if (_windowMode == WINDOW_MODE::FULLSCREEN) {
-            _winStyle = 8U;
-        } else if (_windowMode == WINDOW_MODE::BORDERLESS) {
-            _winStyle = 6U;
-        } else {
-            _winStyle = 7U;
-        }
-    }
-
-    void SFML::setWindowMode(WINDOW_MODE windowMode)
-    {
-        _windowMode = windowMode;
-    }
-
     void SFML::createWindow()
     {
         _window.create(sf::VideoMode(_width, _height), _windowTitle, _winStyle);
@@ -72,6 +56,17 @@ namespace GUI {
         _isOpen = false;
     }
 
+    void SFML::setWindowStyle()
+    {
+        if (_windowMode == WINDOW_MODE::FULLSCREEN) {
+            _winStyle = 8U;
+        } else if (_windowMode == WINDOW_MODE::BORDERLESS) {
+            _winStyle = 6U;
+        } else {
+            _winStyle = 7U;
+        }
+    }
+
     void SFML::update()
     {
         clear();
@@ -88,5 +83,12 @@ namespace GUI {
                 closeWindow();
             }
         }
+    }
+
+    void SFML::switchWindowMode()
+    {
+        closeWindow();
+        setWindowStyle();
+        createWindow();
     }
 }

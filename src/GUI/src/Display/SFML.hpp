@@ -31,12 +31,12 @@ namespace GUI {
             void update() override;
             void handleEvents() override;
             WINDOW_MODE getWindowMode();
-            void setWindowMode(WINDOW_MODE windowMode);
         private:
             void clear() override;
             void closeWindow()override;
             void createWindow() override;
             void setWindowStyle();
+            void switchWindowMode() override;
             sf::Event _event;
             sf::Uint32 _winStyle;
             sf::RenderWindow _window;
