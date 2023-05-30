@@ -126,6 +126,8 @@ namespace Zappy {
         #endif
 
         fd_set _readfds;
+        fd_set _writefds;
+        fd_set _exceptfds;
         std::string _ip;
         std::string _port;
         bool _isConnected;

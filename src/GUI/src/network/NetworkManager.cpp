@@ -64,13 +64,17 @@ namespace Zappy {
     {
         if (_isConnected == true) {
             updateFds();
-            if (select(_serverSocket + 1, &_readfds, nullptr, nullptr, &_tv) == -1) {
+            if (select(_serverSocket + 1, &_readfds, &_writefds, &_exceptfds, &_tv) == -1) {
                 throw NetworkException("Error: select failed");
+            }
+            if (FD_ISSET(_serverSocket, &_exceptfds)) {
+                _isConnected = false;
+                return;
             }
             if (FD_ISSET(_serverSocket, &_readfds)) {
                 receiveData();
             }
-            if (_dataToSend.empty() == false) {
+            if (FD_ISSET(_serverSocket, &_writefds) && _dataToSend.empty() == false) {
                 sendData();
             }
         }
@@ -212,5 +216,9 @@ namespace Zappy {
     {
         FD_ZERO(&_readfds);
         FD_SET(_serverSocket, &_readfds);
+        FD_ZERO(&_writefds);
+        FD_SET(_serverSocket, &_writefds);
+        FD_ZERO(&_exceptfds);
+        FD_SET(_serverSocket, &_exceptfds);
     }
 }
