@@ -10,5 +10,3 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/Vector2F.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Vector3F.cpp
 )
-
-add_subdirectory(Display)
