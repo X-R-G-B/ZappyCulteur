@@ -9,4 +9,5 @@ target_sources(
     ${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/AEntity.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/EntitiesManager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Trantorian.cpp
 )
