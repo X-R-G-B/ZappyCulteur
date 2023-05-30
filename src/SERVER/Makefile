@@ -16,13 +16,23 @@ CFLAGS			=															\
 							-Iinclude										\
 							-Ilibs/tinylibc/includes						\
 							-Ilibs/circularbuffer/includes					\
-							-MMD
 
 LDFLAGS			=															\
 							-L $(LIBS_DIR)/circularbuffer/					\
 							-l circularbuffer								\
 							-L $(LIBS_DIR)/tinylibc/						\
 							-l tinylibc
+
+ECHO			=			echo -e
+
+# ----------------------------------------------------------------------------
+# Colors
+# ----------------------------------------------------------------------------
+
+CYAN				:=		'\033[1;36m'
+BLUE				:=		'\033[1;34m'
+GREEN				:=		'\033[1;32m'
+RESET				:=		'\033[0m'
 
 # ----------------------------------------------------------------------------
 # SRC
@@ -135,7 +145,6 @@ SRC				:=															\
 SRC				:=			$(addprefix src/, $(SRC))
 
 OBJ				:=			$(SRC:.c=.o)
-DEPENDS			:=			$(SRC:.c=.d)
 
 RM				?=			rm -f
 
@@ -144,31 +153,38 @@ all: $(LIBS_DIR)/circularbuffer/libcircularbuffer.a
 all: $(TARGET)
 
 $(TARGET):
-	$(MAKE) -j -C . $(TARGET)_fast
+	@$(ECHO) $(CYAN)'==< CFLAGS >==:'$(RESET) '$(CFLAGS)'
+	@$(ECHO) $(CYAN)'==< LDFLAGS >==:'$(RESET) '$(LDFLAGS) '
+	@$(MAKE) -j -S -C . $(TARGET)_fast
+
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(ECHO) $(GREEN)$@$(RESET) '<-' $(CYAN)$<$(RESET)
 
 $(TARGET)_fast:											$(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) -o $(TARGET)
+	@$(ECHO) $(CYAN)'==< COMPILED >==:'$(RESET) $(GREEN)$(TARGET)$(RESET)
 
 $(LIBS_DIR)/tinylibc/libtinylibc.a:						$(LIBS_DIR)
-	$(MAKE) -j -C $(LIBS_DIR)
+	@$(MAKE) -j -S -C $(LIBS_DIR) 1>/dev/null
 
 $(LIBS_DIR)/circularbuffer/libcircularbuffer.a:			$(LIBS_DIR)
-	$(MAKE) -j -C $(LIBS_DIR)
+	@$(MAKE) -j -S -C $(LIBS_DIR) 1>/dev/null
 
 $(LIBS_DIR)_clean:										$(LIBS_DIR)
-	$(MAKE) -C $(LIBS_DIR) clean
+	@$(MAKE) -S -C $(LIBS_DIR) clean 1>/dev/null
 
 clean:													$(LIBS_DIR)_clean
-	$(RM) $(OBJ) $(SRC:.c=.d)
+	@$(RM) $(OBJ) $(SRC:.c=.d)
+	@$(ECHO) $(CYAN)'==< CLEANED >==:'$(RESET)
 
 $(LIBS_DIR)_fclean:										$(LIBS_DIR)
-	$(MAKE) -C $(LIBS_DIR) fclean
+	@$(MAKE) -S -C $(LIBS_DIR) fclean 1>/dev/null
 
 fclean:													clean
 fclean:													$(LIBS_DIR)_fclean
-	$(RM) $(TARGET)
+	@$(RM) $(TARGET)
+	@$(ECHO) $(CYAN)'==< FCLEANED >==:'$(RESET)
 
 re:														fclean
 re:														all
-
--include $(DEPENDS)
