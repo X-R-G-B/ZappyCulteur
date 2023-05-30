@@ -11,15 +11,27 @@ project(
 
 add_executable(${PROJECT_NAME})
 
+set_target_properties(
+    ${PROJECT_NAME}
+    PROPERTIES UNITY_BUILD ON
+)
+
 ##################### CMAKE OPTIONS #######################
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(UNIX)
-    target_compile_options(${PROJECT_NAME} PRIVATE -W -Wall -Wextra)
+    target_compile_options(
+        ${PROJECT_NAME}
+        PRIVATE
+        -W -Wall -Wextra
+    )
 elseif(WIN32)
-    target_compile_options(${PROJECT_NAME} PRIVATE /W4)
+    target_compile_options(
+        ${PROJECT_NAME}
+        PRIVATE /W4
+    )
 endif()
 
 ##################### libs ##########################
@@ -27,7 +39,10 @@ endif()
 include(Dependencies/build-SFML.cmake)
 
 if(WIN32)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ws2_32)
+    target_link_libraries(
+        ${PROJECT_NAME}
+        PRIVATE ws2_32
+    )
 endif()
 
 ##################### SRC #################################
@@ -39,5 +54,6 @@ add_subdirectory(src)
 add_custom_command(
     TARGET ${PROJECT_NAME}
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:${PROJECT_NAME}> ${CMAKE_CURRENT_SOURCE_DIR}
 )
