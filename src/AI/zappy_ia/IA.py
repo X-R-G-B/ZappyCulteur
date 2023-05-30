@@ -1,5 +1,4 @@
 from typing import List
-from zappy_ia.Personnality.Personnality import Personnality
 from zappy_ia.Client import Client
 import time
 
@@ -15,27 +14,32 @@ class IA:
 
         while (self.client.output() != "WELCOME\n"):
             pass
-        self.client.input(self.teamName + "\n")
-        resSetup = self.client.output()
-        while (resSetup == ""):
-            resSetup = self.client.output().split("\n")
+        resSetup = self.requestClient(self.teamName + "\n").split("\n")
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
-    
-    def pathFinding(self, pos: int) -> List[str]:
+
+    def requestClient(self, message: str) -> str:
+        self.client.input(message)
+        res = ""
+        while (res == ""):
+            res = self.client.output()
+        if (res == "ko"):
+            raise Exception("Server responsed ko to : " + message)
+        return res
+
+    def pathFinding(self, pos: int):
         for i in range(1, 9):
-            res = i * (i + 1)
-            if (res == pos):
-                self.cmdPathfinding += ["Forward\n"] * i
-                return self.cmdPathfinding
-            elif (res - i <= pos and pos < res):
-                self.cmdPathfinding += ["Forward\n"] * i
-                self.cmdPathfinding += ["Left\n"]
-                self.cmdPathfinding += ["Forward\n"] * (res - (res - i))
-                return self.cmdPathfinding
-            elif (res + i >= pos and pos > res):
-                self.cmdPathfinding += ["Forward\n"] * i
-                self.cmdPathfinding += ["Right\n"]
-                self.cmdPathfinding += ["Forward\n"] * ((res + i) - res)
-                return self.cmdPathfinding
-        return self.cmdPathfinding
+            self.requestClient("Forward\n")
+            mid = i * (i + 1)
+            if (mid == pos):
+                return
+            if (mid - i <= pos and pos < mid):
+                self.requestClient("Left\n")
+                for x in range(mid - pos):
+                    self.requestClient("Forward\n")
+                return
+            if (mid + i >= pos and pos > mid):
+                self.requestClient("Right\n")
+                for x in range(pos - mid):
+                    self.requestClient("Forward\n")
+                return
