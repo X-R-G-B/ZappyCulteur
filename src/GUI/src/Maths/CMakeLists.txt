@@ -7,8 +7,8 @@ target_include_directories(
 
 target_sources(
     ${PROJECT_NAME} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/Main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Vector2F.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Vector3F.cpp
 )
 
 add_subdirectory(Display)
-add_subdirectory(Maths)
