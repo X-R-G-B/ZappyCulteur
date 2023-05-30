@@ -24,7 +24,7 @@ namespace GUI {
                 std::string windowTitle = "ZappyCulteur",
                 unsigned int width = 1920U,
                 unsigned int height = 1080U,
-                unsigned int framerateLimit = 144U,
+                unsigned int framerateLimit = 60U,
                 WINDOW_MODE windowMode = WINDOW_MODE::FULLSCREEN
             );
             ~SFML();
