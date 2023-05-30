@@ -73,8 +73,7 @@ namespace Zappy {
         bool reconnectToServer();
 
         /**
-         * @brief get the messages received from the server
-         *  
+         * @brief get the messages received from the server and clean it from the networkManger
          * @return std::vector<std::string> 
          */
         std::vector<std::string> getServerMessages();
