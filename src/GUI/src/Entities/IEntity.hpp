@@ -11,6 +11,13 @@
 
 namespace GUI {
     namespace Entities {
+
+        enum class EntityType {
+            ENVIROMENT,
+            RESOURCE,
+            TRANTORIAN,
+        };
+
         class IEntity {
             public:
                 virtual ~IEntity() = default;
@@ -21,6 +28,7 @@ namespace GUI {
                 virtual void setRotation(const Vector2F &rotation) = 0;
                 virtual GUI::Vector2F getScale() const = 0;
                 virtual void setScale(const Vector2F &scale) = 0;
+                virtual EntityType getType() const = 0;
         };
     }
 }

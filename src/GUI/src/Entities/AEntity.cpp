@@ -38,5 +38,10 @@ namespace GUI {
         {
             _scale = scale;
         }
+
+        EntityType AEntity::getType() const
+        {
+            return _type;
+        }
     }
 }
