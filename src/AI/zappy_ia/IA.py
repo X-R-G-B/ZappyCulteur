@@ -1,6 +1,7 @@
 from typing import List
 from zappy_ia.Personnality.Personnality import Personnality
 from zappy_ia.Client import Client
+import time
 
 class IA:
     def __init__(self, port: int, machineName: str, teamName: str):
@@ -19,7 +20,6 @@ class IA:
         resSetup = self.client.output()
         while (resSetup == ""):
             resSetup = self.client.output().split("\n")
-            pass
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
     

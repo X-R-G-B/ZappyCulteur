@@ -13,6 +13,8 @@ class Client:
         self.isConnected = False
         self.port = port
 
+        self.inTreatment = 0
+
         self.stopLock = threading.Lock()
         self.stop = False
 
@@ -50,20 +52,22 @@ class Client:
                     self.receivedLock.acquire()
                     self.messReceived.append(message)
                     self.receivedLock.release()
+                    if (self.inTreatment > 0):
+                        self.inTreatment -= 1
                 else:
                     self.client_socket.close()
                     self.isConnected = False
 
     def _write(self, write_sockets):
         for socket in write_sockets:
-            if (socket == self.client_socket):
+            if (socket == self.client_socket and self.inTreatment < 10):
                 self.sendLock.acquire()
                 if (len(self.messToSend) != 0):
                     message = self.messToSend[-1]
                     self.messToSend = self.messToSend[:-1]
                     self.sendLock.release()
                     if (message != '\n'):
-                        print("Send :" + message, end="")
+                        self.inTreatment += 1
                         self.client_socket.sendall(message.encode())
                 else:
                     self.sendLock.release()
@@ -85,9 +89,6 @@ class Client:
         else:
             self.receivedLock.release()
         time.sleep(0.1)
-        if (res != ""):
-            print("Recv: ", end="")
-            print(res.split("\n")[:-1])
         return res
 
     def stopClient(self):
