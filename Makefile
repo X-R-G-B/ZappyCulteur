@@ -42,9 +42,7 @@ $(TARGET_server)_clean:
 	$(MAKE) -C $(TARGET_server_DIR) clean
 
 $(TARGET_gui)_clean:
-	if [ -d $(TARGET_gui_DIR)/build ]; then \
-		$(MAKE) -C $(TARGET_gui_DIR)/build clean; \
-	fi
+	if [ -d $(TARGET_gui_DIR)/build ]; then $(RM) -r $(TARGET_gui_DIR)/build; fi
 
 $(TARGET_ai)_clean:
 	$(MAKE) -C $(TARGET_ai_DIR) clean
@@ -57,9 +55,6 @@ $(TARGET_server)_fclean:	$(TARGET_server)_clean
 	$(MAKE) -C $(TARGET_server_DIR) fclean
 
 $(TARGET_gui)_fclean:		$(TARGET_gui)_clean
-	if [ -d $(TARGET_gui_DIR)/build ]; then \
-		$(RM) -r $(TARGET_gui_DIR)/build; \
-	fi
 
 $(TARGET_ai)_fclean:		$(TARGET_ai)_clean
 	$(MAKE) -C $(TARGET_ai_DIR) fclean
