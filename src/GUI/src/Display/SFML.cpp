@@ -31,16 +31,17 @@ namespace GUI {
         closeWindow();
     }
 
-    WINDOW_MODE SFML::getWindowMode()
-    {
-        return _windowMode;
-    }
-
     void SFML::createWindow()
     {
         _window.create(sf::VideoMode(_width, _height), _windowTitle, _winStyle);
         _window.setFramerateLimit(_framerateLimit);
         _isOpen = true;
+    }
+
+    void SFML::setFramerateLimit(unsigned int framerateLimit)
+    {
+        _framerateLimit = framerateLimit;
+        _window.setFramerateLimit(_framerateLimit);
     }
 
     void SFML::clear()
@@ -59,11 +60,11 @@ namespace GUI {
     void SFML::setWindowStyle()
     {
         if (_windowMode == WINDOW_MODE::FULLSCREEN) {
-            _winStyle = 8U;
+            _winStyle = sf::Style::Fullscreen;
         } else if (_windowMode == WINDOW_MODE::BORDERLESS) {
-            _winStyle = 6U;
+            _winStyle = sf::Style::None;
         } else {
-            _winStyle = 7U;
+            _winStyle = sf::Style::Default;
         }
     }
 

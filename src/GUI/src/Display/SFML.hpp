@@ -28,15 +28,15 @@ namespace GUI {
                 WINDOW_MODE windowMode = WINDOW_MODE::FULLSCREEN
             );
             ~SFML();
-            void update() override;
-            void handleEvents() override;
-            WINDOW_MODE getWindowMode();
+            void update() final;
+            void handleEvents() final;
+            void setFramerateLimit(unsigned int framerateLimit) final;
         private:
-            void clear() override;
-            void closeWindow()override;
-            void createWindow() override;
+            void clear() final;
+            void closeWindow()final;
+            void createWindow() final;
+            void switchWindowMode() final;
             void setWindowStyle();
-            void switchWindowMode() override;
             sf::Event _event;
             sf::Uint32 _winStyle;
             sf::RenderWindow _window;
