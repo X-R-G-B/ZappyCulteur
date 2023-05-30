@@ -15,16 +15,16 @@
 namespace GUI {
     class ADisplayModule : public IDisplayModule {
         public:
-            bool isOpen() override;
-            unsigned int getWidth() override;
-            unsigned int getHeigth() override;
-            void setWidth(unsigned int width) override;
-            void setHeight(unsigned int height) override;
-            std::string getWindowTitle() override;
-            void setWindowTitle(std::string windowTitle) override;
-            unsigned int getFramerateLimit() override;
-            void setFramerateLimit(unsigned int framerateLimit) override;
-            void setWindowMode(WINDOW_MODE windowMode) override;
+            bool isOpen() final;
+            unsigned int getWidth() final;
+            unsigned int getHeigth() final;
+            void setWidth(unsigned int width) final;
+            void setHeight(unsigned int height) final;
+            std::string getWindowTitle() final;
+            void setWindowTitle(std::string windowTitle) final;
+            unsigned int getFramerateLimit() final;
+            void setWindowMode(WINDOW_MODE windowMode) final;
+            WINDOW_MODE getWindowMode() final;
         protected:
             virtual void clear() = 0;
             virtual void closeWindow() = 0;
@@ -34,7 +34,7 @@ namespace GUI {
             unsigned int _width;
             unsigned int _height;
             unsigned int _framerateLimit;
-            std::string _windowTitle = "ZappyCulteur";
-            WINDOW_MODE _windowMode = WINDOW_MODE::FULLSCREEN;
+            std::string _windowTitle;
+            WINDOW_MODE _windowMode;
     };
 }
