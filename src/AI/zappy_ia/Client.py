@@ -7,40 +7,42 @@ import threading
 import time
 
 class Client:
-    def __init__(self, port: int, machineName: str = "localhost"):
+    def __init__(self, port: int, server_ip: str = "localhost"):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_ip = "127.0.0.1"
-        self.messToSend = "\n"
-        self.messReceived = "\n"
-        self.machineName = machineName
+        self.server_ip = server_ip
         self.isConnected = False
         self.port = port
 
         self.stopLock = threading.Lock()
         self.stop = False
+
         self.receivedLock = threading.Lock()
+        self.messReceived = []
+
         self.sendLock = threading.Lock()
-        thread = threading.Thread(target=self.connect)
-        thread.start()
+        self.messToSend = []
+
+        self.thread = threading.Thread(target=self.connect)
+        self.thread.start()
         time.sleep(0.1)
 
     def connect(self):
-        self.client_socket.connect((self.machineName, self.port))
+        self.client_socket.connect((self.server_ip, self.port))
         self.isConnected = True
 
-        self.client_socket.setblocking(0)
-        
+        self.client_socket.setblocking(False)
+
         self.stopLock.acquire()
         while self.isConnected and self.stop == False:
             self.stopLock.release()
             read_sockets, write_sockets, _ = select.select([self.client_socket], [self.client_socket], [], 0)
-            self.read(read_sockets)
-            self.write(write_sockets)
+            self._read(read_sockets)
+            self._write(write_sockets)
             self.stopLock.acquire()
 
         self.client_socket.close()
 
-    def read(self, read_sockets):
+    def _read(self, read_sockets):
         for socket in read_sockets:
             if (socket == self.client_socket):
                 message = socket.recv(2048).decode()
@@ -52,24 +54,25 @@ class Client:
                     self.client_socket.close()
                     self.isConnected = False
 
-    def write(self, write_sockets):
+    def _write(self, write_sockets):
         for socket in write_sockets:
             if (socket == self.client_socket):
                 self.sendLock.acquire()
-                message = self.messToSend
-                self.messToSend = "\n"
+                message = self.messToSend[-1]
+                self.messToSend = self.messToSend[:-1]
                 self.sendLock.release()
                 if (message != '\n'):
                     self.client_socket.sendall(message.encode())
 
     def input(self, message: str):
         self.sendLock.acquire()
-        self.messToSend = message
+        self.messToSend.append(message)
         self.sendLock.release()
 
     def output(self) -> str:
         self.receivedLock.acquire()
-        message = self.messReceived
+        message = self.messReceived[-1]
+        self.messReceived = self.messReceived[:-1]
         self.receivedLock.release()
         if (message != "" or message != "\n"):
             res = message

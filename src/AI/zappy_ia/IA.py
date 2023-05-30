@@ -1,4 +1,5 @@
-from zappy_ia.Personnality import Personnality
+from typing import List
+from zappy_ia.Personnality.Personnality import Personnality
 from zappy_ia.Client import Client
 
 class IA:
@@ -9,9 +10,10 @@ class IA:
         self.mapSize = [0, 0]
         self.clientNb = 0
         self.cmdPathfinding = []
-        self.personnality = Personnality.Personnality()
+        self.personnality = Personnality()
         self.client = Client(port, machineName)
 
+        print(self.client.output())
         self.client.input(self.teamName + "\n")
         print("Revc: " + self.client.output())
         resSetup = self.client.output().split("\n")
@@ -20,8 +22,9 @@ class IA:
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
     
-    def pathfinding(self, pos: int) -> [str]:
+    def pathfinding(self, pos: int) -> List[str]:
         for i in range(1, 9):
+            res = i * (i + 1)
             if (res == pos):
                 self.cmdPathfinding += ["Forward\n"] * i
                 return self.cmdPathfinding
