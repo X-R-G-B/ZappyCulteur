@@ -21,7 +21,7 @@ if __name__ == "__main__":
     argParse.add_argument("-n", type=str, help="name of the team", required=True)
     argParse.add_argument("-h", type=str, help="name of the machine", default="localhost")
     argParse.add_argument("-help", action="help", help="show this help message and exit")
-    
+
     args = argParse.parse_args()
     port = args.p
     teamName = args.n
