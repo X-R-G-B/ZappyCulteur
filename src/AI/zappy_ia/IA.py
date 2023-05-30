@@ -6,7 +6,7 @@ class IA:
         self.port = port
         self.machineName = machineName
         self.teamName = teamName
-        self.personnality = Personnality()
+        self.personnality = Personnality.Personnality()
         self.client = Client(port, machineName)
     
     def pathfinding(self, pos: int) -> str:
