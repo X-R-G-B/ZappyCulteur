@@ -48,7 +48,7 @@ class Client:
                 message = socket.recv(2048).decode()
                 if message:
                     self.receivedLock.acquire()
-                    self.messReceived = message
+                    self.messReceived.append(message)
                     self.receivedLock.release()
                 else:
                     self.client_socket.close()
@@ -58,11 +58,15 @@ class Client:
         for socket in write_sockets:
             if (socket == self.client_socket):
                 self.sendLock.acquire()
-                message = self.messToSend[-1]
-                self.messToSend = self.messToSend[:-1]
-                self.sendLock.release()
-                if (message != '\n'):
-                    self.client_socket.sendall(message.encode())
+                if (len(self.messToSend) != 0):
+                    message = self.messToSend[-1]
+                    self.messToSend = self.messToSend[:-1]
+                    self.sendLock.release()
+                    if (message != '\n'):
+                        print("Send :" + message, end="")
+                        self.client_socket.sendall(message.encode())
+                else:
+                    self.sendLock.release()
 
     def input(self, message: str):
         self.sendLock.acquire()
@@ -70,15 +74,20 @@ class Client:
         self.sendLock.release()
 
     def output(self) -> str:
+        res = ""
         self.receivedLock.acquire()
-        message = self.messReceived[-1]
-        self.messReceived = self.messReceived[:-1]
-        self.receivedLock.release()
-        if (message != "" or message != "\n"):
-            res = message
+        if (len(self.messReceived) != 0):
+            message = self.messReceived[-1]
+            self.messReceived = self.messReceived[:-1]
+            self.receivedLock.release()
+            if (message != "" or message != "\n"):
+                res = message
         else:
-            res = ""
+            self.receivedLock.release()
         time.sleep(0.1)
+        if (res != ""):
+            print("Recv: ", end="")
+            print(res.split("\n")[:-1])
         return res
 
     def stopClient(self):

@@ -13,12 +13,13 @@ class IA:
         self.personnality = Personnality()
         self.client = Client(port, machineName)
 
-        print(self.client.output())
+        while (self.client.output() != "WELCOME\n"):
+            pass
         self.client.input(self.teamName + "\n")
-        print("Revc: " + self.client.output())
-        resSetup = self.client.output().split("\n")
-        print("Revc: ", end="")
-        print(resSetup)
+        resSetup = self.client.output()
+        while (resSetup == ""):
+            resSetup = self.client.output().split("\n")
+            pass
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
     
