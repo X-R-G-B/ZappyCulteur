@@ -14,7 +14,7 @@ int main(void)
         "Zappy bzz bzz",
         1920,
         1080,
-        120,
+        60,
         GUI::WINDOW_MODE::FULLSCREEN
     );
 
