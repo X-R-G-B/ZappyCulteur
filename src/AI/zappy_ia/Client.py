@@ -50,7 +50,7 @@ class Client:
                 message = socket.recv(2048).decode()
                 if message:
                     self.receivedLock.acquire()
-                    self.messReceived.append(message)
+                    self.messReceived.insert(0, message)
                     self.receivedLock.release()
                     if (self.inTreatment > 0):
                         self.inTreatment -= 1
@@ -74,7 +74,7 @@ class Client:
 
     def input(self, message: str):
         self.sendLock.acquire()
-        self.messToSend.append(message)
+        self.messToSend.insert(0, message)
         self.sendLock.release()
 
     def output(self) -> str:
