@@ -1,0 +1,6 @@
+obj/
+*.a
+*.o
+*.gcno
+*.gcda
+bin_test
