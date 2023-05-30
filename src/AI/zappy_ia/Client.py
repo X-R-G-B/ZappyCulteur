@@ -37,14 +37,15 @@ class Client:
         self.stopLock.acquire()
         while self.isConnected and self.stop == False:
             self.stopLock.release()
-            read_sockets, write_sockets, _ = select.select([self.client_socket], [self.client_socket], [], 0)
-            self._read(read_sockets)
-            self._write(write_sockets)
+            read_sockets, write_sockets, error_sockets = select.select([self.client_socket], [self.client_socket], [self.client_socket], 0)
+            self.read(read_sockets)
+            self.write(write_sockets)
+            self.handleError(error_sockets)
             self.stopLock.acquire()
 
         self.client_socket.close()
 
-    def _read(self, read_sockets):
+    def read(self, read_sockets):
         for socket in read_sockets:
             if (socket == self.client_socket):
                 message = socket.recv(2048).decode()
@@ -58,7 +59,7 @@ class Client:
                     self.client_socket.close()
                     self.isConnected = False
 
-    def _write(self, write_sockets):
+    def write(self, write_sockets):
         for socket in write_sockets:
             if (socket == self.client_socket and self.inTreatment < 10):
                 self.sendLock.acquire()
@@ -71,6 +72,11 @@ class Client:
                         self.client_socket.sendall(message.encode())
                 else:
                     self.sendLock.release()
+
+    def handleError(self, error_sockets):
+        for socket in error_sockets:
+            if (socket == self.client_socket):
+                raise Exception("Socket error")
 
     def input(self, message: str):
         self.sendLock.acquire()
