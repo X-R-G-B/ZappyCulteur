@@ -11,12 +11,15 @@ namespace GUI {
     namespace Parser {
 
         
-        Parser::Parser(std::shared_ptr<EntityManager> entityManager)
+        Parser::Parser(std::shared_ptr<EntityManager> entityManager) :
             // Is good implementation ?
-            : _entityManager(entityManager)
-        {
-            _toCall[COMMAND_TYPE::MAP_SIZE] = &setMapSize;
-        }
+            //if you prefer, use std::bind to bind the method
+            _entityManager(entityManager),
+            _commandToCall({
+                {COMMAND_TYPE::MAP_SIZE, &Parser::setMapSize},
+                {COMMAND_TYPE::PLAYER_LEVEL, &Parser::setPlayerLevel}
+            })
+        {}
 
         Parser::~Parser()
         {
@@ -39,6 +42,10 @@ namespace GUI {
         {
             return (true);
         }
-        
+
+        bool Parser::setPlayerLevel(std::string &command)
+        {
+            return (true);
+        }
     }
 }

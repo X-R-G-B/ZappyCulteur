@@ -54,9 +54,10 @@ namespace GUI {
             protected:
             private:
                 bool setMapSize(std::string &command);
+                bool setPlayerLevel(std::string &command);
 
                 std::shared_ptr<EntityManager> _entityManager;
-                std::unordered_map<COMMAND_TYPE, std::function<bool(GUI::Parser::Parser *)(std::string &)>> _toCall;
+                const std::unordered_map<COMMAND_TYPE, std::function<bool(Parser&, std::string&)>> _commandToCall;
         };
     }
 }
