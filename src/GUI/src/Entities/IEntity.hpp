@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <string>
 #include "Vector2F.hpp"
 
 namespace GUI {
@@ -29,6 +30,7 @@ namespace GUI {
                 virtual GUI::Vector2F getScale() const = 0;
                 virtual void setScale(const Vector2F &scale) = 0;
                 virtual EntityType getType() const = 0;
+                virtual std::string getId() const = 0;
         };
     }
 }

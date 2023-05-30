@@ -21,11 +21,13 @@ namespace GUI {
                 GUI::Vector2F getScale() const override;
                 void setScale(const Vector2F &scale) override;
                 EntityType getType() const override;
+                std::string getId() const override;
             protected:
                 Vector2F _position;
                 Vector2F _rotation;
                 Vector2F _scale;
                 EntityType _type;
+                std::string _id;
         };
     }
 }

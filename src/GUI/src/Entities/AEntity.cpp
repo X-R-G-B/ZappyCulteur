@@ -43,5 +43,10 @@ namespace GUI {
         {
             return _type;
         }
+
+        std::string AEntity::getId() const
+        {
+            return _id;
+        }
     }
 }
