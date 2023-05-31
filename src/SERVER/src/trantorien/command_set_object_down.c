@@ -23,9 +23,9 @@ int command_set_object_down(trantorien_t *trantorien, zappy_t *zappy,
         trantorien->ressources[action->param.object] -= 1;
         map_index_x_y_to_i(zappy->map, trantorien->x, trantorien->y, &i);
         zappy->map[i].tiles->ressources[action->param.object] += 1;
-        ntw_send(cl, "ok\n");
+        circular_buffer_write(cl->write_to_outside, "ok\n");
     } else {
-        ntw_send(cl, "ko\n");
+        circular_buffer_write(cl->write_to_outside, "ko\n");
     }
     return EXIT_SUCCESS;
 }
