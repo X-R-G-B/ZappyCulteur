@@ -11,7 +11,7 @@
 #include "trantorien.h"
 #include "internal.h"
 
-static void trantorian_need_update(trantorien_t *trantorien, zappy_t *zappy,
+static void trantorien_need_update(trantorien_t *trantorien, zappy_t *zappy,
     ntw_client_t *cl, action_t *action)
 {
     // TODO
@@ -29,7 +29,7 @@ void trantorien_reduce_freq(trantorien_t *trantorien, zappy_t *zappy,
         }
         trantorien->actions[i]->freq--;
         if (trantorien->actions[i]->freq == 0) {
-            trantorian_need_update(trantorien, zappy, cl,
+            trantorien_need_update(trantorien, zappy, cl,
                 trantorien->actions[i]);
             action_destroy(trantorien->actions[i]);
             trantorien->actions[i] = NULL;
