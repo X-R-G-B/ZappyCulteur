@@ -6,10 +6,11 @@
 */
 
 #include "AEntity.hpp"
+#include <iostream>
 
 namespace GUI {
     namespace Entities {
-        GUI::Vector2F AEntity::getPosition() const
+        const GUI::Vector2F &AEntity::getPosition() const
         {
             return _position;
         }
@@ -19,7 +20,7 @@ namespace GUI {
             _position = position;
         }
 
-        GUI::Vector2F AEntity::getRotation() const
+        const GUI::Vector2F &AEntity::getRotation() const
         {
             return _rotation;
         }
@@ -29,7 +30,7 @@ namespace GUI {
             _rotation = rotation;
         }
 
-        GUI::Vector2F AEntity::getScale() const
+        const GUI::Vector2F &AEntity::getScale() const
         {
             return _scale;
         }
@@ -39,14 +40,34 @@ namespace GUI {
             _scale = scale;
         }
 
-        EntityType AEntity::getType() const
+        const EntityType &AEntity::getType() const
         {
             return _type;
         }
 
-        std::string AEntity::getId() const
+        const std::string &AEntity::getId() const
         {
             return _id;
+        }
+
+        void AEntity::setOrientation(const EntityOrientation &orientation)
+        {
+            _orientation = orientation;
+        }
+
+        const EntityOrientation &AEntity::getOrientation() const
+        {
+            return _orientation;
+        }
+
+        const std::vector<Components::CompType> &AEntity::getCompType() const
+        {
+            return _entityCompType;
+        }
+
+        const std::vector<std::shared_ptr<Components::IComponent>> &AEntity::getComponents() const
+        {
+            return _components;
         }
     }
 }

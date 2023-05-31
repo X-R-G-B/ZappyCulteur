@@ -14,20 +14,27 @@ namespace GUI {
         class AEntity : public IEntity {
             public:
                 ~AEntity() = default;
-                GUI::Vector2F getPosition() const override;
-                void setPosition(const Vector2F &position) override;
-                GUI::Vector2F getRotation() const override;
-                void setRotation(const Vector2F &rotation) override;
-                GUI::Vector2F getScale() const override;
-                void setScale(const Vector2F &scale) override;
-                EntityType getType() const override;
-                std::string getId() const override;
+                const GUI::Vector2F &getPosition() const final;
+                void setPosition(const Vector2F &position) final;
+                const GUI::Vector2F &getRotation() const final;
+                void setRotation(const Vector2F &rotation) final;
+                const GUI::Vector2F &getScale() const final;
+                void setScale(const Vector2F &scale) final;
+                const EntityType &getType() const final;
+                const std::string &getId() const final;
+                void setOrientation(const EntityOrientation &orientation) final;
+                const EntityOrientation &getOrientation() const final;
+                const std::vector<Components::CompType> &getCompType() const final;
+                const std::vector<std::shared_ptr<Components::IComponent>> &getComponents() const final;
             protected:
                 Vector2F _position;
                 Vector2F _rotation;
                 Vector2F _scale;
                 EntityType _type;
                 std::string _id;
+                EntityOrientation _orientation;
+                std::vector<Components::CompType> _entityCompType;
+                std::vector<std::shared_ptr<Components::IComponent>> _components;
         };
     }
 }
