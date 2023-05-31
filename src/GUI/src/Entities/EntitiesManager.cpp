@@ -21,7 +21,6 @@ namespace GUI {
         void EntitiesManager::update()
         {
             for (auto &entity : _entities) {
-                //update the rect, the pos if needed, etc...
                 entity->update();
             }
         }
@@ -36,47 +35,62 @@ namespace GUI {
             return _entities;
         }
 
-        const std::shared_ptr<IEntity> &EntitiesManager::getEntityById(
-            EntityType type, const std::string &id) const
+        const std::shared_ptr<IEntity> &EntitiesManager::getEntityById(const std::string &id) const
         {
             for (auto &entity : _entities) {
-                if (entity->getType() == type && entity->getId() == id) {
+                if (entity->getId() == id) {
                     return entity;
                 }
             }
-            throw EntitiesManagerException("No entity found with this id");
+            throw EntitiesManagerException("No entity with this id");
+        }
+
+        const std::vector<std::shared_ptr<IEntity>> &EntitiesManager::getEntitiesByType(EntityType type) const
+        {
+            std::vector<std::shared_ptr<IEntity>> entities;
+
+            for (auto &entity : _entities) {
+                if (entity->getType() == type) {
+                    entities.push_back(entity);
+                }
+            }
+            return entities;
+        }
+
+        const std::vector<std::shared_ptr<IEntity>> &EntitiesManager::getEntitiesByCompType(Components::CompType type) const
+        {
+            std::vector<std::shared_ptr<IEntity>> entities;
+
+            for (auto &entity : _entities) {
+                for (auto &compType : entity->getCompType()) {
+                    if (compType == type) {
+                        entities.push_back(entity);
+                    }
+                }
+            }
+            return entities;
+        }
+
+        void EntitiesManager::killEntityById(const std::string &id)
+        {
+            for (auto iterator = _entities.begin(); iterator != _entities.end(); iterator++) {
+                if ((*iterator)->getId() == id) {
+                    _entities.erase(iterator);
+                    return;
+                }
+            }
+            throw EntitiesManagerException("No entity with this id");
         }
 
         void EntitiesManager::killEntitiesByType(EntityType type)
         {
-            for (auto &entity : _entities) {
-                if (entity->getType() == type) {
-                    entity.reset();
-                }
-            }
-        }
-
-        void EntitiesManager::killEntityById(EntityType type, const std::string &id)
-        {
-            for (auto &entity : _entities) {
-                if (entity->getType() == type && entity->getId() == id) {
-                    entity.reset();
+            for (auto iterator = _entities.begin(); iterator != _entities.end(); iterator++) {
+                if ((*iterator)->getType() == type) {
+                    _entities.erase(iterator);
                     return;
                 }
             }
-        }
-
-        std::unique_ptr<std::vector<std::shared_ptr<IEntity>>>
-            EntitiesManager::getEntitiesByType(EntityType type) const
-        {
-            auto entities = std::make_unique<std::vector<std::shared_ptr<IEntity>>>();
-
-            for (auto &entity : _entities) {
-                if (entity->getType() == type) {
-                    entities->push_back(entity);
-                }
-            }
-            return entities;
+            throw EntitiesManagerException("No entity with this type");
         }
     }
 }

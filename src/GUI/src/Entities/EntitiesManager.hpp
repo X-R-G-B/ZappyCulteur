@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 #include "IEntity.hpp"
+#include "IComponent.hpp"
 
 namespace GUI {
     namespace Entities {
@@ -29,12 +30,13 @@ namespace GUI {
                 EntitiesManager() = default;
                 ~EntitiesManager() = default;
                 void update();
+                void killEntitiesByType(EntityType type);
+                void killEntityById(const std::string &id);
                 void addEntity(const std::shared_ptr<IEntity> &entity);
                 const std::vector<std::shared_ptr<IEntity>> &getEntities() const;
-                const std::shared_ptr<IEntity> &getEntityById(EntityType type, const std::string &id) const;
-                void killEntitiesByType(EntityType type);
-                void killEntityById(EntityType type, const std::string &id);
-                std::unique_ptr<std::vector<std::shared_ptr<IEntity>>> getEntitiesByType(EntityType type) const;
+                const std::shared_ptr<IEntity> &getEntityById(const std::string &id) const;
+                const std::vector<std::shared_ptr<IEntity>> &getEntitiesByType(EntityType type) const;
+                const std::vector<std::shared_ptr<IEntity>> &getEntitiesByCompType(Components::CompType type) const;
             private:
                 std::vector<std::shared_ptr<IEntity>> _entities;
         };
