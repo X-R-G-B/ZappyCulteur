@@ -28,6 +28,12 @@ class IA:
         return res
 
     def pathFinding(self, pos: int):
+        """
+        This function move the ia to the pos in parameters
+
+        Parameters:
+        pos (int): pos which represent an index in the array of tile return by server to command look
+        """
         for i in range(1, 9):
             self.requestClient("Forward\n")
             mid = i * (i + 1)
