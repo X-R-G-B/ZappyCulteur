@@ -7,11 +7,11 @@
 
 #include "App.hpp"
 
-int main(int ac, char **av)
+int main(int ac, const char **av)
 {
     GUI::App app;
     int returnValue = 0;
 
-    // app(ac, av);
+    app(ac, av);
     return (returnValue);
 }
