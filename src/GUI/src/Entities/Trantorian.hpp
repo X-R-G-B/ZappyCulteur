@@ -7,23 +7,32 @@
 
 #pragma once
 
+#include <vector>
+#include <SFML/Graphics.hpp>
 #include "AEntity.hpp"
+#include "Sprite.hpp"
 
 namespace GUI {
     namespace Entities {
         class Trantorian : public AEntity {
             public:
-                Trantorian(const std::string &id);
+                Trantorian(const std::string &id,
+                    const std::string &team,
+                    const Vector2F &position
+                );
                 ~Trantorian() = default;
-                void update() override;
+                void update() final;
                 void setLevel(int level);
                 int getLevel() const;
                 void setTeam(const std::string &team);
                 const std::string &getTeam() const;
             private:
+                void initSprites();
                 int _level;
                 std::string _team;
-                //sprites, textures, 3D models, sounds, rect, etc...
+                sf::Texture _texture;
+                Vector2F _direction;
+                float _speed;
         };
     }
 }
