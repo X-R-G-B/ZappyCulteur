@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import List, Tuple
 from zappy_ia.Client import Client
-from typing import Union
 import time
 
 class Element(Enum):
@@ -41,23 +40,27 @@ class IA:
 
         while (self.client.output() != "WELCOME\n"):
             pass
-        resSetup = self.requestClient(self.teamName + "\n").split("\n")
+        self.client.input(self.teamName + "\n")
+        resSetup = ""
+        while (resSetup == ""):
+            resSetup = self.client.output()
+        resSetup = resSetup.split("\n")
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
 
-    def requestClient(self, command: Union[Command, str]) -> str:
+    def requestClient(self, command: Command) -> str:
         """
         This function send command to the server, wait the response and return it
 
         Parameters:
-        command (Union[Command, str]): command to send to the server, can be an enum Command (which is a string value) or a string."
+        command (Command): command to send to the server."
         """
-        self.client.input(str(command))
+        self.client.input(command.value)
         res = ""
         while (res == ""):
             res = self.client.output()
         if (res == "ko"):
-            raise Exception("Server responsed ko to : " + str(command))
+            raise Exception("Server responsed ko to : " + command.value)
         return res
 
     def look(self):
