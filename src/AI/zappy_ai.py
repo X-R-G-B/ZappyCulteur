@@ -27,4 +27,4 @@ if __name__ == "__main__":
     teamName = args.n
     machineName = args.h
 
-    IA(port, machineName, teamName)
+    bee = IA(port, machineName, teamName)
