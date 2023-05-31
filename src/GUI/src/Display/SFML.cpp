@@ -84,7 +84,7 @@ namespace GUI {
 
         for (auto &sprite : *sprites) {
             for (auto &spriteComponent : sprite.second) {
-                auto spritePtr = std::dynamic_pointer_cast<GUI::Components::Sprite>(spriteComponent);
+                auto spritePtr = std::static_pointer_cast<GUI::Components::Sprite>(spriteComponent);
                 if (spritePtr == nullptr) {
                     continue;
                 }
