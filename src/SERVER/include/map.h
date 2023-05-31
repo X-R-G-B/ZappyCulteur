@@ -25,13 +25,7 @@ enum ressource_e {
 
 struct map_tile_s {
     list_t *trantors;
-    int nb_food;
-    int nb_linemate;
-    int nb_deraumere;
-    int nb_sibur;
-    int nb_mendiane;
-    int nb_phiras;
-    int nb_thystame;
+    int ressources[MAX_NB_RESOURCES];
 };
 typedef struct map_tile_s map_tile_t;
 

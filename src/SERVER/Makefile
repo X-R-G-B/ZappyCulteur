@@ -122,7 +122,8 @@ SRC_TRNT		:=															\
 							trantorien_destroy.c							\
 							trantorien_init.c								\
 							trantorien_is_cmd_availible.c					\
-							trantorien_place_cmd.c
+							trantorien_place_cmd.c							\
+							trantorien_reduce_freq.c
 SRC_TRNT		:=			$(addprefix trantorien/, $(SRC_TRNT))
 
 # ----------------------------------------------------------------------------
