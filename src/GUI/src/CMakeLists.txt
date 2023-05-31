@@ -8,7 +8,11 @@ target_include_directories(
 
 target_sources(
     ${PROJECT_NAME} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/App.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/EntityManager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/DisplayModule.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Parser.cpp
 )
 
 add_subdirectory(network)
