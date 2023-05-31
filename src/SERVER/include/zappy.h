@@ -58,9 +58,4 @@ bool update_client_connected(zappy_t *zappy, ntw_client_t *cl);
 bool update_ai_cmd(zappy_t *zappy, ntw_client_t *cl);
 bool update_graphic_cmd(zappy_t *zappy, ntw_client_t *cl);
 
-// update by types in state connected
-
-bool update_ai_cmd(ntw_t *ntw, ntw_client_t *cl, args_t *args);
-bool update_graphic_cmd(ntw_t *ntw, ntw_client_t *cl, args_t *args);
-
 #endif
