@@ -59,10 +59,11 @@ void on_new_conn(ntw_client_t *new_client);
 ** @brief Function called each frame
 **
 ** @param zappy the zappy
+** @param new_freq if it is a new freq time
 **
 ** @return false if the loop should be called next time
 **/
-bool loop(zappy_t *zappy);
+bool loop(zappy_t *zappy, bool new_freq);
 /**
 ** @brief Function to get an uniq int
 **

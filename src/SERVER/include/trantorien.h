@@ -72,6 +72,11 @@ bool trantorien_add_act_take(trantorien_t *trantorien,
 bool trantorien_add_act_set(trantorien_t *trantorien, enum ressource_e object);
 bool trantorien_add_act(trantorien_t *trantorien, enum cmd_code_e);
 
+typedef struct zappy_s zappy_t;
+
+void trantorien_reduce_freq(trantorien_t *trantorien, zappy_t *zappy,
+    ntw_client_t *cl);
+
 /**
 ** @brief check if the trantorien can do an incantation
 **
