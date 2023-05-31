@@ -79,7 +79,7 @@ class IA:
             if (mid + i >= pos and pos > mid):
                 self.requestClient(Command.RIGHT)
                 for x in range(pos - mid):
-                    self.requestClient(Command.Forward)
+                    self.requestClient(Command.FORWARD)
                 return
 
     def takeElementInLastLook(self, element: Element):
