@@ -44,8 +44,8 @@ namespace GUI {
                 initTexture();
                 float top = _position.y - (static_cast<float>(_height) / 2) * 92;
                 float left = _position.x - (static_cast<float>(_width) / 2) * 92;
-                for (int i = 0; i < _width; i++) {
-                    for (int j = 0; j < _height; j++) {
+                for (unsigned int i = 0; i < _width; i++) {
+                    for (unsigned int j = 0; j < _height; j++) {
                         if ((i + j) % 2 == 0) {
                             createDarkFloor(
                                 Vector2F(left + i * 92, top + j * 92),
