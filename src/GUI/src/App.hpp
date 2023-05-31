@@ -9,6 +9,7 @@
 
 #include "EntityManager.hpp"
 #include "DisplayModule.hpp"
+#include "NetworkManager.hpp"
 #include "Parser.hpp"
 
 namespace GUI {
@@ -21,11 +22,17 @@ namespace GUI {
 
         protected:
         private:
+            void launch();
+        
+            void launch(const std::string &ip, const std::string &port);
+
+            void printHelp();
             // TODO DisplayModule
             DisplayModule _displayModule;
             // TODO Parser
             Parser _parser;
             // TODO EntityManager
             EntityManager _entityManager;
+            NetworkManager _networkManager;
     };
 }

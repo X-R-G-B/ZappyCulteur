@@ -7,7 +7,7 @@
 
 #include "NetworkManager.hpp"
 
-namespace Zappy {
+namespace GUI {
 
     NetworkManager::NetworkException::NetworkException(const std::string &message) :
         _message(message)
