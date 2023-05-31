@@ -58,4 +58,9 @@ namespace GUI {
         _windowMode = windowMode;
         switchWindowMode();
     }
+
+    WINDOW_MODE ADisplayModule::getWindowMode()
+    {
+        return _windowMode;
+    }
 }

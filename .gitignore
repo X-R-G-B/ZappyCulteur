@@ -591,7 +591,6 @@ tags
 # Persistent undo
 [._]*.un~
 
-### VisualStudioCode ###
 .vscode/*
 .vscode/settings.json
 !.vscode/tasks.json

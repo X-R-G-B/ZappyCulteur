@@ -5,6 +5,7 @@
 ** SFML
 */
 
+
 #include <map>
 #include "SFML.hpp"
 #include "IEntity.hpp"
@@ -45,6 +46,12 @@ namespace GUI {
         _window.create(sf::VideoMode(_width, _height), _windowTitle, _winStyle);
         _window.setFramerateLimit(_framerateLimit);
         _isOpen = true;
+    }
+
+    void SFML::setFramerateLimit(unsigned int framerateLimit)
+    {
+        _framerateLimit = framerateLimit;
+        _window.setFramerateLimit(_framerateLimit);
     }
 
     void SFML::clear()
