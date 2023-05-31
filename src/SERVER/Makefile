@@ -162,7 +162,7 @@ all_fast:
 
 $(TARGET):												$(OBJ)
 	@$(ECHO) $(CYAN)'==< CFLAGS >==:'$(RESET) '$(CFLAGS)'
-	@$(ECHO) $(CYAN)'==< LDFLAGS >==:'$(RESET) '$(LDFLAGS) '
+	@$(ECHO) $(CYAN)'==< LDFLAGS >==:'$(RESET) '$(LDFLAGS)'
 	$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) -o $(TARGET)
 	@$(ECHO) $(CYAN)'==< COMPILED >==:'$(RESET) $(GREEN)$(TARGET)$(RESET)
 
