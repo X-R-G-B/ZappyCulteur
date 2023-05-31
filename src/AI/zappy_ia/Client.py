@@ -78,7 +78,9 @@ class Client:
             if (socket == self.client_socket):
                 raise Exception("Socket error")
 
-    def input(self, message: str):
+    def input(self, message: str, arg: str = ""):
+        if (arg != ""):
+            message += " " + arg
         self.sendLock.acquire()
         self.messToSend.insert(0, message)
         self.sendLock.release()

@@ -48,14 +48,14 @@ class IA:
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
 
-    def requestClient(self, command: Command) -> str:
+    def requestClient(self, command: Command, arg: str = "") -> str:
         """
         This function send command to the server, wait the response and return it
 
         Parameters:
         command (Command): command to send to the server."
         """
-        self.client.input(command.value)
+        self.client.input(command.value, arg)
         res = ""
         while (res == ""):
             res = self.client.output()
