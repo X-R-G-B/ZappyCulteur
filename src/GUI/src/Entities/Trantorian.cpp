@@ -45,7 +45,7 @@ namespace GUI {
             }
             for (auto &comp : _components) {
                 if (comp->getType() == Components::CompType::SPRITE) {
-                    auto sprite = std::dynamic_pointer_cast<GUI::Components::Sprite>(comp);
+                    auto sprite = std::static_pointer_cast<GUI::Components::Sprite>(comp);
                     sprite->setPosition({_position.x, _position.y});
                 }
             }
@@ -56,7 +56,7 @@ namespace GUI {
             _level = level;
         }
 
-        int Trantorian::getLevel() const
+        const std::size_t &Trantorian::getLevel() const
         {
             return _level;
         }
@@ -79,7 +79,9 @@ namespace GUI {
                     _id + "BodySprite",
                     _texture,
                     50,
-                    _position
+                    _position,
+                    92,
+                    92
                 ));
                 _entityCompType.push_back(Components::CompType::SPRITE);
             } catch (std::exception &e) {

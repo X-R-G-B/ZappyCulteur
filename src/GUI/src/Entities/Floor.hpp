@@ -19,19 +19,21 @@ namespace GUI {
                 Floor(const std::string &id,
                     const Vector2F &position,
                     unsigned int width = 20,
-                    unsigned int height = 20
+                    unsigned int height = 20,
+                    float tileSize = 92
                 );
                 ~Floor() = default;
                 void update() override;
             private:
                 void initSprites();
                 void initTexture();
-                void createDarkFloor(Vector2F position, std::string id);
-                void createLightFloor(Vector2F position, std::string id);
+                void createDarkFloor(unsigned int x, unsigned int y);
+                void createLightFloor(unsigned int x, unsigned int y);
                 sf::Texture _txFloorDark;
                 sf::Texture _txFloorLight;
                 unsigned int _width;
                 unsigned int _height;
+                float _tileSize;
         };
     }
 }

@@ -23,9 +23,10 @@ namespace GUI {
                 ~Trantorian() = default;
                 void update() final;
                 void setLevel(int level);
-                int getLevel() const;
+                const std::size_t &getLevel() const;
                 void setTeam(const std::string &team);
                 const std::string &getTeam() const;
+
             private:
                 void initSprites();
                 size_t _level;

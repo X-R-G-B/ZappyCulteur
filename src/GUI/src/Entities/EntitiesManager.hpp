@@ -9,6 +9,7 @@
 
 #include <memory>
 #include <stdexcept>
+#include <SFML/Graphics.hpp>
 #include <vector>
 #include <string>
 #include "IEntity.hpp"

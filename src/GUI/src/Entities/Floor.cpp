@@ -14,9 +14,11 @@ namespace GUI {
             const std::string &id,
             const Vector2F &position,
             unsigned int width,
-            unsigned int height) :
+            unsigned int height,
+            float tileSize) :
             _width(width),
-            _height(height)
+            _height(height),
+            _tileSize(tileSize)
         {
             _id = id;
             _type = EntityType::ENVIROMENT;
@@ -42,20 +44,12 @@ namespace GUI {
         {
             try {
                 initTexture();
-                float top = _position.y - (static_cast<float>(_height) / 2) * 92;
-                float left = _position.x - (static_cast<float>(_width) / 2) * 92;
                 for (unsigned int i = 0; i < _width; i++) {
                     for (unsigned int j = 0; j < _height; j++) {
                         if ((i + j) % 2 == 0) {
-                            createDarkFloor(
-                                Vector2F(left + i * 92, top + j * 92),
-                                _id + std::to_string(i) + std::to_string(j)
-                            );
+                            createDarkFloor(i, j);
                         } else {
-                            createLightFloor(
-                                Vector2F(left + i * 92, top + j * 92),
-                                _id + std::to_string(i) + std::to_string(j)
-                            );
+                            createLightFloor(i, j);
                         }
                     }
                 }
@@ -64,23 +58,37 @@ namespace GUI {
             }
         }
 
-        void Floor::createDarkFloor(Vector2F position, std::string id)
+        void Floor::createDarkFloor(unsigned int i, unsigned int j)
         {
+            std::string id = _id + std::to_string(i) + std::to_string(j);
+
             _components.push_back(std::make_shared<GUI::Components::Sprite>(
                 id,
                 _txFloorDark,
                 10,
-                Vector2F(position.x, position.y)
+                Vector2F(
+                    _tileSize * static_cast<float>(i),
+                    _tileSize * static_cast<float>(j)
+                ),
+                _tileSize,
+                _tileSize
             ));
         }
 
-        void Floor::createLightFloor(Vector2F position, std::string id)
+        void Floor::createLightFloor(unsigned int i, unsigned int j)
         {
+            std::string id = _id + std::to_string(i) + std::to_string(j);
+
             _components.push_back(std::make_shared<GUI::Components::Sprite>(
                 id,
                 _txFloorLight,
                 10,
-                Vector2F(position.x, position.y)
+                Vector2F(
+                    _tileSize * static_cast<float>(i),
+                    _tileSize * static_cast<float>(j)
+                ),
+                _tileSize,
+                _tileSize
             ));
         }
     }
