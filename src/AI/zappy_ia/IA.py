@@ -72,7 +72,7 @@ class IA:
             if (mid == pos):
                 return
             if (mid - i <= pos and pos < mid):
-                self.requestClient(Command.Left)
+                self.requestClient(Command.LEFT)
                 for x in range(mid - pos):
                     self.requestClient(Command.FORWARD)
                 return
