@@ -87,7 +87,8 @@ void ntw_destroy(ntw_t *ntw);
 ** @return true if there are events (false if there is timeout). For better
 ** result, check the enum `ntw_t.error` for more information
 **/
-bool ntw_wait_till_events(ntw_t *ntw, time_t seconds_timeout, suseconds_t microseconds_timeout);
+bool ntw_wait_till_events(ntw_t *ntw, time_t *seconds_timeout,
+    suseconds_t *microseconds_timeout);
 
 /**
 ** @brief Functon that update all its internal datas (better to call this
