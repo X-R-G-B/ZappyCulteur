@@ -5,12 +5,14 @@ from zappy_ia.IA import IA
 import argparse
 import sys
  
+
 class Argparse(argparse.ArgumentParser):
     def error(self, message):
         sys.stderr.write('error: %s\n' % message)
         self.print_help()
         sys.exit(84)
-        
+
+
 if __name__ == "__main__":
     argParse = Argparse(add_help=False)
     port = 0
