@@ -24,7 +24,7 @@ namespace GUI {
             public:
                 ~IComponent() = default;
                 virtual const std::string &getId() const = 0;
-                virtual const CompType getType() const = 0;
+                virtual const CompType &getType() const = 0;
         };
     }
 }

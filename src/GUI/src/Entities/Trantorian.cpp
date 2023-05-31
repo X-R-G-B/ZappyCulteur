@@ -15,8 +15,8 @@ namespace GUI {
             const std::string &team,
             const Vector2F &position) :
             _level(1),
-            _speed(5),
-            _team(team)
+            _team(team),
+            _speed(5)
         {
             _id = id;
             _type = EntityType::TRANTORIAN;

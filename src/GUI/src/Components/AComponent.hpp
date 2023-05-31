@@ -14,7 +14,7 @@ namespace GUI {
         class AComponent : public IComponent {
             public:
                 virtual const std::string &getId() const final;
-                virtual const CompType getType() const  final;
+                virtual const CompType &getType() const  final;
             protected:
                 std::string _id;
                 CompType _type;

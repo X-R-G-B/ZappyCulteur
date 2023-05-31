@@ -28,7 +28,7 @@ namespace GUI {
                 const std::string &getTeam() const;
             private:
                 void initSprites();
-                int _level;
+                size_t _level;
                 std::string _team;
                 sf::Texture _texture;
                 Vector2F _direction;
