@@ -10,6 +10,11 @@ class Argparse(argparse.ArgumentParser):
         sys.stderr.write('error: %s\n' % message)
         self.print_help()
         sys.exit(84)
+
+def abc(a: int):
+    print(a)
+
+abc("ade")
         
 if __name__ == "__main__":
     argParse = Argparse(add_help=False)
