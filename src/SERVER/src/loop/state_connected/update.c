@@ -21,15 +21,9 @@ bool update_client_connected(zappy_t *zappy, ntw_client_t *cl)
         return true;
     }
     if (cc->type == GRAPHIC) {
-<<<<<<< HEAD
-        status = update_graphic_cmd(ntw, cl, args);
-    } else if (cc->type == AI) {
-        status = update_ai_cmd(ntw, cl, args);
-=======
         status = update_graphic_cmd(zappy, cl);
     } else if (cc->type == AI) {
         status = update_ai_cmd(zappy, cl);
->>>>>>> dev
     } else {
         return false;
     }

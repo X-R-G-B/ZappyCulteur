@@ -68,12 +68,7 @@ static bool update(char *tmp, client_t *cc, ntw_client_t *cl, args_t *args)
     return true;
 }
 
-<<<<<<< HEAD
-bool update_client_waiting_team_name(__attribute__((unused)) ntw_t *ntw,
-    ntw_client_t *cl, args_t *args)
-=======
 bool update_client_waiting_team_name(zappy_t *zappy, ntw_client_t *cl)
->>>>>>> dev
 {
     char *tmp = NULL;
     client_t *cc = NULL;
@@ -90,11 +85,7 @@ bool update_client_waiting_team_name(zappy_t *zappy, ntw_client_t *cl)
     if (tmp == NULL) {
         return false;
     }
-<<<<<<< HEAD
-    status = update(tmp, cc, cl, args);
-=======
     status = update(tmp, cc, cl, zappy->args);
->>>>>>> dev
     free(tmp);
     return status;
 }

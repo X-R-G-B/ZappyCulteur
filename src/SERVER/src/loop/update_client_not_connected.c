@@ -16,13 +16,10 @@ bool update_client_not_connected(__attribute__((unused)) zappy_t *zappy,
 {
     client_t *cc = NULL;
 
-<<<<<<< HEAD
-=======
     if (cl == NULL) {
         return true;
     }
     cc = cl->data;
->>>>>>> dev
     circular_buffer_write(cl->write_to_outside, "WELCOME\n");
     cc->state = WAITING_TEAM_NAME;
     printf("%s\n", "INFO: new connection, sending welcome...");

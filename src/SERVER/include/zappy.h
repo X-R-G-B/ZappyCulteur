@@ -49,12 +49,6 @@ int get_id(void);
 
 // Update in states
 
-<<<<<<< HEAD
-bool update_client_not_connected(ntw_t *ntw, ntw_client_t *cl, args_t *args);
-bool update_client_waiting_team_name(ntw_t *ntw, ntw_client_t *cl,
-    args_t *args);
-bool update_client_connected(ntw_t *ntw, ntw_client_t *cl, args_t *args);
-=======
 bool update_client_not_connected(zappy_t *zappy, ntw_client_t *cl);
 bool update_client_waiting_team_name(zappy_t *zappy, ntw_client_t *cl);
 bool update_client_connected(zappy_t *zappy, ntw_client_t *cl);
@@ -63,7 +57,6 @@ bool update_client_connected(zappy_t *zappy, ntw_client_t *cl);
 
 bool update_ai_cmd(zappy_t *zappy, ntw_client_t *cl);
 bool update_graphic_cmd(zappy_t *zappy, ntw_client_t *cl);
->>>>>>> dev
 
 // update by types in state connected
 
