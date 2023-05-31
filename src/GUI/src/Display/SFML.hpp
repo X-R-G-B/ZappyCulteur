@@ -29,16 +29,16 @@ namespace GUI {
                 WINDOW_MODE windowMode = WINDOW_MODE::FULLSCREEN
             );
             ~SFML();
-            void update(Entities::EntitiesManager &entitiesManger) override;
-            void handleEvents() override;
+            virtual void update(Entities::EntitiesManager &entitiesManger) final;
+            virtual void handleEvents() final;
             WINDOW_MODE getWindowMode();
         private:
-            void clear() override;
-            void closeWindow()override;
+            void clear() final;
+            void closeWindow()final;
             void drawSprites(Entities::EntitiesManager &entitiesManger);
-            void createWindow() override;
+            void createWindow() final;
             void setWindowStyle();
-            void switchWindowMode() override;
+            void switchWindowMode() final;
             sf::Event _event;
             sf::Uint32 _winStyle;
             sf::RenderWindow _window;
