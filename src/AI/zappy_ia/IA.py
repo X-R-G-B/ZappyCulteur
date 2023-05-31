@@ -17,7 +17,7 @@ class Element(Enum):
 class Command(Enum):
     FORWARD = "Forward\n"
     RIGHT = "Right\n"
-    Left = "Left\n"
+    LEFT = "Left\n"
     LOOK = "Look\n"
     INVENTORY = "Inventory\n"
     BROADCAST = "Broadcast text\n"
