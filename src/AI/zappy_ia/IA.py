@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List
+from typing import List, Tuple
 from zappy_ia.Client import Client
 import time
 
@@ -17,7 +17,7 @@ class Element(Enum):
 class Command(Enum):
     FORWARD = "Forward\n"
     RIGHT = "Right\n"
-    Left = "Left\n"
+    LEFT = "Left\n"
     LOOK = "Look\n"
     INVENTORY = "Inventory\n"
     BROADCAST = "Broadcast text\n"
@@ -33,7 +33,7 @@ class IA:
         self.port: int = port
         self.machineName: str = machineName
         self.teamName: str = teamName
-        self.mapSize: List[int] = [0, 0]
+        self.mapSize: Tuple[int, int] = [0, 0]
         self.clientNb: int = 0
         self.lastLook: List[List[Element]] = []
         self.client: Client = Client(port, machineName)
@@ -72,14 +72,14 @@ class IA:
             if (mid == pos):
                 return
             if (mid - i <= pos and pos < mid):
-                self.requestClient(Command.Left)
+                self.requestClient(Command.LEFT)
                 for x in range(mid - pos):
                     self.requestClient(Command.FORWARD)
                 return
             if (mid + i >= pos and pos > mid):
                 self.requestClient(Command.RIGHT)
                 for x in range(pos - mid):
-                    self.requestClient(Command.Forward)
+                    self.requestClient(Command.FORWARD)
                 return
 
     def takeElementInLastLook(self, element: Element):
