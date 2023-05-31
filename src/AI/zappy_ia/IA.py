@@ -50,14 +50,14 @@ class IA:
         while (res == ""):
             res = self.client.output()
         if (res == "ko"):
-            raise Exception("Server responsed ko to : " + str(command))
+            raise Exception("Server responsed ko to : " + command)
         return res
 
     def look(self):
         res = self.requestClient(Command.LOOK)
         for i in range(len(res)):
             for elem in tile.split(" "):
-                res[i].append(Element[elem])
+                self.lastLook[i].append(Element[elem])
 
     def pathFinding(self, pos: int):
         """
