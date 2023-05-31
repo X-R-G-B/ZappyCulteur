@@ -25,7 +25,10 @@ namespace GUI {
                 void setOrientation(const EntityOrientation &orientation) final;
                 const EntityOrientation &getOrientation() const final;
                 const std::vector<Components::CompType> &getCompType() const final;
-                const std::vector<std::shared_ptr<Components::IComponent>> &getComponents() const final;
+                const std::vector<std::shared_ptr<Components::IComponent>>
+                    &getComponents() const final;
+                std::unique_ptr<std::vector<std::shared_ptr<Components::IComponent>>>
+                    getComponentsByType(Components::CompType type) const final;
             protected:
                 Vector2F _position;
                 Vector2F _rotation;

@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include "Trantorian.hpp"
-#include "Sprite.hpp"
 
 namespace GUI {
     namespace Entities {

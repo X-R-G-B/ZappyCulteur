@@ -44,7 +44,10 @@ namespace GUI {
                 virtual void setOrientation(const EntityOrientation &orientation) = 0;
                 virtual const EntityOrientation &getOrientation() const = 0;
                 virtual const std::vector<Components::CompType> &getCompType() const = 0;
-                virtual const std::vector<std::shared_ptr<Components::IComponent>> &getComponents() const = 0;
+                virtual const std::vector<std::shared_ptr<Components::IComponent>>
+                    &getComponents() const = 0;
+                virtual std::unique_ptr<std::vector<std::shared_ptr<Components::IComponent>>>
+                    getComponentsByType(Components::CompType type) const = 0;
         };
     }
 }

@@ -69,5 +69,19 @@ namespace GUI {
         {
             return _components;
         }
+
+        std::unique_ptr<std::vector<std::shared_ptr<Components::IComponent>>> 
+            AEntity::getComponentsByType(Components::CompType type) const
+        {
+            std::unique_ptr<std::vector<std::shared_ptr<Components::IComponent>> > components =
+                std::make_unique<std::vector<std::shared_ptr<Components::IComponent>> >();
+
+            for (auto &component : _components) {
+                if (component->getType() == type) {
+                    components->push_back(component);
+                }
+            }
+            return components;
+        }
     }
 }
