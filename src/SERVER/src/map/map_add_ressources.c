@@ -23,7 +23,6 @@ static void add_ressources(map_tile_t *tile,
     int const nb_step_int[MAX_NB_RESOURCES],
     int nb_step[MAX_NB_RESOURCES])
 {
-
     for (int i = 0; i < MAX_NB_RESOURCES; i++) {
         nb_step[i] -= 1;
         if (nb_step[i] <= 0) {
