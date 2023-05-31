@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List
+from typing import List, Tuple
 from zappy_ia.Client import Client
 import time
 
