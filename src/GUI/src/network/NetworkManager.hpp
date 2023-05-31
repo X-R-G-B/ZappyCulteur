@@ -43,7 +43,7 @@ namespace GUI {
 
     public:
 
-        NetworkManager(const std::string& ip = "127.0.0.1", const std::string& port = "8080");
+        NetworkManager();
 
         ~NetworkManager();
 
@@ -64,7 +64,7 @@ namespace GUI {
          * @brief init the connection with the server
          * 
          */
-        void initConnection();
+        void initConnection(const std::string &ip, const std::string &port);
 
         /**
          * @brief reconnect to the server if the connection is lost
