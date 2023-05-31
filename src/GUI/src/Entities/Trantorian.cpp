@@ -58,7 +58,7 @@ namespace GUI {
                 _components.push_back(std::make_shared<GUI::Components::Sprite>(
                     _id + "BodySprite",
                     _texture,
-                    0,
+                    50,
                     _position
                 ));
                 _entityCompType.push_back(Components::CompType::SPRITE);
