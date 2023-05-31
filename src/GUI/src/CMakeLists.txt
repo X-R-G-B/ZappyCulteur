@@ -13,3 +13,4 @@ target_sources(
 add_subdirectory(Display)
 add_subdirectory(Maths)
 add_subdirectory(Entities)
+add_subdirectory(Components)
