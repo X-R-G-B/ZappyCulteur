@@ -74,7 +74,7 @@ namespace GUI {
         void Trantorian::initSprites()
         {
             try {
-                _texture.loadFromFile("assets/bees/beeLeft.png");
+                _texture.loadFromFile("src/GUI/assets/bees/beeLeft.png");
                 _components.push_back(std::make_shared<GUI::Components::Sprite>(
                     _id + "BodySprite",
                     _texture,

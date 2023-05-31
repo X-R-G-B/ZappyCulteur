@@ -34,8 +34,8 @@ namespace GUI {
 
         void Floor::initTexture()
         {
-            if (_txFloorDark.loadFromFile("assets/environment/darkFloor.png") == false ||
-                _txFloorLight.loadFromFile("assets/environment/lightFloor.png") == false) {
+            if (_txFloorDark.loadFromFile("src/GUI/assets/environment/darkFloor.png") == false ||
+                _txFloorLight.loadFromFile("src/GUI/assets/environment/lightFloor.png") == false) {
                 throw std::exception();
             }
         }
