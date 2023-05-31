@@ -17,29 +17,12 @@ namespace GUI {
     namespace Components {
         class CompQuery {
             public:
-                CompQuery(const std::vector<std::shared_ptr<GUI::Entities::IEntity>> &entities)
-                    : _entities(entities) {}
+                CompQuery() = default;
                 ~CompQuery() = default;
 
-                std::unique_ptr<std::map<size_t, std::vector<std::shared_ptr<GUI::Components::Sprite>>>> getSpritesFromEntities()
-                {
-                    auto sprites = std::make_unique<std::map<size_t, std::vector<std::shared_ptr<GUI::Components::Sprite>>>>();
+                std::unique_ptr<std::map<size_t, std::vector<std::shared_ptr<GUI::Components::Sprite>>>>
+                    sortSpritesByLayer(std::unique_ptr<std::vector<std::shared_ptr<Components::IComponent>>> sprites);
 
-                    for (const auto& entity : _entities) {
-                        const auto& spriteComps = entity->getComponentsByType(CompType::SPRITE);
-                        for (const auto& spriteComp : *spriteComps) {
-                            auto sprite = std::dynamic_pointer_cast<GUI::Components::Sprite>(spriteComp);
-                            if (sprite != nullptr) {
-                                auto layer = sprite->getLayer();
-                                (*sprites)[layer].push_back(sprite);
-                            }
-                        }
-                    }
-                    return sprites;
-                }
-
-            private:
-                const std::vector<std::shared_ptr<GUI::Entities::IEntity>> &_entities;
         };
     }
 }

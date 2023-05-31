@@ -34,9 +34,12 @@ namespace GUI {
                 void killEntityById(const std::string &id);
                 void addEntity(const std::shared_ptr<IEntity> &entity);
                 const std::vector<std::shared_ptr<IEntity>> &getEntities() const;
-                const std::shared_ptr<IEntity> &getEntityById(const std::string &id) const;
-                const std::vector<std::shared_ptr<IEntity>> &getEntitiesByType(EntityType type) const;
-                const std::vector<std::shared_ptr<IEntity>> &getEntitiesByCompType(Components::CompType type) const;
+                std::shared_ptr<IEntity> getEntityById(const std::string &id) const;
+                std::unique_ptr<std::vector<std::shared_ptr<Components::IComponent>>>
+                    getComponentsByType(Components::CompType type) const;
+                std::unique_ptr<std::vector<std::shared_ptr<IEntity>>>
+                    getEntitiesByType(EntityType type) const;
+
             private:
                 std::vector<std::shared_ptr<IEntity>> _entities;
         };

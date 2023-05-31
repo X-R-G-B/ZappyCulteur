@@ -71,18 +71,16 @@ namespace GUI {
         }
     }
 
-    void SFML::update(const std::vector<std::shared_ptr<GUI::Entities::IEntity>> &entities)
+    void SFML::update(Entities::EntitiesManager &entitiesManger)
     {
-        Components::CompQuery _compQuery(entities);
-
         clear();
-        drawSprites(_compQuery);
+        drawSprites(entitiesManger);
         _window.display();
     }
 
-    void SFML::drawSprites(Components::CompQuery &query)
+    void SFML::drawSprites(Entities::EntitiesManager &entitiesManger)
     {
-        auto sprites = query.getSpritesFromEntities();
+        auto sprites = _compQuery.sortSpritesByLayer(entitiesManger.getComponentsByType(Components::CompType::SPRITE));
 
         for (auto &sprite : *sprites) {
             for (auto &spriteComponent : sprite.second) {

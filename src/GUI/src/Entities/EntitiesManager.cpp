@@ -35,37 +35,37 @@ namespace GUI {
             return _entities;
         }
 
-        const std::shared_ptr<IEntity> &EntitiesManager::getEntityById(const std::string &id) const
+        std::shared_ptr<IEntity> EntitiesManager::getEntityById(const std::string &id) const
         {
-            for (auto &entity : _entities) {
-                if (entity->getId() == id) {
+            for (const auto &entity : _entities) {
+                if (entity->getId() == id)
                     return entity;
-                }
             }
             throw EntitiesManagerException("No entity with this id");
         }
 
-        const std::vector<std::shared_ptr<IEntity>> &EntitiesManager::getEntitiesByType(EntityType type) const
+        std::unique_ptr<std::vector<std::shared_ptr<Components::IComponent>>>
+            EntitiesManager::getComponentsByType(Components::CompType type) const
         {
-            std::vector<std::shared_ptr<IEntity>> entities;
+            auto components = std::make_unique<std::vector<std::shared_ptr<Components::IComponent>>>();
 
-            for (auto &entity : _entities) {
-                if (entity->getType() == type) {
-                    entities.push_back(entity);
+            for (const auto &entity : _entities) {
+                const auto &entityComponents = entity->getComponentsByType(type);
+                for (const auto &component : *entityComponents) {
+                    components->push_back(component);
                 }
             }
-            return entities;
+            return components;
         }
 
-        const std::vector<std::shared_ptr<IEntity>> &EntitiesManager::getEntitiesByCompType(Components::CompType type) const
+        std::unique_ptr<std::vector<std::shared_ptr<IEntity>>>
+            EntitiesManager::getEntitiesByType(EntityType type) const
         {
-            std::vector<std::shared_ptr<IEntity>> entities;
+            auto entities = std::make_unique<std::vector<std::shared_ptr<IEntity>>>();
 
-            for (auto &entity : _entities) {
-                for (auto &compType : entity->getCompType()) {
-                    if (compType == type) {
-                        entities.push_back(entity);
-                    }
+            for (const auto &entity : _entities) {
+                if (entity->getType() == type) {
+                    entities->push_back(entity);
                 }
             }
             return entities;

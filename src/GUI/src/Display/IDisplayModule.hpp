@@ -9,6 +9,7 @@
 #include <vector>
 #include <memory>
 #include "IEntity.hpp"
+#include "EntitiesManager.hpp"
 
 namespace GUI {
         enum class WINDOW_MODE {
@@ -20,7 +21,7 @@ namespace GUI {
     class IDisplayModule {
         public:
             ~IDisplayModule() = default;
-            virtual void update(const std::vector<std::shared_ptr<GUI::Entities::IEntity>> &entities) = 0;
+            virtual void update(Entities::EntitiesManager &entitiesManger) = 0;
             virtual bool isOpen() = 0;
             virtual void handleEvents() = 0;
             virtual void setFramerateLimit(unsigned int framerateLimit) = 0;

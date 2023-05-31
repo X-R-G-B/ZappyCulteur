@@ -29,7 +29,7 @@ int main(void)
     while (displayModule.isOpen()) {
         displayModule.handleEvents();
         entitiesManager.update();
-        displayModule.update(entitiesManager.getEntities());
+        displayModule.update(entitiesManager);
     }
     return 0;
 }
