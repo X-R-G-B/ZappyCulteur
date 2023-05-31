@@ -34,16 +34,12 @@ static void set_ntw_fds(ntw_t *ntw)
     }
 }
 
-static bool wait_ntw_events(ntw_t *ntw, time_t *seconds_timeout,
-    suseconds_t *microseconds_timeout)
+static bool wait_ntw_events(ntw_t *ntw, struct timeval *timeout)
 {
     int status = 0;
-    struct timeval timeout = {.tv_sec = *seconds_timeout,
-        .tv_usec = *microseconds_timeout
-    };
 
     status = select(ntw->max_fd + 1, &ntw->read_fds, &ntw->write_fds,
-        &ntw->except_fds, &timeout);
+        &ntw->except_fds, timeout);
     if (status == -1) {
         perror("select");
         ntw->error = ERROR;
@@ -53,8 +49,6 @@ static bool wait_ntw_events(ntw_t *ntw, time_t *seconds_timeout,
         return false;
     }
     ntw->error = OK;
-    *seconds_timeout = timeout.tv_sec;
-    *microseconds_timeout = timeout.tv_usec;
     return true;
 }
 
@@ -62,12 +56,18 @@ bool ntw_wait_till_events(ntw_t *ntw, time_t *seconds_timeout,
     suseconds_t *microseconds_timeout)
 {
     bool status = false;
+    struct timeval tv = {
+        .tv_sec = *seconds_timeout,
+        .tv_usec = *microseconds_timeout
+    };
 
     if (ntw == NULL || seconds_timeout == NULL ||
             microseconds_timeout == NULL) {
         return false;
     }
     set_ntw_fds(ntw);
-    status = wait_ntw_events(ntw, seconds_timeout, microseconds_timeout);
+    status = wait_ntw_events(ntw, &tv);
+    *seconds_timeout = tv.tv_sec;
+    *microseconds_timeout = tv.tv_usec;
     return status;
 }

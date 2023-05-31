@@ -24,6 +24,7 @@ zappy_t *zappy_init(args_t *args)
     if (zappy == NULL) {
         return NULL;
     }
+    memset(zappy, 0, sizeof(zappy_t));
     zappy->args = args;
     zappy->map = map_init(args->width, args->height);
     zappy->ntw = ntw_init(args->port, args->teams_name->len, on_new_conn);

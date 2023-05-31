@@ -9,6 +9,7 @@
     #define ZAPPY_H_
 
     #include <stdbool.h>
+    #include <stddef.h>
     #include "args.h"
     #include "map.h"
     #include "ntw.h"
@@ -20,6 +21,7 @@ struct zappy_s {
     ntw_t *ntw;
     map_t *map;
     args_t *args;
+    size_t cur_tick;
 };
 typedef struct zappy_s zappy_t;
 
