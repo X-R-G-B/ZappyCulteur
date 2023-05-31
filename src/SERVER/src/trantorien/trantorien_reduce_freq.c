@@ -17,22 +17,28 @@ static void trantorien_need_update(trantorien_t *trantorien, zappy_t *zappy,
     // TODO
 }
 
+static void move_up(action_t *actions[NB_PARALLEL_ACTION])
+{
+    for (int i = 1; i < NB_PARALLEL_ACTION; i++) {
+        actions[i - 1] = actions[i];
+    }
+    actions[NB_PARALLEL_ACTION - 1] = NULL;
+}
+
 void trantorien_reduce_freq(trantorien_t *trantorien, zappy_t *zappy,
     ntw_client_t *cl)
 {
     if (trantorien == NULL) {
         return;
     }
-    for (int i = 0; i < NB_PARALLEL_ACTION; i++) {
-        if (trantorien->actions[i] == NULL) {
-            continue;
-        }
-        trantorien->actions[i]->freq--;
-        if (trantorien->actions[i]->freq == 0) {
-            trantorien_need_update(trantorien, zappy, cl,
-                trantorien->actions[i]);
-            action_destroy(trantorien->actions[i]);
-            trantorien->actions[i] = NULL;
-        }
+    if (trantorien->actions[0] == NULL) {
+        return;
+    }
+    trantorien->actions[0]->freq--;
+    if (trantorien->actions[0]->freq == 0) {
+        trantorien_need_update(trantorien, zappy, cl, trantorien->actions[0]);
+        action_destroy(trantorien->actions[0]);
+        trantorien->actions[0] = NULL;
+        move_up(trantorien->actions);
     }
 }
