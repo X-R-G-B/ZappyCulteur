@@ -19,39 +19,18 @@ static float density[MAX_NB_RESOURCES] = {
     0.05,
 };
 
-static void set_ressources(map_tile_t *tile, int modifs[MAX_NB_RESOURCES])
-{
-    tile->nb_food = modifs[FOOD];
-    tile->nb_linemate = modifs[LINEMATE];
-    tile->nb_deraumere = modifs[DERAUMERE];
-    tile->nb_sibur = modifs[SIBUR];
-    tile->nb_mendiane = modifs[MENDIANE];
-    tile->nb_phiras = modifs[PHIRAS];
-    tile->nb_thystame = modifs[THYSTAME];
-}
-
 static void add_ressources(map_tile_t *tile,
     int const nb_step_int[MAX_NB_RESOURCES],
     int nb_step[MAX_NB_RESOURCES])
 {
-    int modifs[MAX_NB_RESOURCES] = {
-        tile->nb_food,
-        tile->nb_linemate,
-        tile->nb_deraumere,
-        tile->nb_sibur,
-        tile->nb_mendiane,
-        tile->nb_phiras,
-        tile->nb_thystame
-    };
 
     for (int i = 0; i < MAX_NB_RESOURCES; i++) {
         nb_step[i] -= 1;
         if (nb_step[i] <= 0) {
-            modifs[i] += 1;
+            tile->ressources[i] += 1;
             nb_step[i] = nb_step_int[i];
         }
     }
-    set_ressources(tile, modifs);
 }
 
 static void check_ressources(map_tile_t *tiles, int width, int height,
@@ -60,13 +39,13 @@ static void check_ressources(map_tile_t *tiles, int width, int height,
     int nb_ressources[MAX_NB_RESOURCES] = {0, 0, 0, 0, 0, 0, 0};
 
     for (int i = 0; i < width * height; i++) {
-        nb_ressources[0] += tiles[i].nb_food;
-        nb_ressources[1] += tiles[i].nb_linemate;
-        nb_ressources[2] += tiles[i].nb_deraumere;
-        nb_ressources[3] += tiles[i].nb_sibur;
-        nb_ressources[4] += tiles[i].nb_mendiane;
-        nb_ressources[5] += tiles[i].nb_phiras;
-        nb_ressources[6] += tiles[i].nb_thystame;
+        nb_ressources[FOOD] += tiles[i].ressources[FOOD];
+        nb_ressources[LINEMATE] += tiles[i].ressources[LINEMATE];
+        nb_ressources[DERAUMERE] += tiles[i].ressources[DERAUMERE];
+        nb_ressources[SIBUR] += tiles[i].ressources[SIBUR];
+        nb_ressources[MENDIANE] += tiles[i].ressources[MENDIANE];
+        nb_ressources[PHIRAS] += tiles[i].ressources[PHIRAS];
+        nb_ressources[THYSTAME] += tiles[i].ressources[THYSTAME];
     }
     for (int i = 0; i < MAX_NB_RESOURCES; i++) {
         if (nb_ressources[i] != nb_spawn_max[i]) {

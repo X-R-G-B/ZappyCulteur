@@ -33,13 +33,13 @@ static bool send_ressources(map_tile_t *tile, ntw_client_t *cl)
     char buff[1024] = {0};
 
     snprintf(buff, 1023, "%d %d %d %d %d %d %d",
-        tile->nb_food,
-        tile->nb_linemate,
-        tile->nb_deraumere,
-        tile->nb_sibur,
-        tile->nb_mendiane,
-        tile->nb_phiras,
-        tile->nb_thystame
+        tile->ressources[FOOD],
+        tile->ressources[LINEMATE],
+        tile->ressources[DERAUMERE],
+        tile->ressources[SIBUR],
+        tile->ressources[MENDIANE],
+        tile->ressources[PHIRAS],
+        tile->ressources[THYSTAME]
     );
     circular_buffer_write(cl->write_to_outside, buff);
     return true;
