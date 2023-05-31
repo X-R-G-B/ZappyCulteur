@@ -9,7 +9,7 @@ class IA:
         self.teamName = teamName
         self.mapSize = [0, 0]
         self.clientNb = 0
-        self.cmdPathfinding = []
+        self.lastLook = []
         self.client = Client(port, machineName)
 
         while (self.client.output() != "WELCOME\n"):
@@ -49,3 +49,22 @@ class IA:
                 for x in range(pos - mid):
                     self.requestClient("Forward\n")
                 return
+
+    def takeElementInLastLook(self, element: str):
+        """
+        This function move the ia to the closest element and pick it up
+
+        Parameters:
+        element (str): key of searched element (ex: food, player, etc)
+        """
+        pos = 0
+        for tile in self.lastLook:
+            for elem in tile.split(" "):
+                if (elem == element):
+                    pathFinding(pos)
+                    self.requestClient("Take object\n")
+                    return
+            pos += 1
+
+    def takeFood(self):
+        takeElementInLastLook("food")
