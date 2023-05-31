@@ -23,9 +23,9 @@ int command_take_object(trantorien_t *trantorien, zappy_t *zappy,
     if (zappy->map[i].tiles->ressources[action->param.object] > 0) {
         zappy->map[i].tiles->ressources[action->param.object] -= 1;
         trantorien->ressources[action->param.object] += 1;
-        ntw_send(cl, "ok\n");
+        circular_buffer_write(cl->write_to_outside, "ok\n");
     } else {
-        ntw_send(cl, "ko\n");
+        circular_buffer_write(cl->write_to_outside, "ko\n");
     }
     return EXIT_SUCCESS;
 }

@@ -123,7 +123,10 @@ SRC_TRNT		:=															\
 							trantorien_init.c								\
 							trantorien_is_cmd_availible.c					\
 							trantorien_place_cmd.c							\
-							trantorien_reduce_freq.c
+							trantorien_reduce_freq.c						\
+							command_set_object_down.c						\
+							command_start_incantation.c						\
+							command_take_object.c
 SRC_TRNT		:=			$(addprefix trantorien/, $(SRC_TRNT))
 
 # ----------------------------------------------------------------------------

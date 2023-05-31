@@ -12,8 +12,9 @@
 #include "trantorien.h"
 #include "map.h"
 #include "client.h"
+#include "tlcstdlibs.h"
 
-static const int level_ressources[MAX_NB_RESOURCES - 1][LVL_MAX - 1] = {
+static const int level_ressources[MAX_NB_RESOURCES][LVL_MAX - 1] = {
     {1, 0, 0, 0, 0, 0},
     {1, 1, 1, 0, 0, 0},
     {2, 0, 1, 0, 2, 0},
@@ -27,7 +28,7 @@ static const int level_players[LVL_MAX - 1] = {
     1, 2, 2, 4, 4, 6, 6
 };
 
-static check_incantation_lvl_availability(int trantorien_lvl, ntw_t *ntw)
+static bool check_incantation_lvl_availability(int trantorien_lvl, ntw_t *ntw)
 {
     int nb_trantorien_lvl = 0;
     ntw_client_t *nt_cl = NULL;
@@ -55,7 +56,7 @@ bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
 
     map_index_x_y_to_i(map, trantorien->x, trantorien->y, &map_index);
     for (int i = FOOD; i < MAX_NB_RESOURCES; i++) {
-        if (map[map_index].tiles->ressources <
+        if (map[map_index].tiles->ressources[i] <
             level_ressources[trantorien->level - 1][i])
             return false;
     }
@@ -68,14 +69,20 @@ int command_start_incantation(trantorien_t *trantorien, zappy_t *zappy,
                         ntw_client_t *cl, action_t *action)
 {
     int i = 0;
+    char *level_str = NULL;
 
     if (trantorien == NULL || zappy == NULL || cl == NULL || action == NULL)
         return EXIT_FAILURE;
     if (check_incantation_availability(trantorien, zappy->map, zappy->ntw)
         == false) {
-        ntw_send(cl, "ko\n");
+        circular_buffer_write(cl->write_to_outside, "ko\n");
         return EXIT_SUCCESS;
     }
-    ntw_send(cl, "Elevation underway Current level: %d\n", trantorien->level);
+    level_str = x_itoa(trantorien->level);
+    if (level_str == NULL)
+        return EXIT_FAILURE;
+    circular_buffer_write(cl->write_to_outside, "Elevation underway Current level: ");
+    circular_buffer_write(cl->write_to_outside, level_str);
+    circular_buffer_write(cl->write_to_outside, "\n");
     return EXIT_SUCCESS;
 }
