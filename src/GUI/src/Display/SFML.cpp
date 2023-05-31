@@ -48,12 +48,6 @@ namespace GUI {
         _isOpen = true;
     }
 
-    void SFML::setFramerateLimit(unsigned int framerateLimit)
-    {
-        _framerateLimit = framerateLimit;
-        _window.setFramerateLimit(_framerateLimit);
-    }
-
     void SFML::clear()
     {
         _window.clear(sf::Color::Black);

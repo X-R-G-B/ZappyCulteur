@@ -11,7 +11,6 @@ project(
 
 add_executable(${PROJECT_NAME})
 
-=======
 set_target_properties(
     ${PROJECT_NAME}
     PROPERTIES UNITY_BUILD ON
