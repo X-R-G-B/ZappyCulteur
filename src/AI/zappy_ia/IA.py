@@ -33,7 +33,7 @@ class IA:
         self.port: int = port
         self.machineName: str = machineName
         self.teamName: str = teamName
-        self.mapSize: List[int] = [0, 0]
+        self.mapSize: Tuple[int, int] = [0, 0]
         self.clientNb: int = 0
         self.lastLook: List[List[Element]] = []
         self.client: Client = Client(port, machineName)
