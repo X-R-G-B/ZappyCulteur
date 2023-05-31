@@ -46,6 +46,12 @@ class IA:
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
 
     def requestClient(self, command: Union[Command, str]) -> str:
+        """
+        This function send command to the server, wait the response and return it
+
+        Parameters:
+        command (Union[Command, str]): command to send to the server, can be an enum Command (which is a string value) or a string."
+        """
         self.client.input(str(command))
         res = ""
         while (res == ""):
