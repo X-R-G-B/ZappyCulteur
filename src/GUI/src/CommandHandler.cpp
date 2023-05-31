@@ -40,7 +40,7 @@ namespace GUI {
 
         COMMAND_TYPE CommandHandler::getCommandType(const std::string &command)
         {
-            for (const auto it : commandProtocol) {
+            for (const auto &it : commandProtocol) {
                 if (command.find(it.first) != std::string::npos) {
                     return (it.second);
                 }
