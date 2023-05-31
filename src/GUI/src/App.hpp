@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2023
 ** ZappyCulteur
 ** File description:
-** Main
+** App
 */
 
 #pragma once
@@ -12,10 +12,10 @@
 #include "Parser.hpp"
 
 namespace GUI {
-    class Main {
+    class App {
         public:
-            Main() = default;
-            ~Main() = default;
+            App() = default;
+            ~App() = default;
 
             int operator()(int ac, char **av);
 

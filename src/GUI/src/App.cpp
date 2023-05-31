@@ -2,15 +2,15 @@
 ** EPITECH PROJECT, 2023
 ** zappy gui
 ** File description:
-** main
+** app
 */
 
 // #include "./window/Window.hpp"
-#include "Main.hpp"
+#include "App.hpp"
 
 namespace GUI {
     // need refactor when DisplayModule, EntityManager and Parser are implemented
-    int Main::operator()(int ac, char **av)
+    int App::operator()(int ac, char **av)
     {
         // GUI::Window window;
         // window.createWindow();
@@ -21,13 +21,4 @@ namespace GUI {
         // }
         return 0;
     }
-}
-
-int main(int ac, char **av)
-{
-    GUI::Main main;
-    int returnValue = 0;
-
-    returnValue = main(ac, av);
-    return (returnValue);
 }
