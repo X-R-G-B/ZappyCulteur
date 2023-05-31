@@ -10,7 +10,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-
+#include "CompQuery.hpp"
 #include "ADisplayModule.hpp"
 
 namespace GUI {
@@ -28,12 +28,13 @@ namespace GUI {
                 WINDOW_MODE windowMode = WINDOW_MODE::FULLSCREEN
             );
             ~SFML();
-            void update() override;
+            void update(const std::vector<std::shared_ptr<GUI::Entities::IEntity>> &entities) override;
             void handleEvents() override;
             WINDOW_MODE getWindowMode();
         private:
             void clear() override;
             void closeWindow()override;
+            void drawSprites(Components::CompQuery &compQuery);
             void createWindow() override;
             void setWindowStyle();
             void switchWindowMode() override;

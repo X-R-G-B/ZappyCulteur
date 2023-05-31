@@ -5,7 +5,11 @@
 ** SFML
 */
 
+#include <map>
 #include "SFML.hpp"
+#include "IEntity.hpp"
+#include "Sprite.hpp"
+#include "CompQuery.hpp"
 
 namespace GUI {
     SFML::SFML(std::shared_ptr<GUI::EntityManager> entityManager,
@@ -59,19 +63,36 @@ namespace GUI {
     void SFML::setWindowStyle()
     {
         if (_windowMode == WINDOW_MODE::FULLSCREEN) {
-            _winStyle = 8U;
+            _winStyle = sf::Style::Fullscreen;
         } else if (_windowMode == WINDOW_MODE::BORDERLESS) {
-            _winStyle = 6U;
+            _winStyle = sf::Style::None;
         } else {
-            _winStyle = 7U;
+            _winStyle = sf::Style::Default;
         }
     }
 
-    void SFML::update()
+    void SFML::update(const std::vector<std::shared_ptr<GUI::Entities::IEntity>> &entities)
     {
+        Components::CompQuery _compQuery(entities);
+
         clear();
-        //draw here
+        drawSprites(_compQuery);
         _window.display();
+    }
+
+    void SFML::drawSprites(Components::CompQuery &query)
+    {
+        auto sprites = query.getSpritesFromEntities();
+
+        for (auto &sprite : *sprites) {
+            for (auto &spriteComponent : sprite.second) {
+                auto spritePtr = std::dynamic_pointer_cast<GUI::Components::Sprite>(spriteComponent);
+                if (spritePtr == nullptr) {
+                    continue;
+                }
+                _window.draw(spritePtr->getSprite());
+            }
+        }
     }
 
     void SFML::handleEvents()
