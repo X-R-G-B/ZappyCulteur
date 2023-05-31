@@ -50,19 +50,12 @@ namespace GUI {
 
         bool CommandHandler::setMapSize(std::string &command)
         {
-            std::size_t spacePos = command.find(" ");
-            std::string numbers;
-
-            if (spacePos == std::string::npos) {
-                return (false);
-            }
-            numbers = command.substr(spacePos);
-            spacePos = command.find(" ");
-            if (spacePos == std::string::npos) {
-                return (false);
-            }
-            std::string x = numbers.substr(1, spacePos);
-            std::string y = numbers.substr(spacePos + 1);
+            std::stringstream ss(command);
+            int x;
+            int y;
+            std::string cmd;
+            
+            ss >> cmd >> x >> y;
             //todo fill the entity
             return (true);
         }
