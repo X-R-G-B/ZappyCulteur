@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "Trantorian.hpp"
+#include "Components/Sprite.hpp"
 
 namespace GUI {
     namespace Entities {
@@ -20,7 +21,7 @@ namespace GUI {
         {
             _id = id;
             _type = EntityType::TRANTORIAN;
-            _orientation = EntityOrientation::DOWN;
+            _orientation = EntityOrientation::RIGHT;
             _position = position;
             _rotation = Vector2F(0, 0);
             _scale = Vector2F(1, 1);
@@ -29,6 +30,25 @@ namespace GUI {
 
         void Trantorian::update()
         {
+            if (_orientation == EntityOrientation::RIGHT) {
+                if (_position.x < 1920 - 50) {
+                    _position.x += _speed;
+                } else {
+                    _orientation = EntityOrientation::LEFT;
+                }
+            } else {
+                if (_position.x >= 0) {
+                    _position.x -= _speed;
+                } else {
+                    _orientation = EntityOrientation::RIGHT;
+                }
+            }
+            for (auto &comp : _components) {
+                if (comp->getType() == Components::CompType::SPRITE) {
+                    auto sprite = std::dynamic_pointer_cast<GUI::Components::Sprite>(comp);
+                    sprite->setPosition({_position.x, _position.y});
+                }
+            }
         }
 
         void Trantorian::setLevel(int level)

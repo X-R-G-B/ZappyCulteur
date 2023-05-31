@@ -17,13 +17,13 @@ int main(void)
         "Zappy bzz bzz",
         1920,
         1080,
-        165,
+        60,
         GUI::WINDOW_MODE::BORDERLESS
     );
 
     GUI::Entities::EntitiesManager entitiesManager;
     GUI::Entities::Trantorian trantorian("1", "team1", GUI::Vector2F(100, 100));
-    GUI::Entities::Trantorian trantorian2("2", "team2", GUI::Vector2F(250, 200));
+    GUI::Entities::Trantorian trantorian2("2", "team2", GUI::Vector2F(750, 700));
     GUI::Entities::Floor floor("1", GUI::Vector2F(0, 0), 20, 20);
     entitiesManager.addEntity(std::make_shared<GUI::Entities::Trantorian>(trantorian));
     entitiesManager.addEntity(std::make_shared<GUI::Entities::Trantorian>(trantorian2));
