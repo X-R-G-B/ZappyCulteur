@@ -6,6 +6,7 @@
 */
 
 #include <iostream>
+#include <stringstream>
 #include "CommandHandler.hpp"
 
 namespace GUI {
