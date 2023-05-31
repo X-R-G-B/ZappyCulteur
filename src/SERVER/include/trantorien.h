@@ -10,6 +10,7 @@
 
     #include <stdbool.h>
     #include "map.h"
+    #include "ntw.h"
 
     #define NB_PARALLEL_ACTION 10
 
@@ -71,4 +72,14 @@ bool trantorien_add_act_take(trantorien_t *trantorien,
 bool trantorien_add_act_set(trantorien_t *trantorien, enum ressource_e object);
 bool trantorien_add_act(trantorien_t *trantorien, enum cmd_code_e);
 
+/**
+** @brief check if the trantorien can do an incantation
+**
+** @param trantorien
+** @param map
+** @param ntw
+** @return true
+** @return false
+**/
+bool check_incantation_availability(trantorien_t *trantorien, map_t *map, ntw_t *ntw);
 #endif

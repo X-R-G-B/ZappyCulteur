@@ -20,7 +20,9 @@ bool cmd_incantation(__attribute__((unused)) zappy_t *zappy, ntw_client_t *cl,
 {
     client_t *cc = cl->data;
 
-    if (trantorien_add_act(cc->cl.ai.trantorien, INCANTATION) == false) {
+    if (trantorien_add_act(cc->cl.ai.trantorien, INCANTATION) == false ||
+            check_incantation_availability(cc->cl.ai.trantorien,
+            zappy->map, zappy->ntw) == false) {
         return false;
     }
     return true;

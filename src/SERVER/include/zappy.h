@@ -14,6 +14,8 @@
     #include "ntw.h"
     #include "trantorien.h"
 
+    #define LVL_MAX 8
+
 struct zappy_s {
     ntw_t *ntw;
     map_t *map;
