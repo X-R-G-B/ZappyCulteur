@@ -22,7 +22,7 @@ class Client:
         self.messReceived = []
 
         self.sendLock = threading.Lock()
-        self.messToSend = []
+        self.messToSend: List[Command] = []
 
         self.thread = threading.Thread(target=self.connect)
         self.thread.start()
@@ -78,9 +78,9 @@ class Client:
             if (socket == self.client_socket):
                 raise Exception("Socket error")
 
-    def input(self, message: str):
+    def input(self, command: str):
         self.sendLock.acquire()
-        self.messToSend.insert(0, message)
+        self.messToSend.insert(0, command)
         self.sendLock.release()
 
     def output(self) -> str:

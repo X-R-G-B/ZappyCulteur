@@ -1,16 +1,42 @@
+from enum import Enum
 from typing import List
 from zappy_ia.Client import Client
 import time
 
+class Element(Enum):
+    EMPTY = "empty"
+    FOOD = "food"
+    PLAYER = "player"
+    LINEMATE = "linemate"
+    DERAUMERE = "deraumere"
+    SIBUR = "sibur"
+    MENDIANE = "mendiane"
+    PHIRAS = "phiras"
+    THYSTAME = "thystame"
+
+class Command(Enum):
+    FORWARD = "Forward\n"
+    RIGHT = "Right\n"
+    Left = "Left\n"
+    LOOK = "Look\n"
+    INVENTORY = "Inventory\n"
+    BROADCAST = "Broadcast text\n"
+    CONNECT_NBR = "Connect_nbr\n"
+    FORK = "Fork\n"
+    EJECT = "Eject\n"
+    TAKE_OBJECT = "Take object\n"
+    SET_OBJECT = "Set object\n"
+    INCANTATION = "Incantation\n"
+
 class IA:
     def __init__(self, port: int, machineName: str, teamName: str):
-        self.port = port
-        self.machineName = machineName
-        self.teamName = teamName
-        self.mapSize = [0, 0]
-        self.clientNb = 0
-        self.lastLook = []
-        self.client = Client(port, machineName)
+        self.port: int = port
+        self.machineName: str = machineName
+        self.teamName: str = teamName
+        self.mapSize: List[int] = [0, 0]
+        self.clientNb: int = 0
+        self.lastLook: List[List[Element]] = []
+        self.client: Client = Client(port, machineName)
 
         while (self.client.output() != "WELCOME\n"):
             pass
@@ -18,14 +44,20 @@ class IA:
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
 
-    def requestClient(self, message: str) -> str:
-        self.client.input(message)
+    def requestClient(self, command: str) -> str:
+        self.client.input(command)
         res = ""
         while (res == ""):
             res = self.client.output()
         if (res == "ko"):
-            raise Exception("Server responsed ko to : " + message)
+            raise Exception("Server responsed ko to : " + str(command))
         return res
+
+    def look(self):
+        res = self.requestClient(Command.LOOK)
+        for i in range(len(res)):
+            for elem in tile.split(" "):
+                res[i].append(Element[elem])
 
     def pathFinding(self, pos: int):
         """
@@ -35,22 +67,22 @@ class IA:
         pos (int): pos which represent an index in the array of tile return by server to command look
         """
         for i in range(1, 9):
-            self.requestClient("Forward\n")
+            self.requestClient(Command.FORWARD)
             mid = i * (i + 1)
             if (mid == pos):
                 return
             if (mid - i <= pos and pos < mid):
-                self.requestClient("Left\n")
+                self.requestClient(Command.Left)
                 for x in range(mid - pos):
-                    self.requestClient("Forward\n")
+                    self.requestClient(Command.FORWARD)
                 return
             if (mid + i >= pos and pos > mid):
-                self.requestClient("Right\n")
+                self.requestClient(Command.RIGHT)
                 for x in range(pos - mid):
-                    self.requestClient("Forward\n")
+                    self.requestClient(Command.Forward)
                 return
 
-    def takeElementInLastLook(self, element: str):
+    def takeElementInLastLook(self, element: Element):
         """
         This function move the ia to the closest element and pick it up
 
@@ -59,12 +91,12 @@ class IA:
         """
         pos = 0
         for tile in self.lastLook:
-            for elem in tile.split(" "):
+            for elem in tile:
                 if (elem == element):
                     pathFinding(pos)
-                    self.requestClient("Take object\n")
+                    self.requestClient(Command.TAKE_OBJECT)
                     return
             pos += 1
 
     def takeFood(self):
-        takeElementInLastLook("food")
+        takeElementInLastLook(Element.FOOD)
