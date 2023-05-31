@@ -5,6 +5,11 @@
 ** IDisplayModule
 */
 
+#pragma once
+#include <vector>
+#include <memory>
+#include "IEntity.hpp"
+
 namespace GUI {
         enum class WINDOW_MODE {
             WINDOWED,
@@ -15,7 +20,7 @@ namespace GUI {
     class IDisplayModule {
         public:
             ~IDisplayModule() = default;
-            virtual void update() = 0;
+            virtual void update(const std::vector<std::shared_ptr<GUI::Entities::IEntity>> &entities) = 0;
             virtual bool isOpen() = 0;
             virtual void handleEvents() = 0;
             virtual void setFramerateLimit(unsigned int framerateLimit) = 0;
