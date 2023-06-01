@@ -20,10 +20,10 @@ namespace GUI {
                 void setRotation(const Vector2F &rotation) final;
                 const GUI::Vector2F &getScale() const final;
                 void setScale(const Vector2F &scale) final;
-                const EntityType &getType() const final;
+                EntityType getType() const final;
                 const std::string &getId() const final;
-                void setOrientation(const EntityOrientation &orientation) final;
-                const EntityOrientation &getOrientation() const final;
+                void setOrientation(EntityOrientation orientation) final;
+                EntityOrientation getOrientation() const final;
                 const std::vector<Components::CompType> &getCompType() const final;
                 const std::vector<std::shared_ptr<Components::IComponent>>
                     &getComponents() const final;

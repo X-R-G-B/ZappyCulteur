@@ -40,7 +40,7 @@ namespace GUI {
             _scale = scale;
         }
 
-        const EntityType &AEntity::getType() const
+        EntityType AEntity::getType() const
         {
             return _type;
         }
@@ -50,12 +50,12 @@ namespace GUI {
             return _id;
         }
 
-        void AEntity::setOrientation(const EntityOrientation &orientation)
+        void AEntity::setOrientation(EntityOrientation orientation)
         {
             _orientation = orientation;
         }
 
-        const EntityOrientation &AEntity::getOrientation() const
+        EntityOrientation AEntity::getOrientation() const
         {
             return _orientation;
         }

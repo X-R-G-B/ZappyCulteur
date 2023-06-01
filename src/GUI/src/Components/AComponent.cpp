@@ -14,7 +14,7 @@ namespace GUI {
             return _id;
         }
 
-        const CompType &AComponent::getType() const {
+        CompType AComponent::getType() const {
             return _type;
         }
 

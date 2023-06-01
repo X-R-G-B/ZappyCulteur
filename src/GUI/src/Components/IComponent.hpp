@@ -31,7 +31,7 @@ namespace GUI {
                 /**
                  * @brief get the type of the component
                  */
-                virtual const CompType &getType() const = 0;
+                virtual CompType getType() const = 0;
         };
     }
 }
