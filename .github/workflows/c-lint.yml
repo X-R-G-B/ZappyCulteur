@@ -29,5 +29,7 @@ jobs:
         path: src/SERVER/coding-style-reports.log
 
     - name: Is error ?
-      run: if [[ $(wc -l coding-style-reports.log) -gt 0 ]]; then exit 1; fi
+      run: |
+        if [ ! -f 'coding-style-reports.log' ]; then exit 0; fi
+        if [ -s 'coding-style-reports.log') ]; then exit 1; fi
       working-directory: ${{ env.workdir }}
