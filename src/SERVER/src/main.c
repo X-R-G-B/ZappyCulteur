@@ -25,7 +25,7 @@ static int server_start(args_t *args)
         is_end = loop(zappy);
     }
     zappy_destroy(zappy);
-    return 0; 
+    return 0;
 }
 
 int main(int ac, const char *const av[])
