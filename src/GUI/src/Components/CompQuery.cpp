@@ -10,25 +10,18 @@
 
 namespace GUI {
     namespace Components {
-
-        std::unique_ptr<std::map<size_t, std::vector<std::shared_ptr<GUI::Components::Sprite>>>>
-            CompQuery::sortSpritesByLayer(std::unique_ptr<std::vector<std::shared_ptr<Components::IComponent>>> sprites)
+        
+        void CompQuery::sortSpritesByLayer(
+            std::unique_ptr<std::vector<std::shared_ptr<Components::IComponent>>> &sprites)
         {
-            auto sortedSprites = std::make_unique<std::map<size_t, std::vector<std::shared_ptr<GUI::Components::Sprite>>>>();
-
-            for (const auto &sprite : *sprites) {
-                auto spritePtr = std::static_pointer_cast<GUI::Components::Sprite>(sprite);
-                if (spritePtr == nullptr) {
-                    continue;
+            std::sort(sprites->begin(), sprites->end(),
+                [](const std::shared_ptr<Components::IComponent> &a,
+                const std::shared_ptr<Components::IComponent> &b) {
+                    const auto &firstSprite = std::static_pointer_cast<Components::Sprite>(a);
+                    const auto &secondSprite = std::static_pointer_cast<Components::Sprite>(b);
+                    return firstSprite->getLayer() < secondSprite->getLayer();
                 }
-                if (sortedSprites->find(spritePtr->getLayer()) == sortedSprites->end()) {
-                    sortedSprites->insert(
-                        std::make_pair(spritePtr->getLayer(), std::vector<std::shared_ptr<GUI::Components::Sprite>>())
-                    );
-                }
-                sortedSprites->at(spritePtr->getLayer()).push_back(spritePtr);
-            }
-            return sortedSprites;
+            );
         }
 
     }

@@ -20,8 +20,7 @@ namespace GUI {
                 CompQuery() = default;
                 ~CompQuery() = default;
 
-                std::unique_ptr<std::map<size_t, std::vector<std::shared_ptr<GUI::Components::Sprite>>>>
-                    sortSpritesByLayer(std::unique_ptr<std::vector<std::shared_ptr<Components::IComponent>>> sprites);
+                void sortSpritesByLayer(std::unique_ptr<std::vector<std::shared_ptr<Components::IComponent>>> &sprites);
 
         };
     }

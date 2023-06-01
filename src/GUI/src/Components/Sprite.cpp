@@ -16,12 +16,10 @@ namespace GUI {
             const Vector2F &position,
             unsigned int width,
             unsigned int height
-        ) :
+        ) : AComponent(id, CompType::SPRITE),
             _sprite(texture),
             _layer(layer)
         {
-            _id = id;
-            _type = CompType::SPRITE;
             _position = sf::Vector2f(position.x, position.y);
             _sprite.setPosition(_position);
             applySize(width, height);

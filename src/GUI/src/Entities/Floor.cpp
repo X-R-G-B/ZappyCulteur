@@ -44,17 +44,18 @@ namespace GUI {
         {
             try {
                 initTexture();
-                for (unsigned int i = 0; i < _width; i++) {
-                    for (unsigned int j = 0; j < _height; j++) {
-                        if ((i + j) % 2 == 0) {
-                            createDarkFloor(i, j);
-                        } else {
-                            createLightFloor(i, j);
-                        }
-                    }
-                }
             } catch (const std::exception &e) {
                 std::cerr << e.what() << std::endl;
+                return;
+            }
+            for (unsigned int i = 0; i < _width; i++) {
+                for (unsigned int j = 0; j < _height; j++) {
+                    if ((i + j) % 2 == 0) {
+                        createDarkFloor(i, j);
+                    } else {
+                        createLightFloor(i, j);
+                    }
+                }
             }
         }
 

@@ -81,16 +81,15 @@ namespace GUI {
 
     void SFML::drawSprites(const Entities::EntitiesManager &entitiesManger)
     {
-        auto sprites = _compQuery.sortSpritesByLayer(entitiesManger.getComponentsByType(Components::CompType::SPRITE));
+        auto sprites = entitiesManger.getComponentsByType(Components::CompType::SPRITE);
+        _compQuery.sortSpritesByLayer(sprites);
 
         for (const auto &sprite : *sprites) {
-            for (const auto &spriteComponent : sprite.second) {
-                auto spritePtr = std::static_pointer_cast<GUI::Components::Sprite>(spriteComponent);
-                if (spritePtr == nullptr) {
-                    continue;
-                }
-                _window.draw(spritePtr->getSprite());
+            auto spritePtr = std::static_pointer_cast<GUI::Components::Sprite>(sprite);
+            if (spritePtr == nullptr) {
+                continue;
             }
+            _window.draw(spritePtr->getSprite());
         }
     }
 
