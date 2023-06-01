@@ -79,7 +79,7 @@ namespace GUI {
         _window.display();
     }
 
-    void SFML::drawSprites(Entities::EntitiesManager &entitiesManger)
+    void SFML::drawSprites(const Entities::EntitiesManager &entitiesManger)
     {
         auto sprites = _compQuery.sortSpritesByLayer(entitiesManger.getComponentsByType(Components::CompType::SPRITE));
 

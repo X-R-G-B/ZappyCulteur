@@ -35,7 +35,7 @@ namespace GUI {
         private:
             void clear() final;
             void closeWindow()final;
-            void drawSprites(Entities::EntitiesManager &entitiesManger);
+            void drawSprites(const Entities::EntitiesManager &entitiesManger);
             void createWindow() final;
             void setWindowStyle();
             void switchWindowMode() final;
