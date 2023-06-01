@@ -8,23 +8,23 @@ import time
 
 class Client:
     def __init__(self, port: int, server_ip: str = "localhost"):
-        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_ip = server_ip
-        self.isConnected = False
-        self.port = port
+        self.client_socket: Socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_ip: int = server_ip
+        self.isConnected: bool = False
+        self.port: int = port
 
-        self.inTreatment = 0
+        self.inTreatment: int = 0
 
-        self.stopLock = threading.Lock()
-        self.stop = False
+        self.stopLock: Lock = threading.Lock()
+        self.stop: bool = False
 
-        self.receivedLock = threading.Lock()
-        self.messReceived = []
+        self.receivedLock: Lock = threading.Lock()
+        self.messReceived: List[str] = []
 
-        self.sendLock = threading.Lock()
-        self.messToSend = []
+        self.sendLock: Lock = threading.Lock()
+        self.messToSend: List[str] = []
 
-        self.thread = threading.Thread(target=self.connect)
+        self.thread: Thread = threading.Thread(target=self.connect)
         self.thread.start()
         time.sleep(0.1)
 
@@ -78,7 +78,9 @@ class Client:
             if (socket == self.client_socket):
                 raise Exception("Socket error")
 
-    def input(self, message: str):
+    def input(self, message: str, arg: str = ""):
+        if (arg != ""):
+            message += " " + arg + "\n"
         self.sendLock.acquire()
         self.messToSend.insert(0, message)
         self.sendLock.release()
