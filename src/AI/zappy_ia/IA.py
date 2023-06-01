@@ -48,7 +48,7 @@ class IA:
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
 
-    def requestClient(self, command: Union[Command, str], arg: str = "") -> str:
+    def requestClient(self, command: Union[Command, str], arg: Union[Element, str] = "") -> str:
         """
         This function send command to the server, wait the response and return it
 
@@ -59,28 +59,41 @@ class IA:
         Server response
         """
         toSend: str = ""
+        argToSend: str = ""
         if isinstance(command, Command):
             toSend = command.value
         else:
             toSend = command
-        self.client.input(toSend, arg)
+        if isinstance(arg, Element):
+            argToSend = arg.value
+        else:
+            argToSend = arg
+        self.client.input(toSend, argToSend)
         res = ""
         while res == "":
             res = self.client.output()
         if res == "ko":
-            raise Exception("Server responsed ko to : " + command.value)
+            raise Exception("Server responsed ko to : " + toSend)
         return res
 
     def look(self):
-        res = self.requestClient(Command.LOOK)
+        """
+        This function send the look command to the server and parse response in self.lastLook which is List[List[Element]]
+        """
         self.lastLook.clear()
-        for i in range(len(res)):
+
+        res = self.requestClient(Command.LOOK)
+        res = res.split("[")[1].split("]")[0]
+
+        i = 0
+        for tile in res.split(","):
             self.lastLook.append([])
-            for elem in res[i].split(" "):
+            for elem in tile.split(" "):
                 if elem == "":
                     self.lastLook[i].append(Element.EMPTY)
                 else:
                     self.lastLook[i].append(Element(elem))
+            i += 1
 
     def pathFinding(self, pos: int):
         """
@@ -116,7 +129,7 @@ class IA:
         if pos < 0:
             return
         self.pathFinding(pos)
-        self.requestClient(Command.TAKE_OBJECT, element.value)
+        self.requestClient(Command.TAKE_OBJECT, element)
 
     def takeFood(self, pos: int):
         self.takeElementInLastLook(Element.FOOD, pos)
