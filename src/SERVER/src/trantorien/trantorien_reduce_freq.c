@@ -6,6 +6,7 @@
 */
 
 #include <stddef.h>
+#include <stdio.h>
 #include "ntw.h"
 #include "zappy.h"
 #include "trantorien.h"
@@ -18,8 +19,7 @@ static void trantorien_need_update(trantorien_t *trantorien, zappy_t *zappy,
     // TODO
 }
 
-static void broadcast_incantation(trantorien_t *ref_trantorien,
-    ntw_client_t *client, ntw_t *ntw)
+static void broadcast_incantation(trantorien_t *ref_trantorien, ntw_t *ntw)
 {
     char buff[512] = {0};
     int trantorien_lvl = ref_trantorien->level;
@@ -44,14 +44,14 @@ static void broadcast_incantation(trantorien_t *ref_trantorien,
 }
 
 static void move_up(action_t *actions[NB_PARALLEL_ACTION],
-    trantorien_t *trantorien, ntw_client_t *client, ntw_t *ntw)
+    trantorien_t *trantorien, ntw_t *ntw)
 {
     for (int i = 1; i < NB_PARALLEL_ACTION; i++) {
         actions[i - 1] = actions[i];
     }
     actions[NB_PARALLEL_ACTION - 1] = NULL;
     if (actions[0]->code == INCANTATION) {
-        broadcast_incantation(trantorien, client, ntw);
+        broadcast_incantation(trantorien, ntw);
     }
 }
 
@@ -69,6 +69,6 @@ void trantorien_reduce_freq(trantorien_t *trantorien, zappy_t *zappy,
         trantorien_need_update(trantorien, zappy, cl, trantorien->actions[0]);
         action_destroy(trantorien->actions[0]);
         trantorien->actions[0] = NULL;
-        move_up(trantorien->actions, trantorien, cl, zappy->ntw);
+        move_up(trantorien->actions, trantorien, zappy->ntw);
     }
 }

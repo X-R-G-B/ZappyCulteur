@@ -112,7 +112,14 @@ SRC_NTW			:=															\
 SRC_NTW			:=			$(addprefix network/, $(SRC_NTW))
 
 # TRANTORIEN -----------------------------------------------------------------
+SRC_TRNT_CMD	=															\
+							command_set_object_down.c						\
+							command_start_incantation.c						\
+							command_take_object.c
+SRC_TRNT_CMD	:=			$(addprefix commands/, $(SRC_TRNT_CMD))
+
 SRC_TRNT		:=															\
+							$(SRC_TRNT_CMD)									\
 							action_destroy.c								\
 							action_init.c									\
 							trantorien_add_act.c							\
@@ -123,10 +130,7 @@ SRC_TRNT		:=															\
 							trantorien_init.c								\
 							trantorien_is_cmd_availible.c					\
 							trantorien_place_cmd.c							\
-							trantorien_reduce_freq.c						\
-							command_set_object_down.c						\
-							command_start_incantation.c						\
-							command_take_object.c
+							trantorien_reduce_freq.c
 SRC_TRNT		:=			$(addprefix trantorien/, $(SRC_TRNT))
 
 # ----------------------------------------------------------------------------
