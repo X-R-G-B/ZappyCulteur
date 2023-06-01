@@ -48,7 +48,9 @@ class IA:
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
 
-    def requestClient(self, command: Union[Command, str], arg: Union[Element, str] = "") -> str:
+    def requestClient(
+        self, command: Union[Command, str], arg: Union[Element, str] = ""
+    ) -> str:
         """
         This function send command to the server, wait the response and return it
 
