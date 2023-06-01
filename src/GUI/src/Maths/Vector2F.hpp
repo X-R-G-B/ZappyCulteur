@@ -24,6 +24,8 @@ namespace GUI {
             Vector2F &operator-=(const Vector2F &vector);
             Vector2F &operator*=(const Vector2F &vector);
             Vector2F &operator/=(const Vector2F &vector);
+            Vector2F &operator*=(float value);
+            Vector2F &operator/=(float value);
             bool operator==(const Vector2F &vector) const;
             bool operator!=(const Vector2F &vector) const;
     };

@@ -81,4 +81,18 @@ namespace GUI {
     {
         return Vector2F(this->x / value, this->y / value);
     }
+
+    Vector2F &Vector2F::operator*=(float value)
+    {
+        this->x *= value;
+        this->y *= value;
+        return *this;
+    }
+
+    Vector2F &Vector2F::operator/=(float value)
+    {
+        this->x /= value;
+        this->y /= value;
+        return *this;
+    }
 }
