@@ -31,5 +31,5 @@ jobs:
     - name: Is error ?
       run: |
         if [ ! -f 'coding-style-reports.log' ]; then exit 0; fi
-        if [ -s 'coding-style-reports.log') ]; then exit 1; fi
+        if [ -s 'coding-style-reports.log' ]; then exit 1; fi
       working-directory: ${{ env.workdir }}
