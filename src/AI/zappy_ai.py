@@ -28,4 +28,3 @@ if __name__ == "__main__":
     machineName = args.h
 
     bee = IA(port, machineName, teamName)
-    bee.pathFinding(3)

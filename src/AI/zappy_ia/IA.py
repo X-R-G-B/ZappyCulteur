@@ -41,11 +41,6 @@ class IA:
 
         while (self.client.output() != "WELCOME\n"):
             pass
-        #self.client.input(self.teamName + "\n")
-        #resSetup = ""
-        #while (resSetup == ""):
-        #    resSetup = self.client.output()
-        #resSetup = resSetup.split("\n")
         resSetup = self.requestClient(self.teamName + "\n").split("\n")
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
