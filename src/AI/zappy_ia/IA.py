@@ -4,6 +4,7 @@ from zappy_ia.Client import Client
 from typing import Union
 import time
 
+
 class Element(Enum):
     EMPTY = "empty"
     FOOD = "food"
@@ -14,6 +15,7 @@ class Element(Enum):
     MENDIANE = "mendiane"
     PHIRAS = "phiras"
     THYSTAME = "thystame"
+
 
 class Command(Enum):
     FORWARD = "Forward\n"
@@ -29,6 +31,7 @@ class Command(Enum):
     SET_OBJECT = "Set"
     INCANTATION = "Incantation\n"
 
+
 class IA:
     def __init__(self, port: int, machineName: str, teamName: str):
         self.port: int = port
@@ -39,37 +42,60 @@ class IA:
         self.lastLook: List[List[Element]] = []
         self.client: Client = Client(port, machineName)
 
-        while (self.client.output() != "WELCOME\n"):
+        while self.client.output() != "WELCOME\n":
             pass
         resSetup = self.requestClient(self.teamName + "\n").split("\n")
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
 
-    def requestClient(self, command: Union[Command, str], arg: str = "") -> str:
+    def requestClient(
+        self, command: Union[Command, str], arg: Union[Element, str] = ""
+    ) -> str:
         """
         This function send command to the server, wait the response and return it
 
         Parameters:
-        command (Command): command to send to the server."
+        command (Union[Command, str]): command to send to the server, can be Command or str."
+
+        Returns:
+        Server response
         """
         toSend: str = ""
-        if (isinstance(command, Command)):
+        argToSend: str = ""
+        if isinstance(command, Command):
             toSend = command.value
         else:
             toSend = command
-        self.client.input(toSend, arg)
+        if isinstance(arg, Element):
+            argToSend = arg.value
+        else:
+            argToSend = arg
+        self.client.input(toSend, argToSend)
         res = ""
-        while (res == ""):
+        while res == "":
             res = self.client.output()
-        if (res == "ko"):
-            raise Exception("Server responsed ko to : " + command.value)
+        if res == "ko":
+            raise Exception("Server responsed ko to : " + toSend)
         return res
 
     def look(self):
+        """
+        This function send the look command to the server and parse response in self.lastLook which is List[List[Element]]
+        """
+        self.lastLook.clear()
+
         res = self.requestClient(Command.LOOK)
-        for i in range(len(res)):
+        res = res.split("[")[1].split("]")[0]
+
+        i = 0
+        for tile in res.split(","):
+            self.lastLook.append([])
             for elem in tile.split(" "):
-                self.lastLook[i].append(Element[elem])
+                if elem == "":
+                    self.lastLook[i].append(Element.EMPTY)
+                else:
+                    self.lastLook[i].append(Element(elem))
+            i += 1
 
     def pathFinding(self, pos: int):
         """
@@ -81,34 +107,74 @@ class IA:
         for i in range(1, 9):
             self.requestClient(Command.FORWARD)
             mid = i * (i + 1)
-            if (mid == pos):
+            if mid == pos:
                 return
-            if (mid - i <= pos and pos < mid):
+            if mid - i <= pos and pos < mid:
                 self.requestClient(Command.LEFT)
                 for x in range(mid - pos):
                     self.requestClient(Command.FORWARD)
                 return
-            if (mid + i >= pos and pos > mid):
+            if mid + i >= pos and pos > mid:
                 self.requestClient(Command.RIGHT)
                 for x in range(pos - mid):
                     self.requestClient(Command.FORWARD)
                 return
 
-    def takeElementInLastLook(self, element: Element):
+    def takeElementInLastLook(self, element: Element, pos: int):
         """
         This function move the ia to the closest element and pick it up
 
         Parameters:
-        element (str): key of searched element (ex: food, player, etc)
+        element (Element): element to take
+        pos (int): pos (in front of the ia) of the element
         """
-        pos = 0
-        for tile in self.lastLook:
-            for elem in tile:
-                if (elem == element):
-                    pathFinding(pos)
-                    self.requestClient(Command.TAKE_OBJECT)
-                    return
-            pos += 1
+        if pos < 0:
+            return
+        self.pathFinding(pos)
+        self.requestClient(Command.TAKE_OBJECT, element)
 
-    def takeFood(self):
-        takeElementInLastLook(Element.FOOD)
+    def takeFood(self, pos: int):
+        self.takeElementInLastLook(Element.FOOD, pos)
+
+    def findClosestElemInLastLook(
+        self, element: Element, checkCurrentTile: bool = True
+    ) -> int:
+        """
+        This function find closest elem in last look and return it pos
+
+        Parameters:
+        element (Element): elem to find pos
+        """
+        lastLook = self.lastLook
+        i = 0
+        if checkCurrentTile == False:
+            lastLook = lastLook.pop(0)
+            i = 1
+        for tile in lastLook:
+            for elem in tile:
+                if elem == element:
+                    return i
+            i += 1
+        return -1
+
+    def findFood(self, distanceLimit: int = 0):
+        """
+        This function find and take the closest food in other directions than the current,
+            because it will be call when ia need food and don't see any in last look
+            this function is call when ia need to survive and don't care of other items
+
+        Parameters:
+        distanceLimit (int): is the id of the last line where we can go take food, after it's too far away
+            0 if no limit
+        """
+        i = 1
+        pos = -1
+        while pos == -1:
+            self.requestClient("Right\n")
+            self.look()
+            pos = self.findClosestElemInLastLook(Element.FOOD)
+            if distanceLimit != 0 and i > distanceLimit:
+                self.findFood(distanceLimit)
+            elif pos != -1:
+                self.takeElementInLastLook(Element.FOOD, pos)
+            i += 1
