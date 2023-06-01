@@ -30,6 +30,14 @@ namespace GUI {
                 std::unique_ptr<std::vector<std::shared_ptr<Components::IComponent>>>
                     getComponentsByType(Components::CompType type) const final;
             protected:
+                AEntity(
+                    const std::string &id,
+                    const Vector2F &position,
+                    const Vector2F &rotation,
+                    const Vector2F &scale,
+                    EntityType type,
+                    EntityOrientation orientation
+                );
                 Vector2F _position;
                 Vector2F _rotation;
                 Vector2F _scale;

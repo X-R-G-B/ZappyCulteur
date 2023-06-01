@@ -16,15 +16,18 @@ namespace GUI {
             unsigned int width,
             unsigned int height,
             float tileSize) :
+            AEntity(
+                id,
+                position,
+                Vector2F(0, 0),
+                Vector2F(1, 1),
+                EntityType::ENVIROMENT,
+                EntityOrientation::RIGHT
+            ),
             _width(width),
             _height(height),
             _tileSize(tileSize)
         {
-            _id = id;
-            _type = EntityType::ENVIROMENT;
-            _position = position;
-            _rotation = Vector2F(0, 0);
-            _scale = Vector2F(1, 1);
             initSprites();
         }
 
@@ -36,7 +39,7 @@ namespace GUI {
         {
             if (_txFloorDark.loadFromFile("src/GUI/assets/environment/darkFloor.png") == false ||
                 _txFloorLight.loadFromFile("src/GUI/assets/environment/lightFloor.png") == false) {
-                throw std::exception();
+                throw EntityException("Error: could not load floor texture");
             }
         }
 
@@ -44,7 +47,7 @@ namespace GUI {
         {
             try {
                 initTexture();
-            } catch (const std::exception &e) {
+            } catch (const EntityException &e) {
                 std::cerr << e.what() << std::endl;
                 return;
             }

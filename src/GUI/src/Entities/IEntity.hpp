@@ -8,6 +8,7 @@
 #pragma once
 
 #include <string>
+#include <exception>
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "Vector2F.hpp"
@@ -27,6 +28,14 @@ namespace GUI {
             DOWN,
             LEFT,
             RIGHT,
+        };
+
+        class EntityException : public std::exception {
+            public:
+                EntityException(const std::string &message);
+                const char *what() const noexcept override;
+            private:
+                std::string _message;
         };
 
         class IEntity {

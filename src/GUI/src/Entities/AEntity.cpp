@@ -10,6 +10,32 @@
 
 namespace GUI {
     namespace Entities {
+
+        EntityException::EntityException(const std::string &message) :
+            _message(message)
+        {}
+
+        const char *EntityException::what() const noexcept
+        {
+            return _message.c_str();
+        }
+
+        AEntity::AEntity(
+            const std::string &id,
+            const Vector2F &position,
+            const Vector2F &rotation,
+            const Vector2F &scale,
+            EntityType type,
+            EntityOrientation orientation
+        ) :
+            _position(position),
+            _rotation(rotation),
+            _scale(scale),
+            _type(type),
+            _id(id),
+            _orientation(orientation)
+        {}
+
         const GUI::Vector2F &AEntity::getPosition() const
         {
             return _position;

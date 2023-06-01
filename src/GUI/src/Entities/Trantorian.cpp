@@ -15,16 +15,18 @@ namespace GUI {
             const std::string &id,
             const std::string &team,
             const Vector2F &position) :
+            AEntity(
+                id,
+                position,
+                Vector2F(0, 0),
+                Vector2F(1, 1),
+                EntityType::TRANTORIAN,
+                EntityOrientation::RIGHT
+            ),
             _level(1),
             _team(team),
             _speed(5)
         {
-            _id = id;
-            _type = EntityType::TRANTORIAN;
-            _orientation = EntityOrientation::RIGHT;
-            _position = position;
-            _rotation = Vector2F(0, 0);
-            _scale = Vector2F(1, 1);
             initSprites();
         }
 
