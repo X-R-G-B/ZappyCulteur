@@ -24,7 +24,7 @@ static int server_start(args_t *args)
         ntw_loop(zappy->ntw);
         is_end = loop(zappy);
     }
-    zappy_destroy(zappy); 
+    zappy_destroy(zappy);
     return 0;
 }
 
