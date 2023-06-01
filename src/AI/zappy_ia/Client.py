@@ -80,7 +80,7 @@ class Client:
 
     def input(self, message: str, arg: str = ""):
         if (arg != ""):
-            message += " " + arg
+            message += " " + arg + "\n"
         self.sendLock.acquire()
         self.messToSend.insert(0, message)
         self.sendLock.release()

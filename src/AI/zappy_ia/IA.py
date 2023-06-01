@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import List, Tuple
 from zappy_ia.Client import Client
+from typing import Union
 import time
 
 class Element(Enum):
@@ -24,8 +25,8 @@ class Command(Enum):
     CONNECT_NBR = "Connect_nbr\n"
     FORK = "Fork\n"
     EJECT = "Eject\n"
-    TAKE_OBJECT = "Take object\n"
-    SET_OBJECT = "Set object\n"
+    TAKE_OBJECT = "Take"
+    SET_OBJECT = "Set"
     INCANTATION = "Incantation\n"
 
 class IA:
@@ -40,22 +41,28 @@ class IA:
 
         while (self.client.output() != "WELCOME\n"):
             pass
-        self.client.input(self.teamName + "\n")
-        resSetup = ""
-        while (resSetup == ""):
-            resSetup = self.client.output()
-        resSetup = resSetup.split("\n")
+        #self.client.input(self.teamName + "\n")
+        #resSetup = ""
+        #while (resSetup == ""):
+        #    resSetup = self.client.output()
+        #resSetup = resSetup.split("\n")
+        resSetup = self.requestClient(self.teamName + "\n").split("\n")
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
 
-    def requestClient(self, command: Command, arg: str = "") -> str:
+    def requestClient(self, command: Union[Command, str], arg: str = "") -> str:
         """
         This function send command to the server, wait the response and return it
 
         Parameters:
         command (Command): command to send to the server."
         """
-        self.client.input(command.value, arg)
+        toSend: str = ""
+        if (isinstance(command, Command)):
+            toSend = command.value
+        else:
+            toSend = command
+        self.client.input(toSend, arg)
         res = ""
         while (res == ""):
             res = self.client.output()
