@@ -10,8 +10,9 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-
+#include "CompQuery.hpp"
 #include "ADisplayModule.hpp"
+#include "EntitiesManager.hpp"
 
 namespace GUI {
     class EntityManager;
@@ -28,18 +29,20 @@ namespace GUI {
                 WINDOW_MODE windowMode = WINDOW_MODE::FULLSCREEN
             );
             ~SFML();
-            void update() final;
-            void handleEvents() final;
-            void setFramerateLimit(unsigned int framerateLimit) final;
+            virtual void update(Entities::EntitiesManager &entitiesManger) final;
+            virtual void handleEvents() final;
+            WINDOW_MODE getWindowMode();
         private:
             void clear() final;
             void closeWindow()final;
+            void drawSprites(const Entities::EntitiesManager &entitiesManger);
             void createWindow() final;
-            void switchWindowMode() final;
             void setWindowStyle();
+            void switchWindowMode() final;
             sf::Event _event;
             sf::Uint32 _winStyle;
             sf::RenderWindow _window;
+            Components::CompQuery _compQuery;
             std::shared_ptr<GUI::EntityManager> _entityManager;
     };
 }
