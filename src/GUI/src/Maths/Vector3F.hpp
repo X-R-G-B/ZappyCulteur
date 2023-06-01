@@ -21,12 +21,16 @@ namespace GUI {
             Vector3F operator/(const Vector3F &vector) const;
             Vector3F operator*(float value) const;
             Vector3F operator/(float value) const;
+            Vector3F operator-(float value) const;
+            Vector3F operator+(float value) const;
             Vector3F &operator+=(const Vector3F &vector);
             Vector3F &operator-=(const Vector3F &vector);
             Vector3F &operator*=(const Vector3F &vector);
             Vector3F &operator/=(const Vector3F &vector);
             Vector3F &operator*=(float value);
             Vector3F &operator/=(float value);
+            Vector3F &operator-=(float value);
+            Vector3F &operator+=(float value);
             bool operator==(const Vector3F &vector) const;
             bool operator!=(const Vector3F &vector) const;
     };

@@ -102,4 +102,30 @@ namespace GUI {
         this->z /= value;
         return *this;
     }
+
+    Vector3F Vector3F::operator-(float value) const
+    {
+        return Vector3F(this->x - value, this->y - value, this->z - value);
+    }
+
+    Vector3F Vector3F::operator+(float value) const
+    {
+        return Vector3F(this->x + value, this->y + value, this->z + value);
+    }
+
+    Vector3F &Vector3F::operator-=(float value)
+    {
+        this->x -= value;
+        this->y -= value;
+        this->z -= value;
+        return *this;
+    }
+
+    Vector3F &Vector3F::operator+=(float value)
+    {
+        this->x += value;
+        this->y += value;
+        this->z += value;
+        return *this;
+    }
 }
