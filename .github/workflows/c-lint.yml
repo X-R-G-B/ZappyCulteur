@@ -16,7 +16,6 @@ jobs:
 
     - name: Install Deps
       run: |
-        sudo apt-get install docker.io
         sudo systemctl enable --now docker
 
     - name: Lint
