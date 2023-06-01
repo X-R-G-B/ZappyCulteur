@@ -83,8 +83,8 @@ namespace GUI {
     {
         auto sprites = _compQuery.sortSpritesByLayer(entitiesManger.getComponentsByType(Components::CompType::SPRITE));
 
-        for (auto &sprite : *sprites) {
-            for (auto &spriteComponent : sprite.second) {
+        for (const auto &sprite : *sprites) {
+            for (const auto &spriteComponent : sprite.second) {
                 auto spritePtr = std::static_pointer_cast<GUI::Components::Sprite>(spriteComponent);
                 if (spritePtr == nullptr) {
                     continue;
