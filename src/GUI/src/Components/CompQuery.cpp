@@ -16,7 +16,7 @@ namespace GUI {
         {
             auto sortedSprites = std::make_unique<std::map<size_t, std::vector<std::shared_ptr<GUI::Components::Sprite>>>>();
 
-            for (auto &sprite : *sprites) {
+            for (const auto &sprite : *sprites) {
                 auto spritePtr = std::static_pointer_cast<GUI::Components::Sprite>(sprite);
                 if (spritePtr == nullptr) {
                     continue;
