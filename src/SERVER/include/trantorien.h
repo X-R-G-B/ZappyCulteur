@@ -56,6 +56,7 @@ struct trantorien_s {
     enum direction_e direction;
     bool alive;
     int level;
+    action_t *incantation;
     int ressources[MAX_NB_RESOURCES];
     action_t *actions[NB_PARALLEL_ACTION];
 };

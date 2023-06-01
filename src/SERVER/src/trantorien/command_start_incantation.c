@@ -28,10 +28,10 @@ static const int level_players[LVL_MAX - 1] = {
     1, 2, 2, 4, 4, 6, 6
 };
 
-static bool check_incantation_lvl_availability(int trantorien_lvl, ntw_t *ntw)
+static bool check_incantation_lvl_availability(trantorien_t *ref_trantorien, ntw_t *ntw)
 {
     int nb_trantorien_lvl = 0;
-    ntw_client_t *nt_cl = NULL;
+    int trantorien_lvl = ref_trantorien->level;
     client_t *cl = NULL;
     trantorien_t *trantorien = NULL;
 
@@ -40,10 +40,12 @@ static bool check_incantation_lvl_availability(int trantorien_lvl, ntw_t *ntw)
         if (cl == NULL || cl->type != AI)
             continue;
         trantorien = cl->cl.ai.trantorien;
-        if (trantorien != NULL && trantorien->level == trantorien_lvl)
+        if (trantorien != NULL && trantorien->level == trantorien_lvl
+                && ref_trantorien->x == trantorien->x
+                && ref_trantorien->y == trantorien->y)
             nb_trantorien_lvl += 1;
     }
-    if (nb_trantorien_lvl < level_players[trantorien_lvl - 1])
+    if (nb_trantorien_lvl != level_players[trantorien_lvl - 1])
         return false;
     return true;
 }
@@ -54,13 +56,15 @@ bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
 {
     int map_index = 0;
 
+    if (trantorien == NULL || map == NULL || ntw == NULL)
+        return false;
     map_index_x_y_to_i(map, trantorien->x, trantorien->y, &map_index);
     for (int i = FOOD; i < MAX_NB_RESOURCES; i++) {
         if (map[map_index].tiles->ressources[i] <
             level_ressources[trantorien->level - 1][i])
             return false;
     }
-    if (check_incantation_lvl_availability(trantorien->level, ntw) == false)
+    if (check_incantation_lvl_availability(trantorien, ntw) == false)
         return false;
     return true;
 }
@@ -69,7 +73,6 @@ int command_start_incantation(trantorien_t *trantorien, zappy_t *zappy,
                         ntw_client_t *cl, action_t *action)
 {
     int i = 0;
-    char *level_str = NULL;
 
     if (trantorien == NULL || zappy == NULL || cl == NULL || action == NULL)
         return EXIT_FAILURE;
@@ -78,11 +81,6 @@ int command_start_incantation(trantorien_t *trantorien, zappy_t *zappy,
         circular_buffer_write(cl->write_to_outside, "ko\n");
         return EXIT_SUCCESS;
     }
-    level_str = x_itoa(trantorien->level);
-    if (level_str == NULL)
-        return EXIT_FAILURE;
-    circular_buffer_write(cl->write_to_outside, "Elevation underway Current level: ");
-    circular_buffer_write(cl->write_to_outside, level_str);
-    circular_buffer_write(cl->write_to_outside, "\n");
+    trantorien->level += 1;
     return EXIT_SUCCESS;
 }

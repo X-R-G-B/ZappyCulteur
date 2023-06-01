@@ -10,6 +10,7 @@
 #include "zappy.h"
 #include "trantorien.h"
 #include "internal.h"
+#include "client.h"
 
 static void trantorien_need_update(trantorien_t *trantorien, zappy_t *zappy,
     ntw_client_t *cl, action_t *action)
@@ -17,12 +18,41 @@ static void trantorien_need_update(trantorien_t *trantorien, zappy_t *zappy,
     // TODO
 }
 
-static void move_up(action_t *actions[NB_PARALLEL_ACTION])
+static void broadcast_incantation(trantorien_t *ref_trantorien,
+    ntw_client_t *client, ntw_t *ntw)
+{
+    char buff[512] = {0};
+    int trantorien_lvl = ref_trantorien->level;
+    client_t *cl = NULL;
+    ntw_client_t *ntw_cl = NULL;
+    trantorien_t *trantorien = NULL;
+
+    for (L_EACH(client, ntw->clients)) {
+        ntw_cl = L_DATA(client);
+        cl = L_DATA(ntw_cl);
+        if (cl == NULL || cl->type != AI)
+            continue;
+        trantorien = cl->cl.ai.trantorien;
+        if (trantorien != NULL && trantorien->level == trantorien_lvl
+                && ref_trantorien->x == trantorien->x
+                && ref_trantorien->y == trantorien->y) {
+            snprintf(buff, 511, "Elevation underway Current level: %d\n",
+                trantorien_lvl);
+            circular_buffer_write(ntw_cl->write_to_outside, buff);
+        }
+    }
+}
+
+static void move_up(action_t *actions[NB_PARALLEL_ACTION],
+    trantorien_t *trantorien, ntw_client_t *client, ntw_t *ntw)
 {
     for (int i = 1; i < NB_PARALLEL_ACTION; i++) {
         actions[i - 1] = actions[i];
     }
     actions[NB_PARALLEL_ACTION - 1] = NULL;
+    if (actions[0]->code == INCANTATION) {
+        broadcast_incantation(trantorien, client, ntw);
+    }
 }
 
 void trantorien_reduce_freq(trantorien_t *trantorien, zappy_t *zappy,
@@ -39,6 +69,6 @@ void trantorien_reduce_freq(trantorien_t *trantorien, zappy_t *zappy,
         trantorien_need_update(trantorien, zappy, cl, trantorien->actions[0]);
         action_destroy(trantorien->actions[0]);
         trantorien->actions[0] = NULL;
-        move_up(trantorien->actions);
+        move_up(trantorien->actions, trantorien, cl, zappy->ntw);
     }
 }
