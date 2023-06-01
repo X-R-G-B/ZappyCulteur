@@ -71,4 +71,14 @@ namespace GUI {
     {
         return (this->x != vector.x || this->y != vector.y);
     }
+
+    Vector2F Vector2F::operator*(float value) const
+    {
+        return Vector2F(this->x * value, this->y * value);
+    }
+
+    Vector2F Vector2F::operator/(float value) const
+    {
+        return Vector2F(this->x / value, this->y / value);
+    }
 }

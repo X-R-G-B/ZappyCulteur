@@ -76,4 +76,14 @@ namespace GUI {
     {
         return this->x != vector.x || this->y != vector.y || this->z != vector.z;
     }
+
+    Vector3F Vector3F::operator*(float value) const
+    {
+        return Vector3F(this->x * value, this->y * value, this->z * value);
+    }
+
+    Vector3F Vector3F::operator/(float value) const
+    {
+        return Vector3F(this->x / value, this->y / value, this->z / value);
+    }
 }
