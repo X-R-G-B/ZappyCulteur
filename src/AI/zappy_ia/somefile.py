@@ -1,2 +1,0 @@
-def somefunc():
-    print("ok")
