@@ -8,10 +8,13 @@ class IA:
         self.port = port
         self.machineName = machineName
         self.teamName = teamName
+        self.build()
+
+    def build():
         self.mapSize = [0, 0]
         self.clientNb = 0
         self.cmdPathfinding = []
-        self.client = Client(port, machineName)
+        self.client = Client(self.port, self.machineName)
         self.pid: int = 0
 
         while (self.client.output() != "WELCOME\n"):
@@ -56,4 +59,4 @@ class IA:
         self.requestClient("Fork\n")
         self.pid = os.fork()
         if (self.pid == 0):
-            #self.run
+            self.build()
