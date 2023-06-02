@@ -2,10 +2,9 @@ from enum import Enum
 from typing import List, Tuple
 from zappy_ia.Client import Client
 from typing import Union
-from sklearn.tree import DecisionTreeClassifier
 import pandas as pd
-import time
 import joblib
+import sys
 
 
 class Element(Enum):
@@ -72,7 +71,7 @@ class IA:
         try:
             self.clf = joblib.load("joblib/food.joblib")
         except FileNotFoundError:
-            print(f"File joblib not found", file=sys.stderr)
+            print("File joblib not found", file=sys.stderr)
             sys.exit(84)
 
         while self.client.output() != "WELCOME\n":
@@ -101,7 +100,8 @@ class IA:
         This function send command to the server, wait the response and return it
 
         Parameters:
-        command (Union[Command, str]): command to send to the server, can be Command or str."
+        command (Union[Command, str]): command to send to the server,
+            can be Command or str.
 
         Returns:
         Server response
@@ -126,7 +126,8 @@ class IA:
 
     def inventory(self):
         """
-        This function send the inventory command to the server and parse response in self.inputTree which is List
+        This function send the inventory command to the server and
+            parse response in self.inputTree which is List
         """
         res = self.requestClient(Command.INVENTORY)
         res = res.split("[")[1].split("]")[0]
@@ -140,7 +141,8 @@ class IA:
 
     def lookForTree(self):
         """
-        This function get the list of the closest items on the look to put in self.inputTree
+        This function get the list of the closest items on the look to
+            put in self.inputTree
         """
         self.look()
         for elem in Element:
@@ -152,7 +154,8 @@ class IA:
 
     def look(self):
         """
-        This function send the look command to the server and parse response in self.lastLook which is List[List[Element]]
+        This function send the look command to the server and parse response in
+            self.lastLook which is List[List[Element]]
         """
         self.lastLook.clear()
 
@@ -174,7 +177,8 @@ class IA:
         This function move the ia to the pos in parameters
 
         Parameters:
-        pos (int): pos which represent an index in the array of tile return by server to command look
+        pos (int): pos which represent an index in the array of tile return
+            by server to command look
         """
         if pos <= 0:
             return
@@ -223,7 +227,7 @@ class IA:
         """
         lastLook = self.lastLook
         i = 0
-        if checkCurrentTile == False:
+        if checkCurrentTile is False:
             lastLook = lastLook.pop(0)
             i = 1
         for tile in lastLook:
@@ -235,13 +239,14 @@ class IA:
 
     def findFood(self, distanceLimit: int = 0):
         """
-        This function find and take the closest food in other directions than the current,
-            because it will be call when ia need food and don't see any in last look
-            this function is call when ia need to survive and don't care of other items
+        This function find and take the closest food in other directions
+            than the current, because it will be call when ia need food
+            and don't see any in last look this function is call when
+            ia need to survive and don't care of other items
 
         Parameters:
-        distanceLimit (int): is the id of the last line where we can go take food, after it's too far away
-            0 if no limit
+        distanceLimit (int): is the id of the last line where we can go take food,
+            after it's too far away. 0 if no limit
         """
         i = 1
         pos = -1

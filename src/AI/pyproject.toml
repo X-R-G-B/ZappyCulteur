@@ -30,3 +30,5 @@ exclude = [
   "Makefile",
   "/zappy_ai.py"
 ]
+[tool.ruff]
+ignore = ["E501"]

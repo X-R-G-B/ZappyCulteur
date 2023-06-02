@@ -2,30 +2,30 @@
 
 import socket
 import select
-import sys
 import threading
 import time
+from typing import List
 
 
 class Client:
     def __init__(self, port: int, server_ip: str = "localhost"):
-        self.client_socket: Socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_socket: socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_ip: int = server_ip
         self.isConnected: bool = False
         self.port: int = port
 
         self.inTreatment: int = 0
 
-        self.stopLock: Lock = threading.Lock()
+        self.stopLock: threading.Lock = threading.Lock()
         self.stop: bool = False
 
-        self.receivedLock: Lock = threading.Lock()
+        self.receivedLock: threading.éLock = threading.Lock()
         self.messReceived: List[str] = []
 
-        self.sendLock: Lock = threading.Lock()
+        self.sendLock: threading.Lock = threading.Lock()
         self.messToSend: List[str] = []
 
-        self.thread: Thread = threading.Thread(target=self.connect)
+        self.thread: threading.Thread = threading.Thread(target=self.connect)
         self.thread.start()
         time.sleep(0.1)
 
@@ -36,7 +36,7 @@ class Client:
         self.client_socket.setblocking(False)
 
         self.stopLock.acquire()
-        while self.isConnected and self.stop == False:
+        while self.isConnected and self.stop is False:
             self.stopLock.release()
             read_sockets, write_sockets, error_sockets = select.select(
                 [self.client_socket], [self.client_socket], [self.client_socket], 0
@@ -49,9 +49,9 @@ class Client:
         self.client_socket.close()
 
     def read(self, read_sockets):
-        for socket in read_sockets:
-            if socket == self.client_socket:
-                message = socket.recv(2048).decode()
+        for socket_ in read_sockets:
+            if socket_ == self.client_socket:
+                message = socket_.recv(2048).decode()
                 if message:
                     self.receivedLock.acquire()
                     print("Recv: ", end="")
@@ -65,8 +65,8 @@ class Client:
                     self.isConnected = False
 
     def write(self, write_sockets):
-        for socket in write_sockets:
-            if socket == self.client_socket and self.inTreatment < 10:
+        for socket_ in write_sockets:
+            if socket_ == self.client_socket and self.inTreatment < 10:
                 self.sendLock.acquire()
                 if len(self.messToSend) != 0:
                     message = self.messToSend[-1]
@@ -81,8 +81,8 @@ class Client:
                     self.sendLock.release()
 
     def handleError(self, error_sockets):
-        for socket in error_sockets:
-            if socket == self.client_socket:
+        for socket_ in error_sockets:
+            if socket_ == self.client_socket:
                 raise Exception("Socket error")
 
     def input(self, message: str, arg: str = ""):
