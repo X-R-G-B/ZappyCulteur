@@ -208,7 +208,6 @@ class IA:
         self.requestClient(Command.TAKE_OBJECT, element)
 
     def takeFood(self):
-        print("Tree call 'Take food'")
         self.takeElementInLastLook(
             Element.FOOD, self.findClosestElemInLastLook(Element.FOOD)
         )
@@ -244,7 +243,6 @@ class IA:
         distanceLimit (int): is the id of the last line where we can go take food, after it's too far away
             0 if no limit
         """
-        print("Tree call 'Find food'")
         i = 1
         pos = -1
         while pos == -1:
