@@ -10,7 +10,7 @@
 
     #include "tlcllists.h"
 
-    #define MAX_NB_RESOURCES 7
+    #define MAX_NB_RESOURCES 9
 
 enum ressource_e {
     FOOD = 0,
@@ -20,6 +20,8 @@ enum ressource_e {
     MENDIANE = 4,
     PHIRAS = 5,
     THYSTAME = 6,
+    PLAYER = 7,
+    EGG = 8,
     MAX_RESSOURCE = MAX_NB_RESOURCES,
 };
 

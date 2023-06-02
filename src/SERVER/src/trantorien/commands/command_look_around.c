@@ -13,20 +13,22 @@
 #include "map.h"
 #include "tlcstdlibs.h"
 
-static const char *ressource_name[MAX_RESSOURCE] = {
+static const char *ressources_name[MAX_NB_RESOURCES] = {
     "food",
     "linemate",
     "deraumere",
     "sibur",
     "mendiane",
     "phiras",
-    "thystame"
+    "thystame",
+    "player",
+    "egg"
 };
 
 static void send_tile_single_ressource(ntw_client_t *cl, int ressources,
     int ressource_nbr)
 {
-    circular_buffer_write(cl->write_to_outside, ressource_name[ressources]);
+    circular_buffer_write(cl->write_to_outside, ressources_name[ressources]);
     circular_buffer_write(cl->write_to_outside, " ");
     circular_buffer_write(cl->write_to_outside, x_itoa(ressource_nbr));
 }
