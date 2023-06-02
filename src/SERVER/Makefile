@@ -16,6 +16,7 @@ CFLAGS			=															\
 							-Iinclude										\
 							-Ilibs/tinylibc/includes						\
 							-Ilibs/circularbuffer/includes					\
+							-MMD
 
 LDFLAGS			=															\
 							-L $(LIBS_DIR)/circularbuffer/					\
@@ -154,6 +155,7 @@ SRC				:=															\
 SRC				:=			$(addprefix src/, $(SRC))
 
 OBJ				:=			$(SRC:.c=.o)
+DEP				:=			$(SRC:.c=.d)
 
 RM				?=			rm -f
 
@@ -161,34 +163,37 @@ all: $(LIBS_DIR)/tinylibc/libtinylibc.a
 all: $(LIBS_DIR)/circularbuffer/libcircularbuffer.a
 all: $(TARGET)
 
-$(TARGET):
+all_fast:
+	@$(MAKE) -j --no-print-directory -C . all
+
+$(TARGET):												$(OBJ)
 	@$(ECHO) $(CYAN)'==< CFLAGS >==:'$(RESET) '$(CFLAGS)'
-	@$(ECHO) $(CYAN)'==< LDFLAGS >==:'$(RESET) '$(LDFLAGS) '
-	@$(MAKE) -j -S -C . $(TARGET)_fast
+	@$(ECHO) $(CYAN)'==< LDFLAGS >==:'$(RESET) '$(LDFLAGS)'
+	$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) -o $(TARGET)
+	@$(ECHO) $(CYAN)'==< COMPILED >==:'$(RESET) $(GREEN)$(TARGET)$(RESET)
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@$(ECHO) $(GREEN)$@$(RESET) '<-' $(CYAN)$<$(RESET)
 
-$(TARGET)_fast:											$(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) -o $(TARGET)
-	@$(ECHO) $(CYAN)'==< COMPILED >==:'$(RESET) $(GREEN)$(TARGET)$(RESET)
+$(TARGET)_fast:
+	@$(MAKE) -j --no-print-directory -C . $(TARGET)
 
 $(LIBS_DIR)/tinylibc/libtinylibc.a:						$(LIBS_DIR)
-	@$(MAKE) -j -S -C $(LIBS_DIR) 1>/dev/null
+	@$(MAKE) -j --no-print-directory -C $(LIBS_DIR) 1>/dev/null
 
 $(LIBS_DIR)/circularbuffer/libcircularbuffer.a:			$(LIBS_DIR)
-	@$(MAKE) -j -S -C $(LIBS_DIR) 1>/dev/null
+	@$(MAKE) -j --no-print-directory -C $(LIBS_DIR) 1>/dev/null
 
 $(LIBS_DIR)_clean:										$(LIBS_DIR)
-	@$(MAKE) -S -C $(LIBS_DIR) clean 1>/dev/null
+	@$(MAKE) --no-print-directory -C $(LIBS_DIR) clean 1>/dev/null
 
 clean:													$(LIBS_DIR)_clean
 	@$(RM) $(OBJ) $(SRC:.c=.d)
 	@$(ECHO) $(CYAN)'==< CLEANED >==:'$(RESET)
 
 $(LIBS_DIR)_fclean:										$(LIBS_DIR)
-	@$(MAKE) -S -C $(LIBS_DIR) fclean 1>/dev/null
+	@$(MAKE) --no-print-directory -C $(LIBS_DIR) fclean 1>/dev/null
 
 fclean:													clean
 fclean:													$(LIBS_DIR)_fclean
@@ -197,3 +202,5 @@ fclean:													$(LIBS_DIR)_fclean
 
 re:														fclean
 re:														all
+
+-include $(DEP)

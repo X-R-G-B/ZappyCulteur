@@ -19,8 +19,10 @@ static int server_update(time_t *s_timeout, suseconds_t *m_timeout,
     bool new_freq = false;
 
     if (*s_timeout == 0 && *m_timeout == 0) {
-        *s_timeout = zappy->args->freq;
+        *s_timeout = (zappy->args->freq == 1) ? 1 : 0;
+        *m_timeout = (zappy->args->freq != 1) ? (1.0 / zappy->args->freq) * 1000000 : 0;
         new_freq = true;
+        zappy->cur_tick += 1;
     }
     ntw_wait_till_events(zappy->ntw, s_timeout, m_timeout);
     ntw_loop(zappy->ntw);
@@ -39,6 +41,8 @@ static int server_start(args_t *args)
     if (zappy == NULL) {
         return (84);
     }
+    s_timeout = (zappy->args->freq == 1) ? 1 : 0;
+    m_timeout = (zappy->args->freq != 1) ? (1.0 / zappy->args->freq) * 1000000 : 0;
     while (is_end == false) {
         is_end = server_update(&s_timeout, &m_timeout, zappy);
     }
