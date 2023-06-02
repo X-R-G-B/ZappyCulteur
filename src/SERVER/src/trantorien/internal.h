@@ -8,8 +8,8 @@
 #ifndef INTERNAL_H_
     #define INTERNAL_H_
 
-#include "map.h"
-#include "trantorien.h"
+    #include "map.h"
+    #include "trantorien.h"
 
 action_t *action_init(enum cmd_code_e, enum ressource_e object,
     char *broadcast_msg);

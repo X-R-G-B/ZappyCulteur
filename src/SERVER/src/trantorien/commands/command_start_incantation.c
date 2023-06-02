@@ -28,7 +28,8 @@ static const int level_players[LVL_MAX - 1] = {
     1, 2, 2, 4, 4, 6, 6
 };
 
-static bool check_incantation_lvl_availability(trantorien_t *ref_trantorien, ntw_t *ntw)
+static bool check_incantation_lvl_availability(trantorien_t *ref_trantorien,
+    ntw_t *ntw)
 {
     int nb_trantorien_lvl = 0;
     int trantorien_lvl = ref_trantorien->level;
@@ -49,7 +50,6 @@ static bool check_incantation_lvl_availability(trantorien_t *ref_trantorien, ntw
         return false;
     return true;
 }
-
 
 bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
     ntw_t *ntw)

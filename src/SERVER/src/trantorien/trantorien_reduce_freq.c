@@ -16,7 +16,24 @@
 static void trantorien_need_update(trantorien_t *trantorien, zappy_t *zappy,
     ntw_client_t *cl, action_t *action)
 {
-    // TODO
+    static int (*trantorien_commands[MAX_CMD_CODE])(trantorien_t *, zappy_t *,
+        ntw_client_t *, action_t *) = {
+        command_move,
+        command_turn_right,
+        command_turn_left,
+        command_look_around,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        command_take_object,
+        command_set_object_down,
+        command_start_incantation,
+    };
+
+    if (trantorien_commands[action->code] == NULL)
+        return;
+    trantorien_commands[action->code](trantorien, zappy, cl, action);
 }
 
 static void broadcast_incantation(trantorien_t *ref_trantorien, ntw_t *ntw)

@@ -27,12 +27,10 @@ void look_north_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map,
         last_lvl_case + map->width : last_lvl_case;
     for (int x = min_case[0]; x <= last_lvl_case; x = (x + 1) % map->width) {
         map_index_x_y_to_i(map, x, min_case[1], &map_i);
-        if (lvl == 0 && x == min_case[0]) {
+        if (lvl == 0 && x == min_case[0])
             send_tile_ressources(cl, map[map_i].tiles, -1);
-        }
-        if (lvl == trantorien->level && x == last_lvl_case) {
+        if (lvl == trantorien->level && x == last_lvl_case)
             send_tile_ressources(cl, map[map_i].tiles, 1);
-        }
         if (lvl != 0 && x != min_case[0] && lvl != trantorien->level
                 && x != last_lvl_case) {
             send_tile_ressources(cl, map[map_i].tiles, 0);
@@ -55,12 +53,10 @@ void look_east_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map,
         last_lvl_case + map->height : last_lvl_case;
     for (int y = min_case[1]; y <= last_lvl_case; y = (y + 1) % map->height) {
         map_index_x_y_to_i(map, min_case[0], y, &map_i);
-        if (lvl == 0 && y == min_case[1]) {
+        if (lvl == 0 && y == min_case[1])
             send_tile_ressources(cl, map[map_i].tiles, -1);
-        }
-        if (lvl == trantorien->level && y == last_lvl_case) {
+        if (lvl == trantorien->level && y == last_lvl_case)
             send_tile_ressources(cl, map[map_i].tiles, 1);
-        }
         if (lvl != 0 && y != min_case[1] && lvl != trantorien->level
                 && y != last_lvl_case) {
             send_tile_ressources(cl, map[map_i].tiles, 0);
@@ -84,16 +80,13 @@ void look_south_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map,
     for (int x = min_case[0]; x <= last_lvl_case;
             x = (x - 1 < 0) ? map->width - 1 : x - 1) {
         map_index_x_y_to_i(map, x, min_case[1], &map_i);
-        if (lvl == 0 && x == min_case[0]) {
+        if (lvl == 0 && x == min_case[0])
             send_tile_ressources(cl, map[map_i].tiles, -1);
-        }
-        if (lvl == trantorien->level && x == last_lvl_case) {
+        if (lvl == trantorien->level && x == last_lvl_case)
             send_tile_ressources(cl, map[map_i].tiles, 1);
-        }
         if (lvl != 0 && x != min_case[0] && lvl != trantorien->level
-                && x != last_lvl_case) {
+                && x != last_lvl_case)
             send_tile_ressources(cl, map[map_i].tiles, 0);
-        }
     }
 }
 
@@ -113,15 +106,12 @@ void look_west_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map,
     for (int y = min_case[1]; y <= last_lvl_case;
             y = (y - 1 < 0) ? map->width - 1 : y - 1) {
         map_index_x_y_to_i(map, min_case[0], y, &map_i);
-        if (lvl == 0 && y == min_case[1]) {
+        if (lvl == 0 && y == min_case[1])
             send_tile_ressources(cl, map[map_i].tiles, -1);
-        }
-        if (lvl == trantorien->level && y == last_lvl_case) {
+        if (lvl == trantorien->level && y == last_lvl_case)
             send_tile_ressources(cl, map[map_i].tiles, 1);
-        }
         if (lvl != 0 && y != min_case[1] && lvl != trantorien->level
-                && y != last_lvl_case) {
+                && y != last_lvl_case)
             send_tile_ressources(cl, map[map_i].tiles, 0);
-        }
     }
 }

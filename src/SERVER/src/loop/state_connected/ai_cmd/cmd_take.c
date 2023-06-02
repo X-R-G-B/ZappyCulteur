@@ -28,6 +28,14 @@ static const char *ressources_map[] = {
     "thystame\n",
 };
 
+static bool handle_trantorien_take(trantorien_t *trantorien, int i)
+{
+    if (trantorien_add_act_take(trantorien, i) == false) {
+        return false;
+    }
+    return true;
+}
+
 bool cmd_take(__attribute__((unused)) zappy_t *zappy, ntw_client_t *cl,
     char **cmd_split)
 {
@@ -38,10 +46,7 @@ bool cmd_take(__attribute__((unused)) zappy_t *zappy, ntw_client_t *cl,
     }
     for (int i = 0; i < MAX_NB_RESOURCES; i++) {
         if (strcmp(cmd_split[1], ressources_map[i]) == 0) {
-            if (trantorien_add_act_take(cc->cl.ai.trantorien, i) == false) {
-                return false;
-            }
-            return true;
+            return handle_trantorien_take(cc->cl.ai.trantorien, i);
         }
     }
     return false;

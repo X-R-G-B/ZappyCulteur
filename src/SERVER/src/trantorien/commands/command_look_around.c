@@ -42,7 +42,7 @@ void send_tile_ressources(ntw_client_t *cl, map_tile_t *tile, int message_state)
             send_tile_single_ressource(cl, i, tile->ressources[i]);
     }
     if (message_state == 1)
-        circular_buffer_write(cl->write_to_outside, "]");
+        circular_buffer_write(cl->write_to_outside, "]\n");
 }
 
 int command_look_around(trantorien_t *trantorien, zappy_t *zappy,

@@ -172,4 +172,92 @@ void look_south_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map,
  */
 void look_west_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map,
     ntw_client_t *cl);
+
+/**
+ * @brief look command
+ *
+ * @param trantorien
+ * @param zappy
+ * @param cl
+ * @param action
+ * @return int
+ */
+int command_look_around(trantorien_t *trantorien, zappy_t *zappy,
+                        ntw_client_t *cl, action_t *action);
+
+/**
+ * @brief move command
+ *
+ * @param trantorien
+ * @param zappy
+ * @param cl
+ * @param action
+ * @return int
+ *
+ * @note move the trantorien in the direction he is facing
+ */
+int command_move(trantorien_t *trantorien, zappy_t *zappy,
+                        ntw_client_t *cl, action_t *action);
+
+/**
+ * @brief set object down command
+ *
+ * @param trantorien
+ * @param zappy
+ * @param cl
+ * @param action
+ * @return int
+ */
+int command_set_object_down(trantorien_t *trantorien, zappy_t *zappy,
+                        ntw_client_t *cl, action_t *action);
+
+/**
+ * @brief start incantation command
+ *
+ * @param trantorien
+ * @param zappy
+ * @param cl
+ * @param action
+ * @return int
+ */
+int command_start_incantation(trantorien_t *trantorien, zappy_t *zappy,
+                        ntw_client_t *cl, action_t *action);
+
+/**
+ * @brief take object command
+ *
+ * @param trantorien
+ * @param zappy
+ * @param cl
+ * @param action
+ * @return int
+ *
+ * @note take the object on the tile the trantorien is standing on
+ */
+int command_take_object(trantorien_t *trantorien, zappy_t *zappy,
+                        ntw_client_t *cl, action_t *action);
+
+/**
+ * @brief turn right command
+ *
+ * @param trantorien
+ * @param zappy
+ * @param cl
+ * @param action
+ * @return int
+ */
+int command_turn_right(trantorien_t *trantorien, zappy_t *zappy,
+                        ntw_client_t *cl, action_t *action);
+
+/**
+ * @brief turn left command
+ *
+ * @param trantorien
+ * @param zappy
+ * @param cl
+ * @param action
+ * @return int
+ */
+int command_turn_left(trantorien_t *trantorien, zappy_t *zappy,
+                        ntw_client_t *cl, action_t *action);
 #endif
