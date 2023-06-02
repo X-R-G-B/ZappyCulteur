@@ -119,7 +119,8 @@ SRC_TRNT_CMD	=															\
 							command_take_object.c							\
 							command_look_around.c							\
 							command_look_around_sides.c						\
-							command_look_around_utils.c
+							command_look_around_utils.c						\
+							command_inventory.c
 SRC_TRNT_CMD	:=			$(addprefix commands/, $(SRC_TRNT_CMD))
 
 SRC_TRNT		:=															\

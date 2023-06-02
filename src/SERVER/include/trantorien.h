@@ -13,6 +13,7 @@
     #include "ntw.h"
 
     #define NB_PARALLEL_ACTION 10
+    #define MAX_NB_TR_RESSOURCES 7
 
 // compatibility with graphic trantorien direction
 enum direction_e {
@@ -57,7 +58,7 @@ struct trantorien_s {
     bool alive;
     int level;
     action_t *incantation;
-    int ressources[MAX_NB_RESOURCES];
+    int ressources[MAX_NB_TR_RESSOURCES];
     action_t *actions[NB_PARALLEL_ACTION];
 };
 typedef struct trantorien_s trantorien_t;
@@ -259,5 +260,17 @@ int command_turn_right(trantorien_t *trantorien, zappy_t *zappy,
  * @return int
  */
 int command_turn_left(trantorien_t *trantorien, zappy_t *zappy,
+                        ntw_client_t *cl, action_t *action);
+
+/**
+ * @brief inventory command, send the inventory of the trantorien to the client
+ *
+ * @param trantorien
+ * @param zappy
+ * @param cl
+ * @param action
+ * @return int
+ */
+int command_inventory(trantorien_t *trantorien, zappy_t *zappy,
                         ntw_client_t *cl, action_t *action);
 #endif
