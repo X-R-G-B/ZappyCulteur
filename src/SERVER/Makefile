@@ -48,6 +48,8 @@ SRC_LOOP_AICMD	=															\
 SRC_LOOP_AICMD	:=			$(addprefix ai_cmd/, $(SRC_LOOP_AICMD))
 
 SRC_LOOP_GRCMD	=															\
+							cmd_bct.c										\
+							cmd_mct.c										\
 							cmd_msz.c										\
 							update_graphic_cmd.c
 SRC_LOOP_GRCMD	:=			$(addprefix graphic_cmd/, $(SRC_LOOP_GRCMD))
@@ -65,9 +67,15 @@ SRC_LOOP		:=															\
 							update_client_waiting_team_name.c
 SRC_LOOP		:=			$(addprefix loop/, $(SRC_LOOP))
 
-# ----------------------------------------------------------------------------
-# network
-# ----------------------------------------------------------------------------
+# MAP ------------------------------------------------------------------------
+SRC_MAP		:=																\
+							map_add_ressources.c							\
+							map_destroy.c									\
+							map_index_i_to_x_y.c							\
+							map_init.c
+SRC_MAP		:=				$(addprefix map/, $(SRC_MAP))
+
+# NETWORK --------------------------------------------------------------------
 SRC_NTW			:=															\
 							internal_read_command.c							\
 							internal_remove_client_clean.c					\
@@ -87,10 +95,13 @@ SRC				:=															\
 							$(SRC_ARGS)										\
 							$(SRC_CLIENT)									\
 							$(SRC_LOOP)										\
+							$(SRC_MAP)										\
 							$(SRC_NTW)										\
 							get_id.c										\
 							main.c											\
-							on_new_conn.c
+							on_new_conn.c									\
+							zappy_destroy.c									\
+							zappy_init.c
 SRC				:=			$(addprefix src/, $(SRC))
 
 OBJ				=			$(SRC:.c=.o)

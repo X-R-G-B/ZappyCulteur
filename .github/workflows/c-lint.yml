@@ -1,0 +1,35 @@
+name: C Lint
+
+on:
+  push:
+    paths:
+      - 'src/SERVER/**.c'
+
+jobs:
+  banana:
+    runs-on: ubuntu-latest
+    env:
+      workdir: ./src/SERVER
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Deps
+      run: |
+        sudo systemctl enable --now docker
+
+    - name: Lint
+      run: sudo docker run --rm -i -v "$PWD:/mnt/delivery" -v "$PWD:/mnt/reports" ghcr.io/epitech/coding-style-checker:latest /mnt/delivery /mnt/reports
+      working-directory: ${{ env.workdir }}
+
+    - name: Upload Lint Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: lint-report.log
+        path: src/SERVER/coding-style-reports.log
+
+    - name: Is error ?
+      run: |
+        if [ ! -f 'coding-style-reports.log' ]; then exit 0; fi
+        if [ -s 'coding-style-reports.log' ]; then cat 'coding-style-reports.log' && exit 1; fi
+      working-directory: ${{ env.workdir }}
