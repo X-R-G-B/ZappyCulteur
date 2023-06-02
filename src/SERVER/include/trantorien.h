@@ -13,6 +13,8 @@
     #include "ntw.h"
 
     #define NB_PARALLEL_ACTION 10
+    #define MIN_CASE_SUB(x, lvl, size) (((x - lvl) % size < 0) ? (x - lvl) % size + size : (x - lvl) % size)
+    #define MIN_CASE_ADD(x, lvl, size) (((x + lvl) % size < 0) ? (x + lvl) % size + size : (x + lvl) % size)
 
 // compatibility with graphic trantorien direction
 enum direction_e {
@@ -88,4 +90,61 @@ void trantorien_reduce_freq(trantorien_t *trantorien, zappy_t *zappy,
 ** @return false
 **/
 bool check_incantation_availability(trantorien_t *trantorien, map_t *map, ntw_t *ntw);
+
+/**
+ * @brief send the tile ressources to the client
+ * 
+ * @param cl 
+ * @param tile 
+ * @param message_state 
+ */
+void send_tile_ressources(ntw_client_t *cl, map_tile_t *tile, int message_state);
+
+/**
+ * @brief look command for north direction
+ *
+ * @param trantorien
+ * @param lvl
+ * @param map
+ * @param cl
+ *
+ * @note write the result of the look command in the circular buffer of the client
+ */
+void look_north_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map, ntw_client_t *cl);
+
+/**
+ * @brief look command for east direction
+ *
+ * @param trantorien
+ * @param lvl
+ * @param map
+ * @param cl
+ *
+ * @note write the result of the look command in the circular buffer of the client
+ */
+void look_east_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map, ntw_client_t *cl);
+
+/**
+ * @brief look command for west direction
+ *
+ * @param trantorien
+ * @param lvl
+ * @param map
+ * @param cl
+ *
+ * @note write the result of the look command in the circular buffer of the client
+ */
+void look_south_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map, ntw_client_t *cl);
+
+/**
+ * @brief look command for west direction
+ *
+ * @param trantorien
+ * @param lvl
+ * @param map
+ * @param cl
+ *
+ * @note write the result of the look command in the circular buffer of the client
+ */
+void look_west_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map, ntw_client_t *cl);
 #endif

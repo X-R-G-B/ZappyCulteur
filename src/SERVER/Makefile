@@ -115,7 +115,9 @@ SRC_NTW			:=			$(addprefix network/, $(SRC_NTW))
 SRC_TRNT_CMD	=															\
 							command_set_object_down.c						\
 							command_start_incantation.c						\
-							command_take_object.c
+							command_take_object.c							\
+							command_look_around.c							\
+							command_look_around_utils.c
 SRC_TRNT_CMD	:=			$(addprefix commands/, $(SRC_TRNT_CMD))
 
 SRC_TRNT		:=															\

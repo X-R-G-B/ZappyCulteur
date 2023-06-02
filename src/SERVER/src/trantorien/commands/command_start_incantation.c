@@ -72,8 +72,6 @@ bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
 int command_start_incantation(trantorien_t *trantorien, zappy_t *zappy,
                         ntw_client_t *cl, action_t *action)
 {
-    int i = 0;
-
     if (trantorien == NULL || zappy == NULL || cl == NULL || action == NULL)
         return EXIT_FAILURE;
     if (check_incantation_availability(trantorien, zappy->map, zappy->ntw)
