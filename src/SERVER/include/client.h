@@ -9,7 +9,7 @@
     #define CLIENT_H_
 
     #include "trantorien.h"
-#include <stdbool.h>
+    #include <stdbool.h>
     #define NAME_MAX 200
 
 enum client_type_e {

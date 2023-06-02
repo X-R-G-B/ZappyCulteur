@@ -40,8 +40,7 @@ struct llnodesearch {
     #define L_NEXT(node) ((node != 0) ? (node)->next : 0)
     #define L_FIRST(list) ((list != 0) ? (list)->start : 0)
     #define L_LAST(list) ((list != 0) ? (list)->end : 0)
-    #define L_COPY(node) ((_COPY_CHECK(node)) ? \
-        (node)->copy((node)->data) : 0)
+    #define L_COPY(node) ((_COPY_CHECK(node)) ? (node)->copy((node)->data) : 0)
     #define L_DATA(node) ((node != 0) ? (node)->data : 0)
     #define L_DATAT(type, node) ((type) L_DATA(node))
     #define L_GET(list, index) L_DATA(list_index(list, index))
