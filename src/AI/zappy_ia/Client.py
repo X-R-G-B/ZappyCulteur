@@ -54,6 +54,8 @@ class Client:
                 message = socket.recv(2048).decode()
                 if message:
                     self.receivedLock.acquire()
+                    print("Recv: ", end='')
+                    print(message.split("\n")[:-1])
                     self.messReceived.insert(0, message)
                     self.receivedLock.release()
                     if self.inTreatment > 0:
@@ -68,6 +70,8 @@ class Client:
                 self.sendLock.acquire()
                 if len(self.messToSend) != 0:
                     message = self.messToSend[-1]
+                    print("Send: ", end='')
+                    print(message.split("\n")[:-1])
                     self.messToSend = self.messToSend[:-1]
                     self.sendLock.release()
                     if message != "\n":
