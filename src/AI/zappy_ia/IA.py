@@ -62,11 +62,11 @@ class IA:
             "lphiras": [0],
             "lthystame": [0],
             "enemy": [0],
-            "broadcast": [0]
+            "broadcast": [0],
         }
         self.outputTree: dict() = {
             "Take food": self.takeFood,
-            "Find food": self.findFood    
+            "Find food": self.findFood,
         }
 
         try:
@@ -74,14 +74,14 @@ class IA:
         except FileNotFoundError:
             print(f"File joblib not found", file=sys.stderr)
             sys.exit(84)
-            
+
         while self.client.output() != "WELCOME\n":
             pass
         resSetup = self.requestClient(self.teamName + "\n").split("\n")
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
         self.run()
-    
+
     def run(self):
         continueRun = True
         try:
@@ -123,28 +123,32 @@ class IA:
         if res == "ko":
             raise Exception("Server responsed ko to : " + toSend)
         return res
-    
+
     def inventory(self):
         """
         This function send the inventory command to the server and parse response in self.inputTree which is List
         """
         res = self.requestClient(Command.INVENTORY)
         res = res.split("[")[1].split("]")[0]
-        
+
         i = 1
         for elem in res.split(","):
-            self.inputTree['m' + elem.split(" ")[1].strip()][0] = int(elem.split(" ")[2].strip())
+            self.inputTree["m" + elem.split(" ")[1].strip()][0] = int(
+                elem.split(" ")[2].strip()
+            )
             i += 1
-            
+
     def lookForTree(self):
         """
         This function get the list of the closest items on the look to put in self.inputTree
         """
         self.look()
         for elem in Element:
-            if 'l' + elem.value in self.inputTree.keys():
-                self.inputTree['l' + elem.value][0] = self.findClosestElemInLastLook(elem)
-        self.inputTree['enemy'][0] = self.findClosestElemInLastLook(Element.PLAYER)
+            if "l" + elem.value in self.inputTree.keys():
+                self.inputTree["l" + elem.value][0] = self.findClosestElemInLastLook(
+                    elem
+                )
+        self.inputTree["enemy"][0] = self.findClosestElemInLastLook(Element.PLAYER)
 
     def look(self):
         """
@@ -205,7 +209,9 @@ class IA:
 
     def takeFood(self):
         print("Tree call 'Take food'")
-        self.takeElementInLastLook(Element.FOOD, self.findClosestElemInLastLook(Element.FOOD))
+        self.takeElementInLastLook(
+            Element.FOOD, self.findClosestElemInLastLook(Element.FOOD)
+        )
 
     def findClosestElemInLastLook(
         self, element: Element, checkCurrentTile: bool = True
