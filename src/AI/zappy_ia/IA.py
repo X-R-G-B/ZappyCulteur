@@ -1,5 +1,6 @@
 from typing import List
 from zappy_ia.Client import Client
+import os
 import time
 
 class IA:
@@ -11,6 +12,7 @@ class IA:
         self.clientNb = 0
         self.cmdPathfinding = []
         self.client = Client(port, machineName)
+        self.pid: int = 0
 
         while (self.client.output() != "WELCOME\n"):
             pass
@@ -49,3 +51,9 @@ class IA:
                 for x in range(pos - mid):
                     self.requestClient("Forward\n")
                 return
+
+    def reproduction(self):
+        self.requestClient("Fork\n")
+        self.pid = os.fork()
+        if (self.pid == 0):
+            #self.run
