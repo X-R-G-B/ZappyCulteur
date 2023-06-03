@@ -4,9 +4,9 @@ from zappy_ia.Client import Client
 from typing import Union
 import pandas as pd
 import os
-import time
 import joblib
 import sys
+
 
 class Element(Enum):
     EMPTY = "empty"
@@ -82,7 +82,7 @@ class IA:
         while self.client.output() != "WELCOME\n":
             pass
         resSetup = self.requestClient(self.teamName + "\n").split("\n")
-        if (resSetup[0] == "ko"):
+        if resSetup[0] == "ko":
             print("Not remaining slot")
             self.client.stopClient()
             sys.exit(84)
@@ -210,7 +210,7 @@ class IA:
     def reproduction(self):
         self.requestClient("Fork\n")
         self.pid = os.fork()
-        if (self.pid == 0):
+        if self.pid == 0:
             self.build()
 
     def takeElementInLastLook(self, element: Element, pos: int):
