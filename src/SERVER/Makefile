@@ -172,6 +172,20 @@ RM				?=			rm -f
 
 CC				=			clang
 
+TTARGET				:=		bin_test
+
+T_DIR				:=		tests
+
+T_SRC				:=		$(shell find $(T_DIR)/ -name '*.c' -type f)		\
+							$(filter-out src/main.c, $(SRC))
+
+T_OBJ				:=		$(T_SRC:.c=.o)
+
+TFLAGS				:=		-fprofile-arcs -ftest-coverage
+
+CR_TEST_LDFLAGS		:=		-lcriterion -lgcov
+
+
 all: $(LIBS_DIR)/tinylibc/libtinylibc.a
 all: $(LIBS_DIR)/circularbuffer/libcircularbuffer.a
 all: $(TARGET)
@@ -204,7 +218,7 @@ $(LIBS_DIR)_clean:										$(LIBS_DIR)
 	@$(MAKE) --no-print-directory -C $(LIBS_DIR) clean 1>/dev/null
 
 clean:													$(LIBS_DIR)_clean
-	@$(RM) $(OBJ) $(SRC:.c=.d)
+	@$(RM) $(OBJ) $(SRC:.c=.d) $(T_OBJ)
 	@$(ECHO) $(CYAN)'==< CLEANED >==:'$(RESET)
 
 $(LIBS_DIR)_fclean:										$(LIBS_DIR)
@@ -213,9 +227,22 @@ $(LIBS_DIR)_fclean:										$(LIBS_DIR)
 fclean:													clean
 fclean:													$(LIBS_DIR)_fclean
 	@$(RM) $(TARGET)
+	@$(RM) $(TTARGET)
 	@$(ECHO) $(CYAN)'==< FCLEANED >==:'$(RESET)
 
 re:														fclean
 re:														all
+
+tests_run:		CFLAGS += $(TFLAGS)
+tests_run:		LDFLAGS += $(CR_TEST_LDFLAGS)
+tests_run:		$(LIBS_DIR)/tinylibc/libtinylibc.a
+tests_run:		$(LIBS_DIR)/circularbuffer/libcircularbuffer.a
+tests_run:		SRC := $(filter-out src/main.c, $(SRC))
+tests_run:		fclean $(T_OBJ)
+	$(CC) $(T_OBJ) -o $(TTARGET) $(LDFLAGS) $(CFLAGS)
+	./$(TTARGET) || exit 1
+	gcovr --exclude tests || true
+	gcovr --exclude tests --branch || true
+	true
 
 -include $(DEP)
