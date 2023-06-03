@@ -19,7 +19,7 @@ class Client:
         self.stopLock: threading.Lock = threading.Lock()
         self.stop: bool = False
 
-        self.receivedLock: threading.éLock = threading.Lock()
+        self.receivedLock: threading.Lock = threading.Lock()
         self.messReceived: List[str] = []
 
         self.sendLock: threading.Lock = threading.Lock()
