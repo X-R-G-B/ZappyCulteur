@@ -24,7 +24,7 @@ void look_north_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map,
     tile[1] = get_min_case_sub(trantorien->y, lvl, map->height);
     nb_turns = trantorien->level * (trantorien->level + 1) + trantorien->level;
     for (int turn = 0; turn < nb_turns;
-            tile[0] = (tile[0] + 1) % map->width) {
+            tile[0] = (tile[0] + 1) % map->width, turn++) {
         map_index_x_y_to_i(map,  tile[0], tile[1], &map_i);
         if (lvl == 0 && turn == 0)
             send_tile_ressources(cl, map[map_i].tiles, -1);
@@ -49,7 +49,7 @@ void look_east_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map,
     tile[1] = get_min_case_sub(trantorien->y, lvl, map->height);
     nb_turns = trantorien->level * (trantorien->level + 1) + trantorien->level;
     for (int turn = 0; turn < nb_turns;
-            tile[1] = (tile[1] + 1) % map->height) {
+            tile[1] = (tile[1] + 1) % map->height, turn++) {
         map_index_x_y_to_i(map, tile[0], tile[1], &map_i);
         if (lvl == 0 && turn == 0)
             send_tile_ressources(cl, map[map_i].tiles, -1);
@@ -74,7 +74,7 @@ void look_south_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map,
     tile[1] = get_min_case_add(trantorien->y, lvl, map->height);
     nb_turns = trantorien->level * (trantorien->level + 1) + trantorien->level;
     for (int turn = 0; turn < nb_turns; tile[0] = (tile[0] - 1 < 0) ?
-            map->width - 1 : tile[0] - 1) {
+            map->width - 1 : tile[0] - 1, turn++) {
         map_index_x_y_to_i(map, tile[0], tile[1], &map_i);
         if (lvl == 0 && turn == 0)
             send_tile_ressources(cl, map[map_i].tiles, -1);
@@ -99,7 +99,7 @@ void look_west_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map,
     tile[1] = get_min_case_sub(trantorien->y, lvl, map->height);
     nb_turns = trantorien->level * (trantorien->level + 1) + trantorien->level;
     for (int turn = 0; turn < nb_turns; tile[1] = (tile[1] - 1 < 0) ?
-            map->width - 1 : tile[1] - 1) {
+            map->width - 1 : tile[1] - 1, turn++) {
         map_index_x_y_to_i(map, tile[0], tile[1], &map_i);
         if (lvl == 0 && turn == 0)
             send_tile_ressources(cl, map[map_i].tiles, -1);
