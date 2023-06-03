@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include "ntw.h"
+#include "tlcllists.h"
 #include "zappy.h"
 #include "trantorien.h"
 #include "map.h"
@@ -69,8 +70,23 @@ bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
     return true;
 }
 
-int command_start_incantation(trantorien_t *trantorien, zappy_t *zappy,
-                        ntw_client_t *cl, action_t *action)
+void update_level_trantoriens(ntw_t *ntw, int lvl)
+{
+    client_t *cl = NULL;
+
+    for (L_EACH(client, ntw->clients)) {
+        cl = L_DATA(L_DATAT(ntw_client_t *, client));
+        if (cl == NULL || cl->type != AI || cl->cl.ai.trantorien == NULL ||
+                cl->cl.ai.trantorien->level != lvl - 1) {
+            continue;
+        }
+        cl->cl.ai.trantorien->level = lvl;
+        cl->cl.ai.trantorien->incantation = NULL;
+    }
+}
+
+int command_incantation(trantorien_t *trantorien, zappy_t *zappy,
+    ntw_client_t *cl, action_t *action)
 {
     if (trantorien == NULL || zappy == NULL || cl == NULL || action == NULL)
         return EXIT_FAILURE;
@@ -79,6 +95,6 @@ int command_start_incantation(trantorien_t *trantorien, zappy_t *zappy,
         circular_buffer_write(cl->write_to_outside, "ko\n");
         return EXIT_SUCCESS;
     }
-    trantorien->level += 1;
+    update_level_trantoriens(zappy->ntw, trantorien->level + 1);
     return EXIT_SUCCESS;
 }

@@ -113,9 +113,13 @@ SRC_NTW			:=															\
 SRC_NTW			:=			$(addprefix network/, $(SRC_NTW))
 
 # TRANTORIEN -----------------------------------------------------------------
-SRC_TRNT_CMD	=															\
+SRC_TRNT_BRO	:=															\
+							incantation_start.c
+SRC_TRNT_BRO	:=			$(addprefix broadcasts/, $(SRC_TRNT_BRO))
+
+SRC_TRNT_CMD	:=															\
 							command_set_object_down.c						\
-							command_start_incantation.c						\
+							command_incantation.c							\
 							command_take_object.c							\
 							command_look_around.c							\
 							command_look_around_sides.c						\
@@ -126,6 +130,7 @@ SRC_TRNT_CMD	=															\
 SRC_TRNT_CMD	:=			$(addprefix commands/, $(SRC_TRNT_CMD))
 
 SRC_TRNT		:=															\
+							$(SRC_TRNT_BRO)									\
 							$(SRC_TRNT_CMD)									\
 							action_destroy.c								\
 							action_init.c									\

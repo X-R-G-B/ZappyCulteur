@@ -17,7 +17,7 @@ bool trantorien_place_cmd(trantorien_t *trantorien, action_t *action)
     if (trantorien == NULL) {
         return false;
     }
-    for (int i = 0; i < NB_PARALLEL_ACTION; i++) {
+    for (int i = 1; i < NB_PARALLEL_ACTION; i++) {
         if (trantorien->actions[i] == NULL && i + 1 < NB_PARALLEL_ACTION) {
             trantorien->actions[i + 1] = NULL;
         }

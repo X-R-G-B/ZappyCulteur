@@ -17,7 +17,7 @@ bool trantorien_is_cmd_availible(trantorien_t *trantorien)
     if (trantorien == NULL) {
         return false;
     }
-    for (int i = 0; i < NB_PARALLEL_ACTION; i++) {
+    for (int i = 1; i < NB_PARALLEL_ACTION; i++) {
         if (trantorien->actions[i] == NULL) {
             is_cmd_availible = true;
             break;
