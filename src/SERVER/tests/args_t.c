@@ -243,6 +243,8 @@ Test(args, args_wrong_arg_4)
     } else {
         cr_assert_null(args);
     }
+}
+
 Test(args, bad_port)
 {
     const char *av[] = {"bin_test", "-p", "abc", "-x", "15", "-y", "20", "-n", "abc", "def", "-c", "1", "-f", "1", NULL};
