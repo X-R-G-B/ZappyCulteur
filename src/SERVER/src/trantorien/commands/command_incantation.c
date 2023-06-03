@@ -6,6 +6,7 @@
 */
 
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include "ntw.h"
 #include "tlcllists.h"
@@ -73,15 +74,20 @@ bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
 void update_level_trantoriens(ntw_t *ntw, int lvl)
 {
     client_t *cl = NULL;
+    ntw_client_t *cc = NULL;
+    char buff[512] = {0};
 
     for (L_EACH(client, ntw->clients)) {
-        cl = L_DATA(L_DATAT(ntw_client_t *, client));
+        cc = L_DATA(client);
+        cl = L_DATA(cc);
         if (cl == NULL || cl->type != AI || cl->cl.ai.trantorien == NULL ||
-                cl->cl.ai.trantorien->level != lvl - 1) {
+                cl->cl.ai.trantorien->level != lvl - 1 || cc == NULL) {
             continue;
         }
         cl->cl.ai.trantorien->level = lvl;
         cl->cl.ai.trantorien->incantation = NULL;
+        snprintf(buff, 511, "Current level: %d\n%c", lvl, '\0');
+        circular_buffer_write(cc->write_to_outside, buff);
     }
 }
 
