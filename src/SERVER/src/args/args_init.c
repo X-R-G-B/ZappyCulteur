@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "tlcstrings.h"
 #include "args.h"
 #include "tlcllists.h"
 #include "tlcutils.h"
@@ -25,6 +26,10 @@ static bool arg_team_name(int ac, int index, const char *const av[],
     args->teams_name = list_create();
     for (; i < ac && av[i][0] != '-'; i++) {
         list_append(args->teams_name, strdup(av[i]), free_ifnotnull, NULL);
+    }
+    if (args->teams_name->len == 0) {
+        args->is_ok = false;
+        return false;
     }
     return true;
 }
@@ -77,7 +82,8 @@ static bool check_arg_port_width(int ac, int index, const char *const av[],
 {
     if (args->is_ok == true && strcmp(av[index] + 1, "p") == 0) {
         args->port = atoi(av[index + 1]);
-        if (args->port < 0) {
+        if (args->port < 0 ||
+                x_strcontainc("123456789", av[index + 1][0]) == 0) {
             args->is_ok = false;
             fprintf(stderr, "ERROR: Invalid port: %d\n", args->port);
             return false;
