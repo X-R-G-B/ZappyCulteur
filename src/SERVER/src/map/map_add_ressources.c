@@ -17,6 +17,8 @@ static float density[MAX_NB_RESOURCES] = {
     0.1,
     0.08,
     0.05,
+    0.00,
+    0.00,
 };
 
 static void add_ressources(map_tile_t *tile,
@@ -58,9 +60,9 @@ static void check_ressources(map_tile_t *tiles, int width, int height,
 
 void map_add_ressources(map_t *map)
 {
-    int nb_spawn_max[MAX_NB_RESOURCES] = {0, 0, 0, 0, 0, 0, 0};
-    int nb_step_int[MAX_NB_RESOURCES] = {0, 0, 0, 0, 0, 0, 0};
-    int nb_step[MAX_NB_RESOURCES] = {0, 0, 0, 0, 0, 0, 0};
+    int nb_spawn_max[MAX_NB_RESOURCES] = {0};
+    int nb_step_int[MAX_NB_RESOURCES] = {0};
+    int nb_step[MAX_NB_RESOURCES] = {0};
 
     if (map == NULL || map->tiles == NULL) {
         return;
@@ -68,7 +70,8 @@ void map_add_ressources(map_t *map)
     for (int i = 0; i < MAX_NB_RESOURCES; i++) {
         nb_spawn_max[i] = density[i] * map->width * map->height;
         printf("INFO: nb_spawn_max[%d] = %d\n", i, nb_spawn_max[i]);
-        nb_step_int[i] = map->width * map->height / nb_spawn_max[i];
+        nb_step_int[i] = (nb_spawn_max[i] == 0) ?
+            0 : map->width * map->height / nb_spawn_max[i];
         printf("INFO: nb_step_int[%d] = %d\n", i, nb_step_int[i]);
         nb_step[i] = nb_step_int[i];
     }

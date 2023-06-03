@@ -13,7 +13,6 @@ CFLAGS			=															\
 							-Wall											\
 							-Wextra											\
 							-Wpedantic										\
-							-Wfor-loop-analysis								\
 							-Iinclude										\
 							-Ilibs/tinylibc/includes						\
 							-Ilibs/circularbuffer/includes					\
@@ -170,7 +169,7 @@ DEP				:=			$(SRC:.c=.d)
 
 RM				?=			rm -f
 
-CC				=			clang
+CC				=			gcc
 
 TTARGET				:=		bin_test
 
@@ -234,6 +233,7 @@ re:														fclean
 re:														all
 
 tests_run:		CFLAGS += $(TFLAGS)
+tests_run: 		CFLAGS := $(filter-out -O2, $(CFLAGS))
 tests_run:		LDFLAGS += $(CR_TEST_LDFLAGS)
 tests_run:		$(LIBS_DIR)/tinylibc/libtinylibc.a
 tests_run:		$(LIBS_DIR)/circularbuffer/libcircularbuffer.a
