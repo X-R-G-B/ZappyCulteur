@@ -226,7 +226,7 @@ $(LIBS_DIR)_fclean:										$(LIBS_DIR)
 fclean:													clean
 fclean:													$(LIBS_DIR)_fclean
 	@$(RM) $(TARGET)
-	@$(RM) $(TTARGET)
+	@$(RM) $(TTARGET) $(T_SRC:.c=.gcno) $(T_SRC:.c=.gcda)
 	@$(ECHO) $(CYAN)'==< FCLEANED >==:'$(RESET)
 
 re:														fclean
