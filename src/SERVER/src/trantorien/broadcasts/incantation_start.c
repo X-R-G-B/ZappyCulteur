@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** ZappyCulteur
+** File description:
+** incantation_start
+*/
+
 #include <stdbool.h>
 #include <stdio.h>
 #include "circular_buffer.h"
@@ -34,7 +41,8 @@ static void broadcast_incantation(trantorien_t *ref_trantorien, ntw_t *ntw)
     }
 }
 
-void broadcast_incantation_start(trantorien_t *ref_trantorien, zappy_t *zappy, ntw_client_t *cl)
+void broadcast_incantation_start(trantorien_t *ref_trantorien, zappy_t *zappy,
+    ntw_client_t *cl)
 {
     if (check_incantation_availability(
             ref_trantorien, zappy->map, zappy->ntw) == false) {
