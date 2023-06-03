@@ -243,4 +243,122 @@ Test(args, args_wrong_arg_4)
     } else {
         cr_assert_null(args);
     }
+Test(args, bad_port)
+{
+    const char *av[] = {"bin_test", "-p", "abc", "-x", "15", "-y", "20", "-n", "abc", "def", "-c", "1", "-f", "1", NULL};
+    args_t *args = args_init(14, av);
+    if (args != NULL && args->is_ok != false) {
+        cr_assert_null(args);
+    }
+    args_destroy(args);
+}
+
+Test(args, bad_freq)
+{
+    const char *av[] = {"bin_test", "-p", "4040", "-x", "15", "-y", "20", "-n", "abc", "def", "-c", "abc", "-f", "a", NULL};
+    args_t *args = args_init(14, av);
+    if (args != NULL && args->is_ok != false) {
+        cr_assert_null(args);
+    }
+    args_destroy(args);
+}
+
+Test(args, bad_width)
+{
+    const char *av[] = {"bin_test", "-p", "4040", "-x", "abc", "-y", "20", "-n", "abc", "def", "-c", "1", "-f", "1", NULL};
+    args_t *args = args_init(14, av);
+    if (args != NULL && args->is_ok != false) {
+        cr_assert_null(args);
+    }
+    args_destroy(args);
+}
+
+Test(args, bad_height)
+{
+    const char *av[] = {"bin_test", "-p", "4040", "-x", "15", "-y", "abc", "-n", "abc", "def", "-c", "1", "-f", "1", NULL};
+    args_t *args = args_init(14, av);
+    if (args != NULL && args->is_ok != false) {
+        cr_assert_null(args);
+    }
+    args_destroy(args);
+}
+
+Test(args, bad_name)
+{
+    const char *av[] = {"bin_test", "-p", "4040", "-x", "15", "-y", "20", "-n", "-c", "1", "-f", "1", NULL};
+    args_t *args = args_init(14, av);
+    if (args != NULL && args->is_ok != false) {
+        cr_assert_null(args);
+    }
+    args_destroy(args);
+}
+
+Test(args, bad_c)
+{
+    const char *av[] = {"bin_test", "-p", "4040", "-x", "15", "-y", "20", "-n", "abc", "-c", "abc", "-f", "1", NULL};
+    args_t *args = args_init(13, av);
+    if (args != NULL && args->is_ok != false) {
+        cr_assert_null(args);
+    }
+    args_destroy(args);
+}
+
+Test(args, bad_param)
+{
+    const char *av[] = {"bin_test", "-p", "-x", "15", "-y", "20", "-n", "abc", "-c", "1", "-f", "1", NULL};
+    args_t *args = args_init(13, av);
+    if (args != NULL && args->is_ok != false) {
+        cr_assert_null(args);
+    }
+    args_destroy(args);
+}
+
+Test(args, bad_param1)
+{
+    const char *av[] = {"bin_test", "-p", "4040", "-x", "-y", "20", "-n", "abc", "-c", "1", "-f", "1", NULL};
+    args_t *args = args_init(13, av);
+    if (args != NULL && args->is_ok != false) {
+        cr_assert_null(args);
+    }
+    args_destroy(args);
+}
+
+Test(args, bad_param2)
+{
+    const char *av[] = {"bin_test", "-p", "4040", "-x", "15", "-y", "-n", "abc", "-c", "1", "-f", "1", NULL};
+    args_t *args = args_init(13, av);
+    if (args != NULL && args->is_ok != false) {
+        cr_assert_null(args);
+    }
+    args_destroy(args);
+}
+
+Test(args, bad_param3)
+{
+    const char *av[] = {"bin_test", "-p", "4040", "-x", "15", "-y", "20", "-n", "-c", "1", "-f", "1", NULL};
+    args_t *args = args_init(13, av);
+    if (args != NULL && args->is_ok != false) {
+        cr_assert_null(args);
+    }
+    args_destroy(args);
+}
+
+Test(args, bad_param4)
+{
+    const char *av[] = {"bin_test", "-p", "4040", "-x", "15", "-y", "20", "-n", "abc", "-c", "-f", "1", NULL};
+    args_t *args = args_init(13, av);
+    if (args != NULL && args->is_ok != false) {
+        cr_assert_null(args);
+    }
+    args_destroy(args);
+}
+
+Test(args, bad_param5)
+{
+    const char *av[] = {"bin_test", "-p", "4040", "-x", "15", "-y", "20", "-n", "abc", "-c", "1", "-f", NULL};
+    args_t *args = args_init(13, av);
+    if (args != NULL && args->is_ok != false) {
+        cr_assert_null(args);
+    }
+    args_destroy(args);
 }
