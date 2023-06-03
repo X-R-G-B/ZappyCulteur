@@ -6,13 +6,9 @@
 #include "trantorien.h"
 #include "client.h"
 
-static void send_msg(int trantorien_lvl, ntw_client_t *cl)
+static void send_msg(ntw_client_t *cl)
 {
-    char buff[512] = {0};
-
-    snprintf(buff, 511, "Elevation underway Current level: %d\n",
-        trantorien_lvl);
-    circular_buffer_write(cl->write_to_outside, buff);
+    circular_buffer_write(cl->write_to_outside, "Elevation underway\n");
 }
 
 static void broadcast_incantation(trantorien_t *ref_trantorien, ntw_t *ntw)
@@ -32,7 +28,7 @@ static void broadcast_incantation(trantorien_t *ref_trantorien, ntw_t *ntw)
         if (trantorien != NULL && trantorien->level == trantorien_lvl
                 && ref_trantorien->x == trantorien->x
                 && ref_trantorien->y == trantorien->y) {
-            send_msg(trantorien_lvl, ntw_cl);
+            send_msg(ntw_cl);
             trantorien->incantation = ref_trantorien->actions[0];
         }
     }
