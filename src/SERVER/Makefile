@@ -13,6 +13,7 @@ CFLAGS			=															\
 							-Wall											\
 							-Wextra											\
 							-Wpedantic										\
+							-Wfor-loop-analysis								\
 							-Iinclude										\
 							-Ilibs/tinylibc/includes						\
 							-Ilibs/circularbuffer/includes					\
@@ -167,6 +168,8 @@ OBJ				:=			$(SRC:.c=.o)
 DEP				:=			$(SRC:.c=.d)
 
 RM				?=			rm -f
+
+CC				=			clang
 
 all: $(LIBS_DIR)/tinylibc/libtinylibc.a
 all: $(LIBS_DIR)/circularbuffer/libcircularbuffer.a
