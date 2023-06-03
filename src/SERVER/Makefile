@@ -180,6 +180,8 @@ all_fast:
 	@$(MAKE) -j --no-print-directory -C . all
 
 $(TARGET):												$(OBJ)
+$(TARGET):								$(LIBS_DIR)/tinylibc/libtinylibc.a
+$(TARGET):						$(LIBS_DIR)/circularbuffer/libcircularbuffer.a
 	@$(ECHO) $(CYAN)'==< CFLAGS >==:'$(RESET) '$(CFLAGS)'
 	@$(ECHO) $(CYAN)'==< LDFLAGS >==:'$(RESET) '$(LDFLAGS)'
 	$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) -o $(TARGET)
