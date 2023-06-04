@@ -3,6 +3,7 @@ from typing import List, Tuple
 from zappy_ia.Client import Client
 from typing import Union
 import pandas as pd
+import os
 import joblib
 import sys
 
@@ -39,11 +40,14 @@ class IA:
         self.port: int = port
         self.machineName: str = machineName
         self.teamName: str = teamName
+        self.build()
+
+    def build(self):
         self.mapSize: Tuple[int, int] = [0, 0]
         self.clientNb: int = 0
         self.level: int = 1
         self.lastLook: List[List[Element]] = []
-        self.client: Client = Client(port, machineName)
+        self.client: Client = Client(self.port, self.machineName)
         self.inputTree: dict() = {
             "level": [self.level],
             "mfood": [0],
@@ -72,11 +76,16 @@ class IA:
             self.clf = joblib.load("joblib/food.joblib")
         except FileNotFoundError:
             print("File joblib not found", file=sys.stderr)
+            self.client.stopClient()
             sys.exit(84)
 
         while self.client.output() != "WELCOME\n":
             pass
         resSetup = self.requestClient(self.teamName + "\n").split("\n")
+        if resSetup[0] == "ko":
+            print("Not remaining slot")
+            self.client.stopClient()
+            sys.exit(84)
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
         self.run()
@@ -197,6 +206,12 @@ class IA:
                 for x in range(pos - mid):
                     self.requestClient(Command.FORWARD)
                 return
+
+    def reproduction(self):
+        self.requestClient("Fork\n")
+        self.pid = os.fork()
+        if self.pid == 0:
+            self.build()
 
     def takeElementInLastLook(self, element: Element, pos: int):
         """
