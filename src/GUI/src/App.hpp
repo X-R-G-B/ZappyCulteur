@@ -14,8 +14,6 @@
 #include <memory>
 
 namespace GUI {
-
-
     class App {
         public:
             class AppException : public std::exception {
@@ -32,25 +30,19 @@ namespace GUI {
 
             int operator()(int ac, const char **av);
 
-        protected:
         private:
             void initArgs(const char **av);
-
             void launchUserConnectionMenu();
-
             void launchApp();
-
             void initModules();
-
             void gameLoop();
-        
             void printHelp();
 
             NetworkManager _networkManager;
             std::string _port;
             std::string _ip;
-            std::shared_ptr<GUI::Entities::EntitiesManager> _entityManager;
             std::unique_ptr<SFML> _displayModule;
+            std::shared_ptr<GUI::Entities::EntitiesManager> _entityManager;
             std::unique_ptr<CommandHandler::CommandHandler> _commandHandler;
     };
 }
