@@ -246,10 +246,10 @@ re:														all
 tests_run:		CFLAGS += $(TFLAGS)
 tests_run: 		CFLAGS := $(filter-out -O2, $(CFLAGS))
 tests_run:		LDFLAGS += $(CR_TEST_LDFLAGS)
-tests_run:		$(LIBS_DIR)/tinylibc/libtinylibc.a
-tests_run:		$(LIBS_DIR)/circularbuffer/libcircularbuffer.a
 tests_run:		SRC := $(filter-out src/main.c, $(SRC))
 tests_run:		fclean $(T_OBJ)
+tests_run:		$(LIBS_DIR)/tinylibc/libtinylibc.a
+tests_run:		$(LIBS_DIR)/circularbuffer/libcircularbuffer.a
 	$(CC) $(T_OBJ) -o $(TTARGET) $(LDFLAGS) $(CFLAGS)
 	./$(TTARGET) || exit 1
 	gcovr --exclude tests || true
