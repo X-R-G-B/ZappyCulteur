@@ -50,12 +50,12 @@ class IA:
         self.inputTree: dict() = {
             "level": [self.level],
             "mfood": [0],
-            "linemate": [0],
-            "deraumere": [0],
-            "sibur": [0],
-            "mendiane": [0],
-            "phiras": [0],
-            "thystame": [0],
+            "mlinemate": [0],
+            "mderaumere": [0],
+            "msibur": [0],
+            "mmendiane": [0],
+            "mphiras": [0],
+            "mthystame": [0],
             "lfood": [0],
             "llinemate": [0],
             "lderaumere": [0],
@@ -65,14 +65,23 @@ class IA:
             "lthystame": [0],
             "enemy": [0],
             "broadcast": [0],
+            "placeleft": [0]
         }
         self.outputTree: dict() = {
-            "Take food": self.takeFood,
             "Find food": self.findFood,
+            "Take food": self.takeFood,
+            "Take linemate": self.takeLinemate,
+            "Take deraumere": self.takeDeraumere,
+            "Take sibur": self.takeSibur,
+            "Take mendiane": self.takeMendiane,
+            "Take phiras": self.takePhiras,
+            "Take thystame": self.takeThystame,
+            "Elevation": self.elevation,
+            "Fork": self.fork,
         }
 
         try:
-            self.clf = joblib.load("joblib/food.joblib")
+            self.clf = joblib.load("joblib/bigres.joblib")
         except FileNotFoundError:
             print("File joblib not found", file=sys.stderr)
             sys.exit(84)
@@ -92,6 +101,7 @@ class IA:
                 self.lookForTree()
                 predictions = self.clf.predict(pd.DataFrame(self.inputTree))
                 for prediction in predictions:
+                    print(prediction)
                     self.outputTree[prediction]()
         except KeyboardInterrupt:
             return
@@ -123,8 +133,6 @@ class IA:
         res = ""
         while res == "":
             res = self.client.output()
-        if res == "ko":
-            raise Exception("Server responsed ko to : " + toSend)
         return res
 
     def inventory(self):
@@ -137,7 +145,7 @@ class IA:
 
         i = 1
         for elem in res.split(","):
-            self.inputTree["m" + elem.split(" ")[1].strip()][0] = int(
+            self.inputTree['m' + elem.split(" ")[1].strip()][0] = int(
                 elem.split(" ")[2].strip()
             )
             i += 1
@@ -218,6 +226,39 @@ class IA:
         self.takeElementInLastLook(
             Element.FOOD, self.findClosestElemInLastLook(Element.FOOD)
         )
+    
+    def takeLinemate(self):
+        self.takeElementInLastLook(
+            Element.LINEMATE, self.findClosestElemInLastLook(Element.LINEMATE)
+        )
+    
+    def takeDeraumere(self):
+        self.takeElementInLastLook(
+            Element.DERAUMERE, self.findClosestElemInLastLook(Element.DERAUMERE)
+        )
+    
+    def takeSibur(self):
+        self.takeElementInLastLook(
+            Element.SIBUR, self.findClosestElemInLastLook(Element.SIBUR)
+        )
+    
+    def takeMendiane(self):
+        self.takeElementInLastLook(
+            Element.MENDIANE, self.findClosestElemInLastLook(Element.MENDIANE)
+        )
+    
+    def takePhiras(self):
+        self.takeElementInLastLook(
+            Element.PHIRAS, self.findClosestElemInLastLook(Element.PHIRAS)
+        )
+    
+    def takeThystame(self):
+        self.takeElementInLastLook(
+            Element.THYSTAME, self.findClosestElemInLastLook(Element.THYSTAME)
+        )
+    
+    def fork(self):
+        print("Forking")
 
     def findClosestElemInLastLook(
         self, element: Element, checkCurrentTile: bool = True
@@ -263,10 +304,13 @@ class IA:
                 self.takeElementInLastLook(Element.FOOD, pos)
             i += 1
 
-    def incantation():
+    def elevation(self):
         for costTuple in self.levelCosts[self.level - 1]:
-            if (costTuple[1] > self.inputTree[costTuple[0].value][0]):
-                raise Exception("Incantation launched without enough materials")
+            if (costTuple[1] > self.inputTree['m' + costTuple[0].value][0]):
+                return
             for i in range(costTuple[1]):
                 self.requestClient(Command.SET_OBJECT, costTuple[0].value)
         self.requestClient(Command.INCANTATION)
+        res = self.requestClient("")
+        if (res != "ko\n"):
+            self.level += 1
