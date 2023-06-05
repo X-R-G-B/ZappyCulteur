@@ -6,121 +6,72 @@
 */
 
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "tlcstrings.h"
 #include "args.h"
-#include "tlcllists.h"
-#include "tlcutils.h"
+#include "parse_args/internal.h"
 
-static bool arg_team_name(int ac, int index, const char *const av[],
-    args_t *args)
+static const char *const arr[NB_OPT_ARGS] = {
+    "-p",
+    "-x",
+    "-y",
+    "-f",
+    "-c",
+    "-n"
+};
+
+static bool (*funcs[NB_OPT_ARGS])(const char *const arr[], args_t *args) = {
+    parse_arg_port,
+    parse_arg_width,
+    parse_arg_height,
+    parse_arg_freq,
+    parse_arg_c_per_teams,
+    parse_arg_team_name
+};
+
+static bool check_exec_parse(const char *const av[], args_t *args)
 {
-    int i = index + 1;
-
-    if (args->teams_name != NULL) {
-        args->is_ok = false;
-        return false;
-    }
-    args->teams_name = list_create();
-    for (; i < ac && av[i][0] != '-'; i++) {
-        list_append(args->teams_name, strdup(av[i]), free_ifnotnull, NULL);
-    }
-    if (args->teams_name->len == 0) {
-        args->is_ok = false;
-        return false;
-    }
-    return true;
-}
-
-static bool check_arg_team_height(int ac, int index, const char *const av[],
-    args_t *args)
-{
-    if (args->is_ok == true && strcmp(av[index] + 1, "n") == 0) {
-        return arg_team_name(ac, index, av, args);
-    }
-    if (args->is_ok == true && strcmp(av[index] + 1, "y") == 0) {
-        args->height = atoi(av[index + 1]);
-        if (args->height <= 0) {
-            args->is_ok = false;
-            fprintf(stderr, "ERROR: Invalid height: %d\n", args->height);
-            return false;
+    for (int j = 0; j < NB_OPT_ARGS; j++) {
+        if (strcmp(av[0], arr[j]) == 0) {
+            return funcs[j](av, args);
         }
-        return true;
     }
     return false;
 }
 
-static bool check_arg_nb_freq(int ac, int index, const char *const av[],
-    args_t *args)
+static bool parse_args(int ac, const char *const av[], args_t *args)
 {
-    if (args->is_ok == true && strcmp(av[index] + 1, "c") == 0) {
-        args->clients_per_teams = atoi(av[index + 1]);
-        if (args->clients_per_teams <= 0) {
-            args->is_ok = false;
-            fprintf(stderr, "ERROR: Invalid clientsNb: %d\n",
-                args->clients_per_teams);
-            return false;
-        }
-        return true;
-    }
-    if (args->is_ok == true && strcmp(av[index] + 1, "f") == 0) {
-        args->freq = atoi(av[index + 1]);
-        if (args->freq <= 0) {
-            args->is_ok = false;
-            fprintf(stderr, "ERROR: Invalid freq: %d\n", args->freq);
-            return false;
-        }
-        return true;
-    }
-    return check_arg_team_height(ac, index, av, args);
-}
+    bool is_an_opt = true;
+    int nb = 0;
 
-static bool check_arg_port_width(int ac, int index, const char *const av[],
-    args_t *args)
-{
-    if (args->is_ok == true && strcmp(av[index] + 1, "p") == 0) {
-        args->port = atoi(av[index + 1]);
-        if (args->port < 0 ||
-                x_strcontainc("123456789", av[index + 1][0]) == 0) {
-            args->is_ok = false;
-            fprintf(stderr, "ERROR: Invalid port: %d\n", args->port);
-            return false;
+    for (int i = 1; i < ac && args->is_ok == true; i += 1) {
+        if (av[i][0] != '-') {
+            continue;
         }
-        return true;
-    }
-    if (args->is_ok == true && strcmp(av[index] + 1, "x") == 0) {
-        args->width = atoi(av[index + 1]);
-        if (args->width <= 0) {
+        is_an_opt = check_exec_parse(av + i, args);
+        if (is_an_opt == false) {
             args->is_ok = false;
-            fprintf(stderr, "ERROR: Invalid width: %d\n", args->width);
-            return false;
+        } else {
+            nb++;
         }
-        return true;
     }
-    return check_arg_nb_freq(ac, index, av, args);
+    if (nb != 6) {
+        args->is_ok = false;
+    }
+    return args->is_ok;
 }
 
 args_t *args_init(int ac, const char *const av[])
 {
     args_t *args = NULL;
-    int nb_args = 0;
 
     args = malloc(sizeof(args_t));
     if (args == NULL) {
         return NULL;
     }
     memset(args, 0, sizeof(args_t));
+    args->port = -1;
     args->is_ok = true;
-    for (int i = 1; i < ac - 1 && args->is_ok == true; i++) {
-        if (av[i][0] == '-') {
-            nb_args = (check_arg_port_width(ac, i, av, args))
-                ? nb_args + 1 : nb_args;
-        }
-    }
-    if (nb_args != 6) {
-        args->is_ok = false;
-    }
+    parse_args(ac, av, args);
     return args;
 }

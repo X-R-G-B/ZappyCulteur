@@ -42,7 +42,17 @@ RESET				:=		'\033[0m'
 
 
 # ARGS -----------------------------------------------------------------------
+SRC_ARGS_PARSE	:=															\
+							c_per_teams.c									\
+							freq.c											\
+							height.c										\
+							port.c											\
+							team_name.c										\
+							width.c
+SRC_ARGS_PARSE	:=			$(addprefix parse_args/, $(SRC_ARGS_PARSE))
+
 SRC_ARGS		:=															\
+							$(SRC_ARGS_PARSE)								\
 							args_debug.c									\
 							args_destroy.c									\
 							args_init.c
