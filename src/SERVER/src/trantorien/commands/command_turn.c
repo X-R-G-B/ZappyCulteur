@@ -34,7 +34,8 @@ int command_turn_left(trantorien_t *trantorien, zappy_t *zappy,
     }
     trantorien->direction -= 1;
     if (trantorien->direction <= 0)
-        trantorien->direction = MAX_DIRECTION - 1;
+        trantorien->direction += MAX_DIRECTION;
+    trantorien->direction %= MAX_DIRECTION;
     circular_buffer_write(cl->write_to_outside, "ok\n");
     return EXIT_SUCCESS;
 }
