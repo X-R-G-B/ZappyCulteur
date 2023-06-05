@@ -14,7 +14,7 @@
 bool parse_arg_port(const char *const arr[], args_t *args)
 {
     if (arr == NULL || arr[0] == NULL || x_strcmp(arr[0], "-p") != 0 ||
-            args == NULL) {
+            args == NULL || arr[1] == NULL) {
         return false;
     }
     if (args->port != -1 || x_strcontainc("123456789", arr[1][0]) != 1) {

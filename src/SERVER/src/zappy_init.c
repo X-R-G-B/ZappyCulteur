@@ -5,6 +5,7 @@
 ** init
 */
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include "args.h"
@@ -17,7 +18,7 @@ zappy_t *zappy_init(args_t *args)
 {
     zappy_t *zappy = NULL;
 
-    if (args == NULL) {
+    if (args == NULL || args->is_ok == false) {
         return NULL;
     }
     zappy = malloc(sizeof(zappy_t));

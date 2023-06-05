@@ -14,10 +14,10 @@
 bool parse_arg_freq(const char *const arr[], args_t *args)
 {
     if (arr == NULL || arr[0] == NULL || x_strcmp(arr[0], "-f") != 0 ||
-            args == NULL) {
+            args == NULL || arr[1] == NULL) {
         return false;
     }
-    if (args->freq != 0) {
+    if (args->freq != 0 || x_strcontainc("123456789", arr[1][0]) != 1) {
         args->is_ok = false;
         return false;
     }
