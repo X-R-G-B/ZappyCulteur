@@ -26,20 +26,17 @@ namespace GUI {
             })
         {}
 
-        void CommandHandler::update(std::vector<std::string> &commands)
+        void CommandHandler::update(const std::vector<std::string>& commands)
         {
-            std::string command;
             COMMAND_TYPE commandKey;
-            std::function<bool(CommandHandler &, std::string &)> functionToCall;
+            std::function<bool(CommandHandler &, const std::string &)> functionToCall;
 
-            while (!commands.empty()) {
-                command = commands.back();
+            for (const auto &command : commands) {
                 commandKey = getCommandType(command);
                 auto elem = _toCall.at(commandKey);
                 if (std::invoke(elem, *this, command) == false) {
                     std::cout << "Error while executing this command : " + command << std::endl;
                 }
-                commands.pop_back();
             }
         }
 
@@ -53,7 +50,7 @@ namespace GUI {
             return (COMMAND_TYPE::UNKNOW_COMMAND);
         }
 
-        bool CommandHandler::setMapSize(std::string &command)
+        bool CommandHandler::setMapSize(const std::string &command)
         {
             std::stringstream ss(command);
             unsigned int x = 0;
@@ -75,9 +72,8 @@ namespace GUI {
             return (true);
         }
 
-        bool CommandHandler::setNewPlayer(std::string &command)
+        bool CommandHandler::setNewPlayer(const std::string &command)
         {
-            //pnw n X Y O L N\n
             std::stringstream ss(command);
             std::string cmd;
             std::string id;
