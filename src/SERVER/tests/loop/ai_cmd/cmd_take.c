@@ -66,7 +66,7 @@ Test(loop_cmd_ai_take, basic)
     int last = 0;
     ntw_client_t *graph = NULL;
 
-    set_up_tests(&zappy, 1, 8081, &graph);
+    set_up_tests(&zappy, 1, 8181, &graph);
     ntw_client_t *client = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client);
     zappy->map->tiles[0].ressources[FOOD] = 1;
@@ -94,7 +94,7 @@ Test(loop_cmd_ai_take, no_food)
     int last = 0;
     ntw_client_t *graph = NULL;
 
-    set_up_tests(&zappy, 1, 8082, &graph);
+    set_up_tests(&zappy, 1, 8182, &graph);
     ntw_client_t *client = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client);
     zappy->map->tiles[0].ressources[FOOD] = 0;

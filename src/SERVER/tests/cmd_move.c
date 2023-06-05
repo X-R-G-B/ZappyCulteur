@@ -149,7 +149,7 @@ Test(loop_cmd_ai_move, move_south_border)
 {
     zappy_t *zappy = NULL;
 
-    set_up_tests(&zappy, 1, 8085);
+    set_up_tests(&zappy, 1, 8086);
     ntw_client_t *client = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client);
     client_t *c = L_DATA(client);
@@ -172,7 +172,7 @@ Test(loop_cmd_ai_move, move_south)
 {
     zappy_t *zappy = NULL;
 
-    set_up_tests(&zappy, 1, 8086);
+    set_up_tests(&zappy, 1, 8087);
     ntw_client_t *client = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client);
     client_t *c = L_DATA(client);
@@ -195,7 +195,7 @@ Test(loop_cmd_ai_move, move_south2)
 {
     zappy_t *zappy = NULL;
 
-    set_up_tests(&zappy, 1, 8087);
+    set_up_tests(&zappy, 1, 8088);
     ntw_client_t *client = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client);
     client_t *c = L_DATA(client);
@@ -218,7 +218,7 @@ Test(loop_cmd_ai_move, move_east_border)
 {
     zappy_t *zappy = NULL;
 
-    set_up_tests(&zappy, 1, 8088);
+    set_up_tests(&zappy, 1, 8089);
     ntw_client_t *client = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client);
     client_t *c = L_DATA(client);
@@ -241,7 +241,7 @@ Test(loop_cmd_ai_move, move_east)
 {
     zappy_t *zappy = NULL;
 
-    set_up_tests(&zappy, 1, 8089);
+    set_up_tests(&zappy, 1, 8090);
     ntw_client_t *client = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client);
     client_t *c = L_DATA(client);
@@ -264,7 +264,7 @@ Test(loop_cmd_ai_move, move_east2)
 {
     zappy_t *zappy = NULL;
 
-    set_up_tests(&zappy, 1, 8090);
+    set_up_tests(&zappy, 1, 8091);
     ntw_client_t *client = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client);
     client_t *c = L_DATA(client);
@@ -287,7 +287,7 @@ Test(loop_cmd_ai_move, move_west_border)
 {
     zappy_t *zappy = NULL;
 
-    set_up_tests(&zappy, 1, 8091);
+    set_up_tests(&zappy, 1, 8092);
     ntw_client_t *client = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client);
     client_t *c = L_DATA(client);
@@ -310,7 +310,7 @@ Test(loop_cmd_ai_move, move_west)
 {
     zappy_t *zappy = NULL;
 
-    set_up_tests(&zappy, 1, 8092);
+    set_up_tests(&zappy, 1, 8093);
     ntw_client_t *client = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client);
     client_t *c = L_DATA(client);
@@ -333,7 +333,7 @@ Test(loop_cmd_ai_move, move_west2)
 {
     zappy_t *zappy = NULL;
 
-    set_up_tests(&zappy, 1, 8093);
+    set_up_tests(&zappy, 1, 8094);
     ntw_client_t *client = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client);
     client_t *c = L_DATA(client);
