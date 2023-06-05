@@ -44,15 +44,18 @@ class IA:
         self.level: int = 1
         self.lastLook: List[List[Element]] = []
         self.client: Client = Client(port, machineName)
+        self.levelCosts: List[List[Tuple[Element, int]]] = [[[Element.LINEMATE, 1]], [[Element.LINEMATE, 1], [Element.DERAUMERE, 1], [Element.SIBUR, 1]], [[Element.LINEMATE, 2], [Element.SIBUR, 1], [Element.PHIRAS, 2]],
+            [[Element.LINEMATE, 1], [Element.DERAUMERE, 1], [Element.SIBUR, 2], [Element.PHIRAS, 1]], [[Element.LINEMATE, 1], [Element.DERAUMERE, 2], [Element.SIBUR, 1], [Element.MENDIANE, 3]], [[Element.LINEMATE, 1], [Element.DERAUMERE, 2], [Element.SIBUR, 3], [Element.PHIRAS, 1]],
+            [[Element.LINEMATE, 2], [Element.DERAUMERE, 2], [Element.SIBUR, 2], [Element.MENDIANE, 2], [Element.PHIRAS, 2], [Element.THYSTAME, 1]]]
         self.inputTree: dict() = {
             "level": [self.level],
             "mfood": [0],
-            "mlinemate": [0],
-            "mderaumere": [0],
-            "msibur": [0],
-            "mmendiane": [0],
-            "mphiras": [0],
-            "mthystame": [0],
+            "linemate": [0],
+            "deraumere": [0],
+            "sibur": [0],
+            "mendiane": [0],
+            "phiras": [0],
+            "thystame": [0],
             "lfood": [0],
             "llinemate": [0],
             "lderaumere": [0],
@@ -259,3 +262,11 @@ class IA:
             elif pos != -1:
                 self.takeElementInLastLook(Element.FOOD, pos)
             i += 1
+
+    def incantation():
+        for costTuple in self.levelCosts[self.level - 1]:
+            if (costTuple[1] > self.inputTree[costTuple[0].value][0]):
+                raise Exception("Incantation launched without enough materials")
+            for i in range(costTuple[1]):
+                self.requestClient(Command.SET_OBJECT, costTuple[0].value)
+        self.requestClient(Command.INCANTATION)
