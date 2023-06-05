@@ -166,6 +166,7 @@ SRC				:=															\
 							$(SRC_MAP)										\
 							$(SRC_NTW)										\
 							$(SRC_TRNT)										\
+							broadcast_graphic.c								\
 							get_id.c										\
 							main.c											\
 							on_new_conn.c									\
