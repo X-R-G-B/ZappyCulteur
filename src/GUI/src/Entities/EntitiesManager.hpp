@@ -40,6 +40,7 @@ namespace GUI {
                     getComponentsByType(Components::CompType type) const;
                 std::unique_ptr<std::vector<std::shared_ptr<IEntity>>>
                     getEntitiesByType(EntityType type) const;
+                bool doesEntityExist(const std::string &id) const;
 
             private:
                 std::vector<std::shared_ptr<IEntity>> _entities;

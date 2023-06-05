@@ -58,6 +58,16 @@ namespace GUI {
             return components;
         }
 
+        bool EntitiesManager::doesEntityExist(const std::string &id) const
+        {
+            for (const auto &entity : _entities) {
+                if (entity->getId() == id) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         std::unique_ptr<std::vector<std::shared_ptr<IEntity>>>
             EntitiesManager::getEntitiesByType(EntityType type) const
         {

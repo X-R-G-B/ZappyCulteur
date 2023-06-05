@@ -12,7 +12,7 @@
 #include <string>
 #include <unordered_map>
 #include <functional>
-#include "EntityManager.hpp"
+#include "EntitiesManager.hpp"
 
 namespace GUI {
     namespace CommandHandler {
@@ -57,7 +57,7 @@ namespace GUI {
              * @brief Constructor for CommandHandler.
              * @param entityManager A shared pointer to the EntityManager.
              */
-            CommandHandler(std::shared_ptr<EntityManager> entityManager);
+            CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager);
 
             /**
              * @brief Destructor for CommandHandler.
@@ -88,7 +88,7 @@ namespace GUI {
              */
             bool setMapSize(std::string& command);
 
-            std::shared_ptr<EntityManager> _entityManager;
+            std::shared_ptr<Entities::EntitiesManager> _entityManager;
             const std::unordered_map<COMMAND_TYPE, std::function<bool(CommandHandler&, std::string&)>> _toCall;
         };
     }

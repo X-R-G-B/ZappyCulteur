@@ -6,8 +6,10 @@
 */
 
 #include <iostream>
-#include <stringstream>
+#include <sstream>
 #include "CommandHandler.hpp"
+#include "Floor.hpp"
+#include "Trantorian.hpp"
 
 namespace GUI {
     namespace CommandHandler {
@@ -15,7 +17,7 @@ namespace GUI {
             {"msz", COMMAND_TYPE::MAP_SIZE}
         };
 
-        CommandHandler::CommandHandler(std::shared_ptr<EntityManager> entityManager)
+        CommandHandler::CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager)
             : _entityManager(entityManager), _toCall({
                 {COMMAND_TYPE::MAP_SIZE, &CommandHandler::setMapSize}
             })
@@ -29,7 +31,6 @@ namespace GUI {
 
             while (!commands.empty()) {
                 command = commands.back();
-                command.erase(command.end() - 1);
                 commandKey = getCommandType(command);
                 auto elem = _toCall.at(commandKey);
                 if (std::invoke(elem, *this, command) == false) {
@@ -52,12 +53,22 @@ namespace GUI {
         bool CommandHandler::setMapSize(std::string &command)
         {
             std::stringstream ss(command);
-            int x;
-            int y;
+            unsigned int x;
+            unsigned int y;
             std::string cmd;
             
-            ss >> cmd >> x >> y;
-            //todo fill the entity
+            if (!(ss >> cmd >> x >> y)) {
+                return (false);
+            }
+            if (_entityManager->doesEntityExist("Floor") == true) {
+                _entityManager->killEntityById("Floor");
+            }
+            _entityManager->addEntity(std::make_shared<Entities::Floor>(
+                "Floor",
+                Vector2F(0, 0),
+                x,
+                y)
+            );
             return (true);
         }
     }

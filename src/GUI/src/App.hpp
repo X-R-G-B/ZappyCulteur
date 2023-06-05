@@ -7,10 +7,11 @@
 
 #pragma once
 
-#include "EntityManager.hpp"
-#include "DisplayModule.hpp"
 #include "NetworkManager.hpp"
-#include "Parser.hpp"
+#include "CommandHandler.hpp"
+#include "SFML.hpp"
+#include "EntitiesManager.hpp"
+#include <memory>
 
 namespace GUI {
 
@@ -42,16 +43,18 @@ namespace GUI {
             void launchUserConnectionMenu();
 
             void launchApp();
+
+            void initModules();
+
+            void gameLoop();
         
             void printHelp();
-            // TODO DisplayModule
-            DisplayModule _displayModule;
-            // TODO Parser
-            Parser _parser;
-            // TODO EntityManager
-            EntityManager _entityManager;
+
             NetworkManager _networkManager;
             std::string _port;
             std::string _ip;
+            std::shared_ptr<GUI::Entities::EntitiesManager> _entityManager;
+            std::unique_ptr<SFML> _displayModule;
+            std::unique_ptr<CommandHandler::CommandHandler> _commandHandler;
     };
 }
