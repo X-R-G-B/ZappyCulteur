@@ -72,6 +72,15 @@ bool loop(zappy_t *zappy, bool new_freq);
 ** @return an uniq int
 **/
 int get_id(void);
+/**
+** @brief Broadcast a message to all graphic
+**
+** @param ntw the ntw 
+** @param msg the message
+**
+** @return true if broadcast
+**/
+bool broadcast_graphic(ntw_t *ntw, const char *msg);
 
 // ---------------------------------------------------------------------------
 
