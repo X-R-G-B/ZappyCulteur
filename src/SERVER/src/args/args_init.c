@@ -10,6 +10,7 @@
 #include <string.h>
 #include "args.h"
 #include "parse_args/internal.h"
+#include "tlcstrings.h"
 
 static const char *const arr[NB_OPT_ARGS] = {
     "-p",
@@ -29,33 +30,38 @@ static bool (*funcs[NB_OPT_ARGS])(const char *const arr[], args_t *args) = {
     parse_arg_team_name
 };
 
-static bool check_exec_parse(const char *const av[], args_t *args)
+static bool check_exec_parse(const char *const av[], args_t *args,
+    char checklist[NB_OPT_ARGS])
 {
+    bool is_ok = false;
+
     for (int j = 0; j < NB_OPT_ARGS; j++) {
         if (strcmp(av[0], arr[j]) == 0) {
-            return funcs[j](av, args);
+            is_ok = funcs[j](av, args);
+            checklist[j] = '1';
+            return is_ok;
         }
     }
-    return false;
+    return is_ok;
 }
 
 static bool parse_args(int ac, const char *const av[], args_t *args)
 {
     bool is_an_opt = true;
     int nb = 0;
+    char check_all[NB_OPT_ARGS + 1] = {0};
 
     for (int i = 1; i < ac && args->is_ok == true; i += 1) {
         if (av[i][0] != '-') {
             continue;
         }
-        is_an_opt = check_exec_parse(av + i, args);
+        is_an_opt = check_exec_parse(av + i, args, check_all);
         if (is_an_opt == false) {
             args->is_ok = false;
-        } else {
-            nb++;
         }
+        nb++;
     }
-    if (nb != 6) {
+    if (nb != 6 || x_strcmp(check_all, "111111") != 0) {
         args->is_ok = false;
     }
     return args->is_ok;

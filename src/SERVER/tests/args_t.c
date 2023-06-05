@@ -21,7 +21,6 @@ Test(args, args_init)
     cr_assert_eq(args->port, 4042);
     cr_assert_eq(args->width, 15);
     cr_assert_eq(args->height, 20);
-    printf("--------------------------- %d\n", args->freq);
     cr_assert_eq(args->freq, 1);
     for (L_EACH(s, args->teams_name)) {
         cr_assert_str_eq(L_DATA(s), rep[i]);
