@@ -15,5 +15,8 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/Parser.cpp
 )
 
-add_subdirectory(network)
 add_subdirectory(Display)
+add_subdirectory(Maths)
+add_subdirectory(Entities)
+add_subdirectory(Components)
+add_subdirectory(network)
