@@ -32,10 +32,6 @@ namespace GUI {
 
             int operator()(int ac, const char **av);
 
-            const std::pair<std::string, std::string> &getArgs();
-
-            const std::pair<std::string, std::string> &getArgs() const;
-
         protected:
         private:
             void initArgs(const char **av);

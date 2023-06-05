@@ -33,6 +33,10 @@ namespace GUI {
 
         paramsStream >> flag1 >> arg1 >> flag2 >> arg2;
 
+        if (flag1 == "--help" || flag2 == "--help") {
+            printHelp();
+            throw AppException("Exiting...");
+        }
         if (!strcmp(flag1.c_str(), "-h")) {
             _ip = arg1;
         }
@@ -52,10 +56,6 @@ namespace GUI {
 
     void App::launchUserConnectionMenu()
     {
-        // _displayModule.update(ENUM);
-        // get input of user
-        // connection try
-        // return
         std::cout << "Menu will be implemented later." << std::endl;
     }
 
@@ -95,8 +95,8 @@ namespace GUI {
     void App::printHelp()
     {
         std::cout << "USAGE: ./zappy_gui -h [ip] -p [port]" << std::endl;
-        std::cout << "ip = ip address of the server" << std::endl;
-        std::cout << "port = port number of the server" << std::endl;
+        std::cout << "\tip = ip address of the server" << std::endl;
+        std::cout << "\tport = port number of the server" << std::endl;
     }
 
     void App::initModules()
