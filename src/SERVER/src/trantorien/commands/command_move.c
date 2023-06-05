@@ -32,6 +32,10 @@ int command_move(trantorien_t *trantorien, zappy_t *zappy,
     }
     trantorien->x += direction_to_x[trantorien->direction - 1][0];
     trantorien->y += direction_to_x[trantorien->direction - 1][1];
+    if (trantorien->x < 0)
+        trantorien->x += zappy->map->width;
+    if (trantorien->y < 0)
+        trantorien->y += zappy->map->height;
     trantorien->x %= zappy->map->width;
     trantorien->y %= zappy->map->height;
     circular_buffer_write(cl->write_to_outside, "ok\n");
