@@ -34,7 +34,7 @@ static void trantorien_need_update(trantorien_t *trantorien, zappy_t *zappy,
 {
     if (trantorien_commands[action->code] == NULL) {
         circular_buffer_write(cl->write_to_outside, "ko\n");
-        printf("%s%d\n", "Command not handled: ", action->code);
+        fprintf(stderr, "%s%d\n", "Command not handled: ", action->code);
         return;
     }
     trantorien_commands[action->code](trantorien, zappy, cl, action);
@@ -47,6 +47,9 @@ static void move_up(action_t *actions[NB_PARALLEL_ACTION],
         actions[i - 1] = actions[i];
     }
     actions[NB_PARALLEL_ACTION - 1] = NULL;
+    if (actions[0] == NULL) {
+        return;
+    }
     if (actions[0]->code == INCANTATION) {
         broadcast_incantation_start(trantorien, zappy, cl);
     }
@@ -55,13 +58,9 @@ static void move_up(action_t *actions[NB_PARALLEL_ACTION],
 void trantorien_reduce_freq(trantorien_t *trantorien, zappy_t *zappy,
     ntw_client_t *cl)
 {
-    if (trantorien == NULL) {
-        return;
-    }
-    if (trantorien->actions[0] == NULL && trantorien->actions[1] == NULL) {
-        return;
-    }
-    if (trantorien->incantation != NULL) {
+    if (trantorien == NULL ||
+            (trantorien->actions[0] == NULL && trantorien->actions[1] == NULL)
+            || trantorien->incantation != NULL) {
         return;
     }
     if (trantorien->actions[0] == NULL) {
