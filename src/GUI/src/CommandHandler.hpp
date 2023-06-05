@@ -88,6 +88,13 @@ namespace GUI {
              */
             bool setMapSize(std::string& command);
 
+            /**
+             * @brief Sets the new player entity based on the command.
+             * @param command The command string.
+             * @return True if the new player was set successfully, false otherwise.
+             */
+            bool setNewPlayer(std::string& command);
+
             std::shared_ptr<Entities::EntitiesManager> _entityManager;
             const std::unordered_map<COMMAND_TYPE, std::function<bool(CommandHandler&, std::string&)>> _toCall;
         };

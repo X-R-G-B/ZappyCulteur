@@ -10,16 +10,19 @@
 #include "CommandHandler.hpp"
 #include "Floor.hpp"
 #include "Trantorian.hpp"
+#include "IEntity.hpp"
 
 namespace GUI {
     namespace CommandHandler {
         static const std::unordered_map<std::string, COMMAND_TYPE> commandProtocol = {
-            {"msz", COMMAND_TYPE::MAP_SIZE}
+            {"msz", COMMAND_TYPE::MAP_SIZE},
+            {"pnw", COMMAND_TYPE::NEW_PLAYER}
         };
 
         CommandHandler::CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager)
             : _entityManager(entityManager), _toCall({
-                {COMMAND_TYPE::MAP_SIZE, &CommandHandler::setMapSize}
+                {COMMAND_TYPE::MAP_SIZE, &CommandHandler::setMapSize},
+                {COMMAND_TYPE::NEW_PLAYER, &CommandHandler::setNewPlayer}
             })
         {}
 
@@ -53,8 +56,8 @@ namespace GUI {
         bool CommandHandler::setMapSize(std::string &command)
         {
             std::stringstream ss(command);
-            unsigned int x;
-            unsigned int y;
+            unsigned int x = 0;
+            unsigned int y = 0;
             std::string cmd;
             
             if (!(ss >> cmd >> x >> y)) {
@@ -69,6 +72,38 @@ namespace GUI {
                 x,
                 y)
             );
+            return (true);
+        }
+
+        bool CommandHandler::setNewPlayer(std::string &command)
+        {
+            //pnw n X Y O L N\n
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string id;
+            float x = 0;
+            float y = 0;
+            int orientation = 0;
+            Entities::EntityOrientation enumOrientation = Entities::EntityOrientation::UP;
+            size_t level = 0;
+            std::string teamName;
+
+            if (!(ss >> cmd >> id >> x >> y >> orientation >> level >> teamName)
+                || orientation < 0 || orientation > 3) {
+                return (false);
+            }
+            if (_entityManager->doesEntityExist(id) == true) {
+                _entityManager->killEntityById(id);
+            }
+            enumOrientation = static_cast<Entities::EntityOrientation>(orientation);
+
+            _entityManager->addEntity(std::make_shared<Entities::Trantorian>(
+                id,
+                teamName,
+                Vector2F((x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE),
+                enumOrientation,
+                level
+            ));
             return (true);
         }
     }
