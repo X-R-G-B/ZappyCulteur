@@ -7,18 +7,27 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 #include "circular_buffer.h"
+#include "tlcllists.h"
 #include "zappy.h"
 #include "ntw.h"
 #include "trantorien.h"
 #include "client.h"
 
-static void send_msg(ntw_client_t *cl)
+static void process_start_incant_trnt(ntw_client_t *cl, list_t *list_trnt,
+    trantorien_t *trnt, trantorien_t *ref_trnt)
 {
     circular_buffer_write(cl->write_to_outside, "Elevation underway\n");
+    list_append(list_trnt, trnt, NULL, NULL);
+    if (trnt == ref_trnt) {
+        return;
+    }
+    trnt->incantation = ref_trnt->actions[0];
 }
 
-static void broadcast_incantation(trantorien_t *ref_trantorien, ntw_t *ntw)
+static void broadcast_incantation(trantorien_t *ref_trantorien, ntw_t *ntw,
+    list_t *list_trnt)
 {
     int trantorien_lvl = ref_trantorien->level;
     client_t *cl = NULL;
@@ -35,19 +44,47 @@ static void broadcast_incantation(trantorien_t *ref_trantorien, ntw_t *ntw)
         if (trantorien != NULL && trantorien->level == trantorien_lvl
                 && ref_trantorien->x == trantorien->x
                 && ref_trantorien->y == trantorien->y) {
-            send_msg(ntw_cl);
-            trantorien->incantation = ref_trantorien->actions[0];
+            process_start_incant_trnt(ntw_cl, list_trnt, trantorien,
+                ref_trantorien);
         }
     }
+}
+
+static void send_broadcast_graph(ntw_t *ntw, list_t *list_trnt,
+    trantorien_t *ref_trnt)
+{
+    char tmp[10] = {0};
+    char buff[1024] = {0};
+    trantorien_t *trnt;
+
+    snprintf(buff, 511, "pic %d %d %d", ref_trnt->x, ref_trnt->y,
+        ref_trnt->level);
+    for (L_EACH(x, list_trnt)) {
+        trnt = L_DATA(x);
+        if (trnt == NULL) {
+            continue;
+        }
+        snprintf(tmp, 9, " %d", trnt->id);
+        strcat(buff, tmp);
+    }
+    strcat(buff, "\n");
+    broadcast_graphic(ntw, buff);
 }
 
 void broadcast_incantation_start(trantorien_t *ref_trantorien, zappy_t *zappy,
     ntw_client_t *cl)
 {
+    list_t *list_trnt = NULL;
+
     if (check_incantation_availability(
             ref_trantorien, zappy->map, zappy->ntw) == false) {
         circular_buffer_write(cl->write_to_outside, "ko\n");
         return;
     }
-    broadcast_incantation(ref_trantorien, zappy->ntw);
+    list_trnt = list_create();
+    if (list_trnt == NULL) {
+        return;
+    }
+    broadcast_incantation(ref_trantorien, zappy->ntw, list_trnt);
+    send_broadcast_graph(zappy->ntw, list_trnt, ref_trantorien);
 }

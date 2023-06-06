@@ -21,6 +21,7 @@ trantorien_t *trantorien_init(const char *team_name, int id,
     }
     memset(trantorien, 0, sizeof(trantorien_t));
     trantorien->team_name = team_name;
+    trantorien->level = 1;
     trantorien->id = id;
     trantorien->alive = true;
     trantorien->direction = (rand() % (MAX_DIRECTION - 1)) + 1;
