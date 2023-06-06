@@ -76,7 +76,6 @@ class IA:
             ],
         ]
         self.inputTree: dict() = {
-            "level": [self.level],
             "mfood": [0],
             "mlinemate": [0],
             "mderaumere": [0],
