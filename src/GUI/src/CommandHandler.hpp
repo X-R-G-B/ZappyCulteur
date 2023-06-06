@@ -86,7 +86,7 @@ namespace GUI {
              * @param command The command string.
              * @return True if the map size was set successfully, false otherwise.
              */
-            bool setMapSize(const std::string& command);
+            bool setMapSize(const std::string &command);
 
             /**
              * @brief Sets the new player entity based on the command.
