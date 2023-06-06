@@ -10,6 +10,26 @@
 
 namespace GUI {
     namespace Entities {
+        static const std::string food = "_FOOD";
+        static const std::string linemate = "_LINEMATE";
+        static const std::string deraumere = "_DERAUMERE";
+        static const std::string sibur = "_SIBUR";
+        static const std::string mendiane = "_MENDIANE";
+        static const std::string phiras = "_PHIRAS";
+        static const std::string thystame = "_THYSTAME";
+
+        static const std::unordered_map<RessourcesType, std::string> pathToData = {
+            {RessourcesType::FOOD, "src/GUI/assets/environment/honey.png"},
+            {RessourcesType::LINEMATE, "src/GUI/assets/environment/rocks.png"},
+            {RessourcesType::DERAUMERE, "src/GUI/assets/environment/flower.png"},
+            {RessourcesType::SIBUR, "src/GUI/assets/environment/rose.png"},
+            {RessourcesType::MENDIANE, "src/GUI/assets/environment/hibiscus.png"},
+            {RessourcesType::PHIRAS, "src/GUI/assets/environment/camellia.png"},
+            {RessourcesType::THYSTAME, "src/GUI/assets/environment/camellia.png"}
+        };
+
+        static const std::size_t ressourceLayer = 20;
+
         Floor::Floor(
             const std::string &id,
             const Vector2F &position,
@@ -60,36 +80,65 @@ namespace GUI {
                     }
                 }
             }
+            
         }
 
-        void Floor::createDarkFloor(unsigned int i, unsigned int j)
+        void Floor::createRessource(unsigned int x, unsigned int y, RessourcesType ressource)
         {
-            std::string id = _id + std::to_string(i) + std::to_string(j);
+            std::string id = std::to_string(x) + std::to_string(y) + thystame;
+            sf::Texture tx;
 
+            auto search = _ressources.find(ressource);
+            if (search == _ressources.end()) {
+                if (tx.loadFromFile(pathToData.find(ressource)->second) == false) {
+                    return;
+                } else {
+                    _ressources.emplace(std::make_pair(ressource, tx));
+                }
+            } else {
+                tx = search->second;
+            }
             _components.push_back(std::make_shared<GUI::Components::Sprite>(
                 id,
-                _txFloorDark,
-                10,
+                tx,
+                ressourceLayer,
                 Vector2F(
-                    _tileSize * static_cast<float>(i),
-                    _tileSize * static_cast<float>(j)
+                    _tileSize * static_cast<float>(x),
+                    _tileSize * static_cast<float>(y)
                 ),
                 _tileSize,
                 _tileSize
             ));
         }
 
-        void Floor::createLightFloor(unsigned int i, unsigned int j)
+        void Floor::createDarkFloor(unsigned int x, unsigned int y)
         {
-            std::string id = _id + std::to_string(i) + std::to_string(j);
+            std::string id = _id + std::to_string(x) + std::to_string(y);
+
+            _components.push_back(std::make_shared<GUI::Components::Sprite>(
+                id,
+                _txFloorDark,
+                10,
+                Vector2F(
+                    _tileSize * static_cast<float>(x),
+                    _tileSize * static_cast<float>(y)
+                ),
+                _tileSize,
+                _tileSize
+            ));
+        }
+
+        void Floor::createLightFloor(unsigned int x, unsigned int y)
+        {
+            std::string id = _id + std::to_string(x) + std::to_string(y);
 
             _components.push_back(std::make_shared<GUI::Components::Sprite>(
                 id,
                 _txFloorLight,
                 10,
                 Vector2F(
-                    _tileSize * static_cast<float>(i),
-                    _tileSize * static_cast<float>(j)
+                    _tileSize * static_cast<float>(x),
+                    _tileSize * static_cast<float>(y)
                 ),
                 _tileSize,
                 _tileSize

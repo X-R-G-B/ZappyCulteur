@@ -8,8 +8,10 @@
 #pragma once
 
 #include <vector>
+#include <unordered_map>
 #include <SFML/Graphics.hpp>
 #include "AEntity.hpp"
+#include "Ressources.hpp"
 #include "Sprite.hpp"
 
 #define TILE_SIZE 92
@@ -24,6 +26,7 @@ namespace GUI {
                     unsigned int height = 20,
                     float tileSize = TILE_SIZE
                 );
+                void createRessource(unsigned int x, unsigned int y, RessourcesType ressource);
                 ~Floor() = default;
                 void update() override;
             private:
@@ -32,7 +35,8 @@ namespace GUI {
                 void createDarkFloor(unsigned int x, unsigned int y);
                 void createLightFloor(unsigned int x, unsigned int y);
                 sf::Texture _txFloorDark;
-                sf::Texture _txFloorLight;
+                sf::Texture _txFloorLight;          
+                std::unordered_map<RessourcesType, sf::Texture> _ressources;
                 unsigned int _width;
                 unsigned int _height;
                 float _tileSize;
