@@ -16,13 +16,15 @@ namespace GUI {
     namespace CommandHandler {
         static const std::unordered_map<std::string, COMMAND_TYPE> commandProtocol = {
             {"msz", COMMAND_TYPE::MAP_SIZE},
+            {"bct", COMMAND_TYPE::MAP_CONTENT},
             {"pnw", COMMAND_TYPE::NEW_PLAYER}
         };
 
         CommandHandler::CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager)
             : _entityManager(entityManager), _toCall({
                 {COMMAND_TYPE::MAP_SIZE, &CommandHandler::setMapSize},
-                {COMMAND_TYPE::NEW_PLAYER, &CommandHandler::setNewPlayer}
+                {COMMAND_TYPE::NEW_PLAYER, &CommandHandler::setNewPlayer},
+                {COMMAND_TYPE::MAP_CONTENT, &CommandHandler::setRessources}
             })
         {}
 
@@ -100,6 +102,27 @@ namespace GUI {
                 enumOrientation,
                 level
             ));
+            return (true);
+        }
+
+        bool CommandHandler::setRessources(const std::string &command)
+        {
+            std::cout << command << std::endl;
+            std::stringstream ss(command);
+            int x = 0;
+            int y = 0;
+            int q0 = 0;
+            int q1 = 0;
+            int q2 = 0;
+            int q3 = 0;
+            int q4 = 0;
+            int q5 = 0;
+            int q6 = 0;
+            std::string cmd;
+            std::cout << "salut" << std::endl;
+
+            ss >> cmd >> x >> y >> q0 >> q1 >> q2 >> q3 >> q4 >> q5 >> q6;
+            
             return (true);
         }
     }
