@@ -95,6 +95,13 @@ namespace GUI {
              */
             bool setNewPlayer(const std::string &command);
 
+            /**
+             * @brief Sets the player position based on the command.
+             * @param command The command string.
+             * @return True if the player position was set successfully, false otherwise.
+             */
+            bool setPlayerPosition(const std::string &command);
+
             std::shared_ptr<Entities::EntitiesManager> _entityManager;
             const std::unordered_map<COMMAND_TYPE, std::function<bool(CommandHandler &, const std::string &)>> _toCall;
         };

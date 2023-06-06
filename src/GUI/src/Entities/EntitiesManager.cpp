@@ -10,10 +10,10 @@
 namespace GUI {
     namespace Entities {
 
-        EntitiesManager::EntitiesManagerException::EntitiesManagerException(const std::string &message) :
+        EntitiesManagerException::EntitiesManagerException(const std::string &message) :
             _message(message) {}
 
-        const char *EntitiesManager::EntitiesManagerException::what() const noexcept
+        const char *EntitiesManagerException::what() const noexcept
         {
             return _message.c_str();
         }

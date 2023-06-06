@@ -17,16 +17,16 @@
 
 namespace GUI {
     namespace Entities {
-        class EntitiesManager {
-            
-            class EntitiesManagerException : public std::exception {
-                public:
-                    explicit EntitiesManagerException(const std::string &message);
-                    const char *what() const noexcept override;
-                private:
-                    std::string _message;
-            };
 
+        class EntitiesManagerException : public std::exception {
+            public:
+                explicit EntitiesManagerException(const std::string &message);
+                const char *what() const noexcept override;
+            private:
+                std::string _message;
+        };
+
+        class EntitiesManager {
             public:
                 EntitiesManager() = default;
                 ~EntitiesManager() = default;
