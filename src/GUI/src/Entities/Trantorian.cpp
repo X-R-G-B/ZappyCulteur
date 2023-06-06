@@ -6,6 +6,7 @@
 */
 
 #include <iostream>
+#include <cmath>
 #include "Trantorian.hpp"
 #include "Components/Sprite.hpp"
 
@@ -27,8 +28,8 @@ namespace GUI {
             ),
             _level(level),
             _team(team),
-            _speed(200),
-            _toGo(position)
+            _toGo(position),
+            _speed(200)
         {
             initSprites();
         }
