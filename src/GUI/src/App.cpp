@@ -37,16 +37,16 @@ namespace GUI {
             printHelp();
             throw AppException("Exiting...");
         }
-        if (!strcmp(flag1.c_str(), "-h")) {
+        if (flag1 == "-h") {
             _ip = arg1;
         }
-        if (!strcmp(flag1.c_str(), "-p")) {
+        if (flag1 == "-p") {
             _port = arg1;
         }
-        if (!strcmp(flag2.c_str(), "-h")) {
+        if (flag2 == "-h") {
             _ip = arg2;
         }
-        if (!strcmp(flag2.c_str(), "-p")) {
+        if (flag2 =="-p") {
             _port = arg2;
         }
         if (_port.empty() || _ip.empty()) {
