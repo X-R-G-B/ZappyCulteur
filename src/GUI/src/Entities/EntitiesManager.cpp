@@ -18,10 +18,10 @@ namespace GUI {
             return _message.c_str();
         }
 
-        void EntitiesManager::update()
+        void EntitiesManager::update(double deltaTime)
         {
             for (auto &entity : _entities) {
-                entity->update();
+                entity->update(deltaTime);
             }
         }
 

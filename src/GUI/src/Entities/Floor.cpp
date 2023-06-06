@@ -31,7 +31,7 @@ namespace GUI {
             initSprites();
         }
 
-        void Floor::update()
+        void Floor::update(double)
         {
         }
 

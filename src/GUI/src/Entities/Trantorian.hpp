@@ -23,7 +23,7 @@ namespace GUI {
                     size_t level
                 );
                 ~Trantorian() = default;
-                void update() final;
+                void update(double deltaTime) final;
                 void setLevel(int level);
                 const std::size_t &getLevel() const;
                 void setTeam(const std::string &team);

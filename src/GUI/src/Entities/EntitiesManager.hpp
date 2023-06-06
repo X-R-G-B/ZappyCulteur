@@ -30,7 +30,7 @@ namespace GUI {
             public:
                 EntitiesManager() = default;
                 ~EntitiesManager() = default;
-                void update();
+                void update(double deltaTime);
                 void killEntitiesByType(EntityType type);
                 void killEntityById(const std::string &id);
                 void addEntity(const std::shared_ptr<IEntity> &entity);

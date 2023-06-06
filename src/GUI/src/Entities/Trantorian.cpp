@@ -32,7 +32,7 @@ namespace GUI {
             initSprites();
         }
 
-        void Trantorian::update()
+        void Trantorian::update(double deltaTime)
         {
             if (_orientation == EntityOrientation::RIGHT) {
                 if (_position.x < 1920 - 50) {

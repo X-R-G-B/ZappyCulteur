@@ -7,11 +7,12 @@
 
 #pragma once
 
+#include <memory>
+#include <chrono>
 #include "NetworkManager.hpp"
 #include "CommandHandler.hpp"
 #include "SFML.hpp"
 #include "EntitiesManager.hpp"
-#include <memory>
 
 namespace GUI {
     class App {
@@ -25,7 +26,7 @@ namespace GUI {
                 private:
                     std::string _msg;
             };
-            App() = default;
+            App();
             ~App() = default;
 
             int operator()(int ac, const char **av);
@@ -37,6 +38,8 @@ namespace GUI {
             void initModules();
             void gameLoop();
             void printHelp();
+            void askNetworkForUpdate();
+            void updateTime();
 
             NetworkManager _networkManager;
             std::string _port;
@@ -44,5 +47,7 @@ namespace GUI {
             std::unique_ptr<SFML> _displayModule;
             std::shared_ptr<GUI::Entities::EntitiesManager> _entityManager;
             std::unique_ptr<CommandHandler::CommandHandler> _commandHandler;
+            double _deltatime;
+            std::chrono::time_point<std::chrono::system_clock> _lastTime;
     };
 }
