@@ -11,9 +11,9 @@
 namespace GUI {
     static const std::string windowName = "ZappyCulteur";
 
-    static const std::size_t height = 1080;
-    static const std::size_t width = 1920;
-    static const std::size_t framerateLimit = 60;
+    static constexpr std::size_t height = 1080;
+    static constexpr std::size_t width = 1920;
+    static constexpr unsigned int framerateLimit = 60;
 
     App::AppException::AppException(const std::string &msg)
         : _msg(msg){}
@@ -23,11 +23,11 @@ namespace GUI {
         return (_msg.c_str());
     }
 
-    void App::initArgs(const char **av)
+    void App::initArgs(const char **av, int ac)
     {
         std::string params;
 
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i < ac; i++) {
             params.append(std::string(av[i]) + " ");
         }
 
@@ -130,7 +130,7 @@ namespace GUI {
     {
         if (ac != 1) {
             try {
-                initArgs(av);
+                initArgs(av, ac);
                 launchApp();
             } catch (const std::exception &err) {
                 std::cerr << err.what() << std::endl;

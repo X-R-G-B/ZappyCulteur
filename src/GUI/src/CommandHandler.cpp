@@ -26,7 +26,7 @@ namespace GUI {
             })
         {}
 
-        void CommandHandler::update(const std::vector<std::string> &commands)
+        void CommandHandler::update(const std::vector<std::string>& commands)
         {
             COMMAND_TYPE commandKey;
             std::function<bool(CommandHandler &, const std::string &)> functionToCall;
@@ -88,7 +88,6 @@ namespace GUI {
                 || orientation < 0 || orientation > 3) {
                 return (false);
             }
-            id = "Player_" + id;
             if (_entityManager->doesEntityExist(id) == true) {
                 _entityManager->killEntityById(id);
             }
@@ -97,7 +96,7 @@ namespace GUI {
             _entityManager->addEntity(std::make_shared<Entities::Trantorian>(
                 id,
                 teamName,
-                Vector2F((x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE),
+                Vector2F(x * TILE_SIZE, y * TILE_SIZE),
                 enumOrientation,
                 level
             ));
