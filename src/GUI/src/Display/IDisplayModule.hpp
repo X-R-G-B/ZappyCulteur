@@ -25,7 +25,7 @@ namespace GUI {
              * @brief Clear, draw and display (sprites, sounds, etc...)
              * @param entitiesManger
              */
-            virtual void update(Entities::EntitiesManager &entitiesManger) = 0;
+            virtual void update() = 0;
             
             /**
              * @brief say if the window is open or not

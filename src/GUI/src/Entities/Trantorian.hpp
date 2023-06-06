@@ -18,7 +18,9 @@ namespace GUI {
             public:
                 Trantorian(const std::string &id,
                     const std::string &team,
-                    const Vector2F &position
+                    const Vector2F &position,
+                    EntityOrientation orientation,
+                    size_t level
                 );
                 ~Trantorian() = default;
                 void update() final;

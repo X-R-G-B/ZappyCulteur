@@ -12,6 +12,8 @@
 #include "AEntity.hpp"
 #include "Sprite.hpp"
 
+#define TILE_SIZE 92
+
 namespace GUI {
     namespace Entities {
         class Floor : public AEntity {
@@ -20,7 +22,7 @@ namespace GUI {
                     const Vector2F &position,
                     unsigned int width = 20,
                     unsigned int height = 20,
-                    float tileSize = 92
+                    float tileSize = TILE_SIZE
                 );
                 ~Floor() = default;
                 void update() override;

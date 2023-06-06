@@ -26,7 +26,7 @@
 #include <array>
 #include <stdexcept>
 
-namespace Zappy {
+namespace GUI {
 
     class NetworkManager {
 
@@ -43,7 +43,7 @@ namespace Zappy {
 
     public:
 
-        NetworkManager(const std::string& ip, const std::string& port);
+        NetworkManager();
 
         ~NetworkManager();
 
@@ -64,7 +64,7 @@ namespace Zappy {
          * @brief init the connection with the server
          * 
          */
-        void initConnection();
+        void initConnection(const std::string &ip, const std::string &port);
 
         /**
          * @brief reconnect to the server if the connection is lost

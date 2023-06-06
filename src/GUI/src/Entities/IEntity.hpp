@@ -25,9 +25,9 @@ namespace GUI {
 
         enum class EntityOrientation {
             UP,
+            RIGHT,
             DOWN,
             LEFT,
-            RIGHT,
         };
 
         class EntityException : public std::exception {

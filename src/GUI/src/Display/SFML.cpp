@@ -13,7 +13,7 @@
 #include "CompQuery.hpp"
 
 namespace GUI {
-    SFML::SFML(std::shared_ptr<GUI::EntityManager> entityManager,
+    SFML::SFML(std::shared_ptr<Entities::EntitiesManager> entityManager,
         std::string windowTitle,
         unsigned int width,
         unsigned int height,
@@ -72,16 +72,16 @@ namespace GUI {
         }
     }
 
-    void SFML::update(Entities::EntitiesManager &entitiesManger)
+    void SFML::update()
     {
         clear();
-        drawSprites(entitiesManger);
+        drawSprites();
         _window.display();
     }
 
-    void SFML::drawSprites(const Entities::EntitiesManager &entitiesManger)
+    void SFML::drawSprites()
     {
-        auto sprites = entitiesManger.getComponentsByType(Components::CompType::SPRITE);
+        auto sprites = _entityManager->getComponentsByType(Components::CompType::SPRITE);
         _compQuery.sortSpritesByLayer(sprites);
 
         for (const auto &sprite : *sprites) {
