@@ -10,6 +10,14 @@
 
 namespace GUI {
     namespace Entities {
+        static const std::string food = "_FOOD";
+        static const std::string linemate = "_LINEMATE";
+        static const std::string deraumere = "_DERAUMERE";
+        static const std::string sibur = "_SIBUR";
+        static const std::string mendiane = "_MENDIANE";
+        static const std::string phiras = "_PHIRAS";
+        static const std::string thystame = "_THYSTAME";
+
         Floor::Floor(
             const std::string &id,
             const Vector2F &position,
@@ -70,68 +78,153 @@ namespace GUI {
             
         }
 
-        void createFood(unsigned int x, unsigned int y)
+        void Floor::createFood(unsigned int x, unsigned int y)
         {
-        }
-
-        void createLinemate(unsigned int x, unsigned int y)
-        {
-            
-        }
-
-        void createDeraumere(unsigned int x, unsigned int y)
-        {
-
-        }
-
-        void createSibur(unsigned int x, unsigned int y)
-        {
-
-        }
-
-        void createMendiane(unsigned int x, unsigned int y)
-        {
-
-        }
-
-        void createPhiras(unsigned int x, unsigned int y)
-        {
-
-        }
-
-        void createThystame(unsigned int x, unsigned int y)
-        {
-
-        }
-
-        void Floor::createDarkFloor(unsigned int i, unsigned int j)
-        {
-            std::string id = _id + std::to_string(i) + std::to_string(j);
+            std::string id = std::to_string(x) + std::to_string(y) + food;
 
             _components.push_back(std::make_shared<GUI::Components::Sprite>(
                 id,
-                _txFloorDark,
-                10,
+                _txFood,
+                20,
                 Vector2F(
-                    _tileSize * static_cast<float>(i),
-                    _tileSize * static_cast<float>(j)
+                    _tileSize * static_cast<float>(x),
+                    _tileSize * static_cast<float>(y)
                 ),
                 _tileSize,
                 _tileSize
             ));
         }
 
-        void Floor::createLightFloor(unsigned int i, unsigned int j)
+        void Floor::createLinemate(unsigned int x, unsigned int y)
         {
-            std::string id = _id + std::to_string(i) + std::to_string(j);
+            std::string id = std::to_string(x) + std::to_string(y) + linemate;
+
+            _components.push_back(std::make_shared<GUI::Components::Sprite>(
+                id,
+                _txLinemate,
+                20,
+                Vector2F(
+                    _tileSize * static_cast<float>(x),
+                    _tileSize * static_cast<float>(y)
+                ),
+                _tileSize,
+                _tileSize
+            ));
+        }
+
+        void Floor::createDeraumere(unsigned int x, unsigned int y)
+        {
+            std::string id = std::to_string(x) + std::to_string(y) + deraumere;
+
+            _components.push_back(std::make_shared<GUI::Components::Sprite>(
+                id,
+                _txDeraumere,
+                20,
+                Vector2F(
+                    _tileSize * static_cast<float>(x),
+                    _tileSize * static_cast<float>(y)
+                ),
+                _tileSize,
+                _tileSize
+            ));
+        }
+
+        void Floor::createSibur(unsigned int x, unsigned int y)
+        {
+            std::string id = std::to_string(x) + std::to_string(y) + sibur;
+
+            _components.push_back(std::make_shared<GUI::Components::Sprite>(
+                id,
+                _txSibur,
+                20,
+                Vector2F(
+                    _tileSize * static_cast<float>(x),
+                    _tileSize * static_cast<float>(y)
+                ),
+                _tileSize,
+                _tileSize
+            ));
+        }
+
+        void Floor::createMendiane(unsigned int x, unsigned int y)
+        {
+            std::string id = std::to_string(x) + std::to_string(y) + mendiane;
+
+            _components.push_back(std::make_shared<GUI::Components::Sprite>(
+                id,
+                _txMendiane,
+                20,
+                Vector2F(
+                    _tileSize * static_cast<float>(x),
+                    _tileSize * static_cast<float>(y)
+                ),
+                _tileSize,
+                _tileSize
+            ));
+        }
+
+        void Floor::createPhiras(unsigned int x, unsigned int y)
+        {
+            std::string id = std::to_string(x) + std::to_string(y) + phiras;
+
+            _components.push_back(std::make_shared<GUI::Components::Sprite>(
+                id,
+                _txPhiras,
+                20,
+                Vector2F(
+                    _tileSize * static_cast<float>(x),
+                    _tileSize * static_cast<float>(y)
+                ),
+                _tileSize,
+                _tileSize
+            ));
+        }
+
+        void Floor::createThystame(unsigned int x, unsigned int y)
+        {
+            std::string id = std::to_string(x) + std::to_string(y) + thystame;
+
+            _components.push_back(std::make_shared<GUI::Components::Sprite>(
+                id,
+                _txThystame,
+                20,
+                Vector2F(
+                    _tileSize * static_cast<float>(x),
+                    _tileSize * static_cast<float>(y)
+                ),
+                _tileSize,
+                _tileSize
+            ));
+        }
+
+        void Floor::createDarkFloor(unsigned int x, unsigned int y)
+        {
+            std::string id = _id + std::to_string(x) + std::to_string(y);
+
+            _components.push_back(std::make_shared<GUI::Components::Sprite>(
+                id,
+                _txFloorDark,
+                10,
+                Vector2F(
+                    _tileSize * static_cast<float>(x),
+                    _tileSize * static_cast<float>(y)
+                ),
+                _tileSize,
+                _tileSize
+            ));
+        }
+
+        void Floor::createLightFloor(unsigned int x, unsigned int y)
+        {
+            std::string id = _id + std::to_string(x) + std::to_string(y);
 
             _components.push_back(std::make_shared<GUI::Components::Sprite>(
                 id,
                 _txFloorLight,
                 10,
                 Vector2F(
-                    _tileSize * static_cast<float>(i),
-                    _tileSize * static_cast<float>(j)
+                    _tileSize * static_cast<float>(x),
+                    _tileSize * static_cast<float>(y)
                 ),
                 _tileSize,
                 _tileSize

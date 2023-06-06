@@ -47,7 +47,6 @@ namespace GUI {
                 sf::Texture _txMendiane;
                 sf::Texture _txPhiras;
                 sf::Texture _txThystame;
-                std::vector<GUI::Components::Sprite> _ressources;
                 unsigned int _width;
                 unsigned int _height;
                 float _tileSize;
