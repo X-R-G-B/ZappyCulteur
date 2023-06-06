@@ -12,6 +12,7 @@
 namespace GUI {
     namespace Entities {
         enum class RessourcesType {
+            FOOD,
             LINEMATE,
             DERAUMERE,
             SIBUR,
