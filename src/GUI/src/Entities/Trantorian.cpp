@@ -14,16 +14,18 @@ namespace GUI {
         Trantorian::Trantorian(
             const std::string &id,
             const std::string &team,
-            const Vector2F &position) :
+            const Vector2F &position,
+            EntityOrientation orientation,
+            size_t level) :
             AEntity(
                 id,
                 position,
                 Vector2F(0, 0),
                 Vector2F(1, 1),
                 EntityType::TRANTORIAN,
-                EntityOrientation::RIGHT
+                orientation
             ),
-            _level(1),
+            _level(level),
             _team(team),
             _speed(5)
         {

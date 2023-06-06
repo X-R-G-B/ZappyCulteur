@@ -15,13 +15,9 @@
 #include "EntitiesManager.hpp"
 
 namespace GUI {
-    class EntityManager;
-}
-
-namespace GUI {
     class SFML : public ADisplayModule {
         public:
-            SFML(std::shared_ptr<GUI::EntityManager> entityManager,
+            SFML(std::shared_ptr<GUI::Entities::EntitiesManager> entityManager,
                 std::string windowTitle = "ZappyCulteur",
                 unsigned int width = 1920U,
                 unsigned int height = 1080U,
@@ -29,13 +25,13 @@ namespace GUI {
                 WINDOW_MODE windowMode = WINDOW_MODE::FULLSCREEN
             );
             ~SFML();
-            virtual void update(Entities::EntitiesManager &entitiesManger) final;
+            virtual void update() final;
             virtual void handleEvents() final;
             WINDOW_MODE getWindowMode();
         private:
             void clear() final;
             void closeWindow()final;
-            void drawSprites(const Entities::EntitiesManager &entitiesManger);
+            void drawSprites();
             void createWindow() final;
             void setWindowStyle();
             void switchWindowMode() final;
@@ -43,6 +39,6 @@ namespace GUI {
             sf::Uint32 _winStyle;
             sf::RenderWindow _window;
             Components::CompQuery _compQuery;
-            std::shared_ptr<GUI::EntityManager> _entityManager;
+            std::shared_ptr<Entities::EntitiesManager> _entityManager;
     };
 }
