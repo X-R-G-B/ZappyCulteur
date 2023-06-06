@@ -28,6 +28,8 @@ namespace GUI {
             {RessourcesType::THYSTAME, "src/GUI/assets/environment/camellia.png"}
         };
 
+        static const std::size_t ressourceLayer = 20;
+
         Floor::Floor(
             const std::string &id,
             const Vector2F &position,
@@ -99,7 +101,7 @@ namespace GUI {
             _components.push_back(std::make_shared<GUI::Components::Sprite>(
                 id,
                 tx,
-                20,
+                ressourceLayer,
                 Vector2F(
                     _tileSize * static_cast<float>(x),
                     _tileSize * static_cast<float>(y)
