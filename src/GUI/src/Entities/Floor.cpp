@@ -38,7 +38,14 @@ namespace GUI {
         void Floor::initTexture()
         {
             if (_txFloorDark.loadFromFile("src/GUI/assets/environment/darkFloor.png") == false ||
-                _txFloorLight.loadFromFile("src/GUI/assets/environment/lightFloor.png") == false) {
+                _txFloorLight.loadFromFile("src/GUI/assets/environment/lightFloor.png") == false ||
+                _txFood.loadFromFile("src/GUI/assets/environment/honey.png") == false ||
+                _txLinemate.loadFromFile("src/GUI/assets/environment/rocks.png") == false ||
+                _txDeraumere.loadFromFile("src/GUI/assets/environment/flower.png") == false ||
+                _txSibur.loadFromFile("src/GUI/assets/environment/rose.png") == false ||
+                _txMendiane.loadFromFile("src/GUI/assets/environment/hibiscus.png") == false ||
+                _txPhiras.loadFromFile("src/GUI/assets/environment/camellia.png") == false ||
+                _txThystame.loadFromFile("src/GUI/assets/environment/dahlia.png") == false) {
                 throw EntityException("Error: could not load floor texture");
             }
         }
@@ -60,6 +67,41 @@ namespace GUI {
                     }
                 }
             }
+            
+        }
+
+        void createFood(unsigned int x, unsigned int y)
+        {
+        }
+
+        void createLinemate(unsigned int x, unsigned int y)
+        {
+            
+        }
+
+        void createDeraumere(unsigned int x, unsigned int y)
+        {
+
+        }
+
+        void createSibur(unsigned int x, unsigned int y)
+        {
+
+        }
+
+        void createMendiane(unsigned int x, unsigned int y)
+        {
+
+        }
+
+        void createPhiras(unsigned int x, unsigned int y)
+        {
+
+        }
+
+        void createThystame(unsigned int x, unsigned int y)
+        {
+
         }
 
         void Floor::createDarkFloor(unsigned int i, unsigned int j)
