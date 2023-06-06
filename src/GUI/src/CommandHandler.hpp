@@ -96,7 +96,7 @@ namespace GUI {
             bool setNewPlayer(const std::string &command);
 
             std::shared_ptr<Entities::EntitiesManager> _entityManager;
-            const std::unordered_map<COMMAND_TYPE, std::function<bool(CommandHandler&, const std::string&)>> _toCall;
+            const std::unordered_map<COMMAND_TYPE, std::function<bool(CommandHandler &, const std::string &)>> _toCall;
         };
     }
 }
