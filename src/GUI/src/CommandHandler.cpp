@@ -9,6 +9,7 @@
 #include <sstream>
 #include "CommandHandler.hpp"
 #include "Floor.hpp"
+#include "Ressources.hpp"
 #include "Trantorian.hpp"
 #include "IEntity.hpp"
 
@@ -108,7 +109,7 @@ namespace GUI {
 
         bool CommandHandler::setRessources(const std::string &command)
         {
-            std::cout << command << std::endl;
+            std::shared_ptr<GUI::Entities::IEntity> entity;
             std::stringstream ss(command);
             int x = 0;
             int y = 0;
@@ -120,10 +121,35 @@ namespace GUI {
             int q5 = 0;
             int q6 = 0;
             std::string cmd;
-            std::cout << "salut" << std::endl;
+            if (_entityManager->doesEntityExist("Floor") == true) {
+                entity = _entityManager->getEntityById("Floor");
+            } else {
+                return (false);
+            }
 
+            auto floor = std::static_pointer_cast<GUI::Entities::Floor>(entity);
             ss >> cmd >> x >> y >> q0 >> q1 >> q2 >> q3 >> q4 >> q5 >> q6;
-            
+            if (q0 > 0) {
+                floor->createRessource(x, y, Entities::RessourcesType::FOOD);
+            }
+            if (q1 > 0) {
+                floor->createRessource(x, y, Entities::RessourcesType::LINEMATE);
+            }
+            if (q2 > 0) {
+                floor->createRessource(x, y, Entities::RessourcesType::DERAUMERE);
+            }
+            if (q3 > 0) {
+                floor->createRessource(x, y, Entities::RessourcesType::SIBUR);
+            }
+            if (q4 > 0) {
+                floor->createRessource(x, y, Entities::RessourcesType::MENDIANE);
+            }
+            if (q5 > 0) {
+                floor->createRessource(x, y, Entities::RessourcesType::PHIRAS);
+            }
+            if (q6 > 0) {
+                floor->createRessource(x, y, Entities::RessourcesType::THYSTAME);
+            }
             return (true);
         }
     }
