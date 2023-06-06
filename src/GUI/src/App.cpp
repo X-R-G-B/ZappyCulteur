@@ -9,6 +9,12 @@
 #include "App.hpp"
 
 namespace GUI {
+    static const std::string windowName = "ZappyCulteur";
+
+    static const std::size_t height = 1080;
+    static const std::size_t width = 1920;
+    static const std::size_t framerateLimit = 60;
+
     App::AppException::AppException(const std::string &msg)
         : _msg(msg){}
     
@@ -21,7 +27,7 @@ namespace GUI {
     {
         std::string params;
 
-        for (int i = 1; av[i] != nullptr; i++) {
+        for (int i = 1; i <= 5; i++) {
             params.append(std::string(av[i]) + " ");
         }
 
@@ -108,10 +114,10 @@ namespace GUI {
         }
         _displayModule = std::make_unique<SFML>(
             _entityManager,
-            "ZappyCulteur",
-            1920,
-            1080,
-            60,
+            windowName,
+            width,
+            height,
+            framerateLimit,
             WINDOW_MODE::FULLSCREEN
         );
         _commandHandler = std::make_unique<CommandHandler::CommandHandler>(_entityManager);
