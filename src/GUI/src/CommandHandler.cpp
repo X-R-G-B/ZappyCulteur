@@ -26,7 +26,7 @@ namespace GUI {
             })
         {}
 
-        void CommandHandler::update(const std::vector<std::string>& commands)
+        void CommandHandler::update(const std::vector<std::string> &commands)
         {
             COMMAND_TYPE commandKey;
             std::function<bool(CommandHandler &, const std::string &)> functionToCall;
