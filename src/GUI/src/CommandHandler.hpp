@@ -93,7 +93,7 @@ namespace GUI {
              * @param command The command string.
              * @return True if the new player was set successfully, false otherwise.
              */
-            bool setNewPlayer(const std::string& command);
+            bool setNewPlayer(const std::string &command);
 
             std::shared_ptr<Entities::EntitiesManager> _entityManager;
             const std::unordered_map<COMMAND_TYPE, std::function<bool(CommandHandler&, const std::string&)>> _toCall;
