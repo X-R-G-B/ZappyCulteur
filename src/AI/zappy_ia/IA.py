@@ -44,9 +44,37 @@ class IA:
         self.level: int = 1
         self.lastLook: List[List[Element]] = []
         self.client: Client = Client(port, machineName)
-        self.levelCosts: List[List[Tuple[Element, int]]] = [[[Element.LINEMATE, 1]], [[Element.LINEMATE, 1], [Element.DERAUMERE, 1], [Element.SIBUR, 1]], [[Element.LINEMATE, 2], [Element.SIBUR, 1], [Element.PHIRAS, 2]],
-            [[Element.LINEMATE, 1], [Element.DERAUMERE, 1], [Element.SIBUR, 2], [Element.PHIRAS, 1]], [[Element.LINEMATE, 1], [Element.DERAUMERE, 2], [Element.SIBUR, 1], [Element.MENDIANE, 3]], [[Element.LINEMATE, 1], [Element.DERAUMERE, 2], [Element.SIBUR, 3], [Element.PHIRAS, 1]],
-            [[Element.LINEMATE, 2], [Element.DERAUMERE, 2], [Element.SIBUR, 2], [Element.MENDIANE, 2], [Element.PHIRAS, 2], [Element.THYSTAME, 1]]]
+        self.levelCosts: List[List[Tuple[Element, int]]] = [
+            [[Element.LINEMATE, 1]],
+            [[Element.LINEMATE, 1], [Element.DERAUMERE, 1], [Element.SIBUR, 1]],
+            [[Element.LINEMATE, 2], [Element.SIBUR, 1], [Element.PHIRAS, 2]],
+            [
+                [Element.LINEMATE, 1],
+                [Element.DERAUMERE, 1],
+                [Element.SIBUR, 2],
+                [Element.PHIRAS, 1],
+            ],
+            [
+                [Element.LINEMATE, 1],
+                [Element.DERAUMERE, 2],
+                [Element.SIBUR, 1],
+                [Element.MENDIANE, 3],
+            ],
+            [
+                [Element.LINEMATE, 1],
+                [Element.DERAUMERE, 2],
+                [Element.SIBUR, 3],
+                [Element.PHIRAS, 1],
+            ],
+            [
+                [Element.LINEMATE, 2],
+                [Element.DERAUMERE, 2],
+                [Element.SIBUR, 2],
+                [Element.MENDIANE, 2],
+                [Element.PHIRAS, 2],
+                [Element.THYSTAME, 1],
+            ],
+        ]
         self.inputTree: dict() = {
             "level": [self.level],
             "mfood": [0],
@@ -65,7 +93,7 @@ class IA:
             "lthystame": [0],
             "enemy": [0],
             "broadcast": [0],
-            "placeleft": [0]
+            "placeleft": [0],
         }
         self.outputTree: dict() = {
             "Find food": self.findFood,
@@ -80,11 +108,7 @@ class IA:
             "Fork": self.fork,
         }
 
-        try:
-            self.clf = joblib.load("joblib/bigres.joblib")
-        except FileNotFoundError:
-            print("File joblib not found", file=sys.stderr)
-            sys.exit(84)
+        self.loadTree()
 
         while self.client.output() != "WELCOME\n":
             pass
@@ -93,13 +117,20 @@ class IA:
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
         self.run()
 
+    def loadTree(self):
+        try:
+            self.tree = joblib.load("joblib/level" + str(self.level) + ".joblib")
+        except FileNotFoundError:
+            print("File joblib not found", file=sys.stderr)
+            sys.exit(84)
+
     def run(self):
         continueRun = True
         try:
             while continueRun:
                 self.inventory()
                 self.lookForTree()
-                predictions = self.clf.predict(pd.DataFrame(self.inputTree))
+                predictions = self.tree.predict(pd.DataFrame(self.inputTree))
                 for prediction in predictions:
                     print(prediction)
                     self.outputTree[prediction]()
@@ -145,7 +176,7 @@ class IA:
 
         i = 1
         for elem in res.split(","):
-            self.inputTree['m' + elem.split(" ")[1].strip()][0] = int(
+            self.inputTree["m" + elem.split(" ")[1].strip()][0] = int(
                 elem.split(" ")[2].strip()
             )
             i += 1
@@ -226,37 +257,37 @@ class IA:
         self.takeElementInLastLook(
             Element.FOOD, self.findClosestElemInLastLook(Element.FOOD)
         )
-    
+
     def takeLinemate(self):
         self.takeElementInLastLook(
             Element.LINEMATE, self.findClosestElemInLastLook(Element.LINEMATE)
         )
-    
+
     def takeDeraumere(self):
         self.takeElementInLastLook(
             Element.DERAUMERE, self.findClosestElemInLastLook(Element.DERAUMERE)
         )
-    
+
     def takeSibur(self):
         self.takeElementInLastLook(
             Element.SIBUR, self.findClosestElemInLastLook(Element.SIBUR)
         )
-    
+
     def takeMendiane(self):
         self.takeElementInLastLook(
             Element.MENDIANE, self.findClosestElemInLastLook(Element.MENDIANE)
         )
-    
+
     def takePhiras(self):
         self.takeElementInLastLook(
             Element.PHIRAS, self.findClosestElemInLastLook(Element.PHIRAS)
         )
-    
+
     def takeThystame(self):
         self.takeElementInLastLook(
             Element.THYSTAME, self.findClosestElemInLastLook(Element.THYSTAME)
         )
-    
+
     def fork(self):
         print("Forking")
 
@@ -306,11 +337,12 @@ class IA:
 
     def elevation(self):
         for costTuple in self.levelCosts[self.level - 1]:
-            if (costTuple[1] > self.inputTree['m' + costTuple[0].value][0]):
+            if costTuple[1] > self.inputTree["m" + costTuple[0].value][0]:
                 return
             for i in range(costTuple[1]):
                 self.requestClient(Command.SET_OBJECT, costTuple[0].value)
         self.requestClient(Command.INCANTATION)
         res = self.requestClient("")
-        if (res != "ko\n"):
+        if res != "ko\n":
             self.level += 1
+            self.loadTree()
