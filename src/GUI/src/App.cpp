@@ -9,6 +9,12 @@
 #include "App.hpp"
 
 namespace GUI {
+    static const std::string windowName = "ZappyCulteur";
+
+    static constexpr std::size_t height = 1080;
+    static constexpr std::size_t width = 1920;
+    static constexpr unsigned int framerateLimit = 60;
+
     App::AppException::AppException(const std::string &msg)
         : _msg(msg){}
     
@@ -17,11 +23,11 @@ namespace GUI {
         return (_msg.c_str());
     }
 
-    void App::initArgs(const char **av)
+    void App::initArgs(const char **av, int ac)
     {
         std::string params;
 
-        for (int i = 1; av[i] != nullptr; i++) {
+        for (int i = 1; i < ac; i++) {
             params.append(std::string(av[i]) + " ");
         }
 
@@ -37,16 +43,16 @@ namespace GUI {
             printHelp();
             throw AppException("Exiting...");
         }
-        if (!strcmp(flag1.c_str(), "-h")) {
+        if (flag1 == "-h") {
             _ip = arg1;
         }
-        if (!strcmp(flag1.c_str(), "-p")) {
+        if (flag1 == "-p") {
             _port = arg1;
         }
-        if (!strcmp(flag2.c_str(), "-h")) {
+        if (flag2 == "-h") {
             _ip = arg2;
         }
-        if (!strcmp(flag2.c_str(), "-p")) {
+        if (flag2 =="-p") {
             _port = arg2;
         }
         if (_port.empty() || _ip.empty()) {
@@ -108,10 +114,10 @@ namespace GUI {
         }
         _displayModule = std::make_unique<SFML>(
             _entityManager,
-            "ZappyCulteur",
-            1920,
-            1080,
-            60,
+            windowName,
+            width,
+            height,
+            framerateLimit,
             WINDOW_MODE::FULLSCREEN
         );
         _commandHandler = std::make_unique<CommandHandler::CommandHandler>(_entityManager);
@@ -124,7 +130,7 @@ namespace GUI {
     {
         if (ac != 1) {
             try {
-                initArgs(av);
+                initArgs(av, ac);
                 launchApp();
             } catch (const std::exception &err) {
                 std::cerr << err.what() << std::endl;

@@ -31,7 +31,7 @@ namespace GUI {
             int operator()(int ac, const char **av);
 
         private:
-            void initArgs(const char **av);
+            void initArgs(const char **av, int ac);
             void launchUserConnectionMenu();
             void launchApp();
             void initModules();
