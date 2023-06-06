@@ -88,6 +88,7 @@ namespace GUI {
                 || orientation < 0 || orientation > 3) {
                 return (false);
             }
+            id = "Player_" + id;
             if (_entityManager->doesEntityExist(id) == true) {
                 _entityManager->killEntityById(id);
             }
