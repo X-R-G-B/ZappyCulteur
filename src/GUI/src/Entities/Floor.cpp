@@ -18,6 +18,16 @@ namespace GUI {
         static const std::string phiras = "_PHIRAS";
         static const std::string thystame = "_THYSTAME";
 
+        static const std::unordered_map<RessourcesType, std::string> pathToData = {
+            {RessourcesType::FOOD, "src/GUI/assets/environment/honey.png"},
+            {RessourcesType::LINEMATE, "src/GUI/assets/environment/rocks.png"},
+            {RessourcesType::DERAUMERE, "src/GUI/assets/environment/flower.png"},
+            {RessourcesType::SIBUR, "src/GUI/assets/environment/rose.png"},
+            {RessourcesType::MENDIANE, "src/GUI/assets/environment/hibiscus.png"},
+            {RessourcesType::PHIRAS, "src/GUI/assets/environment/camellia.png"},
+            {RessourcesType::THYSTAME, "src/GUI/assets/environment/camellia.png"}
+        };
+
         Floor::Floor(
             const std::string &id,
             const Vector2F &position,
@@ -46,14 +56,7 @@ namespace GUI {
         void Floor::initTexture()
         {
             if (_txFloorDark.loadFromFile("src/GUI/assets/environment/darkFloor.png") == false ||
-                _txFloorLight.loadFromFile("src/GUI/assets/environment/lightFloor.png") == false ||
-                _txFood.loadFromFile("src/GUI/assets/environment/honey.png") == false ||
-                _txLinemate.loadFromFile("src/GUI/assets/environment/rocks.png") == false ||
-                _txDeraumere.loadFromFile("src/GUI/assets/environment/flower.png") == false ||
-                _txSibur.loadFromFile("src/GUI/assets/environment/rose.png") == false ||
-                _txMendiane.loadFromFile("src/GUI/assets/environment/hibiscus.png") == false ||
-                _txPhiras.loadFromFile("src/GUI/assets/environment/camellia.png") == false ||
-                _txThystame.loadFromFile("src/GUI/assets/environment/dahlia.png") == false) {
+                _txFloorLight.loadFromFile("src/GUI/assets/environment/lightFloor.png") == false) {
                 throw EntityException("Error: could not load floor texture");
             }
         }
@@ -78,115 +81,24 @@ namespace GUI {
             
         }
 
-        void Floor::createFood(unsigned int x, unsigned int y)
-        {
-            std::string id = std::to_string(x) + std::to_string(y) + food;
-
-            _components.push_back(std::make_shared<GUI::Components::Sprite>(
-                id,
-                _txFood,
-                20,
-                Vector2F(
-                    _tileSize * static_cast<float>(x),
-                    _tileSize * static_cast<float>(y)
-                ),
-                _tileSize,
-                _tileSize
-            ));
-        }
-
-        void Floor::createLinemate(unsigned int x, unsigned int y)
-        {
-            std::string id = std::to_string(x) + std::to_string(y) + linemate;
-
-            _components.push_back(std::make_shared<GUI::Components::Sprite>(
-                id,
-                _txLinemate,
-                20,
-                Vector2F(
-                    _tileSize * static_cast<float>(x),
-                    _tileSize * static_cast<float>(y)
-                ),
-                _tileSize,
-                _tileSize
-            ));
-        }
-
-        void Floor::createDeraumere(unsigned int x, unsigned int y)
-        {
-            std::string id = std::to_string(x) + std::to_string(y) + deraumere;
-
-            _components.push_back(std::make_shared<GUI::Components::Sprite>(
-                id,
-                _txDeraumere,
-                20,
-                Vector2F(
-                    _tileSize * static_cast<float>(x),
-                    _tileSize * static_cast<float>(y)
-                ),
-                _tileSize,
-                _tileSize
-            ));
-        }
-
-        void Floor::createSibur(unsigned int x, unsigned int y)
-        {
-            std::string id = std::to_string(x) + std::to_string(y) + sibur;
-
-            _components.push_back(std::make_shared<GUI::Components::Sprite>(
-                id,
-                _txSibur,
-                20,
-                Vector2F(
-                    _tileSize * static_cast<float>(x),
-                    _tileSize * static_cast<float>(y)
-                ),
-                _tileSize,
-                _tileSize
-            ));
-        }
-
-        void Floor::createMendiane(unsigned int x, unsigned int y)
-        {
-            std::string id = std::to_string(x) + std::to_string(y) + mendiane;
-
-            _components.push_back(std::make_shared<GUI::Components::Sprite>(
-                id,
-                _txMendiane,
-                20,
-                Vector2F(
-                    _tileSize * static_cast<float>(x),
-                    _tileSize * static_cast<float>(y)
-                ),
-                _tileSize,
-                _tileSize
-            ));
-        }
-
-        void Floor::createPhiras(unsigned int x, unsigned int y)
-        {
-            std::string id = std::to_string(x) + std::to_string(y) + phiras;
-
-            _components.push_back(std::make_shared<GUI::Components::Sprite>(
-                id,
-                _txPhiras,
-                20,
-                Vector2F(
-                    _tileSize * static_cast<float>(x),
-                    _tileSize * static_cast<float>(y)
-                ),
-                _tileSize,
-                _tileSize
-            ));
-        }
-
-        void Floor::createThystame(unsigned int x, unsigned int y)
+        void Floor::createRessource(unsigned int x, unsigned int y, RessourcesType ressource)
         {
             std::string id = std::to_string(x) + std::to_string(y) + thystame;
+            sf::Texture tx;
 
+            auto search = _ressources.find(ressource);
+            if (search == _ressources.end()) {
+                if (tx.loadFromFile(pathToData.find(ressource)->second) == false) {
+                    return;
+                } else {
+                    _ressources.emplace(std::make_pair(ressource, tx));
+                }
+            } else {
+                tx = search->second;
+            }
             _components.push_back(std::make_shared<GUI::Components::Sprite>(
                 id,
-                _txThystame,
+                tx,
                 20,
                 Vector2F(
                     _tileSize * static_cast<float>(x),

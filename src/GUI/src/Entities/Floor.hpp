@@ -8,6 +8,7 @@
 #pragma once
 
 #include <vector>
+#include <unordered_map>
 #include <SFML/Graphics.hpp>
 #include "AEntity.hpp"
 #include "Ressources.hpp"
@@ -23,13 +24,7 @@ namespace GUI {
                     unsigned int height = 20,
                     float tileSize = 92
                 );
-                void createFood(unsigned int x, unsigned int y);
-                void createLinemate(unsigned int x, unsigned int y);
-                void createDeraumere(unsigned int x, unsigned int y);
-                void createSibur(unsigned int x, unsigned int y);
-                void createMendiane(unsigned int x, unsigned int y);
-                void createPhiras(unsigned int x, unsigned int y);
-                void createThystame(unsigned int x, unsigned int y);
+                void createRessource(unsigned int x, unsigned int y, RessourcesType ressource);
                 ~Floor() = default;
                 void update() override;
             private:
@@ -39,13 +34,7 @@ namespace GUI {
                 void createLightFloor(unsigned int x, unsigned int y);
                 sf::Texture _txFloorDark;
                 sf::Texture _txFloorLight;          
-                sf::Texture _txFood;
-                sf::Texture _txLinemate;
-                sf::Texture _txDeraumere;
-                sf::Texture _txSibur;
-                sf::Texture _txMendiane;
-                sf::Texture _txPhiras;
-                sf::Texture _txThystame;
+                std::unordered_map<RessourcesType, sf::Texture> _ressources;
                 unsigned int _width;
                 unsigned int _height;
                 float _tileSize;
