@@ -70,7 +70,7 @@ namespace GUI {
              * When data are parsed the entities will be updatr with those.
              * @param commands A vector of commands to process and execute.
              */
-            void update(const std::vector<std::string>& commands);
+            void update(const std::vector<std::string> &commands);
 
         protected:
         private:
