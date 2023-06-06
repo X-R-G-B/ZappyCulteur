@@ -28,20 +28,21 @@ static const char *ressources_name[MAX_NB_RESOURCES] = {
 static void send_tile_single_ressource(ntw_client_t *cl, int ressources,
     int ressource_nbr)
 {
-    circular_buffer_write(cl->write_to_outside, ressources_name[ressources]);
-    circular_buffer_write(cl->write_to_outside, " ");
-    circular_buffer_write(cl->write_to_outside, x_itoa(ressource_nbr));
+    for (int i = 0; i < ressource_nbr; i++) {
+        circular_buffer_write(cl->write_to_outside, ressources_name[ressources]);
+        circular_buffer_write(cl->write_to_outside, " ");
+    }
 }
 
 void send_tile_ressources(ntw_client_t *cl, map_tile_t *tile, int message_state)
 {
-    if (message_state == -1)
+    if (message_state == -1) {
         circular_buffer_write(cl->write_to_outside, "[");
-    else if (message_state == 1)
+    } else if (message_state != -1) {
         circular_buffer_write(cl->write_to_outside, ",");
+    }
     for (int i = 0; i < MAX_RESSOURCE; i++) {
-        if (tile->ressources[i] > 0)
-            send_tile_single_ressource(cl, i, tile->ressources[i]);
+        send_tile_single_ressource(cl, i, tile->ressources[i]);
     }
     if (message_state == 1)
         circular_buffer_write(cl->write_to_outside, "]\n");
@@ -62,7 +63,7 @@ int command_look_around(trantorien_t *trantorien, zappy_t *zappy,
     if (trantorien == NULL || zappy == NULL || cl == NULL || action == NULL)
         return EXIT_FAILURE;
     for (int lvl = 0; lvl <= trantorien->level; lvl++) {
-        look_around_commands[trantorien->direction](trantorien, lvl,
+        look_around_commands[trantorien->direction - 1](trantorien, lvl,
             zappy->map, cl);
     }
     return EXIT_SUCCESS;

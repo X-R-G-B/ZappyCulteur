@@ -140,13 +140,10 @@ Test(loop_cmd_ai_turn, turn_left_from_north)
     c->cl.ai.trantorien->x = 1;
     c->cl.ai.trantorien->y = 1;
     c->cl.ai.trantorien->direction = NORTH;
-    printf("------------ test ------------\n");
     circular_buffer_write(client->read_from_outside, "Left\n");
     while (circular_buffer_is_read_ready(client->write_to_outside) == false) {
         cr_assert_eq(loop(zappy, true), false);
     }
-    printf("direction: %d\n", c->cl.ai.trantorien->direction);
-    printf("------------ end test ------------\n");
     cr_assert_eq(c->cl.ai.trantorien->direction, WEST);
 }
 
