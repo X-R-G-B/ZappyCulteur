@@ -5,7 +5,11 @@ from typing import Union
 import pandas as pd
 import joblib
 import sys
+import random
 
+class Response(Enum):
+    OK = "ok\n"
+    KO = "ko\n"
 
 class Element(Enum):
     EMPTY = "empty"
@@ -106,9 +110,14 @@ class IA:
             "Elevation": self.elevation,
             "Fork": self.fork,
         }
+        self.foodTree = self.loadTree("joblib/food.joblib")
+        self.loadLevelTree()
+        self.connect()
 
-        self.loadTree()
+    def setId(self):
+        random_number = random.randint(10000, 99999)
 
+    def connect(self):
         while self.client.output() != "WELCOME\n":
             pass
         resSetup = self.requestClient(self.teamName + "\n").split("\n")
@@ -116,12 +125,17 @@ class IA:
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
         self.run()
 
-    def loadTree(self):
+    def loadTree(self, path: str) -> "":
         try:
-            self.tree = joblib.load("joblib/level" + str(self.level) + ".joblib")
+            res = joblib.load(path)
+            print(res)
         except FileNotFoundError:
             print("File joblib not found", file=sys.stderr)
             sys.exit(84)
+        return res
+
+    def loadLevelTree(self):
+        self.levelTree = self.loadTree("joblib/level" + str(self.level) + ".joblib")
 
     def run(self):
         continueRun = True
@@ -129,7 +143,7 @@ class IA:
             while continueRun:
                 self.inventory()
                 self.lookForTree()
-                predictions = self.tree.predict(pd.DataFrame(self.inputTree))
+                predictions = self.levelTree.predict(pd.DataFrame(self.inputTree))
                 for prediction in predictions:
                     print(prediction)
                     self.outputTree[prediction]()
@@ -325,7 +339,7 @@ class IA:
         i = 1
         pos = -1
         while pos == -1:
-            self.requestClient("Right\n")
+            self.requestClient(Command.RIGHT)
             self.look()
             pos = self.findClosestElemInLastLook(Element.FOOD)
             if distanceLimit != 0 and i > distanceLimit:
@@ -342,6 +356,8 @@ class IA:
                 self.requestClient(Command.SET_OBJECT, costTuple[0].value)
         self.requestClient(Command.INCANTATION)
         res = self.requestClient("")
-        if res != "ko\n":
+        if res != Response.KO:
             self.level += 1
-            self.loadTree()
+            self.loadLevelTree()
+
+
