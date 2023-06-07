@@ -134,7 +134,7 @@ namespace GUI {
                 >> ressources[4].first >> ressources[5].first >> ressources[6].first;
             for (const auto &it : ressources) {
                 if (it.first > 0) {
-                    floor->createRessources(x, y, it.second, it.first)
+                    floor->createRessources(x, y, it.second, it.first);
                 }
             }
             return (true);
