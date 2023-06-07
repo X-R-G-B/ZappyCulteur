@@ -49,5 +49,6 @@ namespace GUI {
             std::unique_ptr<CommandHandler::CommandHandler> _commandHandler;
             double _deltatime;
             std::chrono::time_point<std::chrono::system_clock> _lastTime;
+            double _timeSinceLastServerAsk;
     };
 }

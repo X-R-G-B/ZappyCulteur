@@ -24,7 +24,8 @@ namespace GUI {
     }
 
     App::App() :
-        _lastTime(std::chrono::system_clock::now())
+        _lastTime(std::chrono::system_clock::now()),
+        _timeSinceLastServerAsk(0)
     {}
 
     void App::initArgs(const char **av, int ac)
@@ -90,7 +91,11 @@ namespace GUI {
 
     void App::askNetworkForUpdate()
     {
-        //ask for player position, refresh resources, etc...
+        //for now, we ask the server for an update every second
+        if (_timeSinceLastServerAsk > 1) {
+            _networkManager.sendToServer("mct\n");
+            _timeSinceLastServerAsk = 0;
+        }
     }
 
     void App::updateTime()
@@ -99,6 +104,7 @@ namespace GUI {
         std::chrono::duration<double> elapsed = currentTime - _lastTime;
         _deltatime = elapsed.count();
         _lastTime = currentTime;
+        _timeSinceLastServerAsk += _deltatime;
     }
 
     void App::gameLoop()
@@ -109,6 +115,7 @@ namespace GUI {
                 _networkManager.reconnectToServer();
                 continue;
             }
+            askNetworkForUpdate();
             _networkManager.update();
             _entityManager->update(_deltatime);
             _commandHandler->update(_networkManager.getServerMessages());
