@@ -102,5 +102,17 @@ namespace GUI {
             }
             throw EntitiesManagerException("No entity with this type");
         }
+
+        std::vector<std::string> EntitiesManager::getPlayersIds() const
+        {
+            std::vector<std::string> playersIds;
+
+            for (const auto &entity : _entities) {
+                if (entity->getType() == EntityType::TRANTORIAN) {
+                    playersIds.push_back(entity->getId());
+                }
+            }
+            return playersIds;
+        }
     }
 }

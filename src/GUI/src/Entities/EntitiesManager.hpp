@@ -41,6 +41,7 @@ namespace GUI {
                 std::unique_ptr<std::vector<std::shared_ptr<IEntity>>>
                     getEntitiesByType(EntityType type) const;
                 bool doesEntityExist(const std::string &id) const;
+                std::vector<std::string> getPlayersIds() const;
 
             private:
                 std::vector<std::shared_ptr<IEntity>> _entities;

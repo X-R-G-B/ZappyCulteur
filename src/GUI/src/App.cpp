@@ -89,11 +89,22 @@ namespace GUI {
         gameLoop();
     }
 
+    //for now, we ask the server for updates every second
+    //next, we will ask in function of the time unit of the server
     void App::askNetworkForUpdate()
     {
-        //for now, we ask the server for an update every second
+        std::string currentPlayerId;
+
         if (_timeSinceLastServerAsk > 1) {
             _networkManager.sendToServer("mct\n");
+            _entityManager->getPlayersIds();
+            for (const auto &id : _entityManager->getPlayersIds()) {
+                currentPlayerId = id;
+                if (currentPlayerId.find("Player_") != std::string::npos) {
+                    currentPlayerId.erase(0, 7);
+                }
+                _networkManager.sendToServer("ppo " + currentPlayerId + "\n");
+            }
             _timeSinceLastServerAsk = 0;
         }
     }
