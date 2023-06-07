@@ -111,15 +111,17 @@ namespace GUI {
         {
             std::shared_ptr<GUI::Entities::IEntity> entity;
             std::stringstream ss(command);
+            std::vector<std::pair<int, Entities::RessourcesType>> ressources = {
+                std::make_pair(0, Entities::RessourcesType::FOOD),
+                std::make_pair(0, Entities::RessourcesType::LINEMATE),
+                std::make_pair(0, Entities::RessourcesType::DERAUMERE),
+                std::make_pair(0, Entities::RessourcesType::SIBUR),
+                std::make_pair(0, Entities::RessourcesType::MENDIANE),
+                std::make_pair(0, Entities::RessourcesType::PHIRAS),
+                std::make_pair(0, Entities::RessourcesType::THYSTAME)
+            };
             int x = 0;
             int y = 0;
-            int q0 = 0;
-            int q1 = 0;
-            int q2 = 0;
-            int q3 = 0;
-            int q4 = 0;
-            int q5 = 0;
-            int q6 = 0;
             std::string cmd;
             if (_entityManager->doesEntityExist("Floor") == true) {
                 entity = _entityManager->getEntityById("Floor");
@@ -128,27 +130,12 @@ namespace GUI {
             }
 
             auto floor = std::static_pointer_cast<GUI::Entities::Floor>(entity);
-            ss >> cmd >> x >> y >> q0 >> q1 >> q2 >> q3 >> q4 >> q5 >> q6;
-            if (q0 > 0) {
-                floor->createRessources(x, y, Entities::RessourcesType::FOOD, q0);
-            }
-            if (q1 > 0) {
-                floor->createRessources(x, y, Entities::RessourcesType::LINEMATE, q1);
-            }
-            if (q2 > 0) {
-                floor->createRessources(x, y, Entities::RessourcesType::DERAUMERE, q2);
-            }
-            if (q3 > 0) {
-                floor->createRessources(x, y, Entities::RessourcesType::SIBUR, q3);
-            }
-            if (q4 > 0) {
-                floor->createRessources(x, y, Entities::RessourcesType::MENDIANE, q4);
-            }
-            if (q5 > 0) {
-                floor->createRessources(x, y, Entities::RessourcesType::PHIRAS, q5);
-            }
-            if (q6 > 0) {
-                floor->createRessources(x, y, Entities::RessourcesType::THYSTAME, q6);
+            ss >> cmd >> x >> y >> ressources[0].first >> ressources[1].first >> ressources[2].first >> ressources[3].first
+                >> ressources[4].first >> ressources[5].first >> ressources[6].first;
+            for (const auto &it : ressources) {
+                if (it.first > 0) {
+                    floor->createRessources(x, y, it.second, it.first);
+                }
             }
             return (true);
         }
