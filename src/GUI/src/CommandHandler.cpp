@@ -130,25 +130,25 @@ namespace GUI {
             auto floor = std::static_pointer_cast<GUI::Entities::Floor>(entity);
             ss >> cmd >> x >> y >> q0 >> q1 >> q2 >> q3 >> q4 >> q5 >> q6;
             if (q0 > 0) {
-                floor->createRessource(x, y, Entities::RessourcesType::FOOD);
+                floor->createRessources(x, y, Entities::RessourcesType::FOOD, q0);
             }
             if (q1 > 0) {
-                floor->createRessource(x, y, Entities::RessourcesType::LINEMATE);
+                floor->createRessources(x, y, Entities::RessourcesType::LINEMATE, q1);
             }
             if (q2 > 0) {
-                floor->createRessource(x, y, Entities::RessourcesType::DERAUMERE);
+                floor->createRessources(x, y, Entities::RessourcesType::DERAUMERE, q2);
             }
             if (q3 > 0) {
-                floor->createRessource(x, y, Entities::RessourcesType::SIBUR);
+                floor->createRessources(x, y, Entities::RessourcesType::SIBUR, q3);
             }
             if (q4 > 0) {
-                floor->createRessource(x, y, Entities::RessourcesType::MENDIANE);
+                floor->createRessources(x, y, Entities::RessourcesType::MENDIANE, q4);
             }
             if (q5 > 0) {
-                floor->createRessource(x, y, Entities::RessourcesType::PHIRAS);
+                floor->createRessources(x, y, Entities::RessourcesType::PHIRAS, q5);
             }
             if (q6 > 0) {
-                floor->createRessource(x, y, Entities::RessourcesType::THYSTAME);
+                floor->createRessources(x, y, Entities::RessourcesType::THYSTAME, q6);
             }
             return (true);
         }

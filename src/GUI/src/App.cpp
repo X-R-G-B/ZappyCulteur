@@ -6,6 +6,7 @@
 */
 
 #include <sstream>
+#include <ctime>
 #include "App.hpp"
 
 namespace GUI {
@@ -124,6 +125,7 @@ namespace GUI {
         if (_commandHandler == nullptr || _displayModule == nullptr) {
             throw AppException("Error while initializing app modules");
         }
+        std::srand(std::time(nullptr));
     }
 
     int App::operator()(int ac, const char **av)

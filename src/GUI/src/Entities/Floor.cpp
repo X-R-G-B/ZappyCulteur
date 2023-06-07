@@ -6,6 +6,8 @@
 */
 
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 #include "Floor.hpp"
 
 namespace GUI {
@@ -83,9 +85,22 @@ namespace GUI {
             
         }
 
+        void Floor::createRessources(
+            unsigned int x,
+            unsigned int y,
+            RessourcesType ressource,
+            unsigned int quantity)
+        {
+            for (unsigned int i = 0; i < quantity; i++) {
+                createRessource(x, y, ressource);
+            }
+        }
+
         void Floor::createRessource(unsigned int x, unsigned int y, RessourcesType ressource)
         {
             std::string id = std::to_string(x) + std::to_string(y) + thystame;
+            float ressourceSize = computeRessourceSize();
+            Vector2F ressourcePos = computeRessourcePosition(x, y, ressourceSize);
             sf::Texture tx;
 
             auto search = _ressources.find(ressource);
@@ -100,15 +115,37 @@ namespace GUI {
             }
             _components.push_back(std::make_shared<GUI::Components::Sprite>(
                 id,
-                tx,
+                _ressources.find(ressource)->second,
                 ressourceLayer,
-                Vector2F(
-                    _tileSize * static_cast<float>(x),
-                    _tileSize * static_cast<float>(y)
-                ),
-                _tileSize,
-                _tileSize
+                ressourcePos,
+                ressourceSize,
+                ressourceSize
             ));
+        }
+
+        float Floor::computeRessourceSize()
+        {
+            float size =static_cast<float>(
+                rand() % static_cast<int>(_maxRessourceSize - _minRessourceSize + 1) +
+                static_cast<int>(_minRessourceSize)
+            );
+            return (size);
+        }
+
+        Vector2F Floor::computeRessourcePosition(
+            unsigned int x,
+            unsigned int y,
+            float ressourceSize)
+        {
+            float posX = static_cast<float>(
+                rand() % static_cast<int>(_tileSize - ressourceSize) +
+                static_cast<int>(_tileSize * static_cast<float>(x))
+            );
+            float posY = static_cast<float>(
+                rand() % static_cast<int>(_tileSize - ressourceSize) +
+                static_cast<int>(_tileSize * static_cast<float>(y))
+            );
+            return (Vector2F(posX, posY));
         }
 
         void Floor::createDarkFloor(unsigned int x, unsigned int y)
