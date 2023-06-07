@@ -13,6 +13,13 @@
 
     #define NB_OPT_ARGS 6
 
+    #define ARG_PORT "-p"
+    #define ARG_WIDTH "-x"
+    #define ARG_HEIGHT "-y"
+    #define ARG_FREQ "-f"
+    #define ARG_C_PER_TEAMS "-c"
+    #define ARG_TEAM_NAME "-n"
+
 bool parse_arg_port(const char *const arr[], args_t *args);
 bool parse_arg_width(const char *const arr[], args_t *args);
 bool parse_arg_height(const char *const arr[], args_t *args);

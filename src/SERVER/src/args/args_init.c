@@ -13,14 +13,15 @@
 #include "tlcstrings.h"
 
 static const char *ok_flags = "111111";
+static const char ok_flag = '1';
 
 static const char *const arr[NB_OPT_ARGS] = {
-    "-p",
-    "-x",
-    "-y",
-    "-f",
-    "-c",
-    "-n"
+    ARG_PORT,
+    ARG_WIDTH,
+    ARG_HEIGHT,
+    ARG_FREQ,
+    ARG_C_PER_TEAMS,
+    ARG_TEAM_NAME
 };
 
 static bool (*funcs[NB_OPT_ARGS])(const char *const arr[], args_t *args) = {
@@ -40,7 +41,7 @@ static bool check_exec_parse(const char *const av[], args_t *args,
     for (int j = 0; j < NB_OPT_ARGS; j++) {
         if (strcmp(av[0], arr[j]) == 0) {
             is_ok = funcs[j](av, args);
-            checklist[j] = '1';
+            checklist[j] = ok_flag;
             return is_ok;
         }
     }

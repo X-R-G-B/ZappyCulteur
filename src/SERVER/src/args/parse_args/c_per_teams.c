@@ -13,7 +13,8 @@
 
 bool parse_arg_c_per_teams(const char *const arr[], args_t *args)
 {
-    if (arr == NULL || arr[0] == NULL || x_strcmp(arr[0], "-c") != 0 ||
+    if (arr == NULL || arr[0] == NULL ||
+            x_strcmp(arr[0], ARG_C_PER_TEAMS) != 0 ||
             args == NULL || arr[1] == NULL) {
         return false;
     }

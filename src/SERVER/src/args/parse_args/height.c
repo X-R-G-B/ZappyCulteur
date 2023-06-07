@@ -13,7 +13,7 @@
 
 bool parse_arg_height(const char *const arr[], args_t *args)
 {
-    if (arr == NULL || arr[0] == NULL || x_strcmp(arr[0], "-y") != 0 ||
+    if (arr == NULL || arr[0] == NULL || x_strcmp(arr[0], ARG_HEIGHT) != 0 ||
             args == NULL || arr[1] == NULL) {
         return false;
     }

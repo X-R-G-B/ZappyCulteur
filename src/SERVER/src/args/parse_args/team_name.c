@@ -29,8 +29,8 @@ static void add_teams_name(const char *const arr[], list_t *names,
 
 bool parse_arg_team_name(const char *const arr[], args_t *args)
 {
-    if (arr == NULL || arr[0] == NULL || x_strcmp(arr[0], "-n") != 0 ||
-            args == NULL) {
+    if (arr == NULL || arr[0] == NULL ||
+            x_strcmp(arr[0], ARG_TEAM_NAME) != 0 || args == NULL) {
         return false;
     }
     if (args->teams_name != NULL) {
