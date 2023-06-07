@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "IDisplayModule.hpp"
 #include "NetworkManager.hpp"
 #include "CommandHandler.hpp"
 #include "SFML.hpp"
@@ -41,7 +42,7 @@ namespace GUI {
             NetworkManager _networkManager;
             std::string _port;
             std::string _ip;
-            std::unique_ptr<SFML> _displayModule;
+            std::unique_ptr<IDisplayModule> _displayModule;
             std::shared_ptr<GUI::Entities::EntitiesManager> _entityManager;
             std::unique_ptr<CommandHandler::CommandHandler> _commandHandler;
     };
