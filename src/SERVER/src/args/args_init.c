@@ -12,6 +12,8 @@
 #include "parse_args/internal.h"
 #include "tlcstrings.h"
 
+static const char *ok_flags = "111111";
+
 static const char *const arr[NB_OPT_ARGS] = {
     "-p",
     "-x",
@@ -61,7 +63,7 @@ static bool parse_args(int ac, const char *const av[], args_t *args)
         }
         nb++;
     }
-    if (nb != 6 || x_strcmp(check_all, "111111") != 0) {
+    if (nb != 6 || x_strcmp(check_all, ok_flags) != 0) {
         args->is_ok = false;
     }
     return args->is_ok;
