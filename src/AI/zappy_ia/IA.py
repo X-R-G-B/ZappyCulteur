@@ -3,13 +3,29 @@ from typing import List, Tuple
 from zappy_ia.Client import Client
 from typing import Union
 import pandas as pd
+import time
 import joblib
 import sys
 import random
 
+
+class Message(Enum):
+    OK = "ok"
+    KO = "ko"
+    L2 = "levelup2"
+    L3 = "levelup3"
+    L4 = "levelup4"
+    L5 = "levelup5"
+    L6 = "levelup6"
+    L7 = "levelup7"
+    L8 = "levelup8"
+    COME = "come"
+
+
 class Response(Enum):
     OK = "ok\n"
     KO = "ko\n"
+
 
 class Element(Enum):
     EMPTY = "empty"
@@ -29,7 +45,7 @@ class Command(Enum):
     LEFT = "Left\n"
     LOOK = "Look\n"
     INVENTORY = "Inventory\n"
-    BROADCAST = "Broadcast text\n"
+    BROADCAST = "Broadcast"
     CONNECT_NBR = "Connect_nbr\n"
     FORK = "Fork\n"
     EJECT = "Eject\n"
@@ -46,6 +62,7 @@ class IA:
         self.mapSize: Tuple[int, int] = [0, 0]
         self.clientNb: int = 0
         self.level: int = 1
+        self.setId()
         self.lastLook: List[List[Element]] = []
         self.client: Client = Client(port, machineName)
         self.levelCosts: List[List[Tuple[Element, int]]] = [
@@ -113,9 +130,10 @@ class IA:
         self.foodTree = self.loadTree("joblib/food.joblib")
         self.loadLevelTree()
         self.connect()
+        self.run()
 
     def setId(self):
-        random_number = random.randint(10000, 99999)
+        self.id = random.randint(10000, 99999)
 
     def connect(self):
         while self.client.output() != "WELCOME\n":
@@ -123,12 +141,11 @@ class IA:
         resSetup = self.requestClient(self.teamName + "\n").split("\n")
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
-        self.run()
 
-    def loadTree(self, path: str) -> "":
+    # jsp quel type il retourne
+    def loadTree(self, path: str):
         try:
             res = joblib.load(path)
-            print(res)
         except FileNotFoundError:
             print("File joblib not found", file=sys.stderr)
             sys.exit(84)
@@ -149,6 +166,22 @@ class IA:
                     self.outputTree[prediction]()
         except KeyboardInterrupt:
             return
+
+    def checkBroadcast(self) -> Tuple[int, str, List[int]]:
+        """
+        This function is call by ElevationEmitter and ElevationParticipant,
+            check if client received broadcast from other ia, parse and return it
+
+        Returns:
+        parsed broadcast
+        """
+        res = self.client.output()
+        splittedRes = res.split("|")
+        if len(splittedRes) != 3:
+            return [0, "", [0]]
+        toSend = list(map(int, splittedRes[2].split(" ")))
+        res = [int(splittedRes[0]), splittedRes[1], toSend]
+        return res
 
     def requestClient(
         self, command: Union[Command, str], arg: Union[Element, str] = ""
@@ -253,9 +286,9 @@ class IA:
                     self.requestClient(Command.FORWARD)
                 return
 
-    def takeElementInLastLook(self, element: Element, pos: int):
+    def takeElement(self, element: Element, pos: int):
         """
-        This function move the ia to the closest element and pick it up
+        This function move the ia to the pos of the element and pick it up
 
         Parameters:
         element (Element): element to take
@@ -267,37 +300,31 @@ class IA:
         self.requestClient(Command.TAKE_OBJECT, element)
 
     def takeFood(self):
-        self.takeElementInLastLook(
-            Element.FOOD, self.findClosestElemInLastLook(Element.FOOD)
-        )
+        self.takeElement(Element.FOOD, self.findClosestElemInLastLook(Element.FOOD))
 
     def takeLinemate(self):
-        self.takeElementInLastLook(
+        self.takeElement(
             Element.LINEMATE, self.findClosestElemInLastLook(Element.LINEMATE)
         )
 
     def takeDeraumere(self):
-        self.takeElementInLastLook(
+        self.takeElement(
             Element.DERAUMERE, self.findClosestElemInLastLook(Element.DERAUMERE)
         )
 
     def takeSibur(self):
-        self.takeElementInLastLook(
-            Element.SIBUR, self.findClosestElemInLastLook(Element.SIBUR)
-        )
+        self.takeElement(Element.SIBUR, self.findClosestElemInLastLook(Element.SIBUR))
 
     def takeMendiane(self):
-        self.takeElementInLastLook(
+        self.takeElement(
             Element.MENDIANE, self.findClosestElemInLastLook(Element.MENDIANE)
         )
 
     def takePhiras(self):
-        self.takeElementInLastLook(
-            Element.PHIRAS, self.findClosestElemInLastLook(Element.PHIRAS)
-        )
+        self.takeElement(Element.PHIRAS, self.findClosestElemInLastLook(Element.PHIRAS))
 
     def takeThystame(self):
-        self.takeElementInLastLook(
+        self.takeElement(
             Element.THYSTAME, self.findClosestElemInLastLook(Element.THYSTAME)
         )
 
@@ -345,7 +372,7 @@ class IA:
             if distanceLimit != 0 and i > distanceLimit:
                 self.findFood(distanceLimit)
             elif pos != -1:
-                self.takeElementInLastLook(Element.FOOD, pos)
+                self.takeElement(Element.FOOD, pos)
             i += 1
 
     def elevation(self):
@@ -360,4 +387,68 @@ class IA:
             self.level += 1
             self.loadLevelTree()
 
+    def sendBroadcast(self, message: str, toSend: List[int] = []):
+        toSendStr = "|"
+        if len(toSend) == 0:
+            toSendStr += "0"
+        else:
+            for id_ in toSend:
+                toSendStr += " " + str(id_)
+        completeMessage = str(self.id) + "|" + message + toSendStr
+        self.requestClient(Command.BROADCAST, completeMessage)
 
+    def isMyIdInList(self, list_: List[int]) -> bool:
+        for id_ in list_:
+            if self.id == id_:
+                return True
+        return False
+
+    def takeClosestFood(self):
+        self.look()
+        foodPos = self.findClosestElemInLastLook(Element.FOOD)
+        if foodPos == -1:
+            self.findFood()
+        else:
+            self.takeElement(Element.FOOD, foodPos)
+        self.inventory()
+
+    def elevationEmitter(self):
+        """
+        This function is call by decision tree when the ia have the stones for elevation,
+            the ia call others to try elevation
+        """
+        self.sendBroadcast(list(Message)[self.level])
+        time_ = time.time()
+        participantsId: List[int] = []
+        res: List[int, str, List[int]] = []
+        # attente des réponses à l'appel
+        # c prévu que le code soit modifié plus tard, c pas bo + ya moyen on est besoin de code similaire apres donc y'aura peut etre une fonction qui fera ça
+        while time.time() - time_ < 1:
+            res = self.checkBroadcast()
+            if res[0] != 0 and self.isMyIdInList(res[3]):
+                if res[1] == Message.OK:
+                    if len(participantsId) < self.level - 1:
+                        participantsId.append(res[0])
+                        self.sendBroadcast(Message.OK, res[0])
+                    else:
+                        self.sendBroadcast(Message.KO, res[0])
+                # on est dans ce if si on a reçu un broadcast qui nous concerne, la ligne en dessous rez le timer, on sort de la boucle while si on reçoit rien pendant 1 seconde
+                time_ = time.time()
+            time.sleep(0.1)
+        if len(participantsId) < self.level - 1:
+            return
+        readyParticipants = 0
+        self.inventory()
+        while readyParticipants < self.level - 1 and self.inputTree["mfood"] < 13:
+            self.takeClosestFood()
+            res = self.checkBroadcast()
+            if res[0] != 0 and self.isMyIdInList(res[3]) and res[2] == Message.OK:
+                readyParticipants += 1
+            self.inventory()
+        arrivedParticipants = 0
+        while arrivedParticipants < self.level - 1:
+            self.sendBroadcast(Message.COME)
+            res = self.checkBroadcast()
+            if res[0] != 0 and self.isMyIdInList(res[3]) and res[2] == Message.OK:
+                arrivedParticipants += 1
+        self.elevation()
