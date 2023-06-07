@@ -29,7 +29,8 @@ static void send_tile_single_ressource(ntw_client_t *cl, int ressources,
     int ressource_nbr)
 {
     for (int i = 0; i < ressource_nbr; i++) {
-        circular_buffer_write(cl->write_to_outside, ressources_name[ressources]);
+        circular_buffer_write(cl->write_to_outside,
+            ressources_name[ressources]);
         circular_buffer_write(cl->write_to_outside, " ");
     }
 }

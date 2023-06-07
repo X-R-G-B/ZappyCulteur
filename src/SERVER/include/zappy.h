@@ -75,7 +75,7 @@ int get_id(void);
 /**
 ** @brief Broadcast a message to all graphic
 **
-** @param ntw the ntw 
+** @param ntw the ntw
 ** @param msg the message
 **
 ** @return true if broadcast
