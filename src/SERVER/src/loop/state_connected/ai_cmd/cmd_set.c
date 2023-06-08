@@ -18,7 +18,7 @@
 #include "internal.h"
 #include "trantorien.h"
 
-static const char *ressources_map[] = {
+const char ressources_map[PLAYER][LEN_SIZE_MAX_RESSURCES] = {
     "food\n",
     "linemate\n",
     "deraumere\n",
@@ -44,7 +44,7 @@ bool cmd_set(__attribute__((unused)) zappy_t *zappy, ntw_client_t *cl,
     if (cmd_split[1] == NULL || x_strendswith(cmd_split[1], "\n") == 0) {
         return false;
     }
-    for (int i = 0; i < MAX_NB_RESOURCES; i++) {
+    for (int i = 0; i < PLAYER; i++) {
         if (strcmp(cmd_split[1], ressources_map[i]) == 0) {
             return handle_trantorien_set(cc->cl.ai.trantorien, i);
         }

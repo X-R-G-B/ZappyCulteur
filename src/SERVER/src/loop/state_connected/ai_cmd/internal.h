@@ -9,10 +9,14 @@
     #define INTERNAL_H_
 
     #include <stdbool.h>
+    #include "map.h"
     #include "zappy.h"
     #include "ntw.h"
 
     #define NB_CMD_AVAILIBLE 11
+    #define LEN_SIZE_MAX_RESSURCES 15
+
+extern const char ressources_map[PLAYER][LEN_SIZE_MAX_RESSURCES];
 
 bool cmd_forward(zappy_t *zappy, ntw_client_t *cl, char **cmd_split);
 bool cmd_left(zappy_t *zappy, ntw_client_t *cl, char **cmd_split);
