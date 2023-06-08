@@ -12,6 +12,11 @@
 
 namespace GUI {
     namespace Entities {
+
+        static const std::string beePath = "src/GUI/assets/bees/beeLeft.png";
+        static const std::size_t beeLayer = 50;
+        static const unsigned int beeWidth = 92;
+        static const unsigned int beeHeight = 92;
         Trantorian::Trantorian(
             const std::string &id,
             const std::string &team,
@@ -84,14 +89,14 @@ namespace GUI {
         void Trantorian::initSprites()
         {
             try {
-                _texture.loadFromFile("src/GUI/assets/bees/beeLeft.png");
+                _texture.loadFromFile(beePath);
                 _components.push_back(std::make_shared<GUI::Components::Sprite>(
                     _id + "BodySprite",
                     _texture,
-                    50,
+                    beeLayer,
                     _position,
-                    92,
-                    92
+                    beeWidth,
+                    beeHeight
                 ));
                 _entityCompType.push_back(Components::CompType::SPRITE);
             } catch (std::exception &e) {

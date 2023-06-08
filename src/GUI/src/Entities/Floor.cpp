@@ -10,6 +10,8 @@
 
 namespace GUI {
     namespace Entities {
+        static const std::string darkFloorPath = "src/GUI/assets/environment/darkFloor.png";
+        static const std::string lightFloorPath = "src/GUI/assets/environment/lightFloor.png";
         Floor::Floor(
             const std::string &id,
             const Vector2F &position,
@@ -37,8 +39,8 @@ namespace GUI {
 
         void Floor::initTexture()
         {
-            if (_txFloorDark.loadFromFile("src/GUI/assets/environment/darkFloor.png") == false ||
-                _txFloorLight.loadFromFile("src/GUI/assets/environment/lightFloor.png") == false) {
+            if (_txFloorDark.loadFromFile(darkFloorPath) == false ||
+                _txFloorLight.loadFromFile(lightFloorPath) == false) {
                 throw EntityException("Error: could not load floor texture");
             }
         }
