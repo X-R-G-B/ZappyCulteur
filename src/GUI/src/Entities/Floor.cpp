@@ -12,13 +12,16 @@
 
 namespace GUI {
     namespace Entities {
-        static const std::string food = "_FOOD";
-        static const std::string linemate = "_LINEMATE";
-        static const std::string deraumere = "_DERAUMERE";
-        static const std::string sibur = "_SIBUR";
-        static const std::string mendiane = "_MENDIANE";
-        static const std::string phiras = "_PHIRAS";
-        static const std::string thystame = "_THYSTAME";
+
+        static const std::unordered_map<RessourcesType, std::string> idOfRessources = {
+            {RessourcesType::FOOD, "_FOOD"},
+            {RessourcesType::LINEMATE, "_LINEMATE"},
+            {RessourcesType::DERAUMERE, "_DERAUMERE"},
+            {RessourcesType::SIBUR, "_SIBUR"},
+            {RessourcesType::MENDIANE, "_MENDIANE"},
+            {RessourcesType::PHIRAS, "_PHIRAS"},
+            {RessourcesType::THYSTAME, "_THYSTAME"}
+        };
 
         static const std::unordered_map<RessourcesType, std::string> pathToData = {
             {RessourcesType::FOOD, "src/GUI/assets/environment/honey.png"},
@@ -100,7 +103,7 @@ namespace GUI {
 
         void Floor::createRessource(unsigned int x, unsigned int y, RessourcesType ressource)
         {
-            std::string id = std::to_string(x) + std::to_string(y) + thystame;
+            std::string id = std::to_string(x) + std::to_string(y) + idOfRessources.at(ressource);
             float ressourceSize = computeRessourceSize();
             Vector2F ressourcePos = computeRessourcePosition(x, y, ressourceSize);
             sf::Texture tx;
