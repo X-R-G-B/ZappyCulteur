@@ -99,7 +99,8 @@ SRC_LOOP		:=															\
 							$(SRC_LOOP_CONN)								\
 							loop.c											\
 							update_client_not_connected.c					\
-							update_client_waiting_team_name.c
+							update_client_waiting_team_name.c				\
+							refuse_client_connection.c
 SRC_LOOP		:=			$(addprefix loop/, $(SRC_LOOP))
 
 # MAP ------------------------------------------------------------------------
@@ -153,7 +154,8 @@ SRC_TRNT		:=															\
 							trantorien_init.c								\
 							trantorien_is_cmd_availible.c					\
 							trantorien_place_cmd.c							\
-							trantorien_reduce_freq.c
+							trantorien_reduce_freq.c						\
+							trantorien_add_client.c
 SRC_TRNT		:=			$(addprefix trantorien/, $(SRC_TRNT))
 
 # ----------------------------------------------------------------------------
