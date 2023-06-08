@@ -7,7 +7,7 @@
 
 #include "NetworkManager.hpp"
 
-namespace Zappy {
+namespace GUI {
 
     NetworkManager::NetworkException::NetworkException(const std::string &message) :
         _message(message)
@@ -16,18 +16,9 @@ namespace Zappy {
         return _message.c_str();
     }
 
-    NetworkManager::NetworkManager(const std::string& ip, const std::string& port) :
-        _port(port),
+    NetworkManager::NetworkManager() :
         _isConnected(false)
-    {
-        setIp(ip);
-        try {
-            initConnection();
-            connectToServer();
-        } catch (const std::exception &e) {
-            std::cerr << e.what() << std::endl;
-        }
-    }
+    {}
 
     NetworkManager::~NetworkManager()
     {
@@ -134,8 +125,10 @@ namespace Zappy {
         }
     }
 
-    void NetworkManager::initConnection()
+    void NetworkManager::initConnection(const std::string &ip, const std::string &port)
     {
+        setIp(ip);
+        setPort(port);
         #ifdef _WIN32
             _wsa = {0};
             if (WSAStartup(MAKEWORD(2, 2), &_wsa) != 0) {
@@ -145,6 +138,7 @@ namespace Zappy {
         _addr.sin_family = AF_INET;
         _addr.sin_port = htons(static_cast<u_short>(std::stoul(_port)));
         _addr.sin_addr.s_addr = inet_addr(_ip.c_str());
+        connectToServer();
     }
 
     void NetworkManager::createSocket()

@@ -15,16 +15,17 @@
 namespace GUI {
     class ADisplayModule : public IDisplayModule {
         public:
-            bool isOpen() final;
-            unsigned int getWidth() final;
-            unsigned int getHeigth() final;
-            void setWidth(unsigned int width) final;
-            void setHeight(unsigned int height) final;
-            std::string getWindowTitle() final;
-            void setWindowTitle(std::string windowTitle) final;
-            unsigned int getFramerateLimit() final;
-            void setWindowMode(WINDOW_MODE windowMode) final;
-            WINDOW_MODE getWindowMode() final;
+            virtual bool isOpen() final;
+            virtual unsigned int getWidth() final;
+            virtual unsigned int getHeigth() final;
+            virtual void setWidth(unsigned int width) final;
+            virtual void setHeight(unsigned int height) final;
+            virtual std::string getWindowTitle() final;
+            virtual void setWindowTitle(std::string windowTitle) final;
+            virtual unsigned int getFramerateLimit() final;
+            virtual void setFramerateLimit(unsigned int framerateLimit) override;
+            virtual void setWindowMode(WINDOW_MODE windowMode) final;
+
         protected:
             virtual void clear() = 0;
             virtual void closeWindow() = 0;

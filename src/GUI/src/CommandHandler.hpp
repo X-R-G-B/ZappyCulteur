@@ -12,7 +12,7 @@
 #include <string>
 #include <unordered_map>
 #include <functional>
-#include "EntityManager.hpp"
+#include "EntitiesManager.hpp"
 
 namespace GUI {
     namespace CommandHandler {
@@ -57,7 +57,7 @@ namespace GUI {
              * @brief Constructor for CommandHandler.
              * @param entityManager A shared pointer to the EntityManager.
              */
-            CommandHandler(std::shared_ptr<EntityManager> entityManager);
+            CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager);
 
             /**
              * @brief Destructor for CommandHandler.
@@ -70,7 +70,7 @@ namespace GUI {
              * When data are parsed the entities will be updatr with those.
              * @param commands A vector of commands to process and execute.
              */
-            void update(std::vector<std::string>& commands);
+            void update(const std::vector<std::string> &commands);
 
         protected:
         private:
@@ -86,10 +86,17 @@ namespace GUI {
              * @param command The command string.
              * @return True if the map size was set successfully, false otherwise.
              */
-            bool setMapSize(std::string& command);
+            bool setMapSize(const std::string &command);
 
-            std::shared_ptr<EntityManager> _entityManager;
-            const std::unordered_map<COMMAND_TYPE, std::function<bool(CommandHandler&, std::string&)>> _toCall;
+            /**
+             * @brief Sets the new player entity based on the command.
+             * @param command The command string.
+             * @return True if the new player was set successfully, false otherwise.
+             */
+            bool setNewPlayer(const std::string &command);
+
+            std::shared_ptr<Entities::EntitiesManager> _entityManager;
+            const std::unordered_map<COMMAND_TYPE, std::function<bool(CommandHandler &, const std::string &)>> _toCall;
         };
     }
 }
