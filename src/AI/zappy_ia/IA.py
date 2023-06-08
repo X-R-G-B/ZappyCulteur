@@ -5,7 +5,6 @@ from typing import Union
 import pandas as pd
 import time
 import joblib
-import sys
 import random
 
 
@@ -134,7 +133,7 @@ class IA:
         }
         try:
             self.levelTree = joblib.load("joblib/level1.joblib")
-        except:
+        except FileNotFoundError:
             raise Exception("Level not found")
         self.connect()
         self.run()
@@ -153,7 +152,7 @@ class IA:
     def loadTree(self):
         try:
             self.levelTree = joblib.load("joblib/level" + str(self.level) + ".joblib")
-        except:
+        except FileNotFoundError:
             raise Exception("Level not found")
 
     def run(self):
@@ -439,7 +438,7 @@ class IA:
             self.takeElement(Element.FOOD, foodPos)
         self.inventory()
 
-    def sendAllCmd(self, messages: List[str]):
+    def sendAllCommand(self, messages: List[str]):
         for message in messages:
             self.requestClient(message)
 
