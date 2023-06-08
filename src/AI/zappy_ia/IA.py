@@ -5,7 +5,6 @@ from typing import Union
 import pandas as pd
 import time
 import joblib
-import sys
 import random
 
 
@@ -109,8 +108,6 @@ class IA:
             "lphiras": [0],
             "lthystame": [0],
             "enemy": [0],
-            "broadcast": [0],
-            "placeleft": [0],
         }
         self.outputTree: dict() = {
             "Find food": self.findFood,
@@ -149,11 +146,10 @@ class IA:
         self.clientNb = int(resSetup[0])
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
 
-    # jsp quel type il retourne
     def loadTree(self):
         try:
             self.levelTree = joblib.load("joblib/level" + self.level + ".joblib")
-        except:
+        except FileNotFoundError:
             raise Exception("Level not found")
 
     def run(self):
@@ -169,11 +165,11 @@ class IA:
                     self.outputTree[prediction]()
         except KeyboardInterrupt:
             return
-    
+
     def checkElevationParticipant(self):
         res = self.checkBroadcast()
-        if (res[0] != 0):
-            if (res[1] in Message and self.emitter != 0):
+        if res[0] != 0:
+            if res[1] in Message and self.emitter != 0:
                 self.emitter = res[0]
                 self.sendBroadcast(Message.OK, List[self.emitter])
                 self.elevationParticipant()
@@ -181,7 +177,6 @@ class IA:
                 self.emitter = 0
                 self.sendBroadcast(Message.KO, List[res[0]])
         return
-
 
     def checkBroadcast(self) -> Tuple[int, str, List[int], int]:
         """
@@ -198,7 +193,7 @@ class IA:
         dir_ = int(res[0].split(" ")[1])
         splittedRes = res[1].split("|")
         if len(splittedRes) != 4 or splittedRes[0] != Message.CODE:
-            return [0, "", [0], 0] 
+            return [0, "", [0], 0]
         toSend = list(map(int, splittedRes[2].split(" ")))
         res = [int(splittedRes[0]), splittedRes[1], toSend, dir_]
         return res
@@ -394,9 +389,9 @@ class IA:
             elif pos != -1:
                 self.takeElement(Element.FOOD, pos)
             i += 1
-            
+
     def chooseElevation(self):
-        if (self.level == 1):
+        if self.level == 1:
             self.elevation()
         else:
             self.elevationEmitter()
@@ -439,27 +434,27 @@ class IA:
         else:
             self.takeElement(Element.FOOD, foodPos)
         self.inventory()
-        
+
     def sendAllCmd(self, messages: List[str]):
         for message in messages:
             self.requestClient(message)
-    
+
     def joinEmitter(self):
         res = self.checkBroadcast()
         while res[3] != 0:
-            sendAllCmd(self.cmdDirections[res[3]])
+            self.sendAllCmd(self.cmdDirections[res[3]])
             res = self.checkBroadcast()
         self.sendBroadcast(Message.OK, List[self.emitter])
         out = self.client.output()
         while out == "":
             out = self.client.output()
-        if (out == "ko\n"):
+        if out == "ko\n":
             self.emitter = 0
         else:
             self.emitter = 0
             self.level += 1
         return
-        
+
     def elevationParticipant(self):
         res = self.checkBroadcast()
         if res[1] == Message.KO:
@@ -473,14 +468,14 @@ class IA:
                 ready = True
                 self.sendBroadcast(Message.OK, List[self.emitter])
             res = self.checkBroadcast()
-            if (res[1] == Message.COME and res[0] == self.emitter):
+            if res[1] == Message.COME and res[0] == self.emitter:
                 haveToCome = True
                 self.sendBroadcast(Message.OK, List[self.emitter])
         self.joinEmitter()
-            
 
-
-    def checkReceivedMessage(self, participantsId: List[int], res: Tuple[int, str, List[int], int]) -> List[int]:
+    def checkReceivedMessage(
+        self, participantsId: List[int], res: Tuple[int, str, List[int], int]
+    ) -> List[int]:
         if res[1] == Message.OK:
             if len(participantsId) < self.level - 1:
                 participantsId.append(res[0])
@@ -514,11 +509,11 @@ class IA:
         self.sendBroadcast(list(Message)[self.level])
         time_ = time.time()
         participantsId: List[int] = []
-        res: List[int, str, List[int]] = []
+        res: Tuple[int, str, List[int]] = []
         while time.time() - time_ < 1:
             res = self.checkBroadcast()
             if res[0] != 0 and self.isMyIdInList(res[2]):
-                participantsId = self.checkReceivedMessage(participantsId)
+                participantsId = self.checkReceivedMessage(participantsId, res)
                 time_ = time.time()
             time.sleep(0.1)
         if len(participantsId) == self.level - 1:
