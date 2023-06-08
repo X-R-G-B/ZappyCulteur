@@ -30,6 +30,8 @@ static const char cmds_graphic[NB_CMD_AVAILIBLE][14] = {
     "",
 };
 
+static const char cmds_broadcast[] = "Broadcast";
+
 static bool
 (*graphic_funcs[NB_CMD_AVAILIBLE])
 (zappy_t *zappy, ntw_client_t *cl, char **) = {
@@ -57,7 +59,7 @@ static bool update_cmd(zappy_t *zappy, ntw_client_t *cl, char **cmd_split,
             break;
         }
     }
-    if (status == false && strcmp(cmd_split[0], "Broadcast") == 0) {
+    if (status == false && strcmp(cmd_split[0], cmds_broadcast) == 0) {
         status = cmd_broadcast(zappy, cl, cmd);
     }
     if (status == false) {
