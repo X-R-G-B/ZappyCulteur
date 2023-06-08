@@ -19,11 +19,10 @@ static char *concat(char *a, char *b)
 
     size += (a == NULL) ? 0 : x_strlen(a);
     size += (b == NULL) ? 0 : x_strlen(b);
-    new = malloc(sizeof(char) * (size + 1));
+    new = calloc(size + 1, sizeof(char));
     if (new == NULL) {
         return NULL;
     }
-    new[0] = '\0';
     if (a != NULL) {
         strcat(new, a);
     }
@@ -49,6 +48,8 @@ char *circular_buffer_read_multiple(circular_buffer_t *buffer)
             free_ifnotnull(tmp);
             break;
         }
+        free(new);
+        new = new_tmp;
     }
     return new;
 }
