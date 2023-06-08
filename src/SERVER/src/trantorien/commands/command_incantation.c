@@ -14,7 +14,6 @@
 #include "trantorien.h"
 #include "map.h"
 #include "client.h"
-#include "tlcstdlibs.h"
 
 static const int level_ressources[LVL_MAX - 1][PLAYER] = {
     {1, 0, 0, 0, 0, 0},

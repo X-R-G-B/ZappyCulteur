@@ -7,7 +7,6 @@
 
 #include <stdbool.h>
 #include <sys/select.h>
-#include <time.h>
 #include <stdio.h>
 #include "tlcmaths.h"
 #include "circular_buffer.h"

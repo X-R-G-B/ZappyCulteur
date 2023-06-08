@@ -10,7 +10,6 @@
 #include "ntw.h"
 #include "zappy.h"
 #include "trantorien.h"
-#include "map.h"
 
 /**
 ** @brief table of displacement according to the direction [(x, y), ...]

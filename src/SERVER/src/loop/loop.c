@@ -6,9 +6,7 @@
 */
 
 #include <stdbool.h>
-#include <string.h>
 #include "args.h"
-#include "circular_buffer.h"
 #include "client.h"
 #include "ntw.h"
 #include "tlcllists.h"

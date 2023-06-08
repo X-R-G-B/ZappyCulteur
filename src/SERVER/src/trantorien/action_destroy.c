@@ -7,7 +7,6 @@
 
 #include <stddef.h>
 #include <stdlib.h>
-#include <string.h>
 #include "trantorien.h"
 #include "internal.h"
 

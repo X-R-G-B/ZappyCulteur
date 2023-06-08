@@ -11,7 +11,6 @@
 #include "ntw.h"
 #include "zappy.h"
 #include "trantorien.h"
-#include "map.h"
 
 static const char *ressources_name[MAX_NB_TR_RESSOURCES] = {
     "food",

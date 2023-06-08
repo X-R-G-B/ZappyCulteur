@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <tlcstrings.h>
 #include "circular_buffer.h"
-#include "tlcstdlibs.h"
 #include "trantorien.h"
 #include "zappy.h"
 #include "internal.h"

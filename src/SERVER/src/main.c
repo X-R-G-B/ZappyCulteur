@@ -6,8 +6,6 @@
 */
 
 #include <stdbool.h>
-#include <sys/select.h>
-#include <time.h>
 #include "args.h"
 #include "ntw.h"
 #include "zappy.h"

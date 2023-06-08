@@ -5,10 +5,7 @@
 ** command_look_around_utils
 */
 
-#include <stddef.h>
-#include <stdlib.h>
 #include "ntw.h"
-#include "zappy.h"
 #include "trantorien.h"
 #include "map.h"
 

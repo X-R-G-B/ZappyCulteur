@@ -7,7 +7,6 @@
 
 #include <stdbool.h>
 #include <string.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include "circular_buffer.h"
 #include "client.h"

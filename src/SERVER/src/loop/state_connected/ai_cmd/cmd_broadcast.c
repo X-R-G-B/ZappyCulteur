@@ -6,12 +6,10 @@
 */
 
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "circular_buffer.h"
 #include "client.h"
-#include "tlcstdlibs.h"
 #include "zappy.h"
 #include "internal.h"
 #include "trantorien.h"

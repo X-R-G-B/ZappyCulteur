@@ -12,7 +12,6 @@
 #include "zappy.h"
 #include "trantorien.h"
 #include "internal.h"
-#include "client.h"
 
 static int (*trantorien_commands[MAX_CMD_CODE])(trantorien_t *, zappy_t *,
     ntw_client_t *, action_t *) = {
