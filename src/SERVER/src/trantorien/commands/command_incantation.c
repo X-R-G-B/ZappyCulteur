@@ -45,7 +45,6 @@ static bool check_incantation_lvl_availability(trantorien_t *ref_trnt,
         trnt = cl->cl.ai.trantorien;
         if (trnt->level == ref_trnt->level && ref_trnt->x == trnt->x
                 && ref_trnt->y == trnt->y) {
-            printf("HERRRRRRRRRRRRRRRRRRRRRRRO\n");
             nb_trantorien_lvl += 1;
         }
     }

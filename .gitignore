@@ -591,9 +591,8 @@ tags
 # Persistent undo
 [._]*.un~
 
-### VisualStudioCode ###
-*.vscode/*
-!.vscode/settings.json
+.vscode/*
+.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
@@ -1003,6 +1002,7 @@ FodyWeavers.xsd
 zappy_ai
 zappy_gui
 zappy_server
+vgcore.*
 *.clang-format
 *.vscode/
 *.idea

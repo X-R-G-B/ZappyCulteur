@@ -9,23 +9,21 @@
 #include <stdio.h>
 #include "map.h"
 
-static float density[MAX_NB_RESOURCES] = {
+static float density[PLAYER] = {
     0.5,
     0.3,
     0.15,
     0.1,
     0.1,
     0.08,
-    0.05,
-    0.00,
-    0.00,
+    0.05
 };
 
 static void add_ressources(map_tile_t *tile,
-    int const nb_step_int[MAX_NB_RESOURCES],
-    int nb_step[MAX_NB_RESOURCES])
+    int const nb_step_int[PLAYER],
+    int nb_step[PLAYER])
 {
-    for (int i = 0; i < MAX_NB_RESOURCES; i++) {
+    for (int i = 0; i < PLAYER; i++) {
         nb_step[i] -= 1;
         if (nb_step[i] <= 0) {
             tile->ressources[i] += 1;
@@ -34,11 +32,11 @@ static void add_ressources(map_tile_t *tile,
     }
 }
 
-static void check_ressources(map_tile_t *tiles, int width, int height,
-    int const nb_spawn_max[MAX_NB_RESOURCES])
+static int *get_nb_ressources(map_tile_t *tiles, int width, int height)
 {
-    int nb_ressources[MAX_NB_RESOURCES] = {0, 0, 0, 0, 0, 0, 0};
+    static int nb_ressources[PLAYER] = {0, 0, 0, 0, 0, 0, 0};
 
+    memset(nb_ressources, 0, sizeof(nb_ressources));
     for (int i = 0; i < width * height; i++) {
         nb_ressources[FOOD] += tiles[i].ressources[FOOD];
         nb_ressources[LINEMATE] += tiles[i].ressources[LINEMATE];
@@ -48,35 +46,28 @@ static void check_ressources(map_tile_t *tiles, int width, int height,
         nb_ressources[PHIRAS] += tiles[i].ressources[PHIRAS];
         nb_ressources[THYSTAME] += tiles[i].ressources[THYSTAME];
     }
-    for (int i = 0; i < MAX_NB_RESOURCES; i++) {
-        if (nb_ressources[i] != nb_spawn_max[i]) {
-            fprintf(stderr, "%s :: %s:%d :: %s:%d\n",
-                "WARN: ressources didn't match",
-                "ressources on map", nb_ressources[i],
-                "ressources expected", nb_spawn_max[i]);
-        }
-    }
+    return nb_ressources;
 }
 
 void map_add_ressources(map_t *map)
 {
-    int nb_spawn_max[MAX_NB_RESOURCES] = {0};
-    int nb_step_int[MAX_NB_RESOURCES] = {0};
-    int nb_step[MAX_NB_RESOURCES] = {0};
+    int nb_spawn_max[PLAYER] = {0};
+    int nb_step_int[PLAYER] = {0};
+    int nb_step[PLAYER] = {0};
+    int *nb_ressources = NULL;
 
     if (map == NULL || map->tiles == NULL) {
         return;
     }
-    for (int i = 0; i < MAX_NB_RESOURCES; i++) {
-        nb_spawn_max[i] = density[i] * map->width * map->height;
-        printf("INFO: nb_spawn_max[%d] = %d\n", i, nb_spawn_max[i]);
-        nb_step_int[i] = (nb_spawn_max[i] == 0) ?
-            0 : map->width * map->height / nb_spawn_max[i];
-        printf("INFO: nb_step_int[%d] = %d\n", i, nb_step_int[i]);
+    nb_ressources = get_nb_ressources(map->tiles, map->width, map->height);
+    for (int i = 0; i < PLAYER; i++) {
+        nb_spawn_max[i] = (density[i] * map->width * map->height)
+            - nb_ressources[i];
+        nb_step_int[i] = map->width * map->height /
+            ((nb_spawn_max[i] <= 0) ? 0.5 : nb_spawn_max[i]);
         nb_step[i] = nb_step_int[i];
     }
     for (int i = 0; i < map->width * map->height; i++) {
         add_ressources(map->tiles + i, nb_step_int, nb_step);
     }
-    check_ressources(map->tiles, map->width, map->height, nb_spawn_max);
 }

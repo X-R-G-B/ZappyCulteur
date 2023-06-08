@@ -252,8 +252,8 @@ tests_run:		$(LIBS_DIR)/tinylibc/libtinylibc.a
 tests_run:		$(LIBS_DIR)/circularbuffer/libcircularbuffer.a
 	$(CC) $(T_OBJ) -o $(TTARGET) $(LDFLAGS) $(CFLAGS)
 	./$(TTARGET) || exit 1
-	gcovr --exclude tests || true
-	gcovr --exclude tests --branch || true
+	gcovr --exclude-directories tests || true
+	gcovr --exclude-directories tests --branch || true
 	true
 
 -include $(DEP)
