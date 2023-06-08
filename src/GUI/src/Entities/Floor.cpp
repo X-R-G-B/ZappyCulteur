@@ -127,10 +127,7 @@ namespace GUI {
 
         float Floor::computeRessourceSize()
         {
-            float size =static_cast<float>(
-                rand() % static_cast<int>(_maxRessourceSize - _minRessourceSize + 1) +
-                static_cast<int>(_minRessourceSize)
-            );
+            float size = rand() % static_cast<int>(_maxRessourceSize - _minRessourceSize + 1) + _minRessourceSize;
             return (size);
         }
 
