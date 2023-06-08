@@ -59,7 +59,7 @@ void trantorien_reduce_freq(trantorien_t *trantorien, zappy_t *zappy,
 {
     if (trantorien == NULL ||
             (trantorien->actions[0] == NULL && trantorien->actions[1] == NULL)
-            || trantorien->incantation != NULL) {
+            || trantorien->incantation != NULL || trantorien->alive == false) {
         return;
     }
     if (trantorien->actions[0] == NULL) {

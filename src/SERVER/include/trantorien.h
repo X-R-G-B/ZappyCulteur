@@ -14,6 +14,7 @@
 
     #define NB_PARALLEL_ACTION 11
     #define MAX_NB_TR_RESSOURCES 7
+    #define MAX_FOOD_FREQ 126
 
 // compatibility with graphic trantorien direction
 enum direction_e {
@@ -56,6 +57,7 @@ struct trantorien_s {
     int y;
     enum direction_e direction;
     bool alive;
+    int food_stack_freq;
     int level;
     const action_t *incantation;
     int ressources[MAX_NB_TR_RESSOURCES];

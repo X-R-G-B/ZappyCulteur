@@ -12,7 +12,7 @@
 #include "ntw.h"
 #include "zappy.h"
 
-bool update_client_connected(zappy_t *zappy, ntw_client_t *cl)
+bool update_client_connected(zappy_t *zappy, ntw_client_t *cl, bool new_freq)
 {
     client_t *cc = cl->data;
     bool status = false;
@@ -23,7 +23,7 @@ bool update_client_connected(zappy_t *zappy, ntw_client_t *cl)
     if (cc->type == GRAPHIC) {
         status = update_graphic_cmd(zappy, cl);
     } else if (cc->type == AI) {
-        status = update_ai_cmd(zappy, cl);
+        status = update_ai_cmd(zappy, cl, new_freq);
     } else {
         return false;
     }

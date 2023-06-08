@@ -68,12 +68,35 @@ static bool update_cmd(zappy_t *zappy, ntw_client_t *cl, char **cmd_split,
     return status;
 }
 
-bool update_ai_cmd(zappy_t *zappy, ntw_client_t *cl)
+static void update_food(zappy_t *zappy, ntw_client_t *cl, bool new_freq)
+{
+    trantorien_t *trantorien = NULL;
+
+    if (!new_freq || !zappy || !cl) {
+        return;
+    }
+    trantorien = L_DATAT(client_t *, cl)->cl.ai.trantorien;
+    trantorien->food_stack_freq += new_freq;
+    if (trantorien == NULL || trantorien->alive == false
+            || trantorien->food_stack_freq < MAX_FOOD_FREQ) {
+        return;
+    }
+    trantorien->food_stack_freq = 0;
+    if (trantorien->ressources[FOOD] > 0) {
+        trantorien->ressources[FOOD]--;
+    } else {
+        trantorien->alive = false;
+        circular_buffer_write(cl->write_to_outside, "dead\n");
+    }
+}
+
+bool update_ai_cmd(zappy_t *zappy, ntw_client_t *cl, bool new_freq)
 {
     char *tmp = NULL;
     char **cmd_split = NULL;
     bool status = false;
 
+    update_food(zappy, cl, new_freq);
     tmp = circular_buffer_read(cl->read_from_outside);
     if (tmp == NULL) {
         return true;
