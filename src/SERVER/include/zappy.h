@@ -17,6 +17,8 @@
 
     #define LVL_MAX 8
 
+    #define KO_RESPONSE "ko\n"
+
 struct zappy_s {
     ntw_t *ntw;
     map_t *map;
