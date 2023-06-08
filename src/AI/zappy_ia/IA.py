@@ -445,7 +445,7 @@ class IA:
     def joinEmitter(self):
         res = self.checkBroadcast()
         while res[3] != 0:
-            sendAllCmd(self.cmdDirections[res[3]])
+            sendAllCommand(self.cmdDirections[res[3]])
             res = self.checkBroadcast()
         self.sendBroadcast(Message.OK, List[self.emitter])
         out = self.client.output()
