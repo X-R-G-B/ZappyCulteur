@@ -25,6 +25,7 @@ trantorien_t *trantorien_init(const char *team_name, int id,
     trantorien->id = id;
     trantorien->alive = true;
     trantorien->direction = (rand() % (MAX_DIRECTION - 1)) + 1;
+    trantorien->ressources[FOOD] = 10;
     trantorien->x = rand() % width;
     trantorien->y = rand() % height;
     return trantorien;

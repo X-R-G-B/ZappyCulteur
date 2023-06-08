@@ -75,10 +75,13 @@ static void update_food(zappy_t *zappy, ntw_client_t *cl, bool new_freq)
     if (!new_freq || !zappy || !cl) {
         return;
     }
-    trantorien = ((client_t *) L_DATA(cl))->cl.ai.trantorien;
-    if (trantorien == NULL || trantorien->alive == false) {
+    trantorien = L_DATAT(client_t *, cl)->cl.ai.trantorien;
+    trantorien->food_stack_freq += new_freq;
+    if (trantorien == NULL || trantorien->alive == false
+            || trantorien->food_stack_freq < MAX_FOOD_FREQ) {
         return;
     }
+    trantorien->food_stack_freq = 0;
     if (trantorien->ressources[FOOD] > 0) {
         trantorien->ressources[FOOD]--;
     } else {

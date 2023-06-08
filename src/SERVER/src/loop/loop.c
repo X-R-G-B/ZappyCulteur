@@ -37,13 +37,17 @@ static bool update_client(zappy_t *zappy, ntw_client_t *cl, bool new_freq)
 static void update_clients_connections(ntw_t *ntw)
 {
     trantorien_t *trantorien = NULL;
+    client_t *cl = NULL;
 
     if (ntw == NULL) {
         return;
     }
     for (L_EACH(client, ntw->clients)) {
-        trantorien = L_DATAT(client_t *,
-            L_DATAT(ntw_client_t *, client))->cl.ai.trantorien;
+        cl = L_DATA(L_DATAT(ntw_client_t *, client));
+        if (cl == NULL || cl->type != AI) {
+            continue;
+        }
+        trantorien = cl->cl.ai.trantorien;
         if (trantorien == NULL) {
             continue;
         }
