@@ -22,6 +22,7 @@ class Message(Enum):
     COME = "come"
     CODE = "+$*"
 
+
 class Element(Enum):
     EMPTY = "empty"
     FOOD = "food"
@@ -170,8 +171,8 @@ class IA:
         Returns:
         parsed broadcast [senderId, message, targets, dir]
         """
-        received = self.client.output()
-        if (received.find(Message.CODE) == -1):
+        res = self.client.output()
+        if res.find(Message.CODE) == -1:
             return
         res = res.split(",")
         dir_ = int(res[0].split(" ")[1])
@@ -393,7 +394,9 @@ class IA:
         else:
             for id_ in toSend:
                 toSendStr += " " + str(id_)
-        completeMessage = Message.CODE + "|" + str(self.id) + "|" + message + "|" + toSendStr
+        completeMessage = (
+            Message.CODE + "|" + str(self.id) + "|" + message + "|" + toSendStr
+        )
         self.requestClient(Command.BROADCAST, completeMessage)
 
     def isMyIdInList(self, list_: List[int]) -> bool:
@@ -411,7 +414,7 @@ class IA:
             self.takeElement(Element.FOOD, foodPos)
         self.inventory()
 
-    def checkReceivedMessage(self, participantsId: List[int]) -> List[int]:
+    def checkReceivedMessage(self, participantsId: List[int], res: Tuple[int, str, List[int], int]) -> List[int]:
         if res[1] == Message.OK:
             if len(participantsId) < self.level - 1:
                 participantsId.append(res[0])
@@ -426,14 +429,14 @@ class IA:
         while readyParticipants < self.level - 1 and self.inputTree["mfood"] < 13:
             self.takeClosestFood()
             res = self.checkBroadcast()
-            if res[0] != 0 and self.isMyIdInList(res[3]) and res[2] == Message.OK:
+            if res[0] != 0 and self.isMyIdInList(res[2]) and res[1] == Message.OK:
                 readyParticipants += 1
             self.inventory()
         arrivedParticipants = 0
         while arrivedParticipants < self.level - 1:
             self.sendBroadcast(Message.COME)
             res = self.checkBroadcast()
-            if res[0] != 0 and self.isMyIdInList(res[3]) and res[2] == Message.OK:
+            if res[0] != 0 and self.isMyIdInList(res[2]) and res[1] == Message.OK:
                 arrivedParticipants += 1
         self.elevation()
 
@@ -446,13 +449,10 @@ class IA:
         time_ = time.time()
         participantsId: List[int] = []
         res: List[int, str, List[int]] = []
-        # attente des réponses à l'appel
-        # c prévu que le code soit modifié plus tard, c pas bo + ya moyen on est besoin de code similaire apres donc y'aura peut etre une fonction qui fera ça
         while time.time() - time_ < 1:
             res = self.checkBroadcast()
-            if res[0] != 0 and self.isMyIdInList(res[3]):
+            if res[0] != 0 and self.isMyIdInList(res[2]):
                 participantsId = self.checkReceivedMessage(participantsId)
-                # on est dans ce if si on a reçu un broadcast qui nous concerne, la ligne en dessous rez le timer, on sort de la boucle while si on reçoit rien pendant 1 seconde
                 time_ = time.time()
             time.sleep(0.1)
         if len(participantsId) == self.level - 1:
