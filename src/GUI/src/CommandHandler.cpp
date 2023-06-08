@@ -9,6 +9,7 @@
 #include <sstream>
 #include "CommandHandler.hpp"
 #include "Floor.hpp"
+#include "Ressources.hpp"
 #include "Trantorian.hpp"
 #include "IEntity.hpp"
 
@@ -16,13 +17,15 @@ namespace GUI {
     namespace CommandHandler {
         static const std::unordered_map<std::string, COMMAND_TYPE> commandProtocol = {
             {"msz", COMMAND_TYPE::MAP_SIZE},
+            {"bct", COMMAND_TYPE::MAP_CONTENT},
             {"pnw", COMMAND_TYPE::NEW_PLAYER}
         };
 
         CommandHandler::CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager)
             : _entityManager(entityManager), _toCall({
                 {COMMAND_TYPE::MAP_SIZE, &CommandHandler::setMapSize},
-                {COMMAND_TYPE::NEW_PLAYER, &CommandHandler::setNewPlayer}
+                {COMMAND_TYPE::NEW_PLAYER, &CommandHandler::setNewPlayer},
+                {COMMAND_TYPE::MAP_CONTENT, &CommandHandler::setRessources}
             })
         {}
 
@@ -101,6 +104,39 @@ namespace GUI {
                 enumOrientation,
                 level
             ));
+            return (true);
+        }
+
+        bool CommandHandler::setRessources(const std::string &command)
+        {
+            std::shared_ptr<GUI::Entities::IEntity> entity;
+            std::stringstream ss(command);
+            std::vector<std::pair<int, Entities::RessourcesType>> ressources = {
+                std::make_pair(0, Entities::RessourcesType::FOOD),
+                std::make_pair(0, Entities::RessourcesType::LINEMATE),
+                std::make_pair(0, Entities::RessourcesType::DERAUMERE),
+                std::make_pair(0, Entities::RessourcesType::SIBUR),
+                std::make_pair(0, Entities::RessourcesType::MENDIANE),
+                std::make_pair(0, Entities::RessourcesType::PHIRAS),
+                std::make_pair(0, Entities::RessourcesType::THYSTAME)
+            };
+            int x = 0;
+            int y = 0;
+            std::string cmd;
+            if (_entityManager->doesEntityExist("Floor") == true) {
+                entity = _entityManager->getEntityById("Floor");
+            } else {
+                return (false);
+            }
+
+            auto floor = std::static_pointer_cast<GUI::Entities::Floor>(entity);
+            ss >> cmd >> x >> y >> ressources[0].first >> ressources[1].first >> ressources[2].first >> ressources[3].first
+                >> ressources[4].first >> ressources[5].first >> ressources[6].first;
+            for (const auto &it : ressources) {
+                if (it.first > 0) {
+                    floor->createRessources(x, y, it.second, it.first);
+                }
+            }
             return (true);
         }
     }
