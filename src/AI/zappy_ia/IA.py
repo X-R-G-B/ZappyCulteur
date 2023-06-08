@@ -207,8 +207,10 @@ class IA:
                     self.requestClient(Command.FORWARD)
                 return
 
-    def reproduction(self):
-        self.requestClient("Fork\n")
+    def fork(self):
+        connectNbr = int(self.requestClient(Command.Connect_nbr))
+        if (connectNbr == 0):
+            self.requestClient(Command.Fork)
         self.pid = os.fork()
         if self.pid == 0:
             self.build()
