@@ -36,7 +36,7 @@ namespace GUI {
                  */
                 void createRessources(unsigned int x, unsigned int y, RessourcesType ressource, unsigned int quantity);
                 ~Floor() = default;
-                void update() override;
+                void update(double deltaTime) override;
             private:
                 void initSprites();
                 void initTexture();

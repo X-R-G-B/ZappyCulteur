@@ -24,6 +24,11 @@ namespace GUI {
         return (_msg.c_str());
     }
 
+    App::App() :
+        _lastTime(std::chrono::system_clock::now()),
+        _timeSinceLastServerAsk(0)
+    {}
+
     void App::initArgs(const char **av, int ac)
     {
         std::string params;
@@ -85,14 +90,46 @@ namespace GUI {
         gameLoop();
     }
 
+    //for now, we ask the server for updates every second
+    //next, we will ask in function of the time unit of the server
+    void App::askNetworkForUpdate()
+    {
+        std::string currentPlayerId;
+
+        if (_timeSinceLastServerAsk > 1) {
+            _networkManager.sendToServer("mct\n");
+            _entityManager->getPlayersIds();
+            for (const auto &id : _entityManager->getPlayersIds()) {
+                currentPlayerId = id;
+                if (currentPlayerId.find("Player_") != std::string::npos) {
+                    currentPlayerId.erase(0, 7);
+                }
+                _networkManager.sendToServer("ppo " + currentPlayerId + "\n");
+            }
+            _timeSinceLastServerAsk = 0;
+        }
+    }
+
+    void App::updateTime()
+    {
+        auto currentTime = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed = currentTime - _lastTime;
+        _deltatime = elapsed.count();
+        _lastTime = currentTime;
+        _timeSinceLastServerAsk += _deltatime;
+    }
+
     void App::gameLoop()
     {
         while (_displayModule->isOpen()) {
+            updateTime();
             if (_networkManager.isConnected() == false) {
                 _networkManager.reconnectToServer();
                 continue;
             }
+            askNetworkForUpdate();
             _networkManager.update();
+            _entityManager->update(_deltatime);
             _commandHandler->update(_networkManager.getServerMessages());
             _displayModule->handleEvents();
             _displayModule->update();
@@ -109,6 +146,7 @@ namespace GUI {
     void App::initModules()
     {
         _networkManager.sendToServer("GRAPHIC\n");
+        _networkManager.sendToServer("msz\n");
         _entityManager = std::make_shared<GUI::Entities::EntitiesManager>();
         if (_entityManager == nullptr) {
             throw AppException("Error while creating EntityManager");

@@ -10,18 +10,18 @@
 namespace GUI {
     namespace Entities {
 
-        EntitiesManager::EntitiesManagerException::EntitiesManagerException(const std::string &message) :
+        EntitiesManagerException::EntitiesManagerException(const std::string &message) :
             _message(message) {}
 
-        const char *EntitiesManager::EntitiesManagerException::what() const noexcept
+        const char *EntitiesManagerException::what() const noexcept
         {
             return _message.c_str();
         }
 
-        void EntitiesManager::update()
+        void EntitiesManager::update(double deltaTime)
         {
             for (auto &entity : _entities) {
-                entity->update();
+                entity->update(deltaTime);
             }
         }
 
@@ -101,6 +101,18 @@ namespace GUI {
                 }
             }
             throw EntitiesManagerException("No entity with this type");
+        }
+
+        std::vector<std::string> EntitiesManager::getPlayersIds() const
+        {
+            std::vector<std::string> playersIds;
+
+            for (const auto &entity : _entities) {
+                if (entity->getType() == EntityType::TRANTORIAN) {
+                    playersIds.push_back(entity->getId());
+                }
+            }
+            return playersIds;
         }
     }
 }

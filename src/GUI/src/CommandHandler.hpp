@@ -95,7 +95,21 @@ namespace GUI {
              */
             bool setNewPlayer(const std::string &command);
 
+            /**
+             * @brief Sets the resources for an entity based on the command.
+             * @param command The command string. The format and content of this string
+             * should follow the GUI protocol.
+             * @return True if the resources were set successfully, false otherwise. 
+             * The method may return false if the command string is not properly formatted or if there is a problem updating the entity in the EntityManager.
+             */
             bool setRessources(const std::string &command);
+
+            /**
+             * @brief Sets the player position based on the command.
+             * @param command The command string.
+             * @return True if the player position was set successfully, false otherwise.
+             */
+            bool setPlayerPosition(const std::string &command);
 
             std::shared_ptr<Entities::EntitiesManager> _entityManager;
             const std::unordered_map<COMMAND_TYPE, std::function<bool(CommandHandler &, const std::string &)>> _toCall;

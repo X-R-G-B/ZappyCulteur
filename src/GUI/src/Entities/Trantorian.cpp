@@ -6,6 +6,7 @@
 */
 
 #include <iostream>
+#include <cmath>
 #include "Trantorian.hpp"
 #include "Components/Sprite.hpp"
 
@@ -32,24 +33,24 @@ namespace GUI {
             ),
             _level(level),
             _team(team),
-            _speed(5)
+            _toGo(position),
+            _speed(200)
         {
             initSprites();
         }
 
-        void Trantorian::update()
+        void Trantorian::update(double deltaTime)
         {
-            if (_orientation == EntityOrientation::RIGHT) {
-                if (_position.x < 1920 - 50) {
-                    _position.x += _speed;
+            if (_toGo.x != _position.x || _toGo.y != _position.y) {
+                auto direction = _toGo - _position;
+                auto distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+                auto normalized = direction / distance;
+                auto movement = normalized * _speed * deltaTime;
+                if (std::abs(movement.x) > std::abs(direction.x) ||
+                    std::abs(movement.y) > std::abs(direction.y)) {
+                    _position = _toGo;
                 } else {
-                    _orientation = EntityOrientation::LEFT;
-                }
-            } else {
-                if (_position.x >= 0) {
-                    _position.x -= _speed;
-                } else {
-                    _orientation = EntityOrientation::RIGHT;
+                    _position += movement;
                 }
             }
             for (auto &comp : _components) {
@@ -78,6 +79,11 @@ namespace GUI {
         const std::string &Trantorian::getTeam() const
         {
             return _team;
+        }
+
+        void Trantorian::setToGo(const Vector2F &toGo)
+        {
+            _toGo = toGo;
         }
 
         void Trantorian::initSprites()
