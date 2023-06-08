@@ -49,13 +49,6 @@ static int *get_nb_ressources(map_tile_t *tiles, int width, int height)
     return nb_ressources;
 }
 
-// static void ressources_debug(int nb_ressources[PLAYER])
-// {
-//     for (int i = 0; i < PLAYER; i++) {
-//         printf("ressources[%d] = %d\n", i, nb_ressources[i]);
-//     }
-// }
-
 void map_add_ressources(map_t *map)
 {
     int nb_spawn_max[PLAYER] = {0};
