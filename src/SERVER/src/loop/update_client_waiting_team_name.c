@@ -17,6 +17,7 @@
 #include "tlcllists.h"
 #include "tlcstdlibs.h"
 #include "trantorien.h"
+#include "internal.h"
 #include "zappy.h"
 
 static const char *graphic_team = "GRAPHIC\n";
@@ -81,14 +82,14 @@ static bool update(char *tmp, ntw_client_t *cl, zappy_t *zappy)
     }
     cc->state = CONNECTED;
     cc->type = (is_graph) ? GRAPHIC : AI;
-    printf("INFO: client is: %s: %d\n", (is_graph) ? "graphic" : "ai", cc->id);
-    strncpy(cc->name, tmp, sizeof(cc->name) - 1);
-    send_id(cc, cl);
-    send_size(zappy->args, cl);
     if (!is_graph && add_client_to_trantorien(cc, zappy->trantoriens_available)
         == false) {
-            printf("ERROR: no trantorien available\n");
             refuse_client_connection(zappy->ntw, cl);
+    } else {
+            printf(DEBUG_CLIENT_LOGIN(is_graph, cc));
+            strncpy(cc->name, tmp, sizeof(cc->name) - 1);
+            send_id(cc, cl);
+            send_size(zappy->args, cl);
     }
     return true;
 }
