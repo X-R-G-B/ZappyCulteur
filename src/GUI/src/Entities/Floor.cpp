@@ -96,6 +96,15 @@ namespace GUI {
             RessourcesType ressource,
             unsigned int quantity)
         {
+            std::string id = std::to_string(x) + std::to_string(y) + idOfRessources.at(ressource);
+
+            for (auto itComponents = _components.begin(); itComponents != _components.end(); itComponents++) {
+                auto entity = std::static_pointer_cast<Components::Sprite>(*itComponents);
+                auto entityId = entity->getId();
+                if (entityId == id) {
+                    quantity -= 1;
+                }
+            }
             for (unsigned int i = 0; i < quantity; i++) {
                 createRessource(x, y, ressource);
             }
