@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include "args.h"
 #include "client.h"
+#include "map.h"
 #include "ntw.h"
 #include "tlcllists.h"
 #include "trantorien.h"
@@ -34,11 +35,23 @@ static bool update_client(zappy_t *zappy, ntw_client_t *cl, bool new_freq)
     return status;
 }
 
+static void check_ressources(zappy_t *zappy, bool new_freq)
+{
+    if (new_freq == true) {
+        zappy->before_add_resources--;
+    }
+    if (zappy->before_add_resources <= 0) {
+        map_add_ressources(zappy->map);
+        zappy->before_add_resources = NB_FREQ_BEFORE_RESOURCE;
+    }
+}
+
 bool loop(zappy_t *zappy, bool new_freq)
 {
     ntw_client_t *cl = NULL;
     bool status = true;
 
+    check_ressources(zappy, new_freq);
     for (L_EACH(client, zappy->ntw->clients)) {
         cl = L_DATA(client);
         if (cl == NULL) {

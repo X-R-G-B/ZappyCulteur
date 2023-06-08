@@ -19,11 +19,14 @@
 
     #define KO_RESPONSE "ko\n"
 
+    #define NB_FREQ_BEFORE_RESOURCE 20
+
 struct zappy_s {
     ntw_t *ntw;
     map_t *map;
     args_t *args;
     size_t cur_tick;
+    size_t before_add_resources;
 };
 typedef struct zappy_s zappy_t;
 
