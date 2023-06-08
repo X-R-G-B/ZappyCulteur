@@ -33,3 +33,16 @@ jobs:
         if [ ! -f 'coding-style-reports.log' ]; then exit 0; fi
         if [ -s 'coding-style-reports.log' ]; then cat 'coding-style-reports.log' && exit 1; fi
       working-directory: ${{ env.workdir }}
+
+  tests_run:
+    runs-on: ubuntu-latest
+    container: epitechcontent/epitest-docker:latest
+    needs: [banana]
+    env:
+      workdir: ./src/SERVER
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Deps
+      run: make tests_run
+      working-directory: ${{ env.workdir }}

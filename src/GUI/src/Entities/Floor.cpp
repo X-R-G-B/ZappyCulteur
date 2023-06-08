@@ -130,10 +130,7 @@ namespace GUI {
 
         float Floor::computeRessourceSize()
         {
-            float size =static_cast<float>(
-                rand() % static_cast<int>(_maxRessourceSize - _minRessourceSize + 1) +
-                static_cast<int>(_minRessourceSize)
-            );
+            float size = rand() % static_cast<int>(_maxRessourceSize - _minRessourceSize + 1) + _minRessourceSize;
             return (size);
         }
 
@@ -142,14 +139,11 @@ namespace GUI {
             unsigned int y,
             float ressourceSize)
         {
-            float posX = static_cast<float>(
-                rand() % static_cast<int>(_tileSize - ressourceSize) +
-                static_cast<int>(_tileSize * static_cast<float>(x))
-            );
-            float posY = static_cast<float>(
-                rand() % static_cast<int>(_tileSize - ressourceSize) +
-                static_cast<int>(_tileSize * static_cast<float>(y))
-            );
+            int upperValue = static_cast<int>(_tileSize - ressourceSize);
+            int lowerX = static_cast<int>(_tileSize * static_cast<float>(x));
+            int lowerY = static_cast<int>(_tileSize * static_cast<float>(y));
+            float posX = static_cast<float>(rand() % upperValue + lowerX);
+            float posY = static_cast<float>(rand() % upperValue + lowerY);
             return (Vector2F(posX, posY));
         }
 
