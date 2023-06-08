@@ -23,11 +23,12 @@ namespace GUI {
                     size_t level
                 );
                 ~Trantorian() = default;
-                void update() final;
+                void update(double deltaTime) final;
                 void setLevel(int level);
                 const std::size_t &getLevel() const;
                 void setTeam(const std::string &team);
                 const std::string &getTeam() const;
+                void setToGo(const Vector2F &toGo);
 
             private:
                 void initSprites();
@@ -35,6 +36,7 @@ namespace GUI {
                 std::string _team;
                 sf::Texture _texture;
                 Vector2F _direction;
+                Vector2F _toGo;
                 float _speed;
         };
     }

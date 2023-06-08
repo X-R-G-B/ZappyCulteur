@@ -16,13 +16,15 @@ namespace GUI {
     namespace CommandHandler {
         static const std::unordered_map<std::string, COMMAND_TYPE> commandProtocol = {
             {"msz", COMMAND_TYPE::MAP_SIZE},
-            {"pnw", COMMAND_TYPE::NEW_PLAYER}
+            {"pnw", COMMAND_TYPE::NEW_PLAYER},
+            {"ppo", COMMAND_TYPE::PLAYER_POSITION}
         };
 
         CommandHandler::CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager)
             : _entityManager(entityManager), _toCall({
                 {COMMAND_TYPE::MAP_SIZE, &CommandHandler::setMapSize},
-                {COMMAND_TYPE::NEW_PLAYER, &CommandHandler::setNewPlayer}
+                {COMMAND_TYPE::NEW_PLAYER, &CommandHandler::setNewPlayer},
+                {COMMAND_TYPE::PLAYER_POSITION, &CommandHandler::setPlayerPosition}
             })
         {}
 
@@ -101,6 +103,36 @@ namespace GUI {
                 enumOrientation,
                 level
             ));
+            return (true);
+        }
+
+        bool CommandHandler::setPlayerPosition(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string id;
+            float x = 0;
+            float y = 0;
+            int orientation = 0;
+            Entities::EntityOrientation enumOrientation = Entities::EntityOrientation::UP;
+
+            if (!(ss >> cmd >> id >> x >> y >> orientation) || orientation < 0 || orientation > 3) {
+                return (false);
+            }
+            id = "Player_" + id;
+            if (_entityManager->doesEntityExist(id) == false) {
+                return (false);
+            }
+            try {
+                auto entity = _entityManager->getEntityById(id);
+                auto trantorian = std::static_pointer_cast<Entities::Trantorian>(entity);
+                enumOrientation = static_cast<Entities::EntityOrientation>(orientation);
+                trantorian->setOrientation(enumOrientation);
+                trantorian->setToGo(Vector2F(x * TILE_SIZE, y * TILE_SIZE));
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return (false);
+            }
             return (true);
         }
     }

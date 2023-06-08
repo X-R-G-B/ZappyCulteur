@@ -41,7 +41,7 @@ namespace GUI {
         class IEntity {
             public:
                 virtual ~IEntity() = default;
-                virtual void update() = 0;
+                virtual void update(double deltaTime) = 0;
                 virtual const GUI::Vector2F &getPosition() const = 0;
                 virtual void setPosition(const Vector2F &position) = 0;
                 virtual const GUI::Vector2F &getRotation() const = 0;

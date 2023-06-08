@@ -25,7 +25,7 @@ namespace GUI {
                     float tileSize = TILE_SIZE
                 );
                 ~Floor() = default;
-                void update() override;
+                void update(double deltaTime) override;
             private:
                 void initSprites();
                 void initTexture();
