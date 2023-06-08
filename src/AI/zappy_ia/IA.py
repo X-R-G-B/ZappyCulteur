@@ -109,8 +109,6 @@ class IA:
             "lphiras": [0],
             "lthystame": [0],
             "enemy": [0],
-            "broadcast": [0],
-            "placeleft": [0],
         }
         self.outputTree: dict() = {
             "Find food": self.findFood,
@@ -134,8 +132,10 @@ class IA:
             7: ["Right\n", "Forward\n"],
             8: ["Forward\n", "Right\n", "Forward\n"],
         }
-        self.levelTree
-        self.loadTree()
+        try:
+            self.levelTree = joblib.load("joblib/level1.joblib")
+        except:
+            raise Exception("Level not found")
         self.connect()
         self.run()
 
@@ -152,7 +152,7 @@ class IA:
     # jsp quel type il retourne
     def loadTree(self):
         try:
-            self.levelTree = joblib.load("joblib/level" + self.level + ".joblib")
+            self.levelTree = joblib.load("joblib/level" + str(self.level) + ".joblib")
         except:
             raise Exception("Level not found")
 
@@ -169,11 +169,11 @@ class IA:
                     self.outputTree[prediction]()
         except KeyboardInterrupt:
             return
-    
+
     def checkElevationParticipant(self):
         res = self.checkBroadcast()
-        if (res[0] != 0):
-            if (res[1] in Message and self.emitter != 0):
+        if res[0] != 0:
+            if res[1] in Message and self.emitter != 0:
                 self.emitter = res[0]
                 self.sendBroadcast(Message.OK, List[self.emitter])
                 self.elevationParticipant()
@@ -181,7 +181,6 @@ class IA:
                 self.emitter = 0
                 self.sendBroadcast(Message.KO, List[res[0]])
         return
-
 
     def checkBroadcast(self) -> Tuple[int, str, List[int], int]:
         """
@@ -192,13 +191,13 @@ class IA:
         parsed broadcast [senderId, message, targets, dir]
         """
         res = self.client.output()
-        if res.find(Message.CODE) == -1:
+        if res.find(Message.CODE.value) == -1:
             return [0, "", [0], 0]
         res = res.split(",")
         dir_ = int(res[0].split(" ")[1])
         splittedRes = res[1].split("|")
-        if len(splittedRes) != 4 or splittedRes[0] != Message.CODE:
-            return [0, "", [0], 0] 
+        if len(splittedRes) != 4 or splittedRes[0] != Message.CODE.value:
+            return [0, "", [0], 0]
         toSend = list(map(int, splittedRes[2].split(" ")))
         res = [int(splittedRes[0]), splittedRes[1], toSend, dir_]
         return res
@@ -394,9 +393,9 @@ class IA:
             elif pos != -1:
                 self.takeElement(Element.FOOD, pos)
             i += 1
-            
+
     def chooseElevation(self):
-        if (self.level == 1):
+        if self.level == 1:
             self.elevation()
         else:
             self.elevationEmitter()
@@ -411,7 +410,7 @@ class IA:
         res = self.requestClient("")
         if res != Message.KO:
             self.level += 1
-            self.loadLevelTree()
+            self.loadTree()
 
     def sendBroadcast(self, message: str, toSend: List[int] = []):
         toSendStr = "|"
@@ -439,11 +438,11 @@ class IA:
         else:
             self.takeElement(Element.FOOD, foodPos)
         self.inventory()
-        
+
     def sendAllCmd(self, messages: List[str]):
         for message in messages:
             self.requestClient(message)
-    
+
     def joinEmitter(self):
         res = self.checkBroadcast()
         while res[3] != 0:
@@ -453,13 +452,13 @@ class IA:
         out = self.client.output()
         while out == "":
             out = self.client.output()
-        if (out == "ko\n"):
+        if out == "ko\n":
             self.emitter = 0
         else:
             self.emitter = 0
             self.level += 1
         return
-        
+
     def elevationParticipant(self):
         res = self.checkBroadcast()
         if res[1] == Message.KO:
@@ -473,14 +472,14 @@ class IA:
                 ready = True
                 self.sendBroadcast(Message.OK, List[self.emitter])
             res = self.checkBroadcast()
-            if (res[1] == Message.COME and res[0] == self.emitter):
+            if res[1] == Message.COME and res[0] == self.emitter:
                 haveToCome = True
                 self.sendBroadcast(Message.OK, List[self.emitter])
         self.joinEmitter()
-            
 
-
-    def checkReceivedMessage(self, participantsId: List[int], res: Tuple[int, str, List[int], int]) -> List[int]:
+    def checkReceivedMessage(
+        self, participantsId: List[int], res: Tuple[int, str, List[int], int]
+    ) -> List[int]:
         if res[1] == Message.OK:
             if len(participantsId) < self.level - 1:
                 participantsId.append(res[0])
