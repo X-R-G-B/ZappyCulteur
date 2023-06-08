@@ -113,7 +113,7 @@ namespace GUI {
         if (_entityManager == nullptr) {
             throw AppException("Error while creating EntityManager");
         }
-        _displayModule = std::make_unique<SFML>(
+        _displayModule = std::make_unique<GUI::SFML>(
             _entityManager,
             windowName,
             width,

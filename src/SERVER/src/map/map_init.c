@@ -30,7 +30,8 @@ map_t *map_init(int width, int height)
     if (map == NULL) {
         return NULL;
     }
-    *map = (map_t) {.height = height, .width = width, .tiles = NULL};
+    map->height = height;
+    map->width = width;
     map->tiles = malloc(sizeof(map_tile_t) * (width * height));
     if (map->tiles == NULL) {
         map_destroy(map);
