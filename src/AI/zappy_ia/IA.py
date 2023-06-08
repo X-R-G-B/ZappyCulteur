@@ -162,20 +162,24 @@ class IA:
         except KeyboardInterrupt:
             return
 
-    def checkBroadcast(self) -> Tuple[int, str, List[int]]:
+    def checkBroadcast(self) -> Tuple[int, str, List[int], int]:
         """
         This function is call by ElevationEmitter and ElevationParticipant,
             check if client received broadcast from other ia, parse and return it
 
         Returns:
-        parsed broadcast
+        parsed broadcast [senderId, message, targets, dir]
         """
-        res = self.client.output()
-        splittedRes = res.split("|")
+        received = self.client.output()
+        if (received.find(Message.CODE) == -1):
+            return
+        res = res.split(",")
+        dir_ = int(res[0].split(" ")[1])
+        splittedRes = res[1].split("|")
         if len(splittedRes) != 4 or splittedRes[0] != Message.CODE:
             return [0, "", [0]]
         toSend = list(map(int, splittedRes[2].split(" ")))
-        res = [int(splittedRes[0]), splittedRes[1], toSend]
+        res = [int(splittedRes[0]), splittedRes[1], toSend, dir_]
         return res
 
     def requestClient(
