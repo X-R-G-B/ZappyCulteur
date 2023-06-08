@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include "tlcstrings.h"
 #include "trantorien.h"
 
 trantorien_t *trantorien_init(const char *team_name, int id,
@@ -20,7 +21,7 @@ trantorien_t *trantorien_init(const char *team_name, int id,
         return NULL;
     }
     memset(trantorien, 0, sizeof(trantorien_t));
-    trantorien->team_name = team_name;
+    trantorien->team_name = x_strdup(team_name);
     trantorien->level = 1;
     trantorien->id = id;
     trantorien->alive = true;
