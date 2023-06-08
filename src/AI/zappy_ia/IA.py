@@ -20,12 +20,7 @@ class Message(Enum):
     L7 = "levelup7"
     L8 = "levelup8"
     COME = "come"
-
-
-class Response(Enum):
-    OK = "ok\n"
-    KO = "ko\n"
-
+    CODE = "+$*"
 
 class Element(Enum):
     EMPTY = "empty"
@@ -177,7 +172,7 @@ class IA:
         """
         res = self.client.output()
         splittedRes = res.split("|")
-        if len(splittedRes) != 3:
+        if len(splittedRes) != 4 or splittedRes[0] != Message.CODE:
             return [0, "", [0]]
         toSend = list(map(int, splittedRes[2].split(" ")))
         res = [int(splittedRes[0]), splittedRes[1], toSend]
@@ -383,7 +378,7 @@ class IA:
                 self.requestClient(Command.SET_OBJECT, costTuple[0].value)
         self.requestClient(Command.INCANTATION)
         res = self.requestClient("")
-        if res != Response.KO:
+        if res != Message.KO:
             self.level += 1
             self.loadLevelTree()
 
@@ -394,7 +389,7 @@ class IA:
         else:
             for id_ in toSend:
                 toSendStr += " " + str(id_)
-        completeMessage = str(self.id) + "|" + message + toSendStr
+        completeMessage = Message.CODE + "|" + str(self.id) + "|" + message + "|" + toSendStr
         self.requestClient(Command.BROADCAST, completeMessage)
 
     def isMyIdInList(self, list_: List[int]) -> bool:
@@ -412,31 +407,16 @@ class IA:
             self.takeElement(Element.FOOD, foodPos)
         self.inventory()
 
-    def elevationEmitter(self):
-        """
-        This function is call by decision tree when the ia have the stones for elevation,
-            the ia call others to try elevation
-        """
-        self.sendBroadcast(list(Message)[self.level])
-        time_ = time.time()
-        participantsId: List[int] = []
-        res: List[int, str, List[int]] = []
-        # attente des réponses à l'appel
-        # c prévu que le code soit modifié plus tard, c pas bo + ya moyen on est besoin de code similaire apres donc y'aura peut etre une fonction qui fera ça
-        while time.time() - time_ < 1:
-            res = self.checkBroadcast()
-            if res[0] != 0 and self.isMyIdInList(res[3]):
-                if res[1] == Message.OK:
-                    if len(participantsId) < self.level - 1:
-                        participantsId.append(res[0])
-                        self.sendBroadcast(Message.OK, res[0])
-                    else:
-                        self.sendBroadcast(Message.KO, res[0])
-                # on est dans ce if si on a reçu un broadcast qui nous concerne, la ligne en dessous rez le timer, on sort de la boucle while si on reçoit rien pendant 1 seconde
-                time_ = time.time()
-            time.sleep(0.1)
-        if len(participantsId) < self.level - 1:
-            return
+    def checkReceivedMessage(self, participantsId: List[int]) -> List[int]:
+        if res[1] == Message.OK:
+            if len(participantsId) < self.level - 1:
+                participantsId.append(res[0])
+                self.sendBroadcast(Message.OK, res[0])
+            else:
+                self.sendBroadcast(Message.KO, res[0])
+        return participantsId
+
+    def waitParticipants(self):
         readyParticipants = 0
         self.inventory()
         while readyParticipants < self.level - 1 and self.inputTree["mfood"] < 13:
@@ -452,3 +432,24 @@ class IA:
             if res[0] != 0 and self.isMyIdInList(res[3]) and res[2] == Message.OK:
                 arrivedParticipants += 1
         self.elevation()
+
+    def elevationEmitter(self):
+        """
+        This function is call by decision tree when the ia have the stones for elevation,
+            the ia call others to try elevation
+        """
+        self.sendBroadcast(list(Message)[self.level])
+        time_ = time.time()
+        participantsId: List[int] = []
+        res: List[int, str, List[int]] = []
+        # attente des réponses à l'appel
+        # c prévu que le code soit modifié plus tard, c pas bo + ya moyen on est besoin de code similaire apres donc y'aura peut etre une fonction qui fera ça
+        while time.time() - time_ < 1:
+            res = self.checkBroadcast()
+            if res[0] != 0 and self.isMyIdInList(res[3]):
+                participantsId = self.checkReceivedMessage(participantsId)
+                # on est dans ce if si on a reçu un broadcast qui nous concerne, la ligne en dessous rez le timer, on sort de la boucle while si on reçoit rien pendant 1 seconde
+                time_ = time.time()
+            time.sleep(0.1)
+        if len(participantsId) == self.level - 1:
+            self.waitParticipants()
