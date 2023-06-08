@@ -69,7 +69,8 @@ static bool update(char *tmp, client_t *cc, ntw_client_t *cl, args_t *args)
     return true;
 }
 
-bool update_client_waiting_team_name(zappy_t *zappy, ntw_client_t *cl)
+bool update_client_waiting_team_name(zappy_t *zappy, ntw_client_t *cl,
+    __attribute__((unused)) bool new_freq)
 {
     char *tmp = NULL;
     client_t *cc = NULL;

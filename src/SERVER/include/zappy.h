@@ -88,13 +88,15 @@ bool broadcast_graphic(ntw_t *ntw, const char *msg);
 
 // Update in states
 
-bool update_client_not_connected(zappy_t *zappy, ntw_client_t *cl);
-bool update_client_waiting_team_name(zappy_t *zappy, ntw_client_t *cl);
-bool update_client_connected(zappy_t *zappy, ntw_client_t *cl);
+bool update_client_not_connected(zappy_t *zappy, ntw_client_t *cl,
+    bool new_freq);
+bool update_client_waiting_team_name(zappy_t *zappy, ntw_client_t *cl,
+    bool new_freq);
+bool update_client_connected(zappy_t *zappy, ntw_client_t *cl, bool new_freq);
 
 // update by types in state connected
 
-bool update_ai_cmd(zappy_t *zappy, ntw_client_t *cl);
+bool update_ai_cmd(zappy_t *zappy, ntw_client_t *cl, bool new_freq);
 bool update_graphic_cmd(zappy_t *zappy, ntw_client_t *cl);
 
 #endif

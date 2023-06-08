@@ -12,7 +12,7 @@
 #include "zappy.h"
 
 bool update_client_not_connected(__attribute__((unused)) zappy_t *zappy,
-    ntw_client_t *cl)
+    ntw_client_t *cl, __attribute__((unused)) bool new_freq)
 {
     client_t *cc = NULL;
 
