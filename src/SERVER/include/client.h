@@ -8,6 +8,7 @@
 #ifndef CLIENT_H_
     #define CLIENT_H_
 
+    #include "trantorien.h"
     #include <stdbool.h>
     #define NAME_MAX 200
 
@@ -30,7 +31,7 @@ struct client_graphic_s {
 
 // TODO: modify this struct
 struct client_ai_s {
-    int tmp;
+    trantorien_t *trantorien;
 };
 
 struct client_s {

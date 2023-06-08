@@ -1003,3 +1003,6 @@ zappy_ai
 zappy_gui
 zappy_server
 vgcore.*
+*.clang-format
+*.vscode/
+*.idea
