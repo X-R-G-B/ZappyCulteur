@@ -131,8 +131,10 @@ class IA:
             7: ["Right\n", "Forward\n"],
             8: ["Forward\n", "Right\n", "Forward\n"],
         }
-        self.levelTree
-        self.loadTree()
+        try:
+            self.levelTree = joblib.load("joblib/level1.joblib")
+        except:
+            raise Exception("Level not found")
         self.connect()
         self.run()
 
@@ -148,7 +150,7 @@ class IA:
 
     def loadTree(self):
         try:
-            self.levelTree = joblib.load("joblib/level" + self.level + ".joblib")
+            self.levelTree = joblib.load("joblib/level" + str(self.level) + ".joblib")
         except FileNotFoundError:
             raise Exception("Level not found")
 
@@ -187,12 +189,12 @@ class IA:
         parsed broadcast [senderId, message, targets, dir]
         """
         res = self.client.output()
-        if res.find(Message.CODE) == -1:
+        if res.find(Message.CODE.value) == -1:
             return [0, "", [0], 0]
         res = res.split(",")
         dir_ = int(res[0].split(" ")[1])
         splittedRes = res[1].split("|")
-        if len(splittedRes) != 4 or splittedRes[0] != Message.CODE:
+        if len(splittedRes) != 4 or splittedRes[0] != Message.CODE.value:
             return [0, "", [0], 0]
         toSend = list(map(int, splittedRes[2].split(" ")))
         res = [int(splittedRes[0]), splittedRes[1], toSend, dir_]
@@ -406,7 +408,7 @@ class IA:
         res = self.requestClient("")
         if res != Message.KO:
             self.level += 1
-            self.loadLevelTree()
+            self.loadTree()
 
     def sendBroadcast(self, message: str, toSend: List[int] = []):
         toSendStr = "|"
