@@ -120,7 +120,7 @@ int command_incantation(trantorien_t *trantorien, zappy_t *zappy,
     }
     if (check_incantation_availability(trantorien, zappy->map, zappy->ntw)
             == false) {
-        circular_buffer_write(cl->write_to_outside, "ko\n");
+        circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
         snprintf(buff, 511, "pie %d %d %d\n", trantorien->x,
             trantorien->y, -1);
         broadcast_graphic(zappy->ntw, buff);

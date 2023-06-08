@@ -16,7 +16,7 @@ int command_turn_right(trantorien_t *trantorien, zappy_t *zappy,
                         ntw_client_t *cl, action_t *action)
 {
     if (trantorien == NULL || zappy == NULL || cl == NULL || action == NULL) {
-        circular_buffer_write(cl->write_to_outside, "ko\n");
+        circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
         return EXIT_FAILURE;
     }
     trantorien->direction += 1;
@@ -32,7 +32,7 @@ int command_turn_left(trantorien_t *trantorien, zappy_t *zappy,
                         ntw_client_t *cl, action_t *action)
 {
     if (trantorien == NULL || zappy == NULL || cl == NULL || action == NULL) {
-        circular_buffer_write(cl->write_to_outside, "ko\n");
+        circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
         return EXIT_FAILURE;
     }
     trantorien->direction -= 1;

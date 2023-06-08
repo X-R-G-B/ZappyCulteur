@@ -33,7 +33,7 @@ static void trantorien_need_update(trantorien_t *trantorien, zappy_t *zappy,
     ntw_client_t *cl, action_t *action)
 {
     if (trantorien_commands[action->code] == NULL) {
-        circular_buffer_write(cl->write_to_outside, "ko\n");
+        circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
         fprintf(stderr, "%s%d\n", "Command not handled: ", action->code);
         return;
     }

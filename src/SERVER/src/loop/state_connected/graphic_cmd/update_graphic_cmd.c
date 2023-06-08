@@ -43,7 +43,7 @@ static bool update_cmd(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
         }
     }
     if (status == false) {
-        circular_buffer_write(cl->write_to_outside, "ko\n");
+        circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
         status = true;
     }
     return status;

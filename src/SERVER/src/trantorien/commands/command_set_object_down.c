@@ -36,7 +36,7 @@ int command_set_object_down(trantorien_t *trantorien, zappy_t *zappy,
         circular_buffer_write(cl->write_to_outside, "ok\n");
         send_broadcast(action->param.object, zappy->ntw, trantorien->id);
     } else {
-        circular_buffer_write(cl->write_to_outside, "ko\n");
+        circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
     }
     return EXIT_SUCCESS;
 }
