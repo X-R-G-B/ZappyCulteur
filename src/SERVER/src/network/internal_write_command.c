@@ -21,7 +21,7 @@ void internal_write_command(ntw_t *ntw, ntw_client_t *cl)
     size_t to_write_size = 0;
     size_t nbwrite = 0;
 
-    to_write = circular_buffer_read(cl->write_to_outside);
+    to_write = circular_buffer_read_multiple(cl->write_to_outside);
     if (to_write == NULL) {
         return;
     }
