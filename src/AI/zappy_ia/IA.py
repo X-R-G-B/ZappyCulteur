@@ -20,7 +20,7 @@ class Message(Enum):
     L7 = "levelup7"
     L8 = "levelup8"
     COME = "come"
-    CODE = "+$*"
+    CODE = "*$+"
 
 
 class Element(Enum):
@@ -61,6 +61,7 @@ class IA:
         self.setId()
         self.lastLook: List[List[Element]] = []
         self.client: Client = Client(port, machineName)
+        self.emitter: int = 0
         self.levelCosts: List[List[Tuple[Element, int]]] = [
             [[Element.LINEMATE, 1]],
             [[Element.LINEMATE, 1], [Element.DERAUMERE, 1], [Element.SIBUR, 1]],
@@ -120,11 +121,21 @@ class IA:
             "Take mendiane": self.takeMendiane,
             "Take phiras": self.takePhiras,
             "Take thystame": self.takeThystame,
-            "Elevation": self.elevation,
+            "Elevation": self.chooseElevation,
             "Fork": self.fork,
         }
-        self.foodTree = self.loadTree("joblib/food.joblib")
-        self.loadLevelTree()
+        self.cmdDirections: dict() = {
+            1: ["Forward\n"],
+            2: ["Forward\n", "Right\n"],
+            3: ["Left\n", "Forward\n"],
+            4: ["Left\n", "Forward\n", "Left\n", "Forward\n"],
+            5: ["Right\n", "Right\n", "Forward\n"],
+            6: ["Right\n", "Forward\n", "Right\n", "Forward\n"],
+            7: ["Right\n", "Forward\n"],
+            8: ["Forward\n", "Right\n", "Forward\n"],
+        }
+        self.levelTree
+        self.loadTree()
         self.connect()
         self.run()
 
@@ -139,21 +150,17 @@ class IA:
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
 
     # jsp quel type il retourne
-    def loadTree(self, path: str):
+    def loadTree(self):
         try:
-            res = joblib.load(path)
-        except FileNotFoundError:
-            print("File joblib not found", file=sys.stderr)
-            sys.exit(84)
-        return res
-
-    def loadLevelTree(self):
-        self.levelTree = self.loadTree("joblib/level" + str(self.level) + ".joblib")
+            self.levelTree = joblib.load("joblib/level" + self.level + ".joblib")
+        except:
+            raise Exception("Level not found")
 
     def run(self):
         continueRun = True
         try:
             while continueRun:
+                self.checkElevationParticipant()
                 self.inventory()
                 self.lookForTree()
                 predictions = self.levelTree.predict(pd.DataFrame(self.inputTree))
@@ -162,6 +169,19 @@ class IA:
                     self.outputTree[prediction]()
         except KeyboardInterrupt:
             return
+    
+    def checkElevationParticipant(self):
+        res = self.checkBroadcast()
+        if (res[0] != 0):
+            if (res[1] in Message and self.emitter != 0):
+                self.emitter = res[0]
+                self.sendBroadcast(Message.OK, List[self.emitter])
+                self.elevationParticipant()
+            else:
+                self.emitter = 0
+                self.sendBroadcast(Message.KO, List[res[0]])
+        return
+
 
     def checkBroadcast(self) -> Tuple[int, str, List[int], int]:
         """
@@ -173,12 +193,12 @@ class IA:
         """
         res = self.client.output()
         if res.find(Message.CODE) == -1:
-            return
+            return [0, "", [0], 0]
         res = res.split(",")
         dir_ = int(res[0].split(" ")[1])
         splittedRes = res[1].split("|")
         if len(splittedRes) != 4 or splittedRes[0] != Message.CODE:
-            return [0, "", [0]]
+            return [0, "", [0], 0] 
         toSend = list(map(int, splittedRes[2].split(" ")))
         res = [int(splittedRes[0]), splittedRes[1], toSend, dir_]
         return res
@@ -374,6 +394,12 @@ class IA:
             elif pos != -1:
                 self.takeElement(Element.FOOD, pos)
             i += 1
+            
+    def chooseElevation(self):
+        if (self.level == 1):
+            self.elevation()
+        else:
+            self.elevationEmitter()
 
     def elevation(self):
         for costTuple in self.levelCosts[self.level - 1]:
@@ -413,6 +439,46 @@ class IA:
         else:
             self.takeElement(Element.FOOD, foodPos)
         self.inventory()
+        
+    def sendAllCmd(self, messages: List[str]):
+        for message in messages:
+            self.requestClient(message)
+    
+    def joinEmitter(self):
+        res = self.checkBroadcast()
+        while res[3] != 0:
+            sendAllCmd(self.cmdDirections[res[3]])
+            res = self.checkBroadcast()
+        self.sendBroadcast(Message.OK, List[self.emitter])
+        out = self.client.output()
+        while out == "":
+            out = self.client.output()
+        if (out == "ko\n"):
+            self.emitter = 0
+        else:
+            self.emitter = 0
+            self.level += 1
+        return
+        
+    def elevationParticipant(self):
+        res = self.checkBroadcast()
+        if res[1] == Message.KO:
+            self.emitter = 0
+            return
+        haveToCome = False
+        ready = False
+        while haveToCome is False or ready is False:
+            self.takeClosestFood()
+            if self.inputTree["mfood"] < 13:
+                ready = True
+                self.sendBroadcast(Message.OK, List[self.emitter])
+            res = self.checkBroadcast()
+            if (res[1] == Message.COME and res[0] == self.emitter):
+                haveToCome = True
+                self.sendBroadcast(Message.OK, List[self.emitter])
+        self.joinEmitter()
+            
+
 
     def checkReceivedMessage(self, participantsId: List[int], res: Tuple[int, str, List[int], int]) -> List[int]:
         if res[1] == Message.OK:
