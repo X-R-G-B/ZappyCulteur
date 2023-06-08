@@ -15,7 +15,9 @@ CFLAGS			=															\
 							-Wpedantic										\
 							-Iinclude										\
 							-Ilibs/tinylibc/includes						\
-							-Ilibs/circularbuffer/includes
+							-Ilibs/circularbuffer/includes					\
+							-MMD											\
+							-O2
 
 LDFLAGS			=															\
 							-L $(LIBS_DIR)/circularbuffer/					\
@@ -23,13 +25,34 @@ LDFLAGS			=															\
 							-L $(LIBS_DIR)/tinylibc/						\
 							-l tinylibc
 
+ECHO			=			echo -e
+
+# ----------------------------------------------------------------------------
+# Colors
+# ----------------------------------------------------------------------------
+
+CYAN				:=		'\033[1;36m'
+BLUE				:=		'\033[1;34m'
+GREEN				:=		'\033[1;32m'
+RESET				:=		'\033[0m'
+
 # ----------------------------------------------------------------------------
 # SRC
 # ----------------------------------------------------------------------------
 
 
 # ARGS -----------------------------------------------------------------------
+SRC_ARGS_PARSE	:=															\
+							c_per_teams.c									\
+							freq.c											\
+							height.c										\
+							port.c											\
+							team_name.c										\
+							width.c
+SRC_ARGS_PARSE	:=			$(addprefix parse_args/, $(SRC_ARGS_PARSE))
+
 SRC_ARGS		:=															\
+							$(SRC_ARGS_PARSE)								\
 							args_debug.c									\
 							args_destroy.c									\
 							args_init.c
@@ -44,6 +67,17 @@ SRC_CLIENT		:=			$(addprefix client/, $(SRC_CLIENT))
 
 # LOOP -----------------------------------------------------------------------
 SRC_LOOP_AICMD	=															\
+							cmd_broadcast.c									\
+							cmd_eject.c										\
+							cmd_fork.c										\
+							cmd_forward.c									\
+							cmd_inventory.c									\
+							cmd_invocation.c								\
+							cmd_left.c										\
+							cmd_look.c										\
+							cmd_right.c										\
+							cmd_set.c										\
+							cmd_take.c										\
 							update_ai_cmd.c
 SRC_LOOP_AICMD	:=			$(addprefix ai_cmd/, $(SRC_LOOP_AICMD))
 
@@ -51,6 +85,7 @@ SRC_LOOP_GRCMD	=															\
 							cmd_bct.c										\
 							cmd_mct.c										\
 							cmd_msz.c										\
+							cmd_ppo.c										\
 							update_graphic_cmd.c
 SRC_LOOP_GRCMD	:=			$(addprefix graphic_cmd/, $(SRC_LOOP_GRCMD))
 
@@ -88,6 +123,39 @@ SRC_NTW			:=															\
 							ntw_wait_till_events.c
 SRC_NTW			:=			$(addprefix network/, $(SRC_NTW))
 
+# TRANTORIEN -----------------------------------------------------------------
+SRC_TRNT_BRO	:=															\
+							incantation_start.c
+SRC_TRNT_BRO	:=			$(addprefix broadcasts/, $(SRC_TRNT_BRO))
+
+SRC_TRNT_CMD	:=															\
+							command_set_object_down.c						\
+							command_incantation.c							\
+							command_take_object.c							\
+							command_look_around.c							\
+							command_look_around_sides.c						\
+							command_look_around_utils.c						\
+							command_inventory.c								\
+							command_move.c									\
+							command_turn.c
+SRC_TRNT_CMD	:=			$(addprefix commands/, $(SRC_TRNT_CMD))
+
+SRC_TRNT		:=															\
+							$(SRC_TRNT_BRO)									\
+							$(SRC_TRNT_CMD)									\
+							action_destroy.c								\
+							action_init.c									\
+							trantorien_add_act.c							\
+							trantorien_add_act_broadcast.c					\
+							trantorien_add_act_set.c						\
+							trantorien_add_act_take.c						\
+							trantorien_destroy.c							\
+							trantorien_init.c								\
+							trantorien_is_cmd_availible.c					\
+							trantorien_place_cmd.c							\
+							trantorien_reduce_freq.c
+SRC_TRNT		:=			$(addprefix trantorien/, $(SRC_TRNT))
+
 # ----------------------------------------------------------------------------
 # SRC
 # ----------------------------------------------------------------------------
@@ -97,42 +165,95 @@ SRC				:=															\
 							$(SRC_LOOP)										\
 							$(SRC_MAP)										\
 							$(SRC_NTW)										\
+							$(SRC_TRNT)										\
+							broadcast_graphic.c								\
 							get_id.c										\
 							main.c											\
 							on_new_conn.c									\
 							zappy_destroy.c									\
+							zappy_find_trantorien_by_id.c					\
 							zappy_init.c
 SRC				:=			$(addprefix src/, $(SRC))
 
-OBJ				=			$(SRC:.c=.o)
+OBJ				:=			$(SRC:.c=.o)
+DEP				:=			$(SRC:.c=.d)
 
 RM				?=			rm -f
+
+CC				=			gcc
+
+TTARGET				:=		bin_test
+
+T_DIR				:=		tests
+
+T_SRC				:=		$(shell find $(T_DIR)/ -name '*.c' -type f)		\
+							$(filter-out src/main.c, $(SRC))
+
+T_OBJ				:=		$(T_SRC:.c=.o)
+
+TFLAGS				:=		-fprofile-arcs -ftest-coverage
+
+CR_TEST_LDFLAGS		:=		-lcriterion -lgcov
+
 
 all: $(LIBS_DIR)/tinylibc/libtinylibc.a
 all: $(LIBS_DIR)/circularbuffer/libcircularbuffer.a
 all: $(TARGET)
 
+all_fast:
+	@$(MAKE) -j --no-print-directory -C . all
+
 $(TARGET):												$(OBJ)
+$(TARGET):								$(LIBS_DIR)/tinylibc/libtinylibc.a
+$(TARGET):						$(LIBS_DIR)/circularbuffer/libcircularbuffer.a
+	@$(ECHO) $(CYAN)'==< CFLAGS >==:'$(RESET) '$(CFLAGS)'
+	@$(ECHO) $(CYAN)'==< LDFLAGS >==:'$(RESET) '$(LDFLAGS)'
 	$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) -o $(TARGET)
+	@$(ECHO) $(CYAN)'==< COMPILED >==:'$(RESET) $(GREEN)$(TARGET)$(RESET)
+
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(ECHO) $(GREEN)$@$(RESET) '<-' $(CYAN)$<$(RESET)
+
+$(TARGET)_fast:
+	@$(MAKE) -j --no-print-directory -C . $(TARGET)
 
 $(LIBS_DIR)/tinylibc/libtinylibc.a:						$(LIBS_DIR)
-	$(MAKE) -C $(LIBS_DIR)
+	@$(MAKE) -j --no-print-directory -C $(LIBS_DIR) 1>/dev/null
 
 $(LIBS_DIR)/circularbuffer/libcircularbuffer.a:			$(LIBS_DIR)
-	$(MAKE) -C $(LIBS_DIR)
+	@$(MAKE) -j --no-print-directory -C $(LIBS_DIR) 1>/dev/null
 
 $(LIBS_DIR)_clean:										$(LIBS_DIR)
-	$(MAKE) -C $(LIBS_DIR) clean
+	@$(MAKE) --no-print-directory -C $(LIBS_DIR) clean 1>/dev/null
 
 clean:													$(LIBS_DIR)_clean
-	$(RM) $(OBJ)
+	@$(RM) $(OBJ) $(SRC:.c=.d) $(T_OBJ)
+	@$(ECHO) $(CYAN)'==< CLEANED >==:'$(RESET)
 
 $(LIBS_DIR)_fclean:										$(LIBS_DIR)
-	$(MAKE) -C $(LIBS_DIR) fclean
+	@$(MAKE) --no-print-directory -C $(LIBS_DIR) fclean 1>/dev/null
 
 fclean:													clean
 fclean:													$(LIBS_DIR)_fclean
-	$(RM) $(TARGET)
+	@$(RM) $(TARGET)
+	@$(RM) $(TTARGET) $(T_SRC:.c=.gcno) $(T_SRC:.c=.gcda)
+	@$(ECHO) $(CYAN)'==< FCLEANED >==:'$(RESET)
 
 re:														fclean
 re:														all
+
+tests_run:		CFLAGS += $(TFLAGS)
+tests_run: 		CFLAGS := $(filter-out -O2, $(CFLAGS))
+tests_run:		LDFLAGS += $(CR_TEST_LDFLAGS)
+tests_run:		SRC := $(filter-out src/main.c, $(SRC))
+tests_run:		fclean $(T_OBJ)
+tests_run:		$(LIBS_DIR)/tinylibc/libtinylibc.a
+tests_run:		$(LIBS_DIR)/circularbuffer/libcircularbuffer.a
+	$(CC) $(T_OBJ) -o $(TTARGET) $(LDFLAGS) $(CFLAGS)
+	./$(TTARGET) || exit 1
+	gcovr --exclude-directories tests || true
+	gcovr --exclude-directories tests --branch || true
+	true
+
+-include $(DEP)

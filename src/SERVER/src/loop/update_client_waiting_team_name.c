@@ -14,6 +14,7 @@
 #include "client.h"
 #include "ntw.h"
 #include "tlcstdlibs.h"
+#include "trantorien.h"
 #include "zappy.h"
 
 static void send_id(client_t *cc, ntw_client_t *cl)
@@ -56,14 +57,14 @@ static bool update(char *tmp, client_t *cc, ntw_client_t *cl, args_t *args)
     send_id(cc, cl);
     send_size(args, cl);
     cc->state = CONNECTED;
-    printf("%s%s%s\n", "INFO: receving team name'", cc->name,
-        "', sending id + x y...");
     if (strcmp(cc->name, "GRAPHIC\n") == 0) {
         cc->type = GRAPHIC;
-        printf("%s\n", "INFO: client is graphic");
+        printf("%s%d\n", "INFO: client is graphic: ", cc->id);
     } else {
         cc->type = AI;
-        printf("%s\n", "INFO: client is ai");
+        cc->cl.ai.trantorien = trantorien_init(cc->name, cc->id, args->width,
+            args->height);
+        printf("%s%d\n", "INFO: client is ai: ", cc->id);
     }
     return true;
 }

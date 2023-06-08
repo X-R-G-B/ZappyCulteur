@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include "map.h"
 #include "ntw.h"
+#include "tlcllists.h"
 #include "zappy.h"
 
 void zappy_destroy(zappy_t *zappy)

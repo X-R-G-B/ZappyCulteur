@@ -1002,3 +1002,6 @@ FodyWeavers.xsd
 zappy_ai
 zappy_gui
 zappy_server
+*.clang-format
+*.vscode/
+*.idea
