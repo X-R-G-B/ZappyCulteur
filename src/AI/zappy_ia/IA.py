@@ -188,7 +188,7 @@ class IA:
             if len(splittedRes) != 4 or splittedRes[0] != Message.CODE.value:
                 continue
             toSend = list(map(int, splittedRes[2].split(" ")))
-            if toSend[0] != 0 and self.isMyIdInList(toSend) == False:
+            if toSend[0] != 0 and self.isMyIdInList(toSend) is False:
                 continue
             res = [int(splittedRes[0]), splittedRes[1], toSend, dir_]
             resList += res
