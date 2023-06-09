@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include "tlcllists.h"
 #include "args.h"
 #include "map.h"
 #include "ntw.h"
@@ -28,7 +29,9 @@ zappy_t *zappy_init(args_t *args)
     zappy->args = args;
     zappy->map = map_init(args->width, args->height);
     zappy->ntw = ntw_init(args->port, args->teams_name->len, on_new_conn);
-    if (zappy->ntw == NULL || zappy->map == NULL) {
+    zappy->trantoriens_available = list_create();
+    if (zappy->ntw == NULL || zappy->map == NULL
+            || zappy->trantoriens_available == NULL) {
         zappy_destroy(zappy);
         return NULL;
     }

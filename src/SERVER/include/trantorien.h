@@ -16,6 +16,8 @@
     #define MAX_NB_TR_RESSOURCES 7
     #define MAX_FOOD_FREQ 126
 
+typedef struct client_s client_t;
+
 // compatibility with graphic trantorien direction
 enum direction_e {
     NORTH = 1,
@@ -52,7 +54,7 @@ typedef struct action_s action_t;
 
 struct trantorien_s {
     int id;
-    const char *team_name;
+    char *team_name;
     int x;
     int y;
     enum direction_e direction;
@@ -279,4 +281,14 @@ int command_inventory(trantorien_t *trantorien, zappy_t *zappy,
 void broadcast_incantation_start(trantorien_t *ref_trantorien, zappy_t *zappy,
     ntw_client_t *cl);
 
+/**
+ * @brief assign a trantorien to a client
+ * @param cc client
+ * @param trantoriens_available list of available trantoriens
+ *
+ * @note if no trantoriens are available, the trantoriens is created
+ *
+ * @return true if the trantoriens is assigned to the client false if not
+ */
+bool add_client_to_trantorien(client_t *cc, list_t *trantoriens_available);
 #endif

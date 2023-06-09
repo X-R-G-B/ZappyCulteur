@@ -6,6 +6,7 @@
 */
 
 #include <stdbool.h>
+#include <stdlib.h>
 #include "args.h"
 #include "ntw.h"
 #include "zappy.h"
@@ -36,6 +37,7 @@ static int server_start(args_t *args)
     time_t s_timeout = 0;
     suseconds_t m_timeout = 0;
 
+    srand(time(NULL));
     zappy = zappy_init(args);
     if (zappy == NULL) {
         return (84);

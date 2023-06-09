@@ -27,6 +27,7 @@ struct zappy_s {
     args_t *args;
     size_t cur_tick;
     size_t before_add_resources;
+    list_t *trantoriens_available;
 };
 typedef struct zappy_s zappy_t;
 
@@ -87,6 +88,13 @@ int get_id(void);
 **/
 bool broadcast_graphic(ntw_t *ntw, const char *msg);
 
+/**
+ * @brief Refuse client connection
+ * @param ntw the ntw
+ * @param cl the client
+ */
+void refuse_client_connection(ntw_t *ntw, ntw_client_t *cl);
+
 // ---------------------------------------------------------------------------
 
 // Update in states
@@ -101,5 +109,8 @@ bool update_client_connected(zappy_t *zappy, ntw_client_t *cl, bool new_freq);
 
 bool update_ai_cmd(zappy_t *zappy, ntw_client_t *cl, bool new_freq);
 bool update_graphic_cmd(zappy_t *zappy, ntw_client_t *cl);
+
+// ---------------------------------------------------------------------------
+
 
 #endif

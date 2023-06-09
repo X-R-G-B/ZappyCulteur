@@ -39,6 +39,9 @@ void circular_buffer_write(circular_buffer_t *buffer, const char *str);
 // else return false
 char *circular_buffer_read(circular_buffer_t *buffer);
 
+// read a char* if the end_pattern is (all ok cmd)
+char *circular_buffer_read_multiple(circular_buffer_t *buffer);
+
 // check if circular buffer is empty
 bool circular_buffer_is_empty(circular_buffer_t *buffer);
 
