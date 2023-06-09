@@ -11,7 +11,8 @@
 #include "client.h"
 #include "zappy.h"
 
-bool update_client_not_connected(__attribute__((unused)) zappy_t *zappy, ntw_client_t *cl)
+bool update_client_not_connected(__attribute__((unused)) zappy_t *zappy,
+    ntw_client_t *cl)
 {
     client_t *cc = NULL;
 
