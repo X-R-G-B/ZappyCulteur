@@ -99,6 +99,7 @@ SRC_LOOP		:=															\
 							$(SRC_LOOP_CONN)								\
 							loop.c											\
 							update_client_not_connected.c					\
+							update_client_waiting_slot_opened.c				\
 							update_client_waiting_team_name.c				\
 							refuse_client_connection.c						\
 							update_food.c
@@ -173,6 +174,7 @@ SRC				:=															\
 							get_id.c										\
 							main.c											\
 							on_new_conn.c									\
+							zappy_create_initial_egg.c						\
 							zappy_destroy.c									\
 							zappy_find_trantorien_by_id.c					\
 							zappy_init.c
