@@ -38,6 +38,7 @@ namespace GUI {
                 ~Floor() = default;
                 void update(double deltaTime) override;
             private:
+                void loadRessourceTexture(RessourcesType ressource);
                 void initSprites();
                 void initTexture();
                 void createDarkFloor(unsigned int x, unsigned int y);

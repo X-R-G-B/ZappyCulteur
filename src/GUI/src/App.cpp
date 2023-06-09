@@ -17,6 +17,11 @@ namespace GUI {
     static constexpr std::size_t width = 1920;
     static constexpr unsigned int framerateLimit = 60;
 
+    static const std::string ipFlag = "-h";
+    static const std::string portFlag = "-p";
+
+    static const std::string defaultIp = "ip";
+    static const std::string defaultPort = "port";
     App::AppException::AppException(const std::string &msg)
         : _msg(msg){}
     
@@ -28,7 +33,10 @@ namespace GUI {
     App::App() :
         _lastTime(std::chrono::system_clock::now()),
         _timeSinceLastServerAsk(0)
-    {}
+    {
+        _args[ipFlag] = std::string(defaultIp);
+        _args[portFlag] = std::string(defaultPort);
+    }
 
     void App::initArgs(const char **av, int ac)
     {
@@ -50,19 +58,12 @@ namespace GUI {
             printHelp();
             throw AppException("Exiting...");
         }
-        if (flag1 == "-h") {
-            _ip = arg1;
+        if (arg1.empty() || arg2.empty()) {
+            throw AppException("Args error : missing arguments");
         }
-        if (flag1 == "-p") {
-            _port = arg1;
-        }
-        if (flag2 == "-h") {
-            _ip = arg2;
-        }
-        if (flag2 =="-p") {
-            _port = arg2;
-        }
-        if (_port.empty() || _ip.empty()) {
+        _args[flag1] = arg1;
+        _args[flag2] = arg2;
+        if (_args[ipFlag] == defaultIp || _args[portFlag] == defaultPort) {
             throw AppException("Args error : flags may be undefined");
         }
     }
@@ -74,11 +75,9 @@ namespace GUI {
 
     void App::launchApp()
     {
-        if (!_port.empty() && !_ip.empty()) {
-            _networkManager.initConnection(_ip, _port);
-            if (_networkManager.isConnected() == false) {
-                throw AppException("Connection error. Please check if the server exists.");
-            }
+        _networkManager.initConnection(_args[ipFlag], _args[portFlag]);
+        if (_networkManager.isConnected() == false) {
+            throw AppException("Connection error. Please check if the server exists.");
         }
         try {
             initModules();
