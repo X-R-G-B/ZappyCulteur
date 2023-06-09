@@ -1,11 +1,17 @@
 /*
 ** EPITECH PROJECT, 2023
-** zappy gui
+** ZappyCulteur
 ** File description:
 ** main
 */
 
-int main(void)
+#include "App.hpp"
+
+int main(int ac, const char **av)
 {
-    return 0;
+    GUI::App app;
+    int returnValue = 0;
+
+    returnValue = app(ac, av);
+    return (returnValue);
 }

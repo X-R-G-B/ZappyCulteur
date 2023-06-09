@@ -6,11 +6,7 @@
 */
 
 #include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "ntw.h"
-#include "tlcstdlibs.h"
-#include "circular_buffer.h"
 #include "map.h"
 #include "internal.h"
 #include "zappy.h"
