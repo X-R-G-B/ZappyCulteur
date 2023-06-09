@@ -107,15 +107,13 @@ class Client:
         self.messToSend.insert(0, message)
         self.sendLock.release()
 
-    def outputBroadcast(self) -> str:
-        res = ""
+    def outputBroadcast(self) -> List[str]:
+        res = [""]
         self.broadcastLock.acquire()
         if len(self.broadcastReceived) != 0:
-            message = self.broadcastReceived[-1]
-            self.broadcastReceived = self.broadcastReceived[:-1]
+            res = self.broadcastReceived
+            self.broadcastReceived = []
             self.broadcastLock.release()
-            if message != "" or message != "\n":
-                res = message
         else:
             self.broadcastLock.release()
         time.sleep(0.1)
