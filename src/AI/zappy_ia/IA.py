@@ -1,25 +1,12 @@
 from enum import Enum
 from typing import List, Tuple
-from zappy_ia.Client import Client
 from typing import Union
 import pandas as pd
 import time
 import joblib
 import random
-
-
-class Message(Enum):
-    OK = "ok"
-    KO = "ko"
-    L2 = "levelup2"
-    L3 = "levelup3"
-    L4 = "levelup4"
-    L5 = "levelup5"
-    L6 = "levelup6"
-    L7 = "levelup7"
-    L8 = "levelup8"
-    COME = "come"
-    CODE = "*$+"
+from zappy_ia.Client import Client
+from MessageEnum import Message
 
 
 class Element(Enum):
@@ -188,7 +175,7 @@ class IA:
         Returns:
         parsed broadcast [senderId, message, targets, dir]
         """
-        res = self.client.output()
+        res = self.client.outputBroadcast()
         if res.find(Message.CODE.value) == -1:
             return [0, "", [0], 0]
         res = res.split(",")
