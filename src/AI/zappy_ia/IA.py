@@ -6,7 +6,7 @@ import time
 import joblib
 import random
 from zappy_ia.Client import Client
-from MessageEnum import Message
+from zappy_ia.MessageEnum import Message
 
 
 class Element(Enum):
@@ -137,7 +137,7 @@ class IA:
 
     def loadTree(self):
         try:
-            self.levelTree = joblib.load("joblib/level" + str(self.level) + ".joblib")
+            self.levelTree = joblib.load("src/AI/joblib/level" + str(self.level) + ".joblib")
         except FileNotFoundError:
             raise Exception("Level not found")
 
@@ -157,6 +157,8 @@ class IA:
 
     def checkElevationParticipant(self):
         broadcasts = self.checkBroadcast()
+        if len(broadcasts) == 0:
+            return
         for broadcast_ in broadcasts:
             if (
                 broadcast_[1] in Message
@@ -180,6 +182,8 @@ class IA:
         List of parsed broadcast List[[senderId, message, targets, dir]]
         """
         outList = self.client.outputBroadcast()
+        if len(outList) == 0:
+            return []
         resList: Tuple[int, str, List[int], int] = []
         for res in outList:
             res = res.split(",")

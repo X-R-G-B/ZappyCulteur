@@ -5,7 +5,7 @@ import select
 import threading
 import time
 from typing import List
-from MessageEnum import Message
+from zappy_ia.MessageEnum import Message
 
 
 class Client:
@@ -108,7 +108,7 @@ class Client:
         self.sendLock.release()
 
     def outputBroadcast(self) -> List[str]:
-        res = [""]
+        res = []
         self.broadcastLock.acquire()
         if len(self.broadcastReceived) != 0:
             res = self.broadcastReceived
