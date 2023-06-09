@@ -252,9 +252,7 @@ class IA:
         self.look()
         for elem in Element:
             if "l" + elem.value in self.inputTree.keys():
-                case = self.findClosestElemInLastLook(
-                    elem
-                )
+                case = self.findClosestElemInLastLook(elem)
                 self.inputTree["l" + elem.value][0] = 1 if case >= 0 else 0
         case = self.findClosestElemInLastLook(Element.PLAYER)
         self.inputTree["enemy"][0] = 1 if case >= 0 else 0
