@@ -91,7 +91,7 @@ namespace GUI {
             std::string teamName;
 
             if (!(ss >> cmd >> id >> x >> y >> orientation >> level >> teamName)
-                || orientation < 1 || orientation > 4) {
+                || orientation < UP || orientation > LEFT) {
                 return (false);
             }
             id = "Player_" + id;
