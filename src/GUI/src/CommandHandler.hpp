@@ -43,6 +43,22 @@ namespace GUI {
             COMMAND_PARAMETER
         };
 
+        bool operator<(Entities::EntityOrientation enitityO, int nbr) {
+            return static_cast<int>(enitityO) < nbr;
+        }
+
+        bool operator<(int nbr, Entities::EntityOrientation enitityO) {
+            return nbr < static_cast<int>(enitityO);
+        }
+
+        bool operator>(Entities::EntityOrientation enitityO, int nbr) {
+            return static_cast<int>(enitityO) > nbr;
+        }
+
+        bool operator>(int nbr, Entities::EntityOrientation enitityO) {
+            return nbr > static_cast<int>(enitityO);
+        }
+
         /**
          * @class CommandHandler
          * @brief Handles commands and their execution based on a GUI protocol.
