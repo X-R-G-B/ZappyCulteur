@@ -32,6 +32,7 @@ namespace GUI {
             void clear() final;
             void closeWindow()final;
             void drawSprites();
+            void drawTexts();
             void createWindow() final;
             void setWindowStyle();
             void switchWindowMode() final;

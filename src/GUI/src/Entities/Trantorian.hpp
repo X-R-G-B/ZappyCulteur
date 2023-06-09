@@ -11,6 +11,7 @@
 #include <SFML/Graphics.hpp>
 #include "AEntity.hpp"
 #include "Sprite.hpp"
+#include "Text.hpp"
 
 namespace GUI {
     namespace Entities {
@@ -29,8 +30,13 @@ namespace GUI {
                 void setTeam(const std::string &team);
                 const std::string &getTeam() const;
                 void setToGo(const Vector2F &toGo);
+                void createTextComponent();
 
             private:
+                static constexpr int levelFontSize = 30;
+                static constexpr float levelYOffset = 30;
+                void updatePosition(double deltaTime);
+                void updateComponents();
                 void initSprites();
                 size_t _level;
                 std::string _team;
