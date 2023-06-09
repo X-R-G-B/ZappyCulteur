@@ -26,5 +26,6 @@ bool update_client_waiting_slot_opened(zappy_t *zappy, ntw_client_t *cl)
     client->type = AI;
     send_id(client, cl);
     send_size(zappy->args, cl);
+    client->cl.ai.trantorien->id = client->id;
     return true;
 }

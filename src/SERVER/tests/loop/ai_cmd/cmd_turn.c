@@ -47,7 +47,8 @@ static void set_up_tests(zappy_t **zappy, int nb_client, int port)
         strcpy(c->name, "test");
         c->state = CONNECTED;
         c->type = AI;
-        c->cl.ai.trantorien = trantorien_init("mdr", c->id, args.width, args.height);
+        c->cl.ai.trantorien = trantorien_init("mdr", args.width, args.height);
+        c->cl.ai.trantorien->id = c->id;
         cr_assert_not_null(c->cl.ai.trantorien);
     }
 }
