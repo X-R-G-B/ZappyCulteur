@@ -110,11 +110,8 @@ namespace GUI {
             }
         }
 
-        void Floor::createRessource(unsigned int x, unsigned int y, RessourcesType ressource)
+        void Floor::loadRessourceTexture(RessourcesType ressource)
         {
-            std::string id = std::to_string(x) + std::to_string(y) + idOfRessources.at(ressource);
-            float ressourceSize = computeRessourceSize();
-            Vector2F ressourcePos = computeRessourcePosition(x, y, ressourceSize);
             sf::Texture tx;
 
             auto search = _ressources.find(ressource);
@@ -127,6 +124,15 @@ namespace GUI {
             } else {
                 tx = search->second;
             }
+        }
+
+        void Floor::createRessource(unsigned int x, unsigned int y, RessourcesType ressource)
+        {
+            std::string id = std::to_string(x) + std::to_string(y) + idOfRessources.at(ressource);
+            float ressourceSize = computeRessourceSize();
+            Vector2F ressourcePos = computeRessourcePosition(x, y, ressourceSize);
+
+            loadRessourceTexture(ressource);
             _components.push_back(std::make_shared<GUI::Components::Sprite>(
                 id,
                 _ressources.find(ressource)->second,

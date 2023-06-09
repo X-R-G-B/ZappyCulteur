@@ -43,8 +43,7 @@ namespace GUI {
             void updateTime();
 
             NetworkManager _networkManager;
-            std::string _port;
-            std::string _ip;
+            std::unordered_map<std::string, std::string> _args;
             std::unique_ptr<IDisplayModule> _displayModule;
             std::shared_ptr<GUI::Entities::EntitiesManager> _entityManager;
             std::unique_ptr<CommandHandler::CommandHandler> _commandHandler;
