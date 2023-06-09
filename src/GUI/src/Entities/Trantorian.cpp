@@ -66,13 +66,17 @@ namespace GUI {
         void Trantorian::updateComponents()
         {
             for (auto &comp : _components) {
-                if (comp->getType() == Components::CompType::SPRITE) {
-                    auto sprite = std::static_pointer_cast<GUI::Components::Sprite>(comp);
-                    sprite->setPosition({_position.x, _position.y});
-                }
-                if (comp->getType() == Components::CompType::TEXT) {
-                    auto text = std::static_pointer_cast<GUI::Components::Text>(comp);
-                    text->setPosition({_position.x, _position.y - levelYOffset});
+                switch (comp->getType()) {
+                    case Components::CompType::SPRITE: {
+                        auto sprite = std::static_pointer_cast<GUI::Components::Sprite>(comp);
+                        sprite->setPosition({_position.x, _position.y});
+                        break;
+                    }
+                    case Components::CompType::TEXT: {
+                        auto text = std::static_pointer_cast<GUI::Components::Text>(comp);
+                        text->setPosition({_position.x, _position.y - levelYOffset});
+                        break;
+                    }
                 }
             }
         }
