@@ -153,7 +153,7 @@ namespace GUI {
             int orientation = 0;
             Entities::EntityOrientation enumOrientation = Entities::EntityOrientation::UP;
 
-            if (!(ss >> cmd >> id >> x >> y >> orientation) || orientation < 1 || orientation > 4) {
+            if (!(ss >> cmd >> id >> x >> y >> orientation) || orientation < UP || orientation > LEFT) {
                 return (false);
             }
             id = "Player_" + id;
