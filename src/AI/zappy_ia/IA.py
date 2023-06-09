@@ -239,10 +239,10 @@ class IA:
         self.look()
         for elem in Element:
             if "l" + elem.value in self.inputTree.keys():
-                self.inputTree["l" + elem.value][0] = self.findClosestElemInLastLook(
-                    elem
-                )
-        self.inputTree["enemy"][0] = self.findClosestElemInLastLook(Element.PLAYER)
+                case = self.findClosestElemInLastLook(elem)
+                self.inputTree["l" + elem.value][0] = 1 if case >= 0 else 0
+        case = self.findClosestElemInLastLook(Element.PLAYER)
+        self.inputTree["enemy"][0] = 1 if case >= 0 else 0
 
     def look(self):
         """
@@ -392,8 +392,10 @@ class IA:
             for i in range(costTuple[1]):
                 self.requestClient(Command.SET_OBJECT, costTuple[0].value)
         self.requestClient(Command.INCANTATION)
-        res = self.requestClient("")
-        if res != Message.KO:
+        out = ""
+        while out == "":
+            out = self.client.output()
+        if out != "ko":
             self.level += 1
             self.loadTree()
 
@@ -439,9 +441,16 @@ class IA:
             out = self.client.output()
         if out == "ko\n":
             self.emitter = 0
+            return
+        out = ""
+        while out == "":
+            out = self.client.output()
+        if out == "ko\n":
+            self.emitter = 0
         else:
             self.emitter = 0
             self.level += 1
+            self.loadTree()
         return
 
     def elevationParticipant(self):
