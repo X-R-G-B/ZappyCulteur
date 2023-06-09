@@ -16,6 +16,8 @@
     #define MAX_NB_TR_RESSOURCES 7
     #define MAX_FOOD_FREQ 126
 
+typedef struct client_s client_t;
+
 // compatibility with graphic trantorien direction
 enum direction_e {
     NORTH = 1,
