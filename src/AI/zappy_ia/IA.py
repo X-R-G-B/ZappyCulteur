@@ -158,7 +158,11 @@ class IA:
     def checkElevationParticipant(self):
         broadcasts = self.checkBroadcast()
         for broadcast_ in broadcasts:
-            if broadcast_[1] in Message and self.emitter != 0:
+            if (
+                broadcast_[1] in Message
+                and self.emitter != 0
+                and int(broadcast_[1][:-1]) == self.level
+            ):
                 self.emitter = broadcast_[0]
                 self.sendBroadcast(Message.OK, List[self.emitter])
             else:
@@ -190,7 +194,9 @@ class IA:
             resList += res
         return resList
 
-    def checkBroadcastWithoutNewElevation(self) -> List[Tuple[int, str, List[int], int]]:
+    def checkBroadcastWithoutNewElevation(
+        self,
+    ) -> List[Tuple[int, str, List[int], int]]:
         """
         This function is call to get received broadcast since last get without new elevation broadcast,
 
@@ -200,7 +206,7 @@ class IA:
         broadcasts = self.checkBroadcast()
         res = []
         for broadcast in broadcasts:
-            if (broadcast[1].find(Message.L2)[:-1] == -1):
+            if broadcast[1].find(Message.L2)[:-1] == -1:
                 res += broadcast
             else:
                 self.sendBroadcast(Message.KO, [broadcast[0]])
@@ -208,7 +214,7 @@ class IA:
 
     def checkBroadcastResponse(self) -> Tuple[int, str, List[int], int]:
         list = self.checkBroadcastWithoutNewElevation()
-        if (len(list) == 1):
+        if len(list) == 1:
             return list[0]
         return [0, "", [0], 0]
 

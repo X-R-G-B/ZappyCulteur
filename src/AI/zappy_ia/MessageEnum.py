@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Message(Enum):
     OK = "ok"
     KO = "ko"
