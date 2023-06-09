@@ -16,12 +16,14 @@ enum client_type_e {
     UNKNOWN = 0,
     GRAPHIC = 1,
     AI = 2,
+    AI_NOT_CONNECTED = 3,
 };
 
 enum client_connection_state_e {
     NOT_CONNECTED = 0,
     WAITING_TEAM_NAME = 1,
-    CONNECTED = 2,
+    WAITING_SLOT_OPENED = 2,
+    CONNECTED = 3,
 };
 
 // TODO: modify this struct

@@ -20,9 +20,9 @@
 #include "internal.h"
 #include "zappy.h"
 
-static const char *graphic_team = "GRAPHIC\n";
+static const char *graphic_team = "GRAPHIC";
 
-static void send_id(client_t *cc, ntw_client_t *cl)
+void send_id(client_t *cc, ntw_client_t *cl)
 {
     char *id_to_str = NULL;
 
@@ -36,7 +36,7 @@ static void send_id(client_t *cc, ntw_client_t *cl)
     circular_buffer_write(cl->write_to_outside, "\n");
 }
 
-static void send_size(args_t *args, ntw_client_t *cl)
+void send_size(args_t *args, ntw_client_t *cl)
 {
     char *size_to_str = NULL;
 
@@ -62,6 +62,9 @@ bool check_client_team_ok(zappy_t *zappy, char *team_name)
     && team_name[x_strlen(team_name) - 1] == '\n') {
         team_name[x_strlen(team_name) - 1] = '\0';
     }
+    if (x_strcmp(team_name, graphic_team) == 0) {
+        return true;
+    }
     for (L_EACH(node, zappy->args->teams_name)) {
         if (x_strcmp(L_DATA(node), team_name) == 0) {
             return true;
@@ -75,27 +78,25 @@ static bool update(char *tmp, ntw_client_t *cl, zappy_t *zappy)
     client_t *cc = cl->data;
     bool is_graph = strcmp(tmp, graphic_team) == 0;
 
-    if (strcmp(tmp, graphic_team) != 0
-    && check_client_team_ok(zappy, tmp) == false) {
+    if (check_client_team_ok(zappy, tmp) == false) {
         list_append(zappy->ntw->clients_to_remove, cl, NULL, NULL);
         return true;
     }
-    cc->state = CONNECTED;
-    cc->type = (is_graph) ? GRAPHIC : AI;
-    if (!is_graph && add_client_to_trantorien(cc, zappy->trantoriens_available)
-        == false) {
-            refuse_client_connection(zappy->ntw, cl);
+    strncpy(cc->name, tmp, sizeof(cc->name) - 1);
+    if (is_graph) {
+        cc->state = CONNECTED;
+        cc->type = GRAPHIC;
+        send_id(cc, cl);
+        send_size(zappy->args, cl);
     } else {
-            printf(DEBUG_CLIENT_LOGIN(is_graph, cc));
-            strncpy(cc->name, tmp, sizeof(cc->name) - 1);
-            send_id(cc, cl);
-            send_size(zappy->args, cl);
+        cc->state = WAITING_SLOT_OPENED;
+        cc->type = AI_NOT_CONNECTED;
     }
     return true;
 }
 
-bool update_client_waiting_team_name(
-zappy_t *zappy, ntw_client_t *cl, __attribute__((unused)) bool new_freq)
+bool update_client_waiting_team_name(zappy_t *zappy, ntw_client_t *cl,
+    __attribute__((unused)) bool new_freq)
 {
     char *tmp = NULL;
     bool status = false;

@@ -13,15 +13,19 @@
 #include "tlcllists.h"
 #include "trantorien.h"
 #include "zappy.h"
+#include "internal.h"
+
+static bool (*funcs[CONNECTED + 1])
+(zappy_t *zappy, ntw_client_t *cl, bool new_freq) = {
+    update_client_not_connected,
+    update_client_waiting_team_name,
+    update_client_waiting_slot_opened,
+    update_client_connected,
+};
 
 static bool update_client(zappy_t *zappy, ntw_client_t *cl, bool new_freq)
 {
     client_t *cc = NULL;
-    bool (*funcs[3])(zappy_t *zappy, ntw_client_t *cl, bool new_freq) = {
-        update_client_not_connected,
-        update_client_waiting_team_name,
-        update_client_connected
-    };
     bool status = false;
 
     if (cl == NULL) {

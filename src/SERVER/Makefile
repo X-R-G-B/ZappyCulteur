@@ -99,6 +99,7 @@ SRC_LOOP		:=															\
 							$(SRC_LOOP_CONN)								\
 							loop.c											\
 							update_client_not_connected.c					\
+							update_client_waiting_slot_opened.c				\
 							update_client_waiting_team_name.c				\
 							refuse_client_connection.c
 SRC_LOOP		:=			$(addprefix loop/, $(SRC_LOOP))

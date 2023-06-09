@@ -11,6 +11,7 @@
 #include "args.h"
 #include "ntw.h"
 #include "zappy.h"
+#include "../internal.h"
 
 bool update_client_connected(zappy_t *zappy, ntw_client_t *cl, bool new_freq)
 {
