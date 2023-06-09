@@ -76,14 +76,13 @@ bool check_client_team_ok(zappy_t *zappy, char *team_name)
 static bool update(char *tmp, ntw_client_t *cl, zappy_t *zappy)
 {
     client_t *cc = cl->data;
-    bool is_graph = strcmp(tmp, graphic_team) == 0;
 
     if (check_client_team_ok(zappy, tmp) == false) {
         list_append(zappy->ntw->clients_to_remove, cl, NULL, NULL);
         return true;
     }
     strncpy(cc->name, tmp, sizeof(cc->name) - 1);
-    if (is_graph) {
+    if (strcmp(tmp, graphic_team) == 0) {
         cc->state = CONNECTED;
         cc->type = GRAPHIC;
         send_id(cc, cl);

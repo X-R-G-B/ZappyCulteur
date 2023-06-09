@@ -174,6 +174,7 @@ SRC				:=															\
 							get_id.c										\
 							main.c											\
 							on_new_conn.c									\
+							zappy_create_initial_egg.c						\
 							zappy_destroy.c									\
 							zappy_find_trantorien_by_id.c					\
 							zappy_init.c

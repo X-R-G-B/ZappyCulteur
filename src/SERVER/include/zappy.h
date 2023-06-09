@@ -88,4 +88,13 @@ int get_id(void);
 **/
 bool broadcast_graphic(ntw_t *ntw, const char *msg);
 
+/**
+** @brief Create a list of trantorien considered as egg
+**
+** @param args the cmd arguments
+**
+** @return the list of trantorien_t
+**/
+list_t *zappy_create_initial_egg(args_t *args);
+
 #endif

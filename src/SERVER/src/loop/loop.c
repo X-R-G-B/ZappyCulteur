@@ -48,16 +48,14 @@ static void update_clients_connections(ntw_t *ntw)
     }
     for (L_EACH(client, ntw->clients)) {
         cl = L_DATA(L_DATAT(ntw_client_t *, client));
-        if (cl == NULL || cl->type != AI) {
+        if (cl == NULL || cl->type != AI || cl->cl.ai.trantorien == NULL) {
             continue;
         }
         trantorien = cl->cl.ai.trantorien;
-        if (trantorien == NULL) {
+        if (trantorien->alive == true) {
             continue;
         }
-        if (trantorien->alive == false) {
-            list_append(ntw->clients_to_remove, client, NULL, NULL);
-        }
+        list_append(ntw->clients_to_remove, client->data, NULL, NULL);
     }
 }
 
