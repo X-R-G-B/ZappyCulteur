@@ -17,7 +17,6 @@ void internal_remove_client_clean(ntw_t *ntw)
 
     for (L_EACH(client, ntw->clients_to_remove)) {
         cl = L_DATA(client);
-        printf("removing client %s\n", L_DATAT(client_t *, cl)->name);
         if (list_remove_ptrdata(ntw->clients, cl) == 0) {
             fprintf(stderr, "ERROR: can't find client to disconnect\n");
         }
