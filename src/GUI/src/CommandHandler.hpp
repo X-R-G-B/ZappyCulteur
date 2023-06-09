@@ -43,6 +43,22 @@ namespace GUI {
             COMMAND_PARAMETER
         };
 
+        bool operator<(Entities::EntityOrientation enitityO, int nbr) {
+            return static_cast<int>(enitityO) < nbr;
+        }
+
+        bool operator<(int nbr, Entities::EntityOrientation enitityO) {
+            return nbr < static_cast<int>(enitityO);
+        }
+
+        bool operator>(Entities::EntityOrientation enitityO, int nbr) {
+            return static_cast<int>(enitityO) > nbr;
+        }
+
+        bool operator>(int nbr, Entities::EntityOrientation enitityO) {
+            return nbr > static_cast<int>(enitityO);
+        }
+
         /**
          * @class CommandHandler
          * @brief Handles commands and their execution based on a GUI protocol.
@@ -110,6 +126,8 @@ namespace GUI {
              * @return True if the player position was set successfully, false otherwise.
              */
             bool setPlayerPosition(const std::string &command);
+
+            bool unknowCommand(const std::string &command);
 
             std::shared_ptr<Entities::EntitiesManager> _entityManager;
             const std::unordered_map<COMMAND_TYPE, std::function<bool(CommandHandler &, const std::string &)>> _toCall;

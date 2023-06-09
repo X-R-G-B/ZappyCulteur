@@ -28,7 +28,8 @@ namespace GUI {
                 {COMMAND_TYPE::MAP_SIZE, &CommandHandler::setMapSize},
                 {COMMAND_TYPE::NEW_PLAYER, &CommandHandler::setNewPlayer},
                 {COMMAND_TYPE::MAP_CONTENT, &CommandHandler::setRessources},
-                {COMMAND_TYPE::PLAYER_POSITION, &CommandHandler::setPlayerPosition}
+                {COMMAND_TYPE::PLAYER_POSITION, &CommandHandler::setPlayerPosition},
+                {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand},
             })
         {}
 
@@ -91,7 +92,8 @@ namespace GUI {
             std::string teamName;
 
             if (!(ss >> cmd >> id >> x >> y >> orientation >> level >> teamName)
-                || orientation < 0 || orientation > 3) {
+                || orientation < Entities::EntityOrientation::UP
+                || orientation > Entities::EntityOrientation::LEFT) {
                 return (false);
             }
             id = "Player_" + id;
@@ -153,7 +155,9 @@ namespace GUI {
             int orientation = 0;
             Entities::EntityOrientation enumOrientation = Entities::EntityOrientation::UP;
 
-            if (!(ss >> cmd >> id >> x >> y >> orientation) || orientation < 0 || orientation > 3) {
+            if (!(ss >> cmd >> id >> x >> y >> orientation)
+                || orientation < Entities::EntityOrientation::UP
+                || orientation > Entities::EntityOrientation::LEFT) {
                 return (false);
             }
             id = "Player_" + id;
@@ -170,6 +174,12 @@ namespace GUI {
                 std::cerr << e.what() << std::endl;
                 return (false);
             }
+            return (true);
+        }
+
+        bool CommandHandler::unknowCommand(const std::string &command)
+        {
+            std::cout << "Command undefined : " << command << std::endl;
             return (true);
         }
     }
