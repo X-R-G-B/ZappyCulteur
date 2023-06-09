@@ -33,9 +33,9 @@ namespace GUI {
             _level(level),
             _team(team),
             _toGo(position),
-            _speed(200),
+            _speed(beeSpeed),
             _isDead(false),
-            _timeDispawn(2)
+            _timeDispawn(beeAnimationDead)
         {
             initSprites();
         }

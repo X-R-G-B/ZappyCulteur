@@ -37,8 +37,9 @@ namespace GUI {
                 bool getDispawned();
 
             private:
+                static constexpr int beeSpeed = 200;
+                static constexpr int beeAnimationDead = 2;
                 void initDeathClock();
-                void launchDeadAnimation();
                 void initSprites();
                 size_t _level;
                 std::string _team;
