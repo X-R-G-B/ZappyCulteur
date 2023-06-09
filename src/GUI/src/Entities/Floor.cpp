@@ -148,11 +148,12 @@ namespace GUI {
             unsigned int y,
             float ressourceSize)
         {
-            int upperValue = static_cast<int>(_tileSize - ressourceSize);
-            int lowerX = static_cast<int>(_tileSize * static_cast<float>(x));
-            int lowerY = static_cast<int>(_tileSize * static_cast<float>(y));
-            float posX = static_cast<float>(rand() % (upperValue + lowerX));
-            float posY = static_cast<float>(rand() % (upperValue + lowerY));
+            int offset = static_cast<int>(_tileSize - ressourceSize);
+            int offsetX = static_cast<int>(_tileSize * static_cast<float>(x));
+            int offsetY = static_cast<int>(_tileSize * static_cast<float>(y));
+
+            float posX = static_cast<float>(rand() % offset + offsetX);
+            float posY = static_cast<float>(rand() % offset + offsetY);
             return (Vector2F(posX, posY));
         }
 
