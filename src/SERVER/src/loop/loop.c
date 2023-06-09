@@ -13,15 +13,18 @@
 #include "tlcllists.h"
 #include "trantorien.h"
 #include "zappy.h"
+#include "internal.h"
+
+static bool (*funcs[CONNECTED + 1])(zappy_t *zappy, ntw_client_t *cl) = {
+    update_client_not_connected,
+    update_client_waiting_team_name,
+    update_client_waiting_slot_opened,
+    update_client_connected,
+};
 
 static bool update_client(zappy_t *zappy, ntw_client_t *cl, bool new_freq)
 {
     client_t *cc = NULL;
-    bool (*funcs[3])(zappy_t *zappy, ntw_client_t *cl) = {
-        update_client_not_connected,
-        update_client_waiting_team_name,
-        update_client_connected
-    };
     bool status = false;
 
     if (cl == NULL) {
@@ -45,16 +48,14 @@ static void update_clients_connections(ntw_t *ntw)
     }
     for (L_EACH(client, ntw->clients)) {
         cl = L_DATA(L_DATAT(ntw_client_t *, client));
-        if (cl == NULL || cl->type != AI) {
+        if (cl == NULL || cl->type != AI || cl->cl.ai.trantorien == NULL) {
             continue;
         }
         trantorien = cl->cl.ai.trantorien;
-        if (trantorien == NULL) {
+        if (trantorien->alive == true) {
             continue;
         }
-        if (trantorien->alive == false) {
-            list_append(ntw->clients_to_remove, client, NULL, NULL);
-        }
+        list_append(ntw->clients_to_remove, client->data, NULL, NULL);
     }
 }
 
