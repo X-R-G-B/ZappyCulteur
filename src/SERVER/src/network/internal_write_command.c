@@ -27,7 +27,6 @@ void internal_write_command(ntw_t *ntw, ntw_client_t *cl)
     }
     to_write_size = strlen(to_write);
     nbwrite = write(cl->fd, to_write, to_write_size);
-    printf("write %ld, '%s'\n", nbwrite, to_write);
     free(to_write);
     if (nbwrite == (size_t) -1) {
         perror("write");
