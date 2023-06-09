@@ -5,7 +5,7 @@
 ** egg
 */
 
-#include "egg.hpp"
+#include "Egg.hpp"
 #include "Sprite.hpp"
 
 static const int eggSize = 42;
