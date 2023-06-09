@@ -24,7 +24,7 @@ namespace GUI {
         };
 
         enum class EntityOrientation {
-            UP,
+            UP = 1,
             RIGHT,
             DOWN,
             LEFT,

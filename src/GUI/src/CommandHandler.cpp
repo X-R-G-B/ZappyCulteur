@@ -92,7 +92,8 @@ namespace GUI {
             std::string teamName;
 
             if (!(ss >> cmd >> id >> x >> y >> orientation >> level >> teamName)
-                || orientation < 0 || orientation > 3) {
+                || orientation < Entities::EntityOrientation::UP
+                || orientation > Entities::EntityOrientation::LEFT) {
                 return (false);
             }
             id = "Player_" + id;
@@ -154,7 +155,9 @@ namespace GUI {
             int orientation = 0;
             Entities::EntityOrientation enumOrientation = Entities::EntityOrientation::UP;
 
-            if (!(ss >> cmd >> id >> x >> y >> orientation) || orientation < 0 || orientation > 3) {
+            if (!(ss >> cmd >> id >> x >> y >> orientation)
+                || orientation < Entities::EntityOrientation::UP
+                || orientation > Entities::EntityOrientation::LEFT) {
                 return (false);
             }
             id = "Player_" + id;
