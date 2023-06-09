@@ -8,6 +8,7 @@
 #include <sstream>
 #include <ctime>
 #include "App.hpp"
+#include "Floor.hpp"
 
 namespace GUI {
     static const std::string windowName = "ZappyCulteur";
@@ -98,7 +99,6 @@ namespace GUI {
 
         if (_timeSinceLastServerAsk > 1) {
             _networkManager.sendToServer("mct\n");
-            _entityManager->getPlayersIds();
             for (const auto &id : _entityManager->getPlayersIds()) {
                 currentPlayerId = id;
                 if (currentPlayerId.find("Player_") != std::string::npos) {
