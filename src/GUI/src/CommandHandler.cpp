@@ -28,7 +28,8 @@ namespace GUI {
                 {COMMAND_TYPE::MAP_SIZE, &CommandHandler::setMapSize},
                 {COMMAND_TYPE::NEW_PLAYER, &CommandHandler::setNewPlayer},
                 {COMMAND_TYPE::MAP_CONTENT, &CommandHandler::setRessources},
-                {COMMAND_TYPE::PLAYER_POSITION, &CommandHandler::setPlayerPosition}
+                {COMMAND_TYPE::PLAYER_POSITION, &CommandHandler::setPlayerPosition},
+                {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand},
             })
         {}
 
@@ -170,6 +171,12 @@ namespace GUI {
                 std::cerr << e.what() << std::endl;
                 return (false);
             }
+            return (true);
+        }
+
+        bool CommandHandler::unknowCommand(const std::string &command)
+        {
+            std::cout << "Command undefined : " << command << std::endl;
             return (true);
         }
     }
