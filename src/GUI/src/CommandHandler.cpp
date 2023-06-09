@@ -189,8 +189,9 @@ namespace GUI {
 
             ss >> cmd >> id;
             try {
-                auto entity = _entityManager->getEntityById(id);
+                auto entity = _entityManager->getEntityById(playerKey + id);
                 auto trantorian = std::static_pointer_cast<Entities::Trantorian>(entity);
+                trantorian->setDead(true);
             } catch (const Entities::EntitiesManagerException &e) {
                 std::cerr << e.what() << std::endl;
                 return (false);
