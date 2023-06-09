@@ -20,8 +20,8 @@ namespace GUI {
     static const std::string ipFlag = "-h";
     static const std::string portFlag = "-p";
 
-    static const std::string ip = "ip";
-    static const std::string port = "port";
+    static const std::string defaultIp = "ip";
+    static const std::string defaultPort = "port";
     App::AppException::AppException(const std::string &msg)
         : _msg(msg){}
     
