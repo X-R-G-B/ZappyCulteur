@@ -15,6 +15,8 @@ namespace GUI {
     namespace Entities {
 
         static const std::string beePath = "src/GUI/assets/bees/beeLeft.png";
+        static const std::string bodySpriteSuffix = "BodySprite";
+        static const std::string levelTextSuffix = "LevelText";
         static const std::size_t beeLayer = 50;
         static const unsigned int beeWidth = 92;
         static const unsigned int beeHeight = 92;
@@ -87,7 +89,7 @@ namespace GUI {
             for (auto &comp : _components) {
                 if (comp->getType() == Components::CompType::TEXT) {
                     auto text = std::static_pointer_cast<GUI::Components::Text>(comp);
-                    if (text->getId() == _id + "LevelText") {
+                    if (text->getId() == _id + levelTextSuffix) {
                         text->setText(std::to_string(_level));
                     }
                 }
@@ -119,7 +121,7 @@ namespace GUI {
             try {
                 _texture.loadFromFile(beePath);
                 _components.push_back(std::make_shared<GUI::Components::Sprite>(
-                    _id + "BodySprite",
+                    _id + bodySpriteSuffix,
                     _texture,
                     beeLayer,
                     _position,
@@ -137,7 +139,7 @@ namespace GUI {
             GUI::Color color(255, 255, 0, 255);
 
             _components.push_back(std::make_shared<GUI::Components::Text>(
-                _id + "LevelText",
+                _id + levelTextSuffix,
                 std::to_string(_level),
                 Vector2F(_position.x, _position.y - levelYOffset),
                 color,
