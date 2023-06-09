@@ -34,8 +34,8 @@ namespace GUI {
         _lastTime(std::chrono::system_clock::now()),
         _timeSinceLastServerAsk(0)
     {
-        _args[ipFlag] = std::string(ip);
-        _args[portFlag] = std::string(port);
+        _args[ipFlag] = std::string(defaultIp);
+        _args[portFlag] = std::string(defaultPort);
     }
 
     void App::initArgs(const char **av, int ac)
@@ -63,7 +63,7 @@ namespace GUI {
         }
         _args[flag1] = arg1;
         _args[flag2] = arg2;
-        if (_args[ipFlag] == ip || _args[portFlag] == port) {
+        if (_args[ipFlag] == defaultIp || _args[portFlag] == defaultPort) {
             throw AppException("Args error : flags may be undefined");
         }
     }
