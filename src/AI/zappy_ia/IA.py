@@ -156,15 +156,15 @@ class IA:
             return
 
     def checkElevationParticipant(self):
-        res = self.checkBroadcast()
-        if res[0] != 0:
-            if res[1] in Message and self.emitter != 0:
-                self.emitter = res[0]
+        broadcasts = self.checkBroadcast()
+        for broadcast_ in broadcasts:
+            if broadcast_[1] in Message and self.emitter != 0:
+                self.emitter = broadcast_[0]
                 self.sendBroadcast(Message.OK, List[self.emitter])
-                self.elevationParticipant()
             else:
-                self.emitter = 0
-                self.sendBroadcast(Message.KO, List[res[0]])
+                self.sendBroadcast(Message.KO, List[broadcast_[0]])
+        if self.emitter != 0:
+            self.elevationParticipant()
         return
 
     def checkBroadcast(self) -> List[Tuple[int, str, List[int], int]]:
