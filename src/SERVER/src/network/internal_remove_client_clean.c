@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include "ntw.h"
 #include "ntw_internal.h"
-#include "client.h"
 #include "tlcllists.h"
 
 void internal_remove_client_clean(ntw_t *ntw)
