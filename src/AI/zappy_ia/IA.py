@@ -430,7 +430,7 @@ class IA:
         out = ""
         while out == "":
             out = self.client.output()
-        if out != "ko":
+        if out != Message.KO.value + "\n":
             self.level += 1
             self.loadTree()
 
@@ -441,8 +441,9 @@ class IA:
         else:
             for id_ in toSend:
                 toSendStr += " " + str(id_)
+        codeStr: str = Message.CODE.value
         completeMessage = (
-            Message.CODE + "|" + str(self.id) + "|" + message + "|" + toSendStr
+            codeStr + "|" + str(self.id) + "|" + message + "|" + toSendStr
         )
         self.requestClient(Command.BROADCAST, completeMessage)
 
