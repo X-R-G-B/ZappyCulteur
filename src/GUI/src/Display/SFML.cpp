@@ -5,10 +5,15 @@
 ** SFML
 */
 
+
+#include <map>
 #include "SFML.hpp"
+#include "IEntity.hpp"
+#include "Sprite.hpp"
+#include "CompQuery.hpp"
 
 namespace GUI {
-    SFML::SFML(std::shared_ptr<GUI::EntityManager> entityManager,
+    SFML::SFML(std::shared_ptr<Entities::EntitiesManager> entityManager,
         std::string windowTitle,
         unsigned int width,
         unsigned int height,
@@ -31,17 +36,16 @@ namespace GUI {
         closeWindow();
     }
 
+    WINDOW_MODE SFML::getWindowMode()
+    {
+        return _windowMode;
+    }
+
     void SFML::createWindow()
     {
         _window.create(sf::VideoMode(_width, _height), _windowTitle, _winStyle);
         _window.setFramerateLimit(_framerateLimit);
         _isOpen = true;
-    }
-
-    void SFML::setFramerateLimit(unsigned int framerateLimit)
-    {
-        _framerateLimit = framerateLimit;
-        _window.setFramerateLimit(_framerateLimit);
     }
 
     void SFML::clear()
@@ -71,8 +75,22 @@ namespace GUI {
     void SFML::update()
     {
         clear();
-        //draw here
+        drawSprites();
         _window.display();
+    }
+
+    void SFML::drawSprites()
+    {
+        auto sprites = _entityManager->getComponentsByType(Components::CompType::SPRITE);
+        _compQuery.sortSpritesByLayer(sprites);
+
+        for (const auto &sprite : *sprites) {
+            auto spritePtr = std::static_pointer_cast<GUI::Components::Sprite>(sprite);
+            if (spritePtr == nullptr) {
+                continue;
+            }
+            _window.draw(spritePtr->getSprite());
+        }
     }
 
     void SFML::handleEvents()

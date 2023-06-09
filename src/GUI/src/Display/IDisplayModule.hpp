@@ -5,6 +5,12 @@
 ** IDisplayModule
 */
 
+#pragma once
+#include <vector>
+#include <memory>
+#include "IEntity.hpp"
+#include "EntitiesManager.hpp"
+
 namespace GUI {
         enum class WINDOW_MODE {
             WINDOWED,
@@ -15,80 +21,74 @@ namespace GUI {
     class IDisplayModule {
         public:
             ~IDisplayModule() = default;
-            
             /**
-             * @brief Update the display module, with clear, draw and display
+             * @brief Clear, draw and display (sprites, sounds, etc...)
+             * @param entitiesManger
              */
             virtual void update() = 0;
             
             /**
-             * @brief Check if the window is open
-             * @return true if the window is open, false otherwise
+             * @brief say if the window is open or not
              */
             virtual bool isOpen() = 0;
 
             /**
-             * @brief Handle the events of the program
+             * @brief handle events (keyboard, mouse, etc...)
              */
             virtual void handleEvents() = 0;
 
             /**
-             * @brief Set the framerate limit of the window and apply it
-             * @param framerateLimit The framerate limit
+             * @brief set the framerate limit of the window
+             * @param framerateLimit
              */
             virtual void setFramerateLimit(unsigned int framerateLimit) = 0;
-    
+
             /**
-             * @brief Get the framerate limit of the window
-             * @return The framerate limit
+             * @brief get the framerate limit of the window
              */
             virtual unsigned int getFramerateLimit() = 0;
 
             /**
-             * @brief Set the width of the window
-             * @param width The width of the window
+             * @brief set the width of the window
+             * @param width
              */
             virtual void setWidth(unsigned int width) = 0;
 
             /**
-             * @brief Set the height of the window
-             * @param height The height of the window
+             * @brief set the height of the window
+             * @param height
              */
             virtual void setHeight(unsigned int height) = 0;
 
             /**
-             * @brief Get the width of the window
-             * @return The width of the window
+             * @brief get the width of the window
              */
             virtual unsigned int getWidth() = 0;
 
             /**
-             * @brief Get the height of the window
-             * @return The height of the window
+             * @brief get the height of the window
              */
             virtual unsigned int getHeigth() = 0;
 
             /**
-             * @brief Set the title of the window
-             * @param windowTitle The title of the window
+             * @brief set the title of the window
+             * @param windowTitle
              */
             virtual void setWindowTitle(std::string windowTitle) = 0;
 
             /**
-             * @brief Get the title of the window
-             * @return The title of the window
+             * @brief get the title of the window
              */
             virtual std::string getWindowTitle() = 0;
 
             /**
-             * @brief get the window mode of the window
-             * @return WINDOW_MODE The window mode of the window
+             * @brief set the window mode
+             * @param windowMode
              */
             virtual WINDOW_MODE getWindowMode() = 0;
 
             /**
-             * @brief Set the window mode for the window
-             * @param WINDOW_MODE The window mode of the window and apply it
+             * @brief switch the window mode
              */
             virtual void setWindowMode(WINDOW_MODE windowMode) = 0;
     };

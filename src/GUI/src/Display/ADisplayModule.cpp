@@ -13,10 +13,17 @@ namespace GUI {
         return _isOpen;
     }
 
+    void ADisplayModule::setFramerateLimit(unsigned int framerateLimit)
+    {
+        _framerateLimit = framerateLimit;
+    }
+
     unsigned int ADisplayModule::getFramerateLimit()
     {
         return _framerateLimit;
     }
+
+
 
     void ADisplayModule::setWidth(unsigned int width)
     {
@@ -52,10 +59,5 @@ namespace GUI {
     {
         _windowMode = windowMode;
         switchWindowMode();
-    }
-
-    WINDOW_MODE ADisplayModule::getWindowMode()
-    {
-        return _windowMode;
     }
 }

@@ -119,7 +119,7 @@ class IA:
             8: ["Forward\n", "Right\n", "Forward\n"],
         }
         try:
-            self.levelTree = joblib.load("joblib/level1.joblib")
+            self.levelTree = joblib.load("src/AI/joblib/level1.joblib")
         except FileNotFoundError:
             raise Exception("Level not found")
         self.connect()

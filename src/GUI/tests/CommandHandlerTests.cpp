@@ -11,7 +11,8 @@
 int main(void)
 {
     std::vector<std::string> commands = {
-        "msz 10 10\n"
+        "msz 10 10\n",
+        "bct 1 2 0 0 0 0 0 0 0\n"
     };
     std::shared_ptr<EntityManager> entityManager;
     GUI::CommandHandler::CommandHandler commandHandler(entityManager);
