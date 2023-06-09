@@ -6,6 +6,7 @@
 */
 
 #include "EntitiesManager.hpp"
+#include "Trantorian.hpp"
 
 namespace GUI {
     namespace Entities {
@@ -22,6 +23,13 @@ namespace GUI {
         {
             for (auto &entity : _entities) {
                 entity->update(deltaTime);
+            }
+            auto trantorians = getEntitiesByType(EntityType::TRANTORIAN);
+            for (const auto &it : *trantorians) {
+                auto entity = std::static_pointer_cast<Entities::Trantorian>(it);
+                if (entity->getDispawned()) {
+                    killEntityById(entity->getId());
+                }
             }
         }
 

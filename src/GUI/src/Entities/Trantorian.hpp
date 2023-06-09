@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include <chrono>
 #include "AEntity.hpp"
 #include "Sprite.hpp"
 
@@ -29,8 +30,15 @@ namespace GUI {
                 void setTeam(const std::string &team);
                 const std::string &getTeam() const;
                 void setToGo(const Vector2F &toGo);
+                const std::chrono::seconds getDispawnTime();
+                void setDead(bool dead);
+                bool getDead();
+                void setDispawned(bool dispawn);
+                bool getDispawned();
 
             private:
+                void initDeathClock();
+                void launchDeadAnimation();
                 void initSprites();
                 size_t _level;
                 std::string _team;
@@ -38,6 +46,10 @@ namespace GUI {
                 Vector2F _direction;
                 Vector2F _toGo;
                 float _speed;
+                bool _isDead;
+                bool _isDispawned;
+                std::chrono::seconds _timeDispawn;
+                std::chrono::time_point<std::chrono::system_clock> _deathClock;
         };
     }
 }
