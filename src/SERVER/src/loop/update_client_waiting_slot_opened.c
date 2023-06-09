@@ -7,8 +7,7 @@
 
 #include "internal.h"
 
-bool update_client_waiting_slot_opened(zappy_t *zappy, ntw_client_t *cl,
-    __attribute__((unused)) bool new_freq)
+bool update_client_waiting_slot_opened(zappy_t *zappy, ntw_client_t *cl)
 {
     if (cl == NULL || zappy == NULL) {
         return true;

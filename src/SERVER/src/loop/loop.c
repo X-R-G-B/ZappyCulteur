@@ -15,8 +15,7 @@
 #include "zappy.h"
 #include "internal.h"
 
-static bool (*funcs[CONNECTED + 1])
-(zappy_t *zappy, ntw_client_t *cl, bool new_freq) = {
+static bool (*funcs[CONNECTED + 1])(zappy_t *zappy, ntw_client_t *cl) = {
     update_client_not_connected,
     update_client_waiting_team_name,
     update_client_waiting_slot_opened,
@@ -32,7 +31,7 @@ static bool update_client(zappy_t *zappy, ntw_client_t *cl, bool new_freq)
         return false;
     }
     cc = cl->data;
-    status = funcs[cc->state](zappy, cl, new_freq);
+    status = funcs[cc->state](zappy, cl);
     if (new_freq) {
         trantorien_reduce_freq(cc->cl.ai.trantorien, zappy, cl);
     }
@@ -73,6 +72,23 @@ static void check_ressources(zappy_t *zappy, bool new_freq)
     }
 }
 
+static void update_trantoriens_available_food(list_t *trantoriens_available,
+    bool new_freq)
+{
+    trantorien_t *trantorien = NULL;
+
+    if (trantoriens_available == NULL || new_freq == false) {
+        return;
+    }
+    for (L_EACH(data, trantoriens_available)) {
+        trantorien = L_DATA(data);
+        if (trantorien == NULL) {
+            continue;
+        }
+        update_food(trantorien, NULL, new_freq);
+    }
+}
+
 bool loop(zappy_t *zappy, bool new_freq)
 {
     ntw_client_t *cl = NULL;
@@ -86,6 +102,11 @@ bool loop(zappy_t *zappy, bool new_freq)
         }
         status = update_client(zappy, cl, new_freq) & status;
         update_clients_connections(zappy->ntw);
+        if (L_DATAT(client_t *, client)->type == AI) {
+            update_food(L_DATAT(client_t *, client)->cl.ai.trantorien,
+                cl, new_freq);
+        }
     }
+    update_trantoriens_available_food(zappy->trantoriens_available, new_freq);
     return !status;
 }

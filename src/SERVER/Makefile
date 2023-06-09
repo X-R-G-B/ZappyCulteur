@@ -101,7 +101,8 @@ SRC_LOOP		:=															\
 							update_client_not_connected.c					\
 							update_client_waiting_slot_opened.c				\
 							update_client_waiting_team_name.c				\
-							refuse_client_connection.c
+							refuse_client_connection.c						\
+							update_food.c
 SRC_LOOP		:=			$(addprefix loop/, $(SRC_LOOP))
 
 # MAP ------------------------------------------------------------------------

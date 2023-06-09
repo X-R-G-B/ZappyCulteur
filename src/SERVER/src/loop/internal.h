@@ -25,19 +25,24 @@ void refuse_client_connection(ntw_t *ntw, ntw_client_t *cl);
 void send_size(args_t *args, ntw_client_t *cl);
 void send_id(client_t *cc, ntw_client_t *cl);
 
+/**
+** @brief update food for every trantoriens, associated or not with clients
+** @param trantorien
+** @param cl
+** @param new_freq
+**/
+void update_food(trantorien_t *trantorien, ntw_client_t *cl, bool new_freq);
+
 // Update in states
 
-bool update_client_not_connected(zappy_t *zappy, ntw_client_t *cl,
-    bool new_freq);
-bool update_client_waiting_team_name(zappy_t *zappy, ntw_client_t *cl,
-    bool new_freq);
-bool update_client_connected(zappy_t *zappy, ntw_client_t *cl, bool new_freq);
-bool update_client_waiting_slot_opened(zappy_t *zappy, ntw_client_t *cl,
-    bool new_freq);
+bool update_client_not_connected(zappy_t *zappy, ntw_client_t *cl);
+bool update_client_waiting_team_name(zappy_t *zappy, ntw_client_t *cl);
+bool update_client_connected(zappy_t *zappy, ntw_client_t *cl);
+bool update_client_waiting_slot_opened(zappy_t *zappy, ntw_client_t *cl);
 
 // update by types in state connected
 
-bool update_ai_cmd(zappy_t *zappy, ntw_client_t *cl, bool new_freq);
+bool update_ai_cmd(zappy_t *zappy, ntw_client_t *cl);
 bool update_graphic_cmd(zappy_t *zappy, ntw_client_t *cl);
 
 #endif // INTERNAL_H
