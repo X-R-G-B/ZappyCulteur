@@ -9,11 +9,14 @@
 #include <cmath>
 #include "Trantorian.hpp"
 #include "Components/Sprite.hpp"
+#include "../Components/Color.hpp"
 
 namespace GUI {
     namespace Entities {
 
         static const std::string beePath = "src/GUI/assets/bees/beeLeft.png";
+        static const std::string bodySpriteSuffix = "BodySprite";
+        static const std::string levelTextSuffix = "LevelText";
         static const std::size_t beeLayer = 50;
         static const unsigned int beeWidth = 92;
         static const unsigned int beeHeight = 92;
@@ -37,9 +40,16 @@ namespace GUI {
             _speed(200)
         {
             initSprites();
+            createTextComponent();
         }
 
         void Trantorian::update(double deltaTime)
+        {
+            updatePosition(deltaTime);
+            updateComponents();
+        }
+
+        void Trantorian::updatePosition(double deltaTime)
         {
             if (_toGo.x != _position.x || _toGo.y != _position.y) {
                 auto direction = _toGo - _position;
@@ -53,10 +63,22 @@ namespace GUI {
                     _position += movement;
                 }
             }
+        }
+
+        void Trantorian::updateComponents()
+        {
             for (auto &comp : _components) {
-                if (comp->getType() == Components::CompType::SPRITE) {
-                    auto sprite = std::static_pointer_cast<GUI::Components::Sprite>(comp);
-                    sprite->setPosition({_position.x, _position.y});
+                switch (comp->getType()) {
+                    case Components::CompType::SPRITE: {
+                        auto sprite = std::static_pointer_cast<GUI::Components::Sprite>(comp);
+                        sprite->setPosition({_position.x, _position.y});
+                        break;
+                    }
+                    case Components::CompType::TEXT: {
+                        auto text = std::static_pointer_cast<GUI::Components::Text>(comp);
+                        text->setPosition({_position.x, _position.y - levelYOffset});
+                        break;
+                    }
                 }
             }
         }
@@ -64,6 +86,14 @@ namespace GUI {
         void Trantorian::setLevel(int level)
         {
             _level = level;
+            for (auto &comp : _components) {
+                if (comp->getType() == Components::CompType::TEXT) {
+                    auto text = std::static_pointer_cast<GUI::Components::Text>(comp);
+                    if (text->getId() == _id + levelTextSuffix) {
+                        text->setText(std::to_string(_level));
+                    }
+                }
+            }
         }
 
         const std::size_t &Trantorian::getLevel() const
@@ -91,7 +121,7 @@ namespace GUI {
             try {
                 _texture.loadFromFile(beePath);
                 _components.push_back(std::make_shared<GUI::Components::Sprite>(
-                    _id + "BodySprite",
+                    _id + bodySpriteSuffix,
                     _texture,
                     beeLayer,
                     _position,
@@ -102,6 +132,20 @@ namespace GUI {
             } catch (std::exception &e) {
                 std::cerr << e.what() << std::endl;
             }
+        }
+
+        void Trantorian::createTextComponent()
+        {
+            GUI::Color color(255, 255, 0, 255);
+
+            _components.push_back(std::make_shared<GUI::Components::Text>(
+                _id + levelTextSuffix,
+                std::to_string(_level),
+                Vector2F(_position.x, _position.y - levelYOffset),
+                color,
+                levelFontSize
+            ));
+            _entityCompType.push_back(Components::CompType::SPRITE);
         }
     }
 }

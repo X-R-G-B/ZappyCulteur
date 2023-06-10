@@ -13,22 +13,25 @@
 #include "tlcllists.h"
 #include "trantorien.h"
 #include "zappy.h"
+#include "internal.h"
+
+static bool (*funcs[CONNECTED + 1])(zappy_t *zappy, ntw_client_t *cl) = {
+    update_client_not_connected,
+    update_client_waiting_team_name,
+    update_client_waiting_slot_opened,
+    update_client_connected,
+};
 
 static bool update_client(zappy_t *zappy, ntw_client_t *cl, bool new_freq)
 {
     client_t *cc = NULL;
-    bool (*funcs[3])(zappy_t *zappy, ntw_client_t *cl, bool new_freq) = {
-        update_client_not_connected,
-        update_client_waiting_team_name,
-        update_client_connected
-    };
     bool status = false;
 
     if (cl == NULL) {
         return false;
     }
     cc = cl->data;
-    status = funcs[cc->state](zappy, cl, new_freq);
+    status = funcs[cc->state](zappy, cl);
     if (new_freq) {
         trantorien_reduce_freq(cc->cl.ai.trantorien, zappy, cl);
     }
@@ -45,16 +48,14 @@ static void update_clients_connections(ntw_t *ntw)
     }
     for (L_EACH(client, ntw->clients)) {
         cl = L_DATA(L_DATAT(ntw_client_t *, client));
-        if (cl == NULL || cl->type != AI) {
+        if (cl == NULL || cl->type != AI || cl->cl.ai.trantorien == NULL) {
             continue;
         }
         trantorien = cl->cl.ai.trantorien;
-        if (trantorien == NULL) {
+        if (trantorien->alive == true) {
             continue;
         }
-        if (trantorien->alive == false) {
-            list_append(ntw->clients_to_remove, client, NULL, NULL);
-        }
+        list_append(ntw->clients_to_remove, client->data, NULL, NULL);
     }
 }
 
@@ -66,6 +67,23 @@ static void check_ressources(zappy_t *zappy, bool new_freq)
     if (zappy->before_add_resources <= 0) {
         map_add_ressources(zappy->map);
         zappy->before_add_resources = NB_FREQ_BEFORE_RESOURCE;
+    }
+}
+
+static void update_trantoriens_available_food(list_t *trantoriens_available,
+    bool new_freq)
+{
+    trantorien_t *trantorien = NULL;
+
+    if (trantoriens_available == NULL || new_freq == false) {
+        return;
+    }
+    for (L_EACH(data, trantoriens_available)) {
+        trantorien = L_DATA(data);
+        if (trantorien == NULL) {
+            continue;
+        }
+        update_food(trantorien, NULL, new_freq);
     }
 }
 
@@ -82,6 +100,11 @@ bool loop(zappy_t *zappy, bool new_freq)
         }
         status = update_client(zappy, cl, new_freq) & status;
         update_clients_connections(zappy->ntw);
+        if (L_DATAT(client_t *, client)->type == AI) {
+            update_food(L_DATAT(client_t *, client)->cl.ai.trantorien,
+                cl, new_freq);
+        }
     }
+    update_trantoriens_available_food(zappy->trantoriens_available, new_freq);
     return !status;
 }
