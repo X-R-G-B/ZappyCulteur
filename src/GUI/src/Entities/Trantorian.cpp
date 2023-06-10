@@ -13,7 +13,6 @@
 
 namespace GUI {
     namespace Entities {
-
         static const std::string beePath = "src/GUI/assets/bees/beeLeft.png";
         static const std::string bodySpriteSuffix = "BodySprite";
         static const std::string levelTextSuffix = "LevelText";
@@ -37,14 +36,32 @@ namespace GUI {
             _level(level),
             _team(team),
             _toGo(position),
-            _speed(200)
+            _speed(beeSpeed),
+            _isDead(false),
+            _timeDispawn(beeAnimationDead)
         {
             initSprites();
             createTextComponent();
         }
 
+        void Trantorian::initDeathClock()
+        {
+            if (_deathClock == std::chrono::time_point<std::chrono::system_clock>{}) {
+                _deathClock = std::chrono::system_clock::now();
+            }
+        }
+
         void Trantorian::update(double deltaTime)
         {
+            if (_isDead) {
+                initDeathClock();
+                auto currentTime = std::chrono::system_clock::now();
+                auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - _deathClock);
+                if (_timeDispawn <= elapsed) {
+                    _isDispawned = true;
+                    return;
+                }
+            }
             updatePosition(deltaTime);
             updateComponents();
         }
@@ -114,6 +131,31 @@ namespace GUI {
         void Trantorian::setToGo(const Vector2F &toGo)
         {
             _toGo = toGo;
+        }
+
+        void Trantorian::setDead(bool dispawn)
+        {
+            _isDead = dispawn;
+        }
+
+        bool Trantorian::getDead()
+        {
+            return (_isDead);
+        }
+
+        bool Trantorian::getDispawned()
+        {
+            return (_isDispawned);
+        }
+
+        void Trantorian::setDispawned(bool dispawn)
+        {
+            _isDispawned = dispawn;
+        }
+
+        const std::chrono::seconds Trantorian::getDispawnTime()
+        {
+            return (_timeDispawn);
         }
 
         void Trantorian::initSprites()
