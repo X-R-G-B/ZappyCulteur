@@ -29,13 +29,15 @@ int command_inventory(trantorien_t *trantorien, zappy_t *zappy,
 
     if (trantorien == NULL || zappy == NULL || cl == NULL || action == NULL)
         return EXIT_FAILURE;
-    snprintf(buff, 511, "[");
+    circular_buffer_write(cl->write_to_outside, "[");
     for (int i = 0; i < MAX_NB_TR_RESSOURCES; i++) {
-        if (i != 0)
-            snprintf(buff, 511, ",");
+        if (i != 0) {
+            circular_buffer_write(cl->write_to_outside, ",");
+        }
         snprintf(buff, 511, "%s %d", ressources_name[i],
             trantorien->ressources[i]);
+        circular_buffer_write(cl->write_to_outside, buff);
     }
-    snprintf(buff, 511, "]\n");
+    circular_buffer_write(cl->write_to_outside, "]\n");
     return EXIT_SUCCESS;
 }
