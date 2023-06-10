@@ -24,7 +24,6 @@ namespace GUI {
 
             private:
                 void initSprites();
-                static constexpr char *eggPath = "src/GUI/assets/bees/egg.png";
                 sf::Texture _texture;
         };
     }

@@ -40,6 +40,8 @@ namespace GUI {
             })
         {}
 
+        static const std::string eggKey = "Egg_";
+
         void CommandHandler::update(const std::vector<std::string> &commands)
         {
             COMMAND_TYPE commandKey;
@@ -201,7 +203,7 @@ namespace GUI {
             if (!(ss >> cmd >> eggId >> playerId >> x >> y)) {
                 return (false);
             }
-            eggId = "Egg_" + eggId;
+            eggId = eggKey + eggId;
             if (_entityManager->doesEntityExist(eggId) == true) {
                 _entityManager->killEntityById(eggId);
             }
@@ -221,7 +223,7 @@ namespace GUI {
             if (!(ss >> cmd >> eggId)) {
                 return (false);
             }
-            eggId = "Egg_" + eggId;
+            eggId = eggKey + eggId;
             if (_entityManager->doesEntityExist(eggId) == true) {
                 _entityManager->killEntityById(eggId);
             } else {

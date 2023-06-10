@@ -8,14 +8,15 @@
 #include "Egg.hpp"
 #include "Sprite.hpp"
 
-static const int eggSize = 42;
-static const int eggScale = 1;
-static const int eggRotation = 0;
-static const int eggLayer = 100;
-static const std::string spriteIdSuffix = "_EggBody";
-
 namespace GUI {
     namespace Entities {
+        
+        static constexpr int eggSize = 42;
+        static constexpr int eggScale = 1;
+        static constexpr int eggRotation = 0;
+        static constexpr int eggLayer = 100;
+        static const std::string spriteIdSuffix = "_EggBody";
+        static const std::string eggPath = "src/GUI/assets/bees/egg.png";
 
         Egg::Egg(
             const std::string &id,
@@ -33,7 +34,7 @@ namespace GUI {
             initSprites();
         }
 
-        void Egg::update(double deltaTime)
+        void Egg::update(__attribute__((unused)) double deltaTime)
         {
         }
 
