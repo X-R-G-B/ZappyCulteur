@@ -76,6 +76,7 @@ namespace GUI {
     {
         clear();
         drawSprites();
+        drawTexts();
         _window.display();
     }
 
@@ -90,6 +91,19 @@ namespace GUI {
                 continue;
             }
             _window.draw(spritePtr->getSprite());
+        }
+    }
+
+    void SFML::drawTexts()
+    {
+        auto texts = _entityManager->getComponentsByType(Components::CompType::TEXT);
+
+        for (const auto &text : *texts) {
+            auto textPtr = std::static_pointer_cast<GUI::Components::Text>(text);
+            if (textPtr == nullptr) {
+                continue;
+            }
+            _window.draw(textPtr->getText());
         }
     }
 

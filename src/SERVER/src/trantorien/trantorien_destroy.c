@@ -21,6 +21,9 @@ void trantorien_destroy(trantorien_t *trantorien)
             trantorien->actions[i] = NULL;
         }
     }
+    if (trantorien->team_name != NULL) {
+        free(trantorien->team_name);
+    }
     memset(trantorien, 0, sizeof(trantorien_t));
     free(trantorien);
 }

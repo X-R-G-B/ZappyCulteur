@@ -27,6 +27,7 @@ struct zappy_s {
     args_t *args;
     size_t cur_tick;
     size_t before_add_resources;
+    list_t *trantoriens_available;
 };
 typedef struct zappy_s zappy_t;
 
@@ -87,19 +88,13 @@ int get_id(void);
 **/
 bool broadcast_graphic(ntw_t *ntw, const char *msg);
 
-// ---------------------------------------------------------------------------
-
-// Update in states
-
-bool update_client_not_connected(zappy_t *zappy, ntw_client_t *cl,
-    bool new_freq);
-bool update_client_waiting_team_name(zappy_t *zappy, ntw_client_t *cl,
-    bool new_freq);
-bool update_client_connected(zappy_t *zappy, ntw_client_t *cl, bool new_freq);
-
-// update by types in state connected
-
-bool update_ai_cmd(zappy_t *zappy, ntw_client_t *cl, bool new_freq);
-bool update_graphic_cmd(zappy_t *zappy, ntw_client_t *cl);
+/**
+** @brief Create a list of trantorien considered as egg
+**
+** @param args the cmd arguments
+**
+** @return the list of trantorien_t
+**/
+list_t *zappy_create_initial_egg(args_t *args);
 
 #endif

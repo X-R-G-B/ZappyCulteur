@@ -12,6 +12,7 @@
 #include <chrono>
 #include "AEntity.hpp"
 #include "Sprite.hpp"
+#include "Text.hpp"
 
 namespace GUI {
     namespace Entities {
@@ -39,7 +40,12 @@ namespace GUI {
             private:
                 static constexpr int beeSpeed = 200;
                 static constexpr int beeAnimationDead = 2;
+                static constexpr int levelFontSize = 30;
+                static constexpr float levelYOffset = 30;
                 void initDeathClock();
+                void createTextComponent();
+                void updatePosition(double deltaTime);
+                void updateComponents();
                 void initSprites();
                 size_t _level;
                 std::string _team;
