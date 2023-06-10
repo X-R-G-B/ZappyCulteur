@@ -8,8 +8,8 @@
 #ifndef CLIENT_H_
     #define CLIENT_H_
 
-    #include "trantorien.h"
     #include <stdbool.h>
+    #include "trantorien.h"
     #define NAME_MAX 200
 
 enum client_type_e {

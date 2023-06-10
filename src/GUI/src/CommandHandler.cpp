@@ -20,7 +20,8 @@ namespace GUI {
             {"bct", COMMAND_TYPE::MAP_CONTENT},
             {"pnw", COMMAND_TYPE::NEW_PLAYER},
             {"pnw", COMMAND_TYPE::NEW_PLAYER},
-            {"ppo", COMMAND_TYPE::PLAYER_POSITION}
+            {"ppo", COMMAND_TYPE::PLAYER_POSITION},
+            {"pdi", COMMAND_TYPE::PLAYER_DEATH}
         };
 
         CommandHandler::CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager)
@@ -30,8 +31,11 @@ namespace GUI {
                 {COMMAND_TYPE::MAP_CONTENT, &CommandHandler::setRessources},
                 {COMMAND_TYPE::PLAYER_POSITION, &CommandHandler::setPlayerPosition},
                 {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand},
+                {COMMAND_TYPE::PLAYER_DEATH, &CommandHandler::setPlayerDeath}
             })
         {}
+
+        static const std::string playerKey = "Player_";
 
         void CommandHandler::update(const std::vector<std::string> &commands)
         {
@@ -96,7 +100,7 @@ namespace GUI {
                 || orientation > Entities::EntityOrientation::LEFT) {
                 return (false);
             }
-            id = "Player_" + id;
+            id = playerKey + id;
             if (_entityManager->doesEntityExist(id) == true) {
                 _entityManager->killEntityById(id);
             }
@@ -160,7 +164,7 @@ namespace GUI {
                 || orientation > Entities::EntityOrientation::LEFT) {
                 return (false);
             }
-            id = "Player_" + id;
+            id = playerKey + id;
             if (_entityManager->doesEntityExist(id) == false) {
                 return (false);
             }
@@ -170,6 +174,24 @@ namespace GUI {
                 enumOrientation = static_cast<Entities::EntityOrientation>(orientation);
                 trantorian->setOrientation(enumOrientation);
                 trantorian->setToGo(Vector2F(x * TILE_SIZE, y * TILE_SIZE));
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return (false);
+            }
+            return (true);
+        }
+
+        bool CommandHandler::setPlayerDeath(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string id;
+
+            ss >> cmd >> id;
+            try {
+                auto entity = _entityManager->getEntityById(playerKey + id);
+                auto trantorian = std::static_pointer_cast<Entities::Trantorian>(entity);
+                trantorian->setDead(true);
             } catch (const Entities::EntitiesManagerException &e) {
                 std::cerr << e.what() << std::endl;
                 return (false);
