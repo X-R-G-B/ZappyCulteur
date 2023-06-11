@@ -22,13 +22,20 @@ static const int direction_to_x[4][2] = {
     {-1, 0}
 };
 
+// TODO: function to remove trantorien from last pos from map tile
+// TODO: and put it on the list of the new position tile
+
 int command_move(trantorien_t *trantorien, zappy_t *zappy,
                         ntw_client_t *cl, action_t *action)
 {
+    int last[2] = {0, 0};
+
     if (trantorien == NULL || zappy == NULL || cl == NULL || action == NULL) {
         circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
         return EXIT_FAILURE;
     }
+    last[0] = trantorien->x;
+    last[1] = trantorien->y;
     trantorien->x += direction_to_x[trantorien->direction - 1][0];
     trantorien->y += direction_to_x[trantorien->direction - 1][1];
     if (trantorien->x < 0)
