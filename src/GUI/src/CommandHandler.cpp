@@ -21,7 +21,9 @@ namespace GUI {
             {"pnw", COMMAND_TYPE::NEW_PLAYER},
             {"pnw", COMMAND_TYPE::NEW_PLAYER},
             {"ppo", COMMAND_TYPE::PLAYER_POSITION},
-            {"pdi", COMMAND_TYPE::PLAYER_DEATH}
+            {"pdi", COMMAND_TYPE::PLAYER_DEATH},
+            {"pie", COMMAND_TYPE::INCANTATION_END},
+            {"pic", COMMAND_TYPE::INCANTATION_START},
         };
 
         CommandHandler::CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager)
@@ -31,7 +33,9 @@ namespace GUI {
                 {COMMAND_TYPE::MAP_CONTENT, &CommandHandler::setRessources},
                 {COMMAND_TYPE::PLAYER_POSITION, &CommandHandler::setPlayerPosition},
                 {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand},
-                {COMMAND_TYPE::PLAYER_DEATH, &CommandHandler::setPlayerDeath}
+                {COMMAND_TYPE::PLAYER_DEATH, &CommandHandler::setPlayerDeath},
+                {COMMAND_TYPE::INCANTATION_START, &CommandHandler::startIncantation},
+                {COMMAND_TYPE::INCANTATION_END, &CommandHandler::endIncantation},
             })
         {}
 
@@ -139,8 +143,11 @@ namespace GUI {
             }
 
             auto floor = std::static_pointer_cast<GUI::Entities::Floor>(entity);
-            ss >> cmd >> x >> y >> ressources[0].first >> ressources[1].first >> ressources[2].first >> ressources[3].first
-                >> ressources[4].first >> ressources[5].first >> ressources[6].first;
+            if (!(ss >> cmd >> x >> y >> ressources[0].first >> ressources[1].first >>
+                ressources[2].first >> ressources[3].first >> ressources[4].first >>
+                ressources[5].first >> ressources[6].first)) {
+                return (false);
+            }
             for (const auto &it : ressources) {
                 if (it.first > 0) {
                     floor->createRessources(x, y, it.second, it.first);
@@ -194,6 +201,40 @@ namespace GUI {
                 trantorian->setDead(true);
             } catch (const Entities::EntitiesManagerException &e) {
                 std::cerr << e.what() << std::endl;
+                return (false);
+            }
+            return (true);
+        }
+
+        bool CommandHandler::startIncantation(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            int x = 0;
+            int y = 0;
+            std::string level;
+            std::string id;
+            std::vector<std::string> playerIds;
+
+            
+            if (!(ss >> cmd >> x >> y >> level)) {
+                return (false);
+            }
+            while (ss >> id) {
+                playerIds.push_back(id);
+            }
+            return (true);
+        }
+
+        bool CommandHandler::endIncantation(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            int x = 0;
+            int y = 0;
+            std::string result;
+
+            if (!(ss >> cmd >> x >> y >> result)) {
                 return (false);
             }
             return (true);

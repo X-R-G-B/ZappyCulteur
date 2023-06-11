@@ -129,6 +129,10 @@ namespace GUI {
 
             bool setPlayerDeath(const std::string &command);
 
+            bool startIncantation(const std::string &command);
+
+            bool endIncantation(const std::string &command);
+
             bool unknowCommand(const std::string &command);
 
             std::shared_ptr<Entities::EntitiesManager> _entityManager;
