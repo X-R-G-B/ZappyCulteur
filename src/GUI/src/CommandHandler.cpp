@@ -223,6 +223,17 @@ namespace GUI {
             while (ss >> id) {
                 playerIds.push_back(id);
             }
+            try {
+                // Create a new incantation entity and add it to the entity manager
+                while (!playerIds.empty()) {
+                    auto trantorian = _entityManager->getEntityById(playerKey + id);
+                    // Add the trantorian to the newly created invocation entity
+                    playerIds.pop_back();
+                }
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return (false);
+            }
             return (true);
         }
 
@@ -237,6 +248,8 @@ namespace GUI {
             if (!(ss >> cmd >> x >> y >> result)) {
                 return (false);
             }
+            // Get the incantation entity and call the method that end properly the incantation animation
+            // Delete incantation
             return (true);
         }
 
