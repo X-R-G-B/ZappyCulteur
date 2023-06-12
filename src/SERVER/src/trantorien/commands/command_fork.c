@@ -6,14 +6,9 @@
 */
 
 #include <stddef.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include "ntw.h"
-#include "tlcllists.h"
 #include "zappy.h"
-#include "trantorien.h"
-#include "map.h"
-#include "client.h"
 #include "command_reponses.h"
 
 int command_fork(trantorien_t *trantorien, zappy_t *zappy,
@@ -27,8 +22,9 @@ ntw_client_t *cl, action_t *action)
     }
     new_trantorien = trantorien_init(trantorien->team_name,
         zappy->map->width, zappy->map->height);
-    if (!new_trantorien || list_append(zappy->trantoriens_available,
-           new_trantorien, (void (*)(void *)) &trantorien_destroy, NULL) == NULL) {
+    if (!new_trantorien ||
+        list_append(zappy->trantoriens_available, new_trantorien,
+        (void (*)(void *)) &trantorien_destroy, NULL) == NULL) {
         circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
         return EXIT_FAILURE;
     }
