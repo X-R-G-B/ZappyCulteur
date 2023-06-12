@@ -141,7 +141,8 @@ SRC_TRNT_CMD	:=															\
 							command_inventory.c								\
 							command_move.c									\
 							command_turn.c									\
-							command_fork.c
+							command_fork.c									\
+							command_eject.c
 SRC_TRNT_CMD	:=			$(addprefix commands/, $(SRC_TRNT_CMD))
 
 SRC_TRNT		:=															\
