@@ -137,7 +137,9 @@ class IA:
 
     def loadTree(self):
         try:
-            self.levelTree = joblib.load("src/AI/joblib/level" + str(self.level) + ".joblib")
+            self.levelTree = joblib.load(
+                "src/AI/joblib/level" + str(self.level) + ".joblib"
+            )
         except FileNotFoundError:
             raise Exception("Level not found")
 
@@ -454,7 +456,7 @@ class IA:
             self.level += 1
             self.loadTree()
         print("--> End elevation <--")
-        
+
     def sendBroadcast(self, message: str, toSend: List[int] = []):
         toSendStr = "|"
         if len(toSend) == 0:
@@ -463,9 +465,7 @@ class IA:
             for id_ in toSend:
                 toSendStr += " " + str(id_)
         codeStr: str = Message.CODE.value
-        completeMessage = (
-            codeStr + "|" + str(self.id) + "|" + message + "|" + toSendStr
-        )
+        completeMessage = codeStr + "|" + str(self.id) + "|" + message + "|" + toSendStr
         self.requestClient(Command.BROADCAST, completeMessage)
 
     def isMyIdInList(self, list_: List[int]) -> bool:
@@ -556,7 +556,10 @@ class IA:
         print("--> Wait participants <--")
         readyParticipants = 0
         self.inventory()
-        while readyParticipants < self.levelParticipantsNb[self.level] and self.inputTree["mfood"][0] >= 13:
+        while (
+            readyParticipants < self.levelParticipantsNb[self.level]
+            and self.inputTree["mfood"][0] >= 13
+        ):
             self.takeClosestFood()
             res = self.checkBroadcastResponse()
             if res[0] != 0 and self.isMyIdInList(res[2]) and res[1] == Message.OK.value:
@@ -581,7 +584,7 @@ class IA:
         res: Tuple[int, str, List[int]] = self.checkBroadcastResponse()
         while res[1] == "":
             res = self.checkBroadcastResponse()
-        if (res[1] == Message.KO.value):
+        if res[1] == Message.KO.value:
             return
         participantsId = self.checkReceivedMessage(participantsId, res)
         if len(participantsId) == self.levelParticipantsNb[self.level - 2]:
