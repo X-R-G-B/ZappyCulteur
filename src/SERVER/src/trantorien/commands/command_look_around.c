@@ -9,9 +9,7 @@
 #include <stdlib.h>
 #include "ntw.h"
 #include "zappy.h"
-#include "trantorien.h"
 #include "internal.h"
-#include "map.h"
 
 static const char *ressources_name[MAX_NB_RESOURCES] = {
     "food",
@@ -21,17 +19,17 @@ static const char *ressources_name[MAX_NB_RESOURCES] = {
     "mendiane",
     "phiras",
     "thystame",
-    "player",
-    "egg"
+    "player"
 };
 
 static void send_tile_single_ressource(ntw_client_t *cl, int ressources,
-    int ressource_nbr)
+    int ressource_nbr, bool is_last)
 {
     for (int i = 0; i < ressource_nbr; i++) {
         circular_buffer_write(cl->write_to_outside,
             ressources_name[ressources]);
-        circular_buffer_write(cl->write_to_outside, " ");
+        if (is_last == false)
+            circular_buffer_write(cl->write_to_outside, " ");
     }
 }
 
@@ -43,7 +41,8 @@ void send_tile_ressources(ntw_client_t *cl, map_tile_t *tile, int message_state)
         circular_buffer_write(cl->write_to_outside, ",");
     }
     for (int i = 0; i < MAX_RESSOURCE; i++) {
-        send_tile_single_ressource(cl, i, tile->ressources[i]);
+        send_tile_single_ressource(cl, i, tile->ressources[i],
+            (i == MAX_RESSOURCE - 1));
     }
     if (message_state == 1)
         circular_buffer_write(cl->write_to_outside, "]\n");
