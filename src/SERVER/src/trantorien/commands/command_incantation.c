@@ -9,11 +9,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "ntw.h"
-#include "tlcllists.h"
 #include "zappy.h"
-#include "trantorien.h"
-#include "map.h"
 #include "client.h"
+#include "command_reponses.h"
 
 static const int level_ressources[LVL_MAX - 1][PLAYER] = {
     {1, 0, 0, 0, 0, 0},

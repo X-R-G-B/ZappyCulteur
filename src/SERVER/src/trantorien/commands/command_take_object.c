@@ -10,8 +10,7 @@
 #include <stdio.h>
 #include "ntw.h"
 #include "zappy.h"
-#include "trantorien.h"
-#include "map.h"
+#include "command_reponses.h"
 
 static void send_broadcast(enum ressource_e obj, ntw_t *ntw, int player_id)
 {
@@ -33,7 +32,7 @@ int command_take_object(trantorien_t *trantorien, zappy_t *zappy,
             action->param.object < PLAYER) {
         zappy->map[i].tiles->ressources[action->param.object] -= 1;
         trantorien->ressources[action->param.object] += 1;
-        circular_buffer_write(cl->write_to_outside, "ok\n");
+        circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
         send_broadcast(action->param.object, zappy->ntw, trantorien->id);
     } else {
         circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
