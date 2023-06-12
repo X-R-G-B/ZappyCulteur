@@ -157,13 +157,9 @@ class IA:
             return
 
     def checkElevationParticipant(self):
-<<<<<<< Updated upstream
-        broadcasts = self.checkBroadcast()
-=======
         print("--> Check elevation participant <--")
         broadcasts: List[Tuple[int, str, List[int], int]] = self.checkBroadcast()
         response: List[int] = []
->>>>>>> Stashed changes
         if len(broadcasts) == 0:
             return
         print("Start : ")
@@ -175,11 +171,6 @@ class IA:
             ):
                 print("OK | ", end="")
                 self.emitter = broadcast_[0]
-<<<<<<< Updated upstream
-                self.sendBroadcast(Message.OK.value, List[self.emitter])
-            else:
-                self.sendBroadcast(Message.KO.value, List[broadcast_[0]])
-=======
                 response.append(broadcast_[0])
                 self.sendBroadcast(Message.OK.value, [self.emitter])
             elif broadcast_[0] in response:
@@ -190,7 +181,6 @@ class IA:
                 response.append(broadcast_[0])
                 self.sendBroadcast(Message.KO.value, [broadcast_[0]])
         print("Emitter : " + str(self.emitter))
->>>>>>> Stashed changes
         if self.emitter != 0:
             print("\nElevation Participant")
             self.elevationParticipant()
@@ -233,13 +223,8 @@ class IA:
         broadcasts = self.checkBroadcast()
         res: List[Tuple[int, str, List[int], int]] = []
         for broadcast in broadcasts:
-<<<<<<< Updated upstream
-            if broadcast[1].find(Message.L2.value)[:-1] == -1:
-                res += broadcast
-=======
             if broadcast[1].find(Message.L2.value[:-1]) == -1:
                 res.append(broadcast)
->>>>>>> Stashed changes
             else:
                 print("KO to new elevation")
                 self.sendBroadcast(Message.KO.value, [broadcast[0]])
@@ -508,9 +493,6 @@ class IA:
         res = self.checkBroadcastResponse()
         while res[1] == "":
             res = self.checkBroadcastResponse()
-<<<<<<< Updated upstream
-        self.sendBroadcast(Message.OK.value, List[self.emitter])
-=======
         while res[3] != 0 and res[1] == "come":
             print("res[3] = " + str(res[3]))
             self.sendAllCommand(self.cmdDirections[res[3]])
@@ -520,7 +502,6 @@ class IA:
         print("--> End join Emitter <--")
         self.look()
         self.sendBroadcast(Message.OK.value, [self.emitter])
->>>>>>> Stashed changes
         out = self.client.output()
         while out == "":
             out = self.client.output()
