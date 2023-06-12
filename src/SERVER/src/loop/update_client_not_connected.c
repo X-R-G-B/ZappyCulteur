@@ -11,8 +11,7 @@
 #include "client.h"
 #include "zappy.h"
 
-bool update_client_not_connected(__attribute__((unused)) zappy_t *zappy,
-    ntw_client_t *cl)
+bool update_client_not_connected(zappy_t *zappy, ntw_client_t *cl)
 {
     client_t *cc = NULL;
 
@@ -20,6 +19,8 @@ bool update_client_not_connected(__attribute__((unused)) zappy_t *zappy,
         return true;
     }
     cc = cl->data;
+    cc->height = zappy->args->height;
+    cc->width = zappy->args->width;
     circular_buffer_write(cl->write_to_outside, "WELCOME\n");
     cc->state = WAITING_TEAM_NAME;
     printf("%s\n", "INFO: new connection, sending welcome...");

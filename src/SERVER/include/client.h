@@ -41,6 +41,8 @@ struct client_s {
     enum client_type_e type;
     char name[NAME_MAX];
     int id;
+    int width;
+    int height;
     union {
         struct client_graphic_s graphic;
         struct client_ai_s ai;

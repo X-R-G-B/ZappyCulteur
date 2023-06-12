@@ -23,7 +23,8 @@ LDFLAGS			=															\
 							-L $(LIBS_DIR)/circularbuffer/					\
 							-l circularbuffer								\
 							-L $(LIBS_DIR)/tinylibc/						\
-							-l tinylibc
+							-l tinylibc										\
+							-l m
 
 ECHO			=			echo -e
 
@@ -132,6 +133,9 @@ SRC_TRNT_BRO	:=															\
 SRC_TRNT_BRO	:=			$(addprefix broadcasts/, $(SRC_TRNT_BRO))
 
 SRC_TRNT_CMD	:=															\
+							broadcast/command_broadcast.c					\
+							broadcast/is_in_box.c							\
+							broadcast/send_broadcast_pos.c					\
 							command_set_object_down.c						\
 							command_incantation.c							\
 							command_take_object.c							\
