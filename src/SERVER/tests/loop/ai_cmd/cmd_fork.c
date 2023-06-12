@@ -19,13 +19,13 @@
 static void set_up_tests(zappy_t **zappy, int nb_client, int port)
 {
     args_t args = {
-    .clients_per_teams = 1,
-    .teams_name = list_create(),
-    .freq = 1,
-    .height = 10,
-    .width = 10,
-    .is_ok = true,
-    .port = port,
+        .clients_per_teams = 1,
+        .teams_name = list_create(),
+        .freq = 1,
+        .height = 10,
+        .width = 10,
+        .is_ok = true,
+        .port = port,
     };
     *zappy = zappy_init(&args);
     ntw_client_t *client;

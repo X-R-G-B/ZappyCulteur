@@ -173,6 +173,6 @@ int command_inventory(trantorien_t *trantorien, zappy_t *zappy,
 ** @return
 **/
 int command_fork(trantorien_t *trantorien, zappy_t *zappy,
-ntw_client_t *cl, action_t *action);
+    ntw_client_t *cl, action_t *action);
 
 #endif
