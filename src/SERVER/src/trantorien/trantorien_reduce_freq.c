@@ -10,9 +10,9 @@
 #include "circular_buffer.h"
 #include "ntw.h"
 #include "zappy.h"
-#include "trantorien.h"
 #include "internal.h"
 #include "commands/internal.h"
+#include "command_reponses.h"
 
 static int (*trantorien_commands[MAX_CMD_CODE])(trantorien_t *, zappy_t *,
     ntw_client_t *, action_t *) = {
@@ -22,7 +22,7 @@ static int (*trantorien_commands[MAX_CMD_CODE])(trantorien_t *, zappy_t *,
     command_look_around,
     command_inventory,
     NULL,
-    NULL,
+    command_fork,
     NULL,
     command_take_object,
     command_set_object_down,
