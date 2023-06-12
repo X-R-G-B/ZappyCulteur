@@ -164,4 +164,15 @@ int command_turn_left(trantorien_t *trantorien, zappy_t *zappy,
 int command_inventory(trantorien_t *trantorien, zappy_t *zappy,
                         ntw_client_t *cl, action_t *action);
 
+/**
+** @brief fork command, create a new trantorien
+** @param trantorien
+** @param zappy
+** @param cl
+** @param action
+** @return
+**/
+int command_fork(trantorien_t *trantorien, zappy_t *zappy,
+    ntw_client_t *cl, action_t *action);
+
 #endif

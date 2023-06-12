@@ -1,4 +1,5 @@
 from enum import Enum
+import time
 from typing import List, Tuple
 from zappy_ia.Client import Client
 from typing import Union
@@ -94,12 +95,15 @@ class IA:
     def checkNeededChilds(self):
         while self.neededChild > 0:
             if int(self.requestClient(Command.CONNECT_NBR.value).split("\n")[0]) > 0:
+                print("newIA")
                 self.connectNewIA()
-            elif self.inputTree["mfood"] > 2:
+            elif self.inputTree["mfood"][0] > 2:
+                print("newEgg")
                 self.createEgg()
             else:
                 break
             self.neededChild -= 1
+            print("neededchilds: " + str(self.neededChild))
 
     def run(self):
         continueRun = True
@@ -223,9 +227,11 @@ class IA:
         self.pid = os.fork()
         if self.pid == 0:
             self.build(0)
+        time.sleep(0.5)
 
     def createEgg(self):
-        self.requestClient("Fork\n")
+        self.requestClient(Command.FORK.value)
+        print("Slots: " + self.requestClient(Command.CONNECT_NBR.value).split("\n")[0])
         self.connectNewIA()
 
     def takeElementInLastLook(self, element: Element, pos: int):

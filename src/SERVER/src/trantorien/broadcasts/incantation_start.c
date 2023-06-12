@@ -9,11 +9,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "circular_buffer.h"
-#include "tlcllists.h"
 #include "zappy.h"
-#include "ntw.h"
-#include "trantorien.h"
 #include "client.h"
+#include "command_reponses.h"
 
 static void process_start_incant_trnt(ntw_client_t *cl, list_t *list_trnt,
     trantorien_t *trnt, trantorien_t *ref_trnt)

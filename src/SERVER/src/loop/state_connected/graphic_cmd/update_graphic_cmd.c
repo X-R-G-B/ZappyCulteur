@@ -11,8 +11,7 @@
 #include "circular_buffer.h"
 #include "internal.h"
 #include "tlcstrings.h"
-#include "tlcutils.h"
-#include "zappy.h"
+#include "command_reponses.h"
 
 static const char cmds_graphic[NB_CMD_AVAILIBLE][6] = {
     "msz\n",

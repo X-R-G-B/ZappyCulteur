@@ -75,7 +75,7 @@ Test(loop_cmd_ai_look_around, look_from_north_level_1)
     while (circular_buffer_is_read_ready(client->write_to_outside) == false) {
         cr_assert_eq(loop(zappy, true), false);
     }
-    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "[food linemate deraumere sibur mendiane phiras thystame player egg ,,food linemate deraumere sibur mendiane phiras thystame player egg ,]\n");
+    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "[food linemate deraumere sibur mendiane phiras thystame player,,food linemate deraumere sibur mendiane phiras thystame player,]\n");
 }
 
 Test(loop_cmd_ai_look_around, look_from_east_level_1) {
@@ -99,7 +99,7 @@ Test(loop_cmd_ai_look_around, look_from_east_level_1) {
     while (circular_buffer_is_read_ready(client->write_to_outside) == false) {
         cr_assert_eq(loop(zappy, true), false);
     }
-    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "[food linemate deraumere sibur mendiane phiras thystame player egg ,,,]\n");
+    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "[food linemate deraumere sibur mendiane phiras thystame player,,,]\n");
 }
 
 Test(loop_cmd_ai_look_around, look_from_south_level_1)
@@ -124,7 +124,33 @@ Test(loop_cmd_ai_look_around, look_from_south_level_1)
     while (circular_buffer_is_read_ready(client->write_to_outside) == false) {
         cr_assert_eq(loop(zappy, true), false);
     }
-    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "[food linemate deraumere sibur mendiane phiras thystame player egg ,,food linemate deraumere sibur mendiane phiras thystame player egg ,]\n");
+    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "[food linemate deraumere sibur mendiane phiras thystame player,,food linemate deraumere sibur mendiane phiras thystame player,]\n");
+}
+
+Test(loop_cmd_ai_look_around, look_from_south_level_1_test2)
+{
+    zappy_t *zappy = NULL;
+
+    set_up_tests(&zappy, 1, 9124);
+    ntw_client_t *client = L_DATA(zappy->ntw->clients->start);
+    cr_assert_not_null(client);
+    client_t *c = L_DATA(client);
+    cr_assert_not_null(c);
+    c->cl.ai.trantorien->x = 5;
+    c->cl.ai.trantorien->y = 9;
+    c->cl.ai.trantorien->level = 1;
+    c->cl.ai.trantorien->direction = SOUTH;
+    for (int i = 0; i < zappy->map->width * zappy->map->height; i++) {
+        for (int j = 0; j < MAX_NB_RESOURCES; j++) {
+            zappy->map->tiles[i].ressources[j] = (i % 2 == 0) ? 1 : 0;
+        }
+    }
+    circular_buffer_write(client->read_from_outside, "Look\n");
+    while (circular_buffer_is_read_ready(client->write_to_outside) == false) {
+        cr_assert_eq(loop(zappy, true), false);
+    }
+    const char *res = circular_buffer_read(client->write_to_outside);
+    cr_assert_str_eq(res, "[,food linemate deraumere sibur mendiane phiras thystame player,,food linemate deraumere sibur mendiane phiras thystame player]\n");
 }
 
 Test(loop_cmd_ai_look_around, look_from_west_level_1)
@@ -149,5 +175,5 @@ Test(loop_cmd_ai_look_around, look_from_west_level_1)
     while (circular_buffer_is_read_ready(client->write_to_outside) == false) {
         cr_assert_eq(loop(zappy, true), false);
     }
-    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "[food linemate deraumere sibur mendiane phiras thystame player egg ,,,]\n");
+    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "[food linemate deraumere sibur mendiane phiras thystame player,,,]\n");
 }
