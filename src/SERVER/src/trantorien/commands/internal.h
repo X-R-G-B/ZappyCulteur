@@ -164,4 +164,17 @@ int command_turn_left(trantorien_t *trantorien, zappy_t *zappy,
 int command_inventory(trantorien_t *trantorien, zappy_t *zappy,
                         ntw_client_t *cl, action_t *action);
 
+
+/**
+** @brief broadcast command, send message to other trnt
+**
+** @param trantorien
+** @param zappy
+** @param cl
+** @param action
+** @return int
+**/
+int command_broadcast(trantorien_t *trnt, zappy_t *zappy,
+    ntw_client_t *cl, action_t *action);
+
 #endif
