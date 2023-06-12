@@ -96,6 +96,8 @@ namespace GUI {
                         text->setPosition({_position.x, _position.y - levelYOffset});
                         break;
                     }
+                    default:
+                        break;
                 }
             }
         }
