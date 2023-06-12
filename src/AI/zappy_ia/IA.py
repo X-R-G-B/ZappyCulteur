@@ -73,7 +73,7 @@ class IA:
         }
 
         try:
-            self.clf = joblib.load("joblib/food.joblib")
+            self.clf = joblib.load("src/AI/joblib/food.joblib")
         except FileNotFoundError:
             print("File joblib not found", file=sys.stderr)
             self.client.stopClient()

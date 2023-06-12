@@ -10,7 +10,7 @@
 
     #include "tlcllists.h"
 
-    #define MAX_NB_RESOURCES 7
+    #define MAX_NB_RESOURCES 8
 
 enum ressource_e {
     FOOD = 0,
@@ -20,18 +20,13 @@ enum ressource_e {
     MENDIANE = 4,
     PHIRAS = 5,
     THYSTAME = 6,
+    PLAYER = 7,
     MAX_RESSOURCE = MAX_NB_RESOURCES,
 };
 
 struct map_tile_s {
     list_t *trantors;
-    int nb_food;
-    int nb_linemate;
-    int nb_deraumere;
-    int nb_sibur;
-    int nb_mendiane;
-    int nb_phiras;
-    int nb_thystame;
+    int ressources[MAX_NB_RESOURCES];
 };
 typedef struct map_tile_s map_tile_t;
 
