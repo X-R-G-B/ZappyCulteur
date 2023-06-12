@@ -14,19 +14,21 @@
 #include "tlcutils.h"
 #include "zappy.h"
 
-static const char cmds_graphic[4][6] = {
+static const char cmds_graphic[NB_CMD_AVAILIBLE][6] = {
     "msz\n",
     "mct\n",
     "bct",
+    "ppo",
     "",
 };
 
 static bool
-(*graphic_funcs[4])
+(*graphic_funcs[NB_CMD_AVAILIBLE])
 (zappy_t *zappy, ntw_client_t *cl, char **) = {
     cmd_msz,
     cmd_mct,
     cmd_bct,
+    cmd_ppo,
     NULL,
 };
 
@@ -41,7 +43,7 @@ static bool update_cmd(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
         }
     }
     if (status == false) {
-        circular_buffer_write(cl->write_to_outside, "ko\n");
+        circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
         status = true;
     }
     return status;

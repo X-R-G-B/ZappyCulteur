@@ -6,9 +6,7 @@
 */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include "circular_buffer.h"
-#include "tlcstdlibs.h"
 #include "zappy.h"
 #include "internal.h"
 

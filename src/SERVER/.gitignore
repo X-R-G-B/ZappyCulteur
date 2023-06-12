@@ -1,1 +1,4 @@
 zappy_server_bin
+*.gcno
+*.gcda
+bin_test

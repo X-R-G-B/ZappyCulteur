@@ -40,9 +40,10 @@ class IA:
         self.port: int = port
         self.machineName: str = machineName
         self.teamName: str = teamName
-        self.build()
+        self.build(7)
 
-    def build(self):
+    def build(self, neededChild: int = 0):
+        self.neededChild = neededChild 
         self.mapSize: Tuple[int, int] = [0, 0]
         self.clientNb: int = 0
         self.level: int = 1
@@ -73,7 +74,7 @@ class IA:
         }
 
         try:
-            self.clf = joblib.load("joblib/food.joblib")
+            self.clf = joblib.load("src/AI/joblib/food.joblib")
         except FileNotFoundError:
             print("File joblib not found", file=sys.stderr)
             self.client.stopClient()
@@ -90,11 +91,22 @@ class IA:
         self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
         self.run()
 
+    def checkNeededChilds(self):
+        while self.neededChild > 0:
+            if int(self.requestClient(Command.CONNECT_NBR.value).split("\n")[0]) > 0:
+                self.connectNewIA()
+            elif self.inputTree["mfood"] > 2:
+                self.createEgg()
+            else:
+                break
+            self.neededChild -= 1
+
     def run(self):
         continueRun = True
         try:
             while continueRun:
                 self.inventory()
+                self.checkNeededChilds()
                 self.lookForTree()
                 predictions = self.clf.predict(pd.DataFrame(self.inputTree))
                 for prediction in predictions:
@@ -207,11 +219,14 @@ class IA:
                     self.requestClient(Command.FORWARD)
                 return
 
-    def reproduction(self):
-        self.requestClient("Fork\n")
+    def connectNewIA(self):
         self.pid = os.fork()
         if self.pid == 0:
-            self.build()
+            self.build(0)
+
+    def createEgg(self):
+        self.requestClient("Fork\n")
+        self.connectNewIA()
 
     def takeElementInLastLook(self, element: Element, pos: int):
         """

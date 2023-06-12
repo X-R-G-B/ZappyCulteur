@@ -10,6 +10,7 @@ TARGET		:=		libcircularbuffer.a
 SRC			:=		src/create.c		\
 					src/destroy.c		\
 					src/read.c			\
+					src/read_multiple.c	\
 					src/write.c			\
 					src/empty.c
 
