@@ -22,6 +22,8 @@ ntw_client_t *cl, action_t *action)
     }
     new_trantorien = trantorien_init(trantorien->team_name,
         zappy->map->width, zappy->map->height);
+    new_trantorien->x = trantorien->x;
+    new_trantorien->y = trantorien->y;
     if (!new_trantorien ||
         list_append(zappy->trantoriens_available, new_trantorien,
         (void (*)(void *)) &trantorien_destroy, NULL) == NULL) {
