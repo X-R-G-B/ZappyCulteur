@@ -38,7 +38,8 @@ namespace GUI {
             _toGo(position),
             _speed(beeSpeed),
             _isDead(false),
-            _timeDispawn(beeAnimationDead)
+            _timeDispawn(beeAnimationDead),
+            _isDispawned(false)
         {
             initSprites();
             createTextComponent();

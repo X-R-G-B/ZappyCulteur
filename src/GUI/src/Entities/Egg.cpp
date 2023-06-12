@@ -34,7 +34,7 @@ namespace GUI {
             initSprites();
         }
 
-        void Egg::update(__attribute__((unused)) double deltaTime)
+        void Egg::update(double deltaTime)
         {
         }
 
