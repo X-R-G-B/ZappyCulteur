@@ -171,7 +171,7 @@ int command_inventory(trantorien_t *trantorien, zappy_t *zappy,
 ** @param zappy
 ** @param cl
 ** @param action
-** @return
+** @return int
 **/
 int command_fork(trantorien_t *trantorien, zappy_t *zappy,
     ntw_client_t *cl, action_t *action);
@@ -183,7 +183,7 @@ int command_fork(trantorien_t *trantorien, zappy_t *zappy,
 ** @param zappy
 ** @param cl
 ** @param action
-** @return
+** @return int
 **/
 int command_eject(trantorien_t *trantorien, zappy_t *zappy,
 ntw_client_t *cl, action_t *action);

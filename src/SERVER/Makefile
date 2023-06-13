@@ -78,6 +78,7 @@ SRC_LOOP_AICMD	=															\
 							cmd_right.c										\
 							cmd_set.c										\
 							cmd_take.c										\
+							cmd_connect_nbr.c								\
 							update_ai_cmd.c
 SRC_LOOP_AICMD	:=			$(addprefix ai_cmd/, $(SRC_LOOP_AICMD))
 
