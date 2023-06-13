@@ -24,7 +24,7 @@ namespace GUI {
             _font.loadFromFile(FONT_PATH);
             _text.setString(text);
             _text.setPosition(position.x, position.y);
-            _text.setColor(sf::Color::White);
+            _text.setFillColor(sf::Color::White);
             _text.setFont(_font);
             _text.setCharacterSize(size);
         }
@@ -53,7 +53,7 @@ namespace GUI {
         void Text::setColor(const Color &color)
         {
             _color = color;
-            _text.setColor(
+            _text.setFillColor(
                 sf::Color(
                     color.getRed(),
                     color.getGreen(),

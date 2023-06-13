@@ -127,6 +127,20 @@ namespace GUI {
              */
             bool setPlayerPosition(const std::string &command);
 
+            /**
+             * @brief Sets the egg position based on the command.
+             * @param command The command string.
+             * @return True if the egg position was set successfully, false otherwise.
+             */
+            bool setEggPosition(const std::string &command);
+
+            /**
+             * @brief Kill the egg based on the command.
+             * @param command The command string.
+             * @return True if the egg was killed successfully, false otherwise.
+             */
+            bool setEggDie(const std::string &command);
+
             bool setPlayerDeath(const std::string &command);
 
             bool startIncantation(const std::string &command);

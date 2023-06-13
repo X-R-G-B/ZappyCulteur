@@ -12,6 +12,7 @@
 #include "Ressources.hpp"
 #include "Trantorian.hpp"
 #include "IEntity.hpp"
+#include "Egg.hpp"
 
 namespace GUI {
     namespace CommandHandler {
@@ -21,9 +22,12 @@ namespace GUI {
             {"pnw", COMMAND_TYPE::NEW_PLAYER},
             {"pnw", COMMAND_TYPE::NEW_PLAYER},
             {"ppo", COMMAND_TYPE::PLAYER_POSITION},
-            {"pdi", COMMAND_TYPE::PLAYER_DEATH},
             {"pie", COMMAND_TYPE::INCANTATION_END},
             {"pic", COMMAND_TYPE::INCANTATION_START},
+            {"enw", COMMAND_TYPE::EGG_LAID},
+            {"edi", COMMAND_TYPE::EGG_DEATH},
+            {"ebo", COMMAND_TYPE::EGG_PLAYER_CONNECTED},
+            {"pdi", COMMAND_TYPE::PLAYER_DEATH}
         };
 
         CommandHandler::CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager)
@@ -32,6 +36,9 @@ namespace GUI {
                 {COMMAND_TYPE::NEW_PLAYER, &CommandHandler::setNewPlayer},
                 {COMMAND_TYPE::MAP_CONTENT, &CommandHandler::setRessources},
                 {COMMAND_TYPE::PLAYER_POSITION, &CommandHandler::setPlayerPosition},
+                {COMMAND_TYPE::EGG_LAID, &CommandHandler::setEggPosition},
+                {COMMAND_TYPE::EGG_DEATH, &CommandHandler::setEggDie},
+                {COMMAND_TYPE::EGG_PLAYER_CONNECTED, &CommandHandler::setEggDie},
                 {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand},
                 {COMMAND_TYPE::PLAYER_DEATH, &CommandHandler::setPlayerDeath},
                 {COMMAND_TYPE::INCANTATION_START, &CommandHandler::startIncantation},
@@ -39,6 +46,7 @@ namespace GUI {
             })
         {}
 
+        static const std::string eggKey = "Egg_";
         static const std::string playerKey = "Player_";
 
         void CommandHandler::update(const std::vector<std::string> &commands)
@@ -256,6 +264,47 @@ namespace GUI {
         bool CommandHandler::unknowCommand(const std::string &command)
         {
             std::cout << "Command undefined : " << command << std::endl;
+            return (true);
+        }
+
+        bool CommandHandler::setEggPosition(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string eggId;
+            std::string playerId;
+            float x = 0, y = 0;
+
+            if (!(ss >> cmd >> eggId >> playerId >> x >> y)) {
+                return (false);
+            }
+            eggId = eggKey + eggId;
+            if (_entityManager->doesEntityExist(eggId) == true) {
+                _entityManager->killEntityById(eggId);
+            }
+            _entityManager->addEntity(std::make_shared<Entities::Egg>(
+                eggId,
+                Vector2F(x * TILE_SIZE, y * TILE_SIZE)
+            ));
+            return (true);
+        }
+
+        bool CommandHandler::setEggDie(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string eggId;
+
+            if (!(ss >> cmd >> eggId)) {
+                return (false);
+            }
+            eggId = eggKey + eggId;
+            if (_entityManager->doesEntityExist(eggId) == true) {
+                _entityManager->killEntityById(eggId);
+            } else {
+                std::cout << "Egg " << eggId << " does not exist" << std::endl;
+                return (false);
+            }
             return (true);
         }
     }
