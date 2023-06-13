@@ -41,7 +41,7 @@ class IA:
         self.port: int = port
         self.machineName: str = machineName
         self.teamName: str = teamName
-        self.build(0)
+        self.build(7)
 
     def build(self, neededChild: int = 0):
         self.neededChild = neededChild 
@@ -90,14 +90,11 @@ class IA:
             sys.exit(84)
         resSetup = ["1", "10 10"]
         if (len(resSetup[1].split(" ")) == 2):
-            print(resSetup)
             self.clientNb = int(resSetup[0])
-            print("waitoutput:" + self.waitOutput())
             mapSize = resSetup[1].split(" ")
             self.mapSize = [int(mapSize[0]), int(mapSize[1])]
         else:
             self.clientNb = int(resSetup[0])
-            mapSize = self.waitOutput()
             mapSize = mapSize.split("\n")[0].split(" ")
             self.mapSize = [int(mapSize[0]), int(mapSize[1])]
         self.run()
