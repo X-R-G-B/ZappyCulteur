@@ -40,10 +40,10 @@ namespace GUI {
                 {COMMAND_TYPE::EGG_LAID, &CommandHandler::setEggPosition},
                 {COMMAND_TYPE::EGG_DEATH, &CommandHandler::setEggDie},
                 {COMMAND_TYPE::EGG_PLAYER_CONNECTED, &CommandHandler::setEggDie},
-                {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand},
                 {COMMAND_TYPE::PLAYER_DEATH, &CommandHandler::setPlayerDeath},
                 {COMMAND_TYPE::INCANTATION_START, &CommandHandler::startIncantation},
                 {COMMAND_TYPE::INCANTATION_END, &CommandHandler::endIncantation},
+                {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}
             })
         {}
 

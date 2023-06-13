@@ -26,6 +26,8 @@ namespace GUI {
                 ~Sprite() = default;
                 void setTexture(sf::Texture &texture);
                 void setPosition(const sf::Vector2f &position);
+                void setRect(const sf::IntRect &rect);
+                sf::IntRect getRect() const;
                 std::size_t getLayer() const;
                 void setLayer(std::size_t layer);
                 const sf::Sprite &getSprite() const;
@@ -35,6 +37,7 @@ namespace GUI {
                 sf::Sprite _sprite;
                 std::size_t _layer;
                 sf::Vector2f _position;
+                sf::IntRect _rect;
         };
     }
 }

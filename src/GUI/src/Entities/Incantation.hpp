@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <chrono>
 #include "Trantorian.hpp"
 #include "Sprite.hpp"
 #include "AEntity.hpp"
@@ -25,8 +26,10 @@ namespace GUI {
             protected:
             private:
                 void initIncantationSprite();
+                void updateSpriteRect();
                 sf::Texture _texture;
                 std::vector<std::shared_ptr<Trantorian>> _trantorians;
+                double _timeSinceLastRectChange;
         };
     }
 }
