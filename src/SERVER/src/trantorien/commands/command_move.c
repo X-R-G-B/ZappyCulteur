@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include "ntw.h"
 #include "zappy.h"
-#include "trantorien.h"
+#include "command_reponses.h"
 
 /**
 ** @brief table of displacement according to the direction [(x, y), ...]
@@ -21,6 +21,9 @@ static const int direction_to_x[4][2] = {
     {0, 1},
     {-1, 0}
 };
+
+// TODO: function to remove trantorien from last pos from map tile
+// TODO: and put it on the list of the new position tile
 
 int command_move(trantorien_t *trantorien, zappy_t *zappy,
                         ntw_client_t *cl, action_t *action)
@@ -37,6 +40,6 @@ int command_move(trantorien_t *trantorien, zappy_t *zappy,
         trantorien->y += zappy->map->height;
     trantorien->x %= zappy->map->width;
     trantorien->y %= zappy->map->height;
-    circular_buffer_write(cl->write_to_outside, "ok\n");
+    circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
     return EXIT_SUCCESS;
 }
