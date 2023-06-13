@@ -71,6 +71,7 @@ static const int look_dir_reset[WEST][2] = {
     {1, 1},
     {-1, 1},
 };
+
 static const int look_dir_next_tile[WEST][2] = {
     {1, 0},
     {0, 1},
@@ -78,16 +79,6 @@ static const int look_dir_next_tile[WEST][2] = {
     {0, -1},
 };
 
-static const int index_ressource_ok[MAX_NB_RESOURCES] = {
-    PLAYER,
-    FOOD,
-    LINEMATE,
-    DERAUMERE,
-    SIBUR,
-    MENDIANE,
-    PHIRAS,
-    THYSTAME,
-};
 static const char *ressources_name[MAX_NB_RESOURCES] = {
     "food",
     "linemate",
@@ -101,48 +92,49 @@ static const char *ressources_name[MAX_NB_RESOURCES] = {
 
 static void send_single_tile(map_tile_t *tile, ntw_client_t *cl)
 {
-    int nb_ressources = 0;
-    enum ressource_e r_idx;
     bool need_space = false;
 
     for (int i = 0; i < MAX_NB_RESOURCES; i++) {
-        nb_ressources += tile->ressources[i];
-    }
-    if (nb_ressources > 1) {
-        circular_buffer_write(cl->write_to_outside, " ");
-    }
-    for (int i = 0; i < nb_ressources; i++) {
-        r_idx = index_ressource_ok[i];
-        if (tile->ressources[r_idx] <= 0) {
+        if (tile->ressources[i] <= 0) {
             continue;
         }
         circular_buffer_write(cl->write_to_outside, (need_space) ? " " : "");
-        circular_buffer_write(cl->write_to_outside, ressources_name[r_idx]);
+        circular_buffer_write(cl->write_to_outside, ressources_name[i]);
         need_space = true;
     }
+}
+
+static int fix_pos(int pos, int size_max)
+{
+    while (pos < 0) {
+        pos = size_max + pos;
+    }
+    return pos % size_max;
 }
 
 static void send_tiles_info(int cur_line_x_y[2], map_t *map, ntw_client_t *cl,
     const int pos[2])
 {
-    int map_i = 0;
-    int nb_tile = (cur_line_x_y[0] * 2) + 1;
-    int pos_x = pos[0];
-    int pos_y = pos[1];
     enum direction_e dir = cur_line_x_y[1];
+    int nb_tile = (cur_line_x_y[0] * 2) + 1;
+    int map_i = 0;
+    int pos_x = 0;
+    int pos_y = 0;
 
     for (int j = 0; j < nb_tile; j++) {
+        pos_x = pos[0] + (look_dir_next_tile[dir - NORTH][0] * j);
+        pos_x = fix_pos(pos_x, map->width);
+        pos_y = pos[1] + (look_dir_next_tile[dir - NORTH][1] * j);
+        pos_y = fix_pos(pos_y, map->height);
         if (j != 0) {
             circular_buffer_write(cl->write_to_outside, ",");
         }
         map_index_x_y_to_i(map,  pos_x, pos_y, &map_i);
         send_single_tile(&map->tiles[map_i], cl);
-        pos_x += look_dir_next_tile[dir - NORTH][0];
-        pos_y += look_dir_next_tile[dir - NORTH][1];
     }
 }
 
-void look_test(trantorien_t *tr, int lvl, map_t *map, ntw_client_t *cl)
+void look_around(trantorien_t *tr, int lvl, map_t *map, ntw_client_t *cl)
 {
     int pos[2] = {0, 0};
     int double_thing[2] = {0};
@@ -154,109 +146,11 @@ void look_test(trantorien_t *tr, int lvl, map_t *map, ntw_client_t *cl)
             circular_buffer_write(cl->write_to_outside, ",");
         }
         pos[0] = tr->x + (look_dir_reset[tr->direction - NORTH][0] * i);
+        pos[0] = fix_pos(pos[0], map->width);
         pos[1] = tr->y + (look_dir_reset[tr->direction - NORTH][1] * i);
+        pos[1] = fix_pos(pos[1], map->height);
         double_thing[0] = i;
         send_tiles_info(double_thing, map, cl, pos);
     }
     circular_buffer_write(cl->write_to_outside, "]\n");
-}
-
-// north
-void look_north_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map,
-    ntw_client_t *cl)
-{
-    int tile[2] = {0, 0};
-    int map_i = 0;
-    int nb_turns = 0;
-
-    tile[0] = get_min_case_sub(trantorien->x, lvl, map->width);
-    tile[1] = get_min_case_sub(trantorien->y, lvl, map->height);
-    nb_turns = 1 + (lvl * 2);
-    for (int turn = 0; turn < nb_turns;
-            tile[0] = (tile[0] + 1) % map->width, turn++) {
-        map_index_x_y_to_i(map,  tile[0], tile[1], &map_i);
-        if (lvl == 0 && turn == 0)
-            send_tile_ressources(cl, &map->tiles[map_i], -1);
-        if (lvl == trantorien->level && turn == nb_turns - 1)
-            send_tile_ressources(cl, &map->tiles[map_i], 1);
-        if ((lvl != 0 || turn != 0) && (lvl != trantorien->level
-                || turn != nb_turns)) {
-            send_tile_ressources(cl, &map->tiles[map_i], 0);
-        }
-    }
-}
-
-// east
-void look_east_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map,
-    ntw_client_t *cl)
-{
-    int tile[2] = {0, 0};
-    int map_i = 0;
-    int nb_turns = 0;
-
-    tile[0] = get_min_case_add(trantorien->x, lvl, map->width);
-    tile[1] = get_min_case_sub(trantorien->y, lvl, map->height);
-    nb_turns = 1 + (lvl * 2);
-    for (int turn = 0; turn < nb_turns;
-            tile[1] = (tile[1] + 1) % map->height, turn++) {
-        map_index_x_y_to_i(map, tile[0], tile[1], &map_i);
-        if (lvl == 0 && turn == 0)
-            send_tile_ressources(cl, &map->tiles[map_i], -1);
-        if (lvl == trantorien->level && turn == nb_turns - 1)
-            send_tile_ressources(cl, &map->tiles[map_i], 1);
-        if ((lvl != 0 || turn != 0) && (lvl != trantorien->level
-                || turn != nb_turns)) {
-            send_tile_ressources(cl, &map->tiles[map_i], 0);
-        }
-    }
-}
-
-// south
-void look_south_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map,
-    ntw_client_t *cl)
-{
-    int tile[2] = {0, 0};
-    int map_i = 0;
-    int nb_turns = 0;
-
-    tile[0] = get_min_case_add(trantorien->x, lvl, map->width);
-    tile[1] = get_min_case_add(trantorien->y, lvl, map->height);
-    nb_turns = 1 + (lvl * 2);
-    for (int turn = 0; turn < nb_turns; tile[0] = (tile[0] - 1 < 0) ?
-            map->width - 1 : tile[0] - 1, turn++) {
-        map_index_x_y_to_i(map, tile[0], tile[1], &map_i);
-        if (lvl == 0 && turn == 0)
-            send_tile_ressources(cl, &map->tiles[map_i], -1);
-        if (lvl == trantorien->level && turn == nb_turns - 1)
-            send_tile_ressources(cl, &map->tiles[map_i], 1);
-        if ((lvl != 0 || turn != 0) && (lvl != trantorien->level
-                || turn != nb_turns)) {
-            send_tile_ressources(cl, &map->tiles[map_i], 0);
-        }
-    }
-}
-
-// west
-void look_west_tiles_ressources(trantorien_t *trantorien, int lvl, map_t *map,
-    ntw_client_t *cl)
-{
-    int tile[2] = {0, 0};
-    int map_i = 0;
-    int nb_turns = 0;
-
-    tile[0] = get_min_case_sub(trantorien->x, lvl, map->width);
-    tile[1] = get_min_case_sub(trantorien->y, lvl, map->height);
-    nb_turns = 1 + (lvl * 2);
-    for (int turn = 0; turn < nb_turns; tile[1] = (tile[1] - 1 < 0) ?
-            map->width - 1 : tile[1] - 1, turn++) {
-        map_index_x_y_to_i(map, tile[0], tile[1], &map_i);
-        if (lvl == 0 && turn == 0)
-            send_tile_ressources(cl, &map->tiles[map_i], -1);
-        if (lvl == trantorien->level && turn == nb_turns - 1)
-            send_tile_ressources(cl, &map->tiles[map_i], 1);
-        if ((lvl != 0 || turn != 0) && (lvl != trantorien->level
-                || turn != nb_turns)) {
-            send_tile_ressources(cl, &map->tiles[map_i], 0);
-        }
-    }
 }
