@@ -295,7 +295,6 @@ namespace GUI {
             int ressource = 0;
             std::string cmd, id;
             std::stringstream ss(command);
-            static constexpr int ressourceQuantity = 1;
             std::shared_ptr<GUI::Entities::IEntity> floorEntity = nullptr;
             std::shared_ptr<GUI::Entities::IEntity> playerEntity = nullptr;
 
