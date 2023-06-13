@@ -159,8 +159,9 @@ class IA:
 
         i = 1
         for elem in res.split(","):
-            self.inputTree["m" + elem.split(" ")[1].strip()][0] = int(
-                elem.split(" ")[2].strip()
+            parsedElem = elem.strip().split(" ")
+            self.inputTree["m" + parsedElem[0]][0] = int(
+                parsedElem[1]
             )
             i += 1
 
@@ -231,7 +232,6 @@ class IA:
 
     def createEgg(self):
         self.requestClient(Command.FORK.value)
-        print("Slots: " + self.requestClient(Command.CONNECT_NBR.value).split("\n")[0])
         self.connectNewIA()
 
     def takeElementInLastLook(self, element: Element, pos: int):
