@@ -5,6 +5,7 @@
 ** egg
 */
 
+#include <cassert>
 #include "Egg.hpp"
 #include "Sprite.hpp"
 
@@ -34,7 +35,7 @@ namespace GUI {
             initSprites();
         }
 
-        void Egg::update(__attribute__((unused)) double deltaTime)
+        void Egg::update([[maybe_unused]] double deltaTime)
         {
         }
 

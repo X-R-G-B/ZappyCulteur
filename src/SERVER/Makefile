@@ -78,6 +78,7 @@ SRC_LOOP_AICMD	=															\
 							cmd_right.c										\
 							cmd_set.c										\
 							cmd_take.c										\
+							cmd_connect_nbr.c								\
 							update_ai_cmd.c
 SRC_LOOP_AICMD	:=			$(addprefix ai_cmd/, $(SRC_LOOP_AICMD))
 
@@ -141,7 +142,8 @@ SRC_TRNT_CMD	:=															\
 							command_inventory.c								\
 							command_move.c									\
 							command_turn.c									\
-							command_fork.c
+							command_fork.c									\
+							command_eject.c
 SRC_TRNT_CMD	:=			$(addprefix commands/, $(SRC_TRNT_CMD))
 
 SRC_TRNT		:=															\

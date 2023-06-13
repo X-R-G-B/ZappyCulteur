@@ -11,5 +11,7 @@
     #define OK_RESPONSE "ok\n"
     #define KO_RESPONSE "ko\n"
     #define DEAD_RESPONSE "dead\n"
+    #define KO_EJECT_RESPONSE "KO\n"
+    #define EJECT_RESPONSE "eject\n"
 
 #endif // ZAPPYCULTEUR_COMMAND_REPONSES_H

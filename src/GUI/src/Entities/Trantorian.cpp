@@ -38,7 +38,8 @@ namespace GUI {
             _toGo(position),
             _speed(beeSpeed),
             _isDead(false),
-            _timeDispawn(beeAnimationDead)
+            _timeDispawn(beeAnimationDead),
+            _isDispawned(false)
         {
             initSprites();
             createTextComponent();
@@ -72,7 +73,7 @@ namespace GUI {
                 auto direction = _toGo - _position;
                 auto distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
                 auto normalized = direction / distance;
-                auto movement = normalized * _speed * deltaTime;
+                auto movement = normalized * _speed * static_cast<float>(deltaTime);
                 if (std::abs(movement.x) > std::abs(direction.x) ||
                     std::abs(movement.y) > std::abs(direction.y)) {
                     _position = _toGo;
@@ -96,6 +97,8 @@ namespace GUI {
                         text->setPosition({_position.x, _position.y - levelYOffset});
                         break;
                     }
+                    default:
+                        break;
                 }
             }
         }
