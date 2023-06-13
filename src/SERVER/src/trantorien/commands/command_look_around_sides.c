@@ -5,11 +5,11 @@
 ** command_look_around_utils
 */
 
+#include <stdbool.h>
 #include "circular_buffer.h"
 #include "ntw.h"
 #include "trantorien.h"
 #include "map.h"
-#include <stdbool.h>
 
 /*
  * direction NORTH(1)
