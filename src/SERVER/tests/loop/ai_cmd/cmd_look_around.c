@@ -53,6 +53,30 @@ static void set_up_tests(zappy_t **zappy, int nb_client, int port)
     }
 }
 
+/*
+  0   1   2   3   4   5   6   7   8   9
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | x |   | x |   | x |   | 0
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | x |   | x |   | x |   | 1
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | x |   | x |   | x |   | 2
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | x |   | x |   | x |   | 3
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | x |   | x |   | x |   | 4
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | x |   | x |   | x |   | 5
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | x |   | x |   | x |   | 6
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | x |   | x |   | x |   | 7
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |  1| x2|  3| x |   | x |   | 8
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | T0|   | x |   | x |   | 9
+|---|---|---|---|---|---|---|---|---|---|
+*/
 Test(loop_cmd_ai_look_around, look_from_north_level_1)
 {
     zappy_t *zappy = NULL;
@@ -75,7 +99,9 @@ Test(loop_cmd_ai_look_around, look_from_north_level_1)
     while (circular_buffer_is_read_ready(client->write_to_outside) == false) {
         cr_assert_eq(loop(zappy, true), false);
     }
-    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "[food linemate deraumere sibur mendiane phiras thystame player,,food linemate deraumere sibur mendiane phiras thystame player,]\n");
+    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "[food linemate deraumere sibur mendiane phiras thystame player,,food linemate deraumere sibur mendiane phiras thystame,]\n");
+    circular_buffer_write(client->write_to_outside, "\n");
+    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "\n");
 }
 
 Test(loop_cmd_ai_look_around, look_from_east_level_1) {
@@ -100,6 +126,8 @@ Test(loop_cmd_ai_look_around, look_from_east_level_1) {
         cr_assert_eq(loop(zappy, true), false);
     }
     cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "[food linemate deraumere sibur mendiane phiras thystame player,,,]\n");
+    circular_buffer_write(client->write_to_outside, "\n");
+    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "\n");
 }
 
 Test(loop_cmd_ai_look_around, look_from_south_level_1)
@@ -124,7 +152,9 @@ Test(loop_cmd_ai_look_around, look_from_south_level_1)
     while (circular_buffer_is_read_ready(client->write_to_outside) == false) {
         cr_assert_eq(loop(zappy, true), false);
     }
-    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "[food linemate deraumere sibur mendiane phiras thystame player,,food linemate deraumere sibur mendiane phiras thystame player,]\n");
+    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "[food linemate deraumere sibur mendiane phiras thystame player,,food linemate deraumere sibur mendiane phiras thystame,]\n");
+    circular_buffer_write(client->write_to_outside, "\n");
+    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "\n");
 }
 
 Test(loop_cmd_ai_look_around, look_from_south_level_1_test2)
@@ -150,9 +180,35 @@ Test(loop_cmd_ai_look_around, look_from_south_level_1_test2)
         cr_assert_eq(loop(zappy, true), false);
     }
     const char *res = circular_buffer_read(client->write_to_outside);
-    cr_assert_str_eq(res, "[,food linemate deraumere sibur mendiane phiras thystame player,,food linemate deraumere sibur mendiane phiras thystame player]\n");
+    cr_assert_str_eq(res, "[player,food linemate deraumere sibur mendiane phiras thystame,,food linemate deraumere sibur mendiane phiras thystame]\n");
+    circular_buffer_write(client->write_to_outside, "\n");
+    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "\n");
 }
 
+/*
+  0   1   2   3   4   5   6   7   8   9
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |  1| x |   | x |   | x |   | 0
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | x |   | x |   | x |   | 1
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | x |   | x |   | x |   | 2
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | x |   | x |   | x |   | 3
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | x |   | x |   | x |   | 4
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | x |   | x |   | x |   | 5
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | x |   | x |   | x |   | 6
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |   | x |   | x |   | x |   | 7
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |  3| x |   | x |   | x |   | 8
+|---|---|---|---|---|---|---|---|---|---|
+| x |   | x |  2| T0|   | x |   | x |   | 9
+|---|---|---|---|---|---|---|---|---|---|
+*/
 Test(loop_cmd_ai_look_around, look_from_west_level_1)
 {
     zappy_t *zappy = NULL;
@@ -176,4 +232,6 @@ Test(loop_cmd_ai_look_around, look_from_west_level_1)
         cr_assert_eq(loop(zappy, true), false);
     }
     cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "[food linemate deraumere sibur mendiane phiras thystame player,,,]\n");
+    circular_buffer_write(client->write_to_outside, "\n");
+    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "\n");
 }

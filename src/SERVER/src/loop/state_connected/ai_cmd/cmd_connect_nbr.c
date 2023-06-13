@@ -31,15 +31,15 @@ bool cmd_connect_nbr(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
     int nbr_connections = 0;
     char buff[512] = {0};
 
-    if (zappy == NULL || cl == NULL || cmd_split == NULL
-        || (tr_src = get_trantorien_src(cl)) == NULL) {
+    if (zappy == NULL || cl == NULL || cmd_split == NULL)
         return false;
-    }
+    tr_src = get_trantorien_src(cl);
+    if (tr_src == NULL)
+        return false;
     for (L_EACH(data, zappy->trantoriens_available)) {
         tr = L_DATA(data);
-        if (tr == NULL || x_strcmp(tr->team_name, tr_src->team_name) != 0) {
+        if (tr == NULL || x_strcmp(tr->team_name, tr_src->team_name) != 0)
             continue;
-        }
         nbr_connections++;
     }
     snprintf(buff, 511, "%d\n", nbr_connections);

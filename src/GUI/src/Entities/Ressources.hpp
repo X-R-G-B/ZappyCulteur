@@ -20,7 +20,9 @@ namespace GUI {
             PHIRAS,
             THYSTAME
         };
-
-        //see later if we want a class for each ressource
+        bool operator<(Entities::RessourcesType rt, int nbr);
+        bool operator<(int nbr, Entities::RessourcesType rt);
+        bool operator>(Entities::RessourcesType rt, int nbr);
+        bool operator>(int nbr, Entities::RessourcesType rt);
     }
 }

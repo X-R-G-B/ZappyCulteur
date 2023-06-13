@@ -12,4 +12,5 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/Trantorian.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Floor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Egg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Ressources.cpp
 )
