@@ -29,7 +29,7 @@ bool cmd_connect_nbr(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
     trantorien_t *tr = NULL;
     trantorien_t *tr_src = NULL;
     int nbr_connections = 0;
-    char buff[512] = {0};
+    char buff[511] = {0};
 
     if (zappy == NULL || cl == NULL || cmd_split == NULL
         || (tr_src = get_trantorien_src(cl)) == NULL) {
