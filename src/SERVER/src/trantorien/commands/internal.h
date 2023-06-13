@@ -12,6 +12,9 @@
     #include "trantorien.h"
     #include "map.h"
 
+
+void look_test(trantorien_t *tr, int lvl, map_t *map, ntw_client_t *cl);
+
 /**
 ** @brief look command for north direction
 **
