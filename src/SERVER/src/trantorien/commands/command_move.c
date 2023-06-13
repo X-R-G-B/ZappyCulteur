@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include "ntw.h"
 #include "zappy.h"
-#include "trantorien.h"
+#include "command_reponses.h"
 
 /**
 ** @brief table of displacement according to the direction [(x, y), ...]
@@ -44,6 +44,6 @@ int command_move(trantorien_t *trantorien, zappy_t *zappy,
         trantorien->y += zappy->map->height;
     trantorien->x %= zappy->map->width;
     trantorien->y %= zappy->map->height;
-    circular_buffer_write(cl->write_to_outside, "ok\n");
+    circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
     return EXIT_SUCCESS;
 }

@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include "ntw.h"
 #include "zappy.h"
-#include "trantorien.h"
+#include "command_reponses.h"
 
 int command_turn_right(trantorien_t *trantorien, zappy_t *zappy,
                         ntw_client_t *cl, action_t *action)
@@ -23,7 +23,7 @@ int command_turn_right(trantorien_t *trantorien, zappy_t *zappy,
     if (trantorien->direction == 0) {
         trantorien->direction = 1;
     }
-    circular_buffer_write(cl->write_to_outside, "ok\n");
+    circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
     return EXIT_SUCCESS;
 }
 
@@ -38,6 +38,6 @@ int command_turn_left(trantorien_t *trantorien, zappy_t *zappy,
     if (trantorien->direction <= 0)
         trantorien->direction += MAX_DIRECTION - 1;
     trantorien->direction %= MAX_DIRECTION;
-    circular_buffer_write(cl->write_to_outside, "ok\n");
+    circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
     return EXIT_SUCCESS;
 }

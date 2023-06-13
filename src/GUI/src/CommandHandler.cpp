@@ -12,6 +12,7 @@
 #include "Ressources.hpp"
 #include "Trantorian.hpp"
 #include "IEntity.hpp"
+#include "Egg.hpp"
 
 namespace GUI {
     namespace CommandHandler {
@@ -20,7 +21,11 @@ namespace GUI {
             {"bct", COMMAND_TYPE::MAP_CONTENT},
             {"pnw", COMMAND_TYPE::NEW_PLAYER},
             {"pnw", COMMAND_TYPE::NEW_PLAYER},
-            {"ppo", COMMAND_TYPE::PLAYER_POSITION}
+            {"ppo", COMMAND_TYPE::PLAYER_POSITION},
+            {"enw", COMMAND_TYPE::EGG_LAID},
+            {"edi", COMMAND_TYPE::EGG_DEATH},
+            {"ebo", COMMAND_TYPE::EGG_PLAYER_CONNECTED},
+            {"pdi", COMMAND_TYPE::PLAYER_DEATH}
         };
 
         CommandHandler::CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager)
@@ -29,9 +34,16 @@ namespace GUI {
                 {COMMAND_TYPE::NEW_PLAYER, &CommandHandler::setNewPlayer},
                 {COMMAND_TYPE::MAP_CONTENT, &CommandHandler::setRessources},
                 {COMMAND_TYPE::PLAYER_POSITION, &CommandHandler::setPlayerPosition},
+                {COMMAND_TYPE::EGG_LAID, &CommandHandler::setEggPosition},
+                {COMMAND_TYPE::EGG_DEATH, &CommandHandler::setEggDie},
+                {COMMAND_TYPE::EGG_PLAYER_CONNECTED, &CommandHandler::setEggDie},
                 {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand},
+                {COMMAND_TYPE::PLAYER_DEATH, &CommandHandler::setPlayerDeath}
             })
         {}
+
+        static const std::string eggKey = "Egg_";
+        static const std::string playerKey = "Player_";
 
         void CommandHandler::update(const std::vector<std::string> &commands)
         {
@@ -96,7 +108,7 @@ namespace GUI {
                 || orientation > Entities::EntityOrientation::LEFT) {
                 return (false);
             }
-            id = "Player_" + id;
+            id = playerKey + id;
             if (_entityManager->doesEntityExist(id) == true) {
                 _entityManager->killEntityById(id);
             }
@@ -160,7 +172,7 @@ namespace GUI {
                 || orientation > Entities::EntityOrientation::LEFT) {
                 return (false);
             }
-            id = "Player_" + id;
+            id = playerKey + id;
             if (_entityManager->doesEntityExist(id) == false) {
                 return (false);
             }
@@ -177,9 +189,68 @@ namespace GUI {
             return (true);
         }
 
+        bool CommandHandler::setPlayerDeath(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string id;
+
+            ss >> cmd >> id;
+            try {
+                auto entity = _entityManager->getEntityById(playerKey + id);
+                auto trantorian = std::static_pointer_cast<Entities::Trantorian>(entity);
+                trantorian->setDead(true);
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return (false);
+            }
+            return (true);
+        }
+
         bool CommandHandler::unknowCommand(const std::string &command)
         {
             std::cout << "Command undefined : " << command << std::endl;
+            return (true);
+        }
+
+        bool CommandHandler::setEggPosition(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string eggId;
+            std::string playerId;
+            float x = 0, y = 0;
+
+            if (!(ss >> cmd >> eggId >> playerId >> x >> y)) {
+                return (false);
+            }
+            eggId = eggKey + eggId;
+            if (_entityManager->doesEntityExist(eggId) == true) {
+                _entityManager->killEntityById(eggId);
+            }
+            _entityManager->addEntity(std::make_shared<Entities::Egg>(
+                eggId,
+                Vector2F(x * TILE_SIZE, y * TILE_SIZE)
+            ));
+            return (true);
+        }
+
+        bool CommandHandler::setEggDie(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string eggId;
+
+            if (!(ss >> cmd >> eggId)) {
+                return (false);
+            }
+            eggId = eggKey + eggId;
+            if (_entityManager->doesEntityExist(eggId) == true) {
+                _entityManager->killEntityById(eggId);
+            } else {
+                std::cout << "Egg " << eggId << " does not exist" << std::endl;
+                return (false);
+            }
             return (true);
         }
     }

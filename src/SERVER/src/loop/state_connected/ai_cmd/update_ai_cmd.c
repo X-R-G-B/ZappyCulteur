@@ -11,9 +11,9 @@
 #include "circular_buffer.h"
 #include "client.h"
 #include "tlcstrings.h"
-#include "tlcutils.h"
 #include "zappy.h"
 #include "internal.h"
+#include "command_reponses.h"
 
 static const char cmds_graphic[NB_CMD_AVAILIBLE][14] = {
     "Forward\n",
