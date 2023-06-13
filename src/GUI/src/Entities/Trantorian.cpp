@@ -13,7 +13,6 @@
 
 namespace GUI {
     namespace Entities {
-
         static const std::string beePath = "src/GUI/assets/bees/beeLeft.png";
         static const std::string bodySpriteSuffix = "BodySprite";
         static const std::string levelTextSuffix = "LevelText";
@@ -37,14 +36,33 @@ namespace GUI {
             _level(level),
             _team(team),
             _toGo(position),
-            _speed(200)
+            _speed(beeSpeed),
+            _isDead(false),
+            _timeDispawn(beeAnimationDead),
+            _isDispawned(false)
         {
             initSprites();
             createTextComponent();
         }
 
+        void Trantorian::initDeathClock()
+        {
+            if (_deathClock == std::chrono::time_point<std::chrono::system_clock>{}) {
+                _deathClock = std::chrono::system_clock::now();
+            }
+        }
+
         void Trantorian::update(double deltaTime)
         {
+            if (_isDead) {
+                initDeathClock();
+                auto currentTime = std::chrono::system_clock::now();
+                auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - _deathClock);
+                if (_timeDispawn <= elapsed) {
+                    _isDispawned = true;
+                    return;
+                }
+            }
             updatePosition(deltaTime);
             updateComponents();
         }
@@ -55,7 +73,7 @@ namespace GUI {
                 auto direction = _toGo - _position;
                 auto distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
                 auto normalized = direction / distance;
-                auto movement = normalized * _speed * deltaTime;
+                auto movement = normalized * _speed * static_cast<float>(deltaTime);
                 if (std::abs(movement.x) > std::abs(direction.x) ||
                     std::abs(movement.y) > std::abs(direction.y)) {
                     _position = _toGo;
@@ -79,6 +97,8 @@ namespace GUI {
                         text->setPosition({_position.x, _position.y - levelYOffset});
                         break;
                     }
+                    default:
+                        break;
                 }
             }
         }
@@ -114,6 +134,31 @@ namespace GUI {
         void Trantorian::setToGo(const Vector2F &toGo)
         {
             _toGo = toGo;
+        }
+
+        void Trantorian::setDead(bool dispawn)
+        {
+            _isDead = dispawn;
+        }
+
+        bool Trantorian::getDead()
+        {
+            return (_isDead);
+        }
+
+        bool Trantorian::getDispawned()
+        {
+            return (_isDispawned);
+        }
+
+        void Trantorian::setDispawned(bool dispawn)
+        {
+            _isDispawned = dispawn;
+        }
+
+        const std::chrono::seconds Trantorian::getDispawnTime()
+        {
+            return (_timeDispawn);
         }
 
         void Trantorian::initSprites()
