@@ -15,6 +15,9 @@
     #define NB_PARALLEL_ACTION 11
     #define MAX_NB_TR_RESSOURCES 7
     #define MAX_FOOD_FREQ 126
+    #define IS_SAME_TR_POS(tr1, tr2) (tr1->x == tr2->x && tr1->y == tr2->y)
+    #define _IS_N(a) (a == NULL)
+    #define IS_CMD_ARG_NL(a,b,c,d) _IS_N(a) || _IS_N(b) || _IS_N(c) || _IS_N(d)
 
 typedef struct client_s client_t;
 
