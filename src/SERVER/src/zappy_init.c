@@ -27,7 +27,7 @@ zappy_t *zappy_init(args_t *args)
     memset(zappy, 0, sizeof(zappy_t));
     zappy->args = args;
     zappy->map = map_init(args->width, args->height);
-    zappy->ntw = ntw_init(args->port, args->teams_name->len, on_new_conn);
+    zappy->ntw = ntw_init(args->port, args->teams_name->len * 3, on_new_conn);
     zappy->trantoriens_available = zappy_create_initial_egg(args);
     if (zappy->ntw == NULL || zappy->map == NULL
             || zappy->trantoriens_available == NULL) {
