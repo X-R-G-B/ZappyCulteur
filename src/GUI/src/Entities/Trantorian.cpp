@@ -17,8 +17,8 @@ namespace GUI {
         static const std::string bodySpriteSuffix = "BodySprite";
         static const std::string levelTextSuffix = "LevelText";
         static const std::size_t beeLayer = 50;
-        static const unsigned int beeWidth = 92;
-        static const unsigned int beeHeight = 92;
+        static const unsigned int beeWidth = 60;
+        static const unsigned int beeHeight = 60;
         Trantorian::Trantorian(
             const std::string &id,
             const std::string &team,
