@@ -449,9 +449,7 @@ class IA:
             for id_ in toSend:
                 toSendStr += " " + str(id_)
         codeStr: str = Message.CODE.value
-        completeMessage: str = (
-            codeStr + "|" + str(self.id) + "|" + message + toSendStr
-        )
+        completeMessage: str = codeStr + "|" + str(self.id) + "|" + message + toSendStr
         self.requestClient(Command.BROADCAST, completeMessage)
 
     def isMyIdInList(self, list_: List[int]) -> bool:
