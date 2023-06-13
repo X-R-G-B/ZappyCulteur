@@ -26,6 +26,7 @@ static const char cmds_graphic[NB_CMD_AVAILIBLE][14] = {
     "Incantation\n",
     "Take",
     "Set",
+    "Connect_nbr\n",
     "",
 };
 
@@ -44,6 +45,7 @@ static bool
     cmd_incantation,
     cmd_take,
     cmd_set,
+    cmd_connect_nbr,
     NULL,
 };
 

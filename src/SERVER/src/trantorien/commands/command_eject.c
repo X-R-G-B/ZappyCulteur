@@ -16,12 +16,15 @@
 static void remove_eggs_on_tile(trantorien_t *tr_src,
     list_t *trantoriens_available)
 {
+    trantorien_t *tr = NULL;
+
     for (L_EACH(trantorien, trantoriens_available)) {
-        if (trantorien == NULL) {
+        tr = L_DATA(trantorien);
+        if (tr == NULL) {
             continue;
         }
-        if (trantorien->x == tr_src->x && trantorien->y == tr_src->y) {
-            list_remove_ptrdata(trantorien);
+        if (IS_SAME_TR_POS(tr_src, tr)) {
+            list_remove_ptrdata(trantoriens_available, tr);
         }
     }
 }
