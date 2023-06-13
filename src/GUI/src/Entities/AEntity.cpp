@@ -11,6 +11,26 @@
 namespace GUI {
     namespace Entities {
 
+        bool operator<(Entities::EntityOrientation enitityO, int nbr)
+        {
+            return static_cast<int>(enitityO) < nbr;
+        }
+
+        bool operator<(int nbr, Entities::EntityOrientation enitityO)
+        {
+            return nbr < static_cast<int>(enitityO);
+        }
+
+        bool operator>(Entities::EntityOrientation enitityO, int nbr)
+        {
+            return static_cast<int>(enitityO) > nbr;
+        }
+
+        bool operator>(int nbr, Entities::EntityOrientation enitityO)
+        {
+            return nbr > static_cast<int>(enitityO);
+        }
+
         EntityException::EntityException(const std::string &message) :
             _message(message)
         {}

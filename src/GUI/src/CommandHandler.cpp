@@ -25,7 +25,9 @@ namespace GUI {
             {"enw", COMMAND_TYPE::EGG_LAID},
             {"edi", COMMAND_TYPE::EGG_DEATH},
             {"ebo", COMMAND_TYPE::EGG_PLAYER_CONNECTED},
-            {"pdi", COMMAND_TYPE::PLAYER_DEATH}
+            {"pdi", COMMAND_TYPE::PLAYER_DEATH},
+            {"pgt", COMMAND_TYPE::RESSOURCE_COLLECTING},
+            {"pdr", COMMAND_TYPE::RESSOURCE_DROPPING}
         };
 
         CommandHandler::CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager)
@@ -38,7 +40,9 @@ namespace GUI {
                 {COMMAND_TYPE::EGG_DEATH, &CommandHandler::setEggDie},
                 {COMMAND_TYPE::EGG_PLAYER_CONNECTED, &CommandHandler::setEggDie},
                 {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand},
-                {COMMAND_TYPE::PLAYER_DEATH, &CommandHandler::setPlayerDeath}
+                {COMMAND_TYPE::PLAYER_DEATH, &CommandHandler::setPlayerDeath},
+                {COMMAND_TYPE::RESSOURCE_COLLECTING, &CommandHandler::setRessourceCollecting},
+                {COMMAND_TYPE::RESSOURCE_DROPPING, &CommandHandler::setRessourceDropping}
             })
         {}
 
@@ -252,6 +256,46 @@ namespace GUI {
                 return (false);
             }
             return (true);
+        }
+
+        bool CommandHandler::setRessourceCollecting(const std::string &command)
+        {
+            //pgt n i\n resource collecting
+            return true;
+        }
+
+        bool CommandHandler::setRessourceDropping(const std::string &command)
+        {
+            int ressource = 0;
+            std::string cmd, id;
+            std::stringstream ss(command);
+            static constexpr int ressourceQuantity = 1;
+            std::shared_ptr<GUI::Entities::IEntity> floorEntity = nullptr;
+            std::shared_ptr<GUI::Entities::IEntity> playerEntity = nullptr;
+
+            if (!(ss >> cmd >> id >> ressource) ||
+            ressource < Entities::RessourcesType::FOOD ||
+            ressource > Entities::RessourcesType::THYSTAME) {
+                return false;
+            }
+            Entities::RessourcesType rt = static_cast<Entities::RessourcesType>(ressource);
+            std::shared_ptr<GUI::Entities::IEntity> entity;
+            try {
+                floorEntity = _entityManager->getEntityById("Floor");
+                playerEntity = _entityManager->getEntityById(playerKey + id);
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return false;
+            }
+            auto floor = std::static_pointer_cast<GUI::Entities::Floor>(floorEntity);
+            auto player = std::static_pointer_cast<GUI::Entities::Trantorian>(playerEntity);
+            floor->createRessources(
+                player->getPosition().x == 0 ? 0 : player->getPosition().x / TILE_SIZE,
+                player->getPosition().y == 0 ? 0 : player->getPosition().y / TILE_SIZE,
+                rt,
+                ressourceQuantity
+            );
+            return true;
         }
     }
 }

@@ -31,6 +31,11 @@ namespace GUI {
             LEFT,
         };
 
+        bool operator<(Entities::EntityOrientation enitityO, int nbr);
+        bool operator<(int nbr, Entities::EntityOrientation enitityO);
+        bool operator>(Entities::EntityOrientation enitityO, int nbr);
+        bool operator>(int nbr, Entities::EntityOrientation enitityO);
+
         class EntityException : public std::exception {
             public:
                 EntityException(const std::string &message);
