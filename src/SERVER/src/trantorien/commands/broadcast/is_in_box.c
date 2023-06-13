@@ -10,12 +10,12 @@
 
 bool is_in_box(float pos[2], float pos_sq[2], float size_sq[2])
 {
-    int x_min_sq = fmin(pos_sq[0], pos_sq[0] + size_sq[0]);
-    int y_min_sq = fmin(pos_sq[1], pos_sq[1] + size_sq[1]);
-    int x_max_sq = fmax(pos_sq[0], pos_sq[0] + size_sq[0]);
-    int y_max_sq = fmax(pos_sq[1], pos_sq[1] + size_sq[1]);
-    int x = pos[0];
-    int y = pos[1];
+    float x_min_sq = fmin(pos_sq[0], pos_sq[0] + size_sq[0]);
+    float y_min_sq = fmin(pos_sq[1], pos_sq[1] + size_sq[1]);
+    float x_max_sq = fmax(pos_sq[0], pos_sq[0] + size_sq[0]);
+    float y_max_sq = fmax(pos_sq[1], pos_sq[1] + size_sq[1]);
+    float x = pos[0];
+    float y = pos[1];
 
     if (x_min_sq < x && x < x_max_sq &&
             y_min_sq < y && y < y_max_sq) {

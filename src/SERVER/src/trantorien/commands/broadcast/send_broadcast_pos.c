@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include "client.h"
+#include "internal.h"
 #include "ntw.h"
 #include "circular_buffer.h"
 #include "tlcllists.h"
@@ -55,16 +56,16 @@ relatif dir west(4):
 |   8  |   7  |   6  |
 |------|------|------|
 */
-static const int step_add[WEST] = {
-    1,
-    3,
-    5,
-    -1
+static const int step_add[WEST][DIR_SIZE] = {
+    {8, 1, 2, 3, 4, 5, 6, 7},
+    {6, 7, 8, 1, 2, 3, 4, 5},
+    {4, 5, 6, 7, 8, 1, 2, 3},
+    {2, 3, 4, 5, 6, 7, 8, 1},
 };
 
 static int abs_to_relatif(enum direction_e dir, int abs)
 {
-    return abs + step_add[dir];
+    return step_add[dir - NORTH][abs - 1];
 }
 
 void send_broadcast_pos(ntw_client_t *trnt, int pos, const char *msg)

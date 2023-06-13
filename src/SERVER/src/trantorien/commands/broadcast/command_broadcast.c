@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include "circular_buffer.h"
+#include "command_reponses.h"
 #include "ntw.h"
 #include "tlcllists.h"
 #include "zappy.h"
@@ -55,9 +57,9 @@ static int get_pos_vect_rel(int dest, int start, int map_len)
 {
     int res = dest - start;
 
-    if (dest + start > map_len / 2) {
-        res *= -1;
+    if (res > map_len / 2) {
         res = map_len - res;
+        res *= -1;
     }
     return res;
 }
@@ -101,7 +103,7 @@ static void calculate_send_broadcast(int trnt_x, int trnt_y,
     }
 }
 
-static void spread_broadcast(int trnt_x, int trnt_y, zappy_t *zappy,
+static void spread_broadcast(trantorien_t *trnt, zappy_t *zappy,
     const char *msg)
 {
     ntw_client_t *ncl = NULL;
@@ -109,10 +111,12 @@ static void spread_broadcast(int trnt_x, int trnt_y, zappy_t *zappy,
     for (L_EACH(node, zappy->ntw->clients)) {
         ncl = L_DATA(node);
         if (ncl == NULL || ncl->data == NULL ||
-                L_DATAT(client_t *, ncl)->type != AI) {
+                L_DATAT(client_t *, ncl)->type != AI ||
+                L_DATAT(client_t *, ncl)->cl.ai.trantorien == NULL ||
+                L_DATAT(client_t *, ncl)->cl.ai.trantorien == trnt) {
             continue;
         }
-        calculate_send_broadcast(trnt_x, trnt_y, ncl, msg);
+        calculate_send_broadcast(trnt->x, trnt->y, ncl, msg);
     }
 }
 
@@ -122,6 +126,7 @@ int command_broadcast(trantorien_t *trnt, zappy_t *zappy,
     if (trnt == NULL || zappy == NULL || cl == NULL || action == NULL) {
         return EXIT_FAILURE;
     }
-    spread_broadcast(trnt->x, trnt->y, zappy, action->param.broadcast_msg);
+    spread_broadcast(trnt, zappy, action->param.broadcast_msg);
+    circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
     return EXIT_SUCCESS;
 }
