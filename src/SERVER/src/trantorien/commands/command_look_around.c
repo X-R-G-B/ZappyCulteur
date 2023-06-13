@@ -53,18 +53,20 @@ int command_look_around(trantorien_t *trantorien, zappy_t *zappy,
 {
     static void (*look_around_commands[])(trantorien_t *, int,
             map_t *, ntw_client_t *) = {
-        look_north_tiles_ressources,
-        look_east_tiles_ressources,
-        look_south_tiles_ressources,
-        look_west_tiles_ressources,
+        // look_north_tiles_ressources,
+        // look_east_tiles_ressources,
+        // look_south_tiles_ressources,
+        // look_west_tiles_ressources,
+        look_test,
+        look_test,
+        look_test,
+        look_test,
         NULL
     };
 
     if (trantorien == NULL || zappy == NULL || cl == NULL || action == NULL)
         return EXIT_FAILURE;
-    for (int lvl = 0; lvl <= trantorien->level; lvl++) {
-        look_around_commands[trantorien->direction - 1](trantorien, lvl,
-            zappy->map, cl);
-    }
+    look_around_commands[trantorien->direction - 1](trantorien,
+        trantorien->level, zappy->map, cl);
     return EXIT_SUCCESS;
 }
