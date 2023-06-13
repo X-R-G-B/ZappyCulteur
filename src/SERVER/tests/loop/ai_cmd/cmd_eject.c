@@ -120,7 +120,6 @@ Test(loop_cmd_eject, cmd_eject_test2)
     cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "eject\n");
     cr_assert_eq(c->cl.ai.trantorien->x, 1);
     cr_assert_eq(c->cl.ai.trantorien->y, 0);
-    printf("len = %d\n", zappy->trantoriens_available->len);
     cr_assert_eq(zappy->trantoriens_available->len, 0);
     client = L_DATA(list_index(zappy->ntw->clients, 0));
     cr_assert_not_null(client);
