@@ -77,11 +77,9 @@ class Client:
                 self.checkMessage(message)
 
     def addMessageToSend(self):
-        print("tosend")
         self.sendLock.acquire()
         if len(self.messToSend) != 0:
             message = self.messToSend[-1]
-            print("send: ", message)
             print("Send: ", end="")
             print(message.split("\n")[:-1])
             self.messToSend = self.messToSend[:-1]
@@ -106,7 +104,6 @@ class Client:
         if arg != "":
             message += " " + arg + "\n"
         self.sendLock.acquire()
-        print("insert" + message)
         self.messToSend.insert(0, message)
         self.sendLock.release()
 

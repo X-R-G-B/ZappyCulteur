@@ -47,7 +47,7 @@ class IA:
         self.lastLook: List[List[Element]] = []
         self.client: Client = Client(port, machineName)
         self.emitter: int = 0
-        self.levelParticipantsNb: List[int] = [1, 1, 3, 3, 5, 5]
+        self.levelParticipantsNb: List[int] = [0, 0, 1, 1, 3, 3, 5, 5]
         self.levelCosts: List[List[Tuple[Element, int]]] = [
             [[Element.LINEMATE, 1]],
             [[Element.LINEMATE, 1], [Element.DERAUMERE, 1], [Element.SIBUR, 1]],
@@ -148,7 +148,6 @@ class IA:
         try:
             while continueRun:
                 self.checkElevationParticipant()
-                print("IN WHILE")
                 self.inventory()
                 self.lookForTree()
                 predictions = self.levelTree.predict(pd.DataFrame(self.inputTree))
@@ -159,32 +158,26 @@ class IA:
             return
 
     def checkElevationParticipant(self):
-        print("--> Check elevation participant <--")
         broadcasts: List[Tuple[int, str, List[int], int]] = self.checkBroadcast()
+        print(broadcasts)
         response: List[int] = []
         if len(broadcasts) == 0:
             return
-        print("Start : ")
         for broadcast_ in broadcasts:
             if (
-                broadcast_[1] in Message
-                and self.emitter != 0
-                and int(broadcast_[1][:-1]) == self.level
+                broadcast_[1][:-1] == "levelup"
+                and self.emitter == 0
+                and int(broadcast_[1][-1]) == self.level
             ):
-                print("OK | ", end="")
                 self.emitter = broadcast_[0]
                 response.append(broadcast_[0])
                 self.sendBroadcast(Message.OK.value, [self.emitter])
             elif broadcast_[0] in response:
-                print("CO | ", end="")
                 continue
             else:
-                print("KO | ", end="")
                 response.append(broadcast_[0])
                 self.sendBroadcast(Message.KO.value, [broadcast_[0]])
-        print("Emitter : " + str(self.emitter))
         if self.emitter != 0:
-            print("\nElevation Participant")
             self.elevationParticipant()
         return
 
@@ -196,21 +189,20 @@ class IA:
         Returns:
         List of parsed broadcast List[[senderId, message, targets, dir]]
         """
-        outList = self.client.outputBroadcast()
+        outList: List[str] = self.client.outputBroadcast()
         if len(outList) == 0:
             return []
-        resList: Tuple[int, str, List[int], int] = []
+        resList: List[Tuple[int, str, List[int], int]] = []
         for res in outList:
             res = res.split(",")
             dir_ = int(res[0].split(" ")[1])
             splittedRes = res[1].split("|")
-            if len(splittedRes) != 4 or splittedRes[0] != Message.CODE.value:
+            if len(splittedRes) != 4 or splittedRes[0].strip() != Message.CODE.value:
                 continue
-            toSend = list(map(int, splittedRes[2].split(" ")))
+            toSend = list(map(int, splittedRes[3].strip().split(" ")))
             if toSend[0] != 0 and self.isMyIdInList(toSend) is False:
                 continue
-            res = [int(splittedRes[0]), splittedRes[1], toSend, dir_]
-            resList += res
+            resList.append([int(splittedRes[1]), splittedRes[2], toSend, dir_])
         return resList
 
     def checkBroadcastWithoutNewElevation(
@@ -228,16 +220,14 @@ class IA:
             if broadcast[1].find(Message.L2.value[:-1]) == -1:
                 res.append(broadcast)
             else:
-                print("KO to new elevation")
                 self.sendBroadcast(Message.KO.value, [broadcast[0]])
         return res
 
     def checkBroadcastResponse(self) -> Tuple[int, str, List[int], int]:
-        print("--> Check Broadcast Response <--")
         liste = self.checkBroadcastWithoutNewElevation()
-        if len(liste) == 1:
-            return liste[0]
-        return [0, "", [0], 0]
+        if len(liste) == 0:
+            return [0, "", [0], 0]
+        return liste[0]
 
     def requestClient(
         self, command: Union[Command, str], arg: Union[Element, str] = ""
@@ -262,7 +252,6 @@ class IA:
             argToSend = arg.value
         else:
             argToSend = arg
-        print("request: " + toSend)
         self.client.input(toSend, argToSend)
         res = ""
         while res == "":
@@ -279,7 +268,6 @@ class IA:
 
         i = 1
         for elem in res.split(","):
-            print(elem)
             self.inputTree["m" + elem.split(" ")[1].strip()][0] = int(
                 elem.split(" ")[2].strip()
             )
@@ -435,14 +423,11 @@ class IA:
 
     def chooseElevation(self):
         if self.level == 1:
-            print("--> Elevation <--")
             self.elevation()
         else:
-            print("--> Elevation Emitter <--")
             self.elevationEmitter()
 
     def elevation(self):
-        print("--> Start elevation <--")
         for costTuple in self.levelCosts[self.level - 1]:
             if costTuple[1] > self.inputTree["m" + costTuple[0].value][0]:
                 return
@@ -455,17 +440,18 @@ class IA:
         if out != Message.KO.value + "\n":
             self.level += 1
             self.loadTree()
-        print("--> End elevation <--")
 
     def sendBroadcast(self, message: str, toSend: List[int] = []):
-        toSendStr = "|"
+        toSendStr: str = "|"
         if len(toSend) == 0:
             toSendStr += "0"
         else:
             for id_ in toSend:
                 toSendStr += " " + str(id_)
         codeStr: str = Message.CODE.value
-        completeMessage = codeStr + "|" + str(self.id) + "|" + message + "|" + toSendStr
+        completeMessage: str = (
+            codeStr + "|" + str(self.id) + "|" + message + toSendStr
+        )
         self.requestClient(Command.BROADCAST, completeMessage)
 
     def isMyIdInList(self, list_: List[int]) -> bool:
@@ -475,7 +461,6 @@ class IA:
         return False
 
     def takeClosestFood(self):
-        print("--> Start take closest food <--")
         self.look()
         foodPos = self.findClosestElemInLastLook(Element.FOOD)
         if foodPos == -1:
@@ -489,17 +474,15 @@ class IA:
             self.requestClient(message)
 
     def joinEmitter(self):
-        print("--> Start join Emitter <--")
         res = self.checkBroadcastResponse()
-        while res[1] == "":
+        while res[1] != "come":
             res = self.checkBroadcastResponse()
         while res[3] != 0 and res[1] == "come":
             print("res[3] = " + str(res[3]))
             self.sendAllCommand(self.cmdDirections[res[3]])
             res = self.checkBroadcastResponse()
-            while res[1] == "":
+            while res[1] != "come":
                 res = self.checkBroadcastResponse()
-        print("--> End join Emitter <--")
         self.look()
         self.sendBroadcast(Message.OK.value, [self.emitter])
         out = self.client.output()
@@ -520,7 +503,6 @@ class IA:
         return
 
     def elevationParticipant(self):
-        print("-->Start elevation Participant <--")
         res = self.checkBroadcastResponse()
         while res[1] == "":
             res = self.checkBroadcastResponse()
@@ -530,46 +512,45 @@ class IA:
         haveToCome = False
         ready = False
         while haveToCome is False or ready is False:
+            print("haveToCome = " + str(haveToCome) + " ready = " + str(ready))
             self.takeClosestFood()
-            if self.inputTree["mfood"][0] >= 13:
+            if self.inputTree["mfood"][0] >= 13 and ready is False:
                 ready = True
-                self.sendBroadcast(Message.OK.value, List[self.emitter])
+                self.sendBroadcast(Message.OK.value, [self.emitter])
             res = self.checkBroadcastResponse()
-            if res[1] == Message.COME.value and res[0] == self.emitter:
+            print("res[1] = " + res[1])
+            if res[1] == Message.COME.value:
                 haveToCome = True
         self.joinEmitter()
 
     def checkReceivedMessage(
         self, participantsId: List[int], res: Tuple[int, str, List[int], int]
     ) -> List[int]:
-        print("--> checkReceivedMessage <--")
         if res[1] == Message.OK.value:
-            if len(participantsId) < self.levelParticipantsNb[self.level - 2]:
+            if len(participantsId) < self.levelParticipantsNb[self.level]:
                 participantsId.append(res[0])
                 self.sendBroadcast(Message.OK.value, [res[0]])
             else:
-                print("KO to new participants")
                 self.sendBroadcast(Message.KO.value, [res[0]])
         return participantsId
 
-    def waitParticipants(self):
-        print("--> Wait participants <--")
+    def waitParticipants(self, participantsId: List[int]):
         readyParticipants = 0
         self.inventory()
         while (
             readyParticipants < self.levelParticipantsNb[self.level]
-            and self.inputTree["mfood"][0] >= 13
+            or self.inputTree["mfood"][0] < 13
         ):
             self.takeClosestFood()
-            res = self.checkBroadcastResponse()
+            res: Tuple[int, str, List[int], int] = self.checkBroadcastResponse()
             if res[0] != 0 and self.isMyIdInList(res[2]) and res[1] == Message.OK.value:
                 readyParticipants += 1
             self.inventory()
         arrivedParticipants = 0
         while arrivedParticipants < self.levelParticipantsNb[self.level]:
-            self.sendBroadcast(Message.COME.value)
-            res = self.checkBroadcastResponse()
-            if res[0] != 0 and self.isMyIdInList(res[2]) and res[1] == Message.OK.value:
+            self.sendBroadcast(Message.COME.value, participantsId)
+            res: Tuple[int, str, List[int], int] = self.checkBroadcastResponse()
+            if res[1] == Message.OK.value:
                 arrivedParticipants += 1
         self.elevation()
 
@@ -578,14 +559,10 @@ class IA:
         This function is call by decision tree when the ia have the stones for elevation,
             the ia call others to try elevation
         """
-        print("--> Start elevation Emitter <--")
         self.sendBroadcast(list(Message)[self.level].value)
         participantsId: List[int] = []
         res: Tuple[int, str, List[int]] = self.checkBroadcastResponse()
-        while res[1] == "":
+        while len(participantsId) != self.levelParticipantsNb[self.level]:
             res = self.checkBroadcastResponse()
-        if res[1] == Message.KO.value:
-            return
-        participantsId = self.checkReceivedMessage(participantsId, res)
-        if len(participantsId) == self.levelParticipantsNb[self.level - 2]:
-            self.waitParticipants()
+            participantsId = self.checkReceivedMessage(participantsId, res)
+        self.waitParticipants(participantsId)
