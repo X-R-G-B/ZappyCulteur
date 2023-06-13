@@ -138,7 +138,7 @@ void look_around(trantorien_t *tr, int lvl, map_t *map, ntw_client_t *cl)
 {
     int pos[2] = {0, 0};
     int double_thing[2] = {0};
- 
+
     double_thing[1] = tr->direction;
     circular_buffer_write(cl->write_to_outside, "[");
     for (int i = 0; i < lvl + 1; i++) {
