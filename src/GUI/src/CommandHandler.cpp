@@ -11,6 +11,7 @@
 #include "Floor.hpp"
 #include "Ressources.hpp"
 #include "Trantorian.hpp"
+#include "Incantation.hpp"
 #include "IEntity.hpp"
 #include "Egg.hpp"
 
@@ -48,6 +49,7 @@ namespace GUI {
 
         static const std::string eggKey = "Egg_";
         static const std::string playerKey = "Player_";
+        static const std::string incantationKey = "Incantation_";
 
         void CommandHandler::update(const std::vector<std::string> &commands)
         {
@@ -218,24 +220,28 @@ namespace GUI {
         {
             std::stringstream ss(command);
             std::string cmd;
-            int x = 0;
-            int y = 0;
+            std::string incantationId;
+            float x = 0;
+            float y = 0;
             std::string level;
             std::string id;
             std::vector<std::string> playerIds;
 
-            
             if (!(ss >> cmd >> x >> y >> level)) {
                 return (false);
             }
             while (ss >> id) {
                 playerIds.push_back(id);
             }
+            incantationId = incantationKey + std::to_string(x) + std::to_string(x);
             try {
-                // Create a new incantation entity and add it to the entity manager
+                auto incantationEntity = std::make_shared<Entities::Incantation>(incantationId,
+                                            Vector2F(x, y), Entities::EntityOrientation::UP);
+                _entityManager->addEntity(incantationEntity);
                 while (!playerIds.empty()) {
-                    auto trantorian = _entityManager->getEntityById(playerKey + id);
-                    // Add the trantorian to the newly created invocation entity
+                    auto entity = _entityManager->getEntityById(playerKey + id);
+                    auto trantorian = std::static_pointer_cast<Entities::Trantorian>(entity);
+                    incantationEntity->addTrantorian(trantorian);
                     playerIds.pop_back();
                 }
             } catch (const Entities::EntitiesManagerException &e) {
@@ -251,13 +257,17 @@ namespace GUI {
             std::string cmd;
             int x = 0;
             int y = 0;
-            std::string result;
+            int result = 0;
+            std::string incantationId;
 
             if (!(ss >> cmd >> x >> y >> result)) {
                 return (false);
             }
-            // Get the incantation entity and call the method that end properly the incantation animation
-            // Delete incantation
+            incantationId = incantationKey + std::to_string(x) + std::to_string(x);
+            auto entity = _entityManager->getEntityById(incantationId);
+            auto incantation = std::static_pointer_cast<Entities::Incantation>(entity);
+            incantation->endIncantation(result);
+            _entityManager->killEntityById(incantationId);
             return (true);
         }
 
