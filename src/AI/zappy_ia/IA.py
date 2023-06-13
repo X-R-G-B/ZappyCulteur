@@ -41,7 +41,7 @@ class IA:
         self.port: int = port
         self.machineName: str = machineName
         self.teamName: str = teamName
-        self.build(7)
+        self.build(0)
 
     def build(self, neededChild: int = 0):
         self.neededChild = neededChild 
@@ -88,8 +88,18 @@ class IA:
             print("Not remaining slot")
             self.client.stopClient()
             sys.exit(84)
-        self.clientNb = int(resSetup[0])
-        self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
+        resSetup = ["1", "10 10"]
+        if (len(resSetup[1].split(" ")) == 2):
+            print(resSetup)
+            self.clientNb = int(resSetup[0])
+            print("waitoutput:" + self.waitOutput())
+            mapSize = resSetup[1].split(" ")
+            self.mapSize = [int(mapSize[0]), int(mapSize[1])]
+        else:
+            self.clientNb = int(resSetup[0])
+            mapSize = self.waitOutput()
+            mapSize = mapSize.split("\n")[0].split(" ")
+            self.mapSize = [int(mapSize[0]), int(mapSize[1])]
         self.run()
 
     def checkNeededChilds(self):
@@ -118,6 +128,12 @@ class IA:
         except KeyboardInterrupt:
             return
 
+    def waitOutput(self) -> str:
+        res = ""
+        while res == "":
+            res = self.client.output()
+        return res
+
     def requestClient(
         self, command: Union[Command, str], arg: Union[Element, str] = ""
     ) -> str:
@@ -142,9 +158,7 @@ class IA:
         else:
             argToSend = arg
         self.client.input(toSend, argToSend)
-        res = ""
-        while res == "":
-            res = self.client.output()
+        res = self.waitOutput()
         if res == "ko":
             raise Exception("Server responsed ko to : " + toSend)
         return res
@@ -155,6 +169,7 @@ class IA:
             parse response in self.inputTree which is List
         """
         res = self.requestClient(Command.INVENTORY)
+        print(res)
         res = res.split("[")[1].split("]")[0]
 
         i = 1
@@ -227,6 +242,7 @@ class IA:
     def connectNewIA(self):
         self.pid = os.fork()
         if self.pid == 0:
+            self.client.stopClient()
             self.build(0)
         time.sleep(0.5)
 
