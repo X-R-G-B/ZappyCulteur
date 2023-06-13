@@ -53,36 +53,36 @@ static void set_up_tests(zappy_t **zappy, int nb_client, int port)
     }
 }
 
-//Test(loop_cmd_eject, cmd_eject_test1)
-//{
-//    zappy_t *zappy = NULL;
-//
-//    set_up_tests(&zappy, 2, 9201);
-//    for (L_EACH(x, zappy->ntw->clients)) {
-//        ntw_client_t *client = L_DATA(x);
-//        client_t *c = L_DATA(client);
-//
-//        cr_assert_not_null(c);
-//        c->cl.ai.trantorien->x = 0;
-//        c->cl.ai.trantorien->y = 0;
-//        c->cl.ai.trantorien->direction = EAST;
-//    }
-//    ntw_client_t *client = L_DATA(list_index(zappy->ntw->clients, 0));
-//    cr_assert_not_null(client);
-//    client_t *c = L_DATA(client);
-//    cr_assert_not_null(c);
-//    circular_buffer_write(client->read_from_outside, "Eject\n");
-//    while (circular_buffer_is_read_ready(client->write_to_outside) == false) {
-//        cr_assert_eq(loop(zappy, true), false);
-//    }
-//    client = L_DATA(list_index(zappy->ntw->clients, 1));
-//    cr_assert_not_null(client);
-//    c = L_DATA(client);
-//    cr_assert_not_null(c);
-//    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "eject\n");
-//    cr_assert_eq(c->cl.ai.trantorien->x, 1);
-//    cr_assert_eq(c->cl.ai.trantorien->y, 0);
-//}
+Test(loop_cmd_eject, cmd_eject_test1)
+{
+    zappy_t *zappy = NULL;
+
+    set_up_tests(&zappy, 2, 9201);
+    for (L_EACH(x, zappy->ntw->clients)) {
+        ntw_client_t *client = L_DATA(x);
+        client_t *c = L_DATA(client);
+
+        cr_assert_not_null(c);
+        c->cl.ai.trantorien->x = 0;
+        c->cl.ai.trantorien->y = 0;
+        c->cl.ai.trantorien->direction = EAST;
+    }
+    ntw_client_t *client = L_DATA(list_index(zappy->ntw->clients, 0));
+    cr_assert_not_null(client);
+    client_t *c = L_DATA(client);
+    cr_assert_not_null(c);
+    circular_buffer_write(client->read_from_outside, "Eject\n");
+    while (circular_buffer_is_read_ready(client->write_to_outside) == false) {
+        cr_assert_eq(loop(zappy, true), false);
+    }
+    client = L_DATA(list_index(zappy->ntw->clients, 1));
+    cr_assert_not_null(client);
+    c = L_DATA(client);
+    cr_assert_not_null(c);
+    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "eject\n");
+    cr_assert_eq(c->cl.ai.trantorien->x, 1);
+    cr_assert_eq(c->cl.ai.trantorien->y, 0);
+}
 
 Test(loop_cmd_eject, cmd_eject_test2)
 {
