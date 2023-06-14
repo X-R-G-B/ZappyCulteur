@@ -35,51 +35,63 @@ class Command(Enum):
     INCANTATION = "Incantation\n"
 
 
+cmdDirections: Dict = {
+    1: ["Forward\n"],
+    2: ["Forward\n", "Left\n", "Forward\n"],
+    3: ["Left\n", "Forward\n"],
+    4: ["Left\n", "Forward\n", "Left\n", "Forward\n"],
+    5: ["Right\n", "Right\n", "Forward\n"],
+    6: ["Right\n", "Forward\n", "Right\n", "Forward\n"],
+    7: ["Right\n", "Forward\n"],
+    8: ["Forward\n", "Right\n", "Forward\n"],
+}
+
+
+levelCosts: List[List[Tuple[Element, int]]] = [
+    [(Element.LINEMATE, 1)],
+    [(Element.LINEMATE, 1), (Element.DERAUMERE, 1), (Element.SIBUR, 1)],
+    [(Element.LINEMATE, 2), (Element.SIBUR, 1), (Element.PHIRAS, 2)],
+    [
+        (Element.LINEMATE, 1),
+        (Element.DERAUMERE, 1),
+        (Element.SIBUR, 2),
+        (Element.PHIRAS, 1),
+    ],
+    [
+        (Element.LINEMATE, 1),
+        (Element.DERAUMERE, 2),
+        (Element.SIBUR, 1),
+        (Element.MENDIANE, 3),
+    ],
+    [
+        (Element.LINEMATE, 1),
+        (Element.DERAUMERE, 2),
+        (Element.SIBUR, 3),
+        (Element.PHIRAS, 1),
+    ],
+    [
+        (Element.LINEMATE, 2),
+        (Element.DERAUMERE, 2),
+        (Element.SIBUR, 2),
+        (Element.MENDIANE, 2),
+        (Element.PHIRAS, 2),
+        (Element.THYSTAME, 1),
+    ],
+]
+
+
+levelParticpantsNb: List[int] = [0, 0, 1, 1, 3, 3, 5, 5]
+
+
 class IA:
     def __init__(self, port: int, machineName: str, teamName: str):
-        self.port: int = port
-        self.machineName: str = machineName
         self.teamName: str = teamName
-        self.mapSize: Tuple[int, int] = (0, 0)
-        self.clientNb: int = 0
-        self.level: int = 1
+        self._level: int = 1
         self.setId()
-        self.lastLook: List[List[Element]] = []
-        self.client: Client = Client(port, machineName)
-        self.emitter: int = 0
-        self.levelParticipantsNb: List[int] = [0, 0, 1, 1, 3, 3, 5, 5]
-        self.levelCosts: List[List[Tuple[Element, int]]] = [
-            [(Element.LINEMATE, 1)],
-            [(Element.LINEMATE, 1), (Element.DERAUMERE, 1), (Element.SIBUR, 1)],
-            [(Element.LINEMATE, 2), (Element.SIBUR, 1), (Element.PHIRAS, 2)],
-            [
-                (Element.LINEMATE, 1),
-                (Element.DERAUMERE, 1),
-                (Element.SIBUR, 2),
-                (Element.PHIRAS, 1),
-            ],
-            [
-                (Element.LINEMATE, 1),
-                (Element.DERAUMERE, 2),
-                (Element.SIBUR, 1),
-                (Element.MENDIANE, 3),
-            ],
-            [
-                (Element.LINEMATE, 1),
-                (Element.DERAUMERE, 2),
-                (Element.SIBUR, 3),
-                (Element.PHIRAS, 1),
-            ],
-            [
-                (Element.LINEMATE, 2),
-                (Element.DERAUMERE, 2),
-                (Element.SIBUR, 2),
-                (Element.MENDIANE, 2),
-                (Element.PHIRAS, 2),
-                (Element.THYSTAME, 1),
-            ],
-        ]
-        self.inputTree: Dict = {
+        self._lastLook: List[List[Element]] = []
+        self._client: Client = Client(port, machineName)
+        self._emitter: int = 0
+        self._inputTree: Dict = {
             "mfood": [0],
             "mlinemate": [0],
             "mderaumere": [0],
@@ -96,7 +108,8 @@ class IA:
             "lthystame": [0],
             "enemy": [0],
         }
-        self.outputTree: Dict = {
+
+        self._outputTree: Dict = {
             "Find food": self.findFood,
             "Take food": self.takeFood,
             "Take linemate": self.takeLinemate,
@@ -108,42 +121,33 @@ class IA:
             "Elevation": self.chooseElevation,
             "Fork": self.fork,
         }
-        self.cmdDirections: Dict = {
-            1: ["Forward\n"],
-            2: ["Forward\n", "Left\n", "Forward\n"],
-            3: ["Left\n", "Forward\n"],
-            4: ["Left\n", "Forward\n", "Left\n", "Forward\n"],
-            5: ["Right\n", "Right\n", "Forward\n"],
-            6: ["Right\n", "Forward\n", "Right\n", "Forward\n"],
-            7: ["Right\n", "Forward\n"],
-            8: ["Forward\n", "Right\n", "Forward\n"],
-        }
+
         try:
-            self.levelTree = joblib.load("src/AI/joblib/level1.joblib")
+            self._levelTree = joblib.load("src/AI/joblib/level1.joblib")
         except FileNotFoundError:
             raise Exception("Level not found")
         self.connect()
         self.run()
 
     def setId(self):
-        self.id = random.randint(10000, 99999)
+        self._id = random.randint(10000, 99999)
 
     def connect(self):
-        while self.client.output() != "WELCOME\n":
+        while self._client.output() != "WELCOME\n":
             pass
-        self.client.input(self.teamName + "\n")
+        self._client.input(self.teamName + "\n")
         resSetup = ""
         while resSetup == "":
-            resSetup = self.client.output()
+            resSetup = self._client.output()
         if resSetup == "ko\n":
             raise Exception("Team name already taken")
         elif len(resSetup.split("\n")) == 2:
-            self.client.output()
+            self._client.output()
 
     def loadTree(self):
         try:
-            self.levelTree = joblib.load(
-                "src/AI/joblib/level" + str(self.level) + ".joblib"
+            self._levelTree = joblib.load(
+                "src/AI/joblib/level" + str(self._level) + ".joblib"
             )
         except FileNotFoundError:
             raise Exception("Level not found")
@@ -155,10 +159,10 @@ class IA:
                 self.checkElevationParticipant()
                 self.inventory()
                 self.lookForTree()
-                predictions = self.levelTree.predict(pd.DataFrame(self.inputTree))
+                predictions = self._levelTree.predict(pd.DataFrame(self._inputTree))
                 for prediction in predictions:
                     print(prediction)
-                    self.outputTree[prediction]()
+                    self._outputTree[prediction]()
         except KeyboardInterrupt:
             return
 
@@ -170,18 +174,18 @@ class IA:
         for broadcast_ in broadcasts:
             if (
                 broadcast_[1][:-1] == "levelup"
-                and self.emitter == 0
-                and int(broadcast_[1][-1]) == self.level
+                and self._emitter == 0
+                and int(broadcast_[1][-1]) == self._level
             ):
-                self.emitter = broadcast_[0]
+                self._emitter = broadcast_[0]
                 response.append(broadcast_[0])
-                self.sendBroadcast(Message.OK.value, [self.emitter])
+                self.sendBroadcast(Message.OK.value, [self._emitter])
             elif broadcast_[0] in response:
                 continue
             else:
                 response.append(broadcast_[0])
                 self.sendBroadcast(Message.KO.value, [broadcast_[0]])
-        if self.emitter != 0:
+        if self._emitter != 0:
             self.elevationParticipant()
         return
 
@@ -193,20 +197,20 @@ class IA:
         Returns:
         List of parsed broadcast List[[senderId, message, targets, dir]]
         """
-        outList: List[str] = self.client.outputBroadcast()
+        outList: List[str] = self._client.outputBroadcast()
         if len(outList) == 0:
             return []
         resList: List[Tuple[int, str, List[int], int]] = []
         for res in outList:
             res = res.split(",")
-            dir_ = int(res[0].split(" ")[1])
+            direc = int(res[0].split(" ")[1])
             splittedRes = res[1].split("|")
             if len(splittedRes) != 4 or splittedRes[0].strip() != Message.CODE.value:
                 continue
             toSend = list(map(int, splittedRes[3].strip().split(" ")))
             if toSend[0] != 0 and self.isMyIdInList(toSend) is False:
                 continue
-            resList.append((int(splittedRes[1]), splittedRes[2], toSend, dir_))
+            resList.append((int(splittedRes[1]), splittedRes[2], toSend, direc))
         return resList
 
     def checkBroadcastWithoutNewElevation(
@@ -223,7 +227,12 @@ class IA:
         for broadcast in broadcasts:
             if broadcast[1].find(Message.L2.value[:-1]) == -1:
                 res.append(broadcast)
-                print("Received broadcast from :" + str(broadcast[0]) + "\n: " + broadcast[1])
+                print(
+                    "Received broadcast from :"
+                    + str(broadcast[0])
+                    + "\n: "
+                    + broadcast[1]
+                )
             else:
                 self.sendBroadcast(Message.KO.value, [broadcast[0]])
         return res
@@ -257,16 +266,16 @@ class IA:
             argToSend = arg.value
         else:
             argToSend = arg
-        self.client.input(toSend, argToSend)
+        self._client.input(toSend, argToSend)
         res = ""
         while res == "":
-            res = self.client.output()
+            res = self._client.output()
         return res
 
     def inventory(self):
         """
         This function send the inventory command to the server and
-            parse response in self.inputTree which is List
+            parse response in self._inputTree which is List
         """
         res = self.requestClient(Command.INVENTORY)
         res = res.split("[")[1].split("]")[0]
@@ -274,42 +283,40 @@ class IA:
         i = 1
         for elem in res.split(","):
             parsedElem = elem.strip().split(" ")
-            self.inputTree["m" + parsedElem[0]][0] = int(
-                parsedElem[1]
-            )
+            self._inputTree["m" + parsedElem[0]][0] = int(parsedElem[1])
             i += 1
 
     def lookForTree(self):
         """
         This function get the list of the closest items on the look to
-            put in self.inputTree
+            put in self._inputTree
         """
         self.look()
         for elem in Element:
-            if "l" + elem.value in self.inputTree.keys():
+            if "l" + elem.value in self._inputTree.keys():
                 case = self.findClosestElemInLastLook(elem)
-                self.inputTree["l" + elem.value][0] = 1 if case >= 0 else 0
+                self._inputTree["l" + elem.value][0] = 1 if case >= 0 else 0
         case = self.findClosestElemInLastLook(Element.PLAYER)
-        self.inputTree["enemy"][0] = 1 if case >= 0 else 0
+        self._inputTree["enemy"][0] = 1 if case >= 0 else 0
 
     def look(self):
         """
         This function send the look command to the server and parse response in
-            self.lastLook which is List[List[Element]]
+            self._lastLook which is List[List[Element]]
         """
-        self.lastLook.clear()
+        self._lastLook.clear()
 
         res = self.requestClient(Command.LOOK)
         res = res.split("[")[1].split("]")[0]
 
         i = 0
         for tile in res.split(","):
-            self.lastLook.append([])
+            self._lastLook.append([])
             for elem in tile.split(" "):
                 if elem == "":
-                    self.lastLook[i].append(Element.EMPTY)
+                    self._lastLook[i].append(Element.EMPTY)
                 else:
-                    self.lastLook[i].append(Element(elem))
+                    self._lastLook[i].append(Element(elem))
             i += 1
 
     def pathFinding(self, pos: int):
@@ -392,7 +399,7 @@ class IA:
         Parameters:
         element (Element): elem to find pos
         """
-        lastLook = self.lastLook
+        lastLook = self._lastLook
         i = 0
         if checkCurrentTile is False:
             lastLook = lastLook[1:]
@@ -428,23 +435,23 @@ class IA:
             i += 1
 
     def chooseElevation(self):
-        if self.level == 1:
+        if self._level == 1:
             self.elevation()
         else:
             self.elevationEmitter()
 
     def elevation(self):
-        for costTuple in self.levelCosts[self.level - 1]:
-            if costTuple[1] > self.inputTree["m" + costTuple[0].value][0]:
+        for costTuple in levelCosts[self._level - 1]:
+            if costTuple[1] > self._inputTree["m" + costTuple[0].value][0]:
                 return
             for _ in range(costTuple[1]):
                 self.requestClient(Command.SET_OBJECT, costTuple[0].value)
         self.requestClient(Command.INCANTATION)
         out = ""
         while out == "":
-            out = self.client.output()
+            out = self._client.output()
         if out != Message.KO.value + "\n":
-            self.level += 1
+            self._level += 1
             self.loadTree()
 
     def sendBroadcast(self, message: str, toSend: List[int] = []):
@@ -455,13 +462,13 @@ class IA:
             for id_ in toSend:
                 toSendStr += " " + str(id_)
         codeStr: str = Message.CODE.value
-        completeMessage: str = codeStr + "|" + str(self.id) + "|" + message + toSendStr
+        completeMessage: str = codeStr + "|" + str(self._id) + "|" + message + toSendStr
         print("Send broadcast: " + completeMessage)
         self.requestClient(Command.BROADCAST, completeMessage)
 
     def isMyIdInList(self, list_: List[int]) -> bool:
         for id_ in list_:
-            if self.id == id_:
+            if self._id == id_:
                 return True
         return False
 
@@ -483,45 +490,45 @@ class IA:
         while res[1] != "come":
             res = self.checkBroadcastResponse()
         while res[3] != 0 and res[1] == "come":
-            self.sendAllCommand(self.cmdDirections[res[3]])
+            self.sendAllCommand(cmdDirections[res[3]])
             res = self.checkBroadcastResponse()
             while res[1] != "come":
                 res = self.checkBroadcastResponse()
         self.look()
-        self.sendBroadcast(Message.OK.value, [self.emitter])
-        out = self.client.output()
+        self.sendBroadcast(Message.OK.value, [self._emitter])
+        out = self._client.output()
         while out == "":
-            out = self.client.output()
+            out = self._client.output()
         if out == "ko\n":
-            self.emitter = 0
+            self._emitter = 0
             return
         out = ""
         while out == "":
-            out = self.client.output()
+            out = self._client.output()
         if out == "ko\n":
-            self.emitter = 0
+            self._emitter = 0
         else:
-            self.emitter = 0
-            self.level += 1
+            self._emitter = 0
+            self._level += 1
             self.loadTree()
         return
 
     def elevationParticipant(self):
-        print("PARTICIPANT!: " + str(self.id))
+        print("PARTICIPANT!: " + str(self._id))
         res = self.checkBroadcastResponse()
         while res[1] == "":
             res = self.checkBroadcastResponse()
         if res[1] == Message.KO.value:
-            self.emitter = 0
+            self._emitter = 0
             return
         haveToCome = False
         ready = False
         while haveToCome is False or ready is False:
             print("haveToCome = " + str(haveToCome) + " ready = " + str(ready))
             self.takeClosestFood()
-            if self.inputTree["mfood"][0] >= 13 and ready is False:
+            if self._inputTree["mfood"][0] >= 13 and ready is False:
                 ready = True
-                self.sendBroadcast(Message.OK.value, [self.emitter])
+                self.sendBroadcast(Message.OK.value, [self._emitter])
             res = self.checkBroadcastResponse()
             print("participant res[1] = " + res[1])
             if res[1] == Message.COME.value:
@@ -532,7 +539,7 @@ class IA:
         self, participantsId: List[int], res: Tuple[int, str, List[int], int]
     ) -> List[int]:
         if res[1] == Message.OK.value:
-            if len(participantsId) < self.levelParticipantsNb[self.level]:
+            if len(participantsId) < levelParticpantsNb[self._level]:
                 participantsId.append(res[0])
                 self.sendBroadcast(Message.OK.value, [res[0]])
             else:
@@ -544,17 +551,21 @@ class IA:
         self.inventory()
         res: List[Tuple[int, str, List[int], int]] = []
         while (
-            readyParticipants < self.levelParticipantsNb[self.level]
-            or self.inputTree["mfood"][0] < 13
+            readyParticipants < levelParticpantsNb[self._level]
+            or self._inputTree["mfood"][0] < 13
         ):
             self.takeClosestFood()
             res = self.checkBroadcastWithoutNewElevation()
             for mess in res:
-                if mess[0] != 0 and self.isMyIdInList(mess[2]) and mess[1] == Message.OK.value:
+                if (
+                    mess[0] != 0
+                    and self.isMyIdInList(mess[2])
+                    and mess[1] == Message.OK.value
+                ):
                     readyParticipants += 1
             self.inventory()
         arrivedParticipants = 0
-        while arrivedParticipants < self.levelParticipantsNb[self.level]:
+        while arrivedParticipants < levelParticpantsNb[self._level]:
             self.sendBroadcast(Message.COME.value, participantsId)
             res = self.checkBroadcastWithoutNewElevation()
             for mess in res:
@@ -567,10 +578,10 @@ class IA:
         This function is call by decision tree when the ia have the stones for elevation,
             the ia call others to try elevation
         """
-        self.sendBroadcast(list(Message)[self.level].value)
+        self.sendBroadcast(list(Message)[self._level].value)
         participantsId: List[int] = []
         res: List[Tuple[int, str, List[int], int]] = []
-        while len(participantsId) != self.levelParticipantsNb[self.level]:
+        while len(participantsId) != levelParticpantsNb[self._level]:
             res = self.checkBroadcastWithoutNewElevation()
             for mess in res:
                 participantsId = self.checkReceivedMessage(participantsId, mess)
