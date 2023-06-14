@@ -33,6 +33,7 @@ namespace GUI {
             EGG_LAYING,
             EGG_LAID,
             RESSOURCE_COLLECTING,
+            RESSOURCE_DROPPING,
             EGG_PLAYER_CONNECTED,
             EGG_DEATH,
             TIME_UNIT_REQUEST,
@@ -42,22 +43,6 @@ namespace GUI {
             UNKNOW_COMMAND,
             COMMAND_PARAMETER
         };
-
-        bool operator<(Entities::EntityOrientation enitityO, int nbr) {
-            return static_cast<int>(enitityO) < nbr;
-        }
-
-        bool operator<(int nbr, Entities::EntityOrientation enitityO) {
-            return nbr < static_cast<int>(enitityO);
-        }
-
-        bool operator>(Entities::EntityOrientation enitityO, int nbr) {
-            return static_cast<int>(enitityO) > nbr;
-        }
-
-        bool operator>(int nbr, Entities::EntityOrientation enitityO) {
-            return nbr > static_cast<int>(enitityO);
-        }
 
         /**
          * @class CommandHandler
@@ -144,6 +129,20 @@ namespace GUI {
             bool setPlayerDeath(const std::string &command);
 
             bool unknowCommand(const std::string &command);
+
+            /**
+             * @brief Drop a ressource based on the command.
+             * @param command The command string.
+             * @return True if the ressource was dropped successfully, false otherwise.
+             */
+            bool setRessourceDropping(const std::string &command);
+
+            /**
+             * @brief Player collect a ressource based on the command.
+             * @param command The command string.
+             * @return True if the ressource was collected successfully, false otherwise.
+             */
+            bool setRessourceCollecting(const std::string &command);
 
             std::shared_ptr<Entities::EntitiesManager> _entityManager;
             const std::unordered_map<COMMAND_TYPE, std::function<bool(CommandHandler &, const std::string &)>> _toCall;
