@@ -15,9 +15,14 @@
 
 static const char cmds_graphic[NB_CMD_AVAILIBLE][6] = {
     "msz\n",
-    "mct\n",
     "bct",
+    "mct\n",
+    "tna\n",
     "ppo",
+    "plv",
+    "pin",
+    "sgt\n",
+    "sst",
     "",
 };
 
@@ -25,9 +30,14 @@ static bool
 (*graphic_funcs[NB_CMD_AVAILIBLE])
 (zappy_t *zappy, ntw_client_t *cl, char **) = {
     cmd_msz,
-    cmd_mct,
     cmd_bct,
+    cmd_mct,
+    cmd_tna,
     cmd_ppo,
+    cmd_plv,
+    cmd_pin,
+    cmd_sgt,
+    cmd_sst,
     NULL,
 };
 
@@ -35,7 +45,7 @@ static bool update_cmd(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
 {
     bool status = false;
 
-    for (int i = 0; cmds_graphic[i][0] != '\0'; i++) {
+    for (int i = 0; cmds_graphic[i] != NULL; i++) {
         if (strcmp(cmd_split[0], cmds_graphic[i]) == 0) {
             status = graphic_funcs[i](zappy, cl, cmd_split);
             break;
