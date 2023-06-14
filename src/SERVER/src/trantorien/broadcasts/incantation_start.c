@@ -69,20 +69,19 @@ static void send_broadcast_graph(ntw_t *ntw, list_t *list_trnt,
     broadcast_graphic(ntw, buff);
 }
 
-void broadcast_incantation_start(trantorien_t *ref_trantorien, zappy_t *zappy,
-    ntw_client_t *cl)
+bool broadcast_incantation_start(trantorien_t *ref_trantorien, zappy_t *zappy)
 {
     list_t *list_trnt = NULL;
 
     if (check_incantation_availability(
             ref_trantorien, zappy->map, zappy->ntw) == false) {
-        circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
-        return;
+        return false;
     }
     list_trnt = list_create();
     if (list_trnt == NULL) {
-        return;
+        return false;
     }
     broadcast_incantation(ref_trantorien, zappy->ntw, list_trnt);
     send_broadcast_graph(zappy->ntw, list_trnt, ref_trantorien);
+    return true;
 }
