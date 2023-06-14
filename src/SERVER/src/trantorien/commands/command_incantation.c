@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "ntw.h"
+#include "trantorien.h"
 #include "zappy.h"
 #include "client.h"
 #include "command_reponses.h"
@@ -70,7 +71,7 @@ bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
     return true;
 }
 
-static void update_level_trantoriens(ntw_t *ntw, int lvl)
+static void update_level_trantoriens(ntw_t *ntw, int lvl, trantorien_t *tr)
 {
     client_t *cl = NULL;
     ntw_client_t *cc = NULL;
@@ -80,7 +81,9 @@ static void update_level_trantoriens(ntw_t *ntw, int lvl)
         cc = L_DATA(client);
         cl = L_DATA(cc);
         if (cl == NULL || cl->type != AI || cl->cl.ai.trantorien == NULL ||
-                cl->cl.ai.trantorien->level != lvl - 1 || cc == NULL) {
+                cl->cl.ai.trantorien->level != lvl - 1 || cc == NULL ||
+                cl->cl.ai.trantorien->x != tr->x ||
+                cl->cl.ai.trantorien->y != tr->y) {
             continue;
         }
         cl->cl.ai.trantorien->level = lvl;
@@ -118,12 +121,12 @@ int command_incantation(trantorien_t *trantorien, zappy_t *zappy,
             == false) {
         circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
         snprintf(buff, 511, "pie %d %d %d\n", trantorien->x,
-            trantorien->y, -1);
+            trantorien->y, trantorien->level);
         broadcast_graphic(zappy->ntw, buff);
         return EXIT_SUCCESS;
     }
     update_case_ressources(zappy->map, trantorien, trantorien->level,
         zappy->ntw);
-    update_level_trantoriens(zappy->ntw, trantorien->level + 1);
+    update_level_trantoriens(zappy->ntw, trantorien->level + 1, trantorien);
     return EXIT_SUCCESS;
 }
