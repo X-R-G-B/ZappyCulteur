@@ -13,6 +13,27 @@
 #include "../internal.h"
 #include "command_reponses.h"
 
+static void remove_eggs_on_tile(trantorien_t *tr_src,
+    list_t *trantoriens_available)
+{
+    trantorien_t *tr = NULL;
+    list_t *to_remove = list_create();
+
+    for (L_EACH(trantorien, trantoriens_available)) {
+        tr = L_DATA(trantorien);
+        if (tr == NULL) {
+            continue;
+        }
+        if (IS_SAME_TR_POS(tr_src, tr)) {
+            list_append(to_remove, trantorien, NULL, NULL);
+        }
+    }
+    for (L_EACH(trantorien, to_remove)) {
+        list_remove_ptrnode(trantoriens_available, trantorien->data);
+    }
+    list_delete(to_remove);
+}
+
 static void send_eject_broadcast(ntw_client_t *cl, trantorien_t *tr)
 {
     if (cl == NULL || tr == NULL) {
@@ -63,15 +84,15 @@ ntw_client_t *cl_src, action_t *action)
     }
     for (L_EACH(client, zappy->ntw->clients)) {
         cl = L_DATA(L_DATAT(ntw_client_t *, client));
-        if (cl == NULL || cl->type != AI || cl->cl.ai.trantorien == NULL) {
+        if (cl == NULL || cl->type != AI || cl->cl.ai.trantorien == NULL)
             continue;
-        }
         tr = cl->cl.ai.trantorien;
-        if (!IS_SAME_TR_POS(trantorien_src, tr))
+        if (!(IS_SAME_TR_POS(trantorien_src, tr)) || tr == trantorien_src)
             continue;
         apply_eject_tr_pos(tr, trantorien_src->direction, zappy->map);
         send_eject_broadcast(L_DATA(client), tr);
     }
     circular_buffer_write(cl_src->write_to_outside, OK_RESPONSE);
+    remove_eggs_on_tile(trantorien_src, zappy->trantoriens_available);
     return EXIT_SUCCESS;
 }
