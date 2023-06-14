@@ -44,7 +44,7 @@ class IA:
         self.build(7)
 
     def build(self, neededChild: int = 0):
-        self.neededChild = neededChild 
+        self.neededChild = neededChild
         self.mapSize: Tuple[int, int] = [0, 0]
         self.clientNb: int = 0
         self.level: int = 1
