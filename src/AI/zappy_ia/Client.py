@@ -57,13 +57,10 @@ class Client:
     def checkMessage(self, message: str):
         if message.find(Message.CODE.value) != -1:
             self.broadcastLock.acquire()
-            print("Recv broadcast: " + message)
             self.broadcastReceived.insert(0, message)
             self.broadcastLock.release()
         elif message:
             self.receivedLock.acquire()
-            print("Recv: ", end="")
-            print(message.split("\n")[:-1])
             if len(self.messReceived) == 0 or self.messReceived[0].endswith("\n"):
                 self.messReceived.insert(0, message)
             else:
@@ -132,6 +129,8 @@ class Client:
             self.messReceived = self.messReceived[:-1]
             self.receivedLock.release()
             if message != "" and message != "\n" and message.endswith("\n"):
+                print("Output: ", end="")
+                print(message.split("\n")[:-1])
                 res = message
         else:
             self.receivedLock.release()
