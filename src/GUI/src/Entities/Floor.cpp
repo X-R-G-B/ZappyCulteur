@@ -100,6 +100,9 @@ namespace GUI {
 
             for (auto itComponents = _components.begin(); itComponents != _components.end(); itComponents++) {
                 auto entity = std::static_pointer_cast<Components::Sprite>(*itComponents);
+                if (entity == nullptr) {
+                    continue;
+                }
                 auto entityId = entity->getId();
                 if (entityId == id) {
                     quantity -= 1;
@@ -107,6 +110,22 @@ namespace GUI {
             }
             for (unsigned int i = 0; i < quantity; i++) {
                 createRessource(x, y, ressource);
+            }
+        }
+
+        void Floor::removeRessources(Vector2F tile, RessourcesType ressource)
+        {
+            int x = static_cast<int>(tile.x);
+            int y = static_cast<int>(tile.y);
+            std::string id = std::to_string(x) + std::to_string(y) + idOfRessources.at(ressource);
+
+            for (auto itComponents = _components.begin(); itComponents != _components.end(); itComponents++) {
+                auto entity = std::static_pointer_cast<Components::Sprite>(*itComponents);
+                auto entityId = entity->getId();
+                if (entityId == id) {
+                    _components.erase(itComponents);
+                    return;
+                }
             }
         }
 

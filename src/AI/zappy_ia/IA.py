@@ -131,9 +131,14 @@ class IA:
     def connect(self):
         while self.client.output() != "WELCOME\n":
             pass
-        resSetup = self.requestClient(self.teamName + "\n").split("\n")
-        self.clientNb = int(resSetup[0])
-        self.mapSize = (int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1]))
+        self.client.input(self.teamName + "\n")
+        resSetup = ""
+        while resSetup == "":
+            resSetup = self.client.output()
+        if resSetup == "ko\n":
+            raise Exception("Team name already taken")
+        elif len(resSetup.split("\n")) == 2:
+            self.client.output()
 
     def loadTree(self):
         try:
@@ -159,7 +164,6 @@ class IA:
 
     def checkElevationParticipant(self):
         broadcasts: List[Tuple[int, str, List[int], int]] = self.checkBroadcast()
-        print(broadcasts)
         response: List[int] = []
         if len(broadcasts) == 0:
             return
@@ -264,6 +268,7 @@ class IA:
             parse response in self.inputTree which is List
         """
         res = self.requestClient(Command.INVENTORY)
+        print(res)
         res = res.split("[")[1].split("]")[0]
 
         i = 1

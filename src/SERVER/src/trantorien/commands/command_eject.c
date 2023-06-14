@@ -17,6 +17,7 @@ static void remove_eggs_on_tile(trantorien_t *tr_src,
     list_t *trantoriens_available)
 {
     trantorien_t *tr = NULL;
+    list_t *to_remove = list_create();
 
     for (L_EACH(trantorien, trantoriens_available)) {
         tr = L_DATA(trantorien);
@@ -24,9 +25,13 @@ static void remove_eggs_on_tile(trantorien_t *tr_src,
             continue;
         }
         if (IS_SAME_TR_POS(tr_src, tr)) {
-            list_remove_ptrdata(trantoriens_available, tr);
+            list_append(to_remove, trantorien, NULL, NULL);
         }
     }
+    for (L_EACH(trantorien, to_remove)) {
+        list_remove_ptrnode(trantoriens_available, trantorien->data);
+    }
+    list_delete(to_remove);
 }
 
 static void send_eject_broadcast(ntw_client_t *cl, trantorien_t *tr)
@@ -82,7 +87,7 @@ ntw_client_t *cl_src, action_t *action)
         if (cl == NULL || cl->type != AI || cl->cl.ai.trantorien == NULL)
             continue;
         tr = cl->cl.ai.trantorien;
-        if (!IS_SAME_TR_POS(trantorien_src, tr))
+        if (!(IS_SAME_TR_POS(trantorien_src, tr)) || tr == trantorien_src)
             continue;
         apply_eject_tr_pos(tr, trantorien_src->direction, zappy->map);
         send_eject_broadcast(L_DATA(client), tr);
