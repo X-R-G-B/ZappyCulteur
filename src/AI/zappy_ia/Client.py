@@ -10,8 +10,10 @@ from zappy_ia.MessageEnum import Message
 
 class Client:
     def __init__(self, port: int, server_ip: str = "localhost"):
-        self.client_socket: socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_ip: int = server_ip
+        self.client_socket: socket.socket = socket.socket(
+            socket.AF_INET, socket.SOCK_STREAM
+        )
+        self.server_ip: str = server_ip
         self.isConnected: bool = False
         self.port: int = port
 
@@ -62,7 +64,10 @@ class Client:
             self.receivedLock.acquire()
             print("Recv: ", end="")
             print(message.split("\n")[:-1])
-            self.messReceived.insert(0, message)
+            if len(self.messReceived) == 0 or self.messReceived[0].endswith("\n"):
+                self.messReceived.insert(0, message)
+            else:
+                self.messReceived[0] += message
             self.receivedLock.release()
             if self.inTreatment > 0:
                 self.inTreatment -= 1
@@ -126,7 +131,7 @@ class Client:
             message = self.messReceived[-1]
             self.messReceived = self.messReceived[:-1]
             self.receivedLock.release()
-            if message != "" or message != "\n":
+            if message != "" and message != "\n" and message.endswith("\n"):
                 res = message
         else:
             self.receivedLock.release()

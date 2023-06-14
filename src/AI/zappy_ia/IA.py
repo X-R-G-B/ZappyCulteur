@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 from typing import Union
 import pandas as pd
 import joblib
@@ -40,7 +40,7 @@ class IA:
         self.port: int = port
         self.machineName: str = machineName
         self.teamName: str = teamName
-        self.mapSize: Tuple[int, int] = [0, 0]
+        self.mapSize: Tuple[int, int] = (0, 0)
         self.clientNb: int = 0
         self.level: int = 1
         self.setId()
@@ -49,37 +49,37 @@ class IA:
         self.emitter: int = 0
         self.levelParticipantsNb: List[int] = [0, 0, 1, 1, 3, 3, 5, 5]
         self.levelCosts: List[List[Tuple[Element, int]]] = [
-            [[Element.LINEMATE, 1]],
-            [[Element.LINEMATE, 1], [Element.DERAUMERE, 1], [Element.SIBUR, 1]],
-            [[Element.LINEMATE, 2], [Element.SIBUR, 1], [Element.PHIRAS, 2]],
+            [(Element.LINEMATE, 1)],
+            [(Element.LINEMATE, 1), (Element.DERAUMERE, 1), (Element.SIBUR, 1)],
+            [(Element.LINEMATE, 2), (Element.SIBUR, 1), (Element.PHIRAS, 2)],
             [
-                [Element.LINEMATE, 1],
-                [Element.DERAUMERE, 1],
-                [Element.SIBUR, 2],
-                [Element.PHIRAS, 1],
+                (Element.LINEMATE, 1),
+                (Element.DERAUMERE, 1),
+                (Element.SIBUR, 2),
+                (Element.PHIRAS, 1),
             ],
             [
-                [Element.LINEMATE, 1],
-                [Element.DERAUMERE, 2],
-                [Element.SIBUR, 1],
-                [Element.MENDIANE, 3],
+                (Element.LINEMATE, 1),
+                (Element.DERAUMERE, 2),
+                (Element.SIBUR, 1),
+                (Element.MENDIANE, 3),
             ],
             [
-                [Element.LINEMATE, 1],
-                [Element.DERAUMERE, 2],
-                [Element.SIBUR, 3],
-                [Element.PHIRAS, 1],
+                (Element.LINEMATE, 1),
+                (Element.DERAUMERE, 2),
+                (Element.SIBUR, 3),
+                (Element.PHIRAS, 1),
             ],
             [
-                [Element.LINEMATE, 2],
-                [Element.DERAUMERE, 2],
-                [Element.SIBUR, 2],
-                [Element.MENDIANE, 2],
-                [Element.PHIRAS, 2],
-                [Element.THYSTAME, 1],
+                (Element.LINEMATE, 2),
+                (Element.DERAUMERE, 2),
+                (Element.SIBUR, 2),
+                (Element.MENDIANE, 2),
+                (Element.PHIRAS, 2),
+                (Element.THYSTAME, 1),
             ],
         ]
-        self.inputTree: dict() = {
+        self.inputTree: Dict = {
             "mfood": [0],
             "mlinemate": [0],
             "mderaumere": [0],
@@ -96,7 +96,7 @@ class IA:
             "lthystame": [0],
             "enemy": [0],
         }
-        self.outputTree: dict() = {
+        self.outputTree: Dict = {
             "Find food": self.findFood,
             "Take food": self.takeFood,
             "Take linemate": self.takeLinemate,
@@ -108,7 +108,7 @@ class IA:
             "Elevation": self.chooseElevation,
             "Fork": self.fork,
         }
-        self.cmdDirections: dict() = {
+        self.cmdDirections: Dict = {
             1: ["Forward\n"],
             2: ["Forward\n", "Right\n"],
             3: ["Left\n", "Forward\n"],
@@ -133,7 +133,7 @@ class IA:
             pass
         resSetup = self.requestClient(self.teamName + "\n").split("\n")
         self.clientNb = int(resSetup[0])
-        self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
+        self.mapSize = (int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1]))
 
     def loadTree(self):
         try:
@@ -202,7 +202,7 @@ class IA:
             toSend = list(map(int, splittedRes[3].strip().split(" ")))
             if toSend[0] != 0 and self.isMyIdInList(toSend) is False:
                 continue
-            resList.append([int(splittedRes[1]), splittedRes[2], toSend, dir_])
+            resList.append((int(splittedRes[1]), splittedRes[2], toSend, dir_))
         return resList
 
     def checkBroadcastWithoutNewElevation(
@@ -226,7 +226,7 @@ class IA:
     def checkBroadcastResponse(self) -> Tuple[int, str, List[int], int]:
         liste = self.checkBroadcastWithoutNewElevation()
         if len(liste) == 0:
-            return [0, "", [0], 0]
+            return (0, "", [0], 0)
         return liste[0]
 
     def requestClient(
@@ -323,12 +323,12 @@ class IA:
                 return
             if mid - i <= pos and pos < mid:
                 self.requestClient(Command.LEFT)
-                for x in range(mid - pos):
+                for _ in range(mid - pos):
                     self.requestClient(Command.FORWARD)
                 return
             if mid + i >= pos and pos > mid:
                 self.requestClient(Command.RIGHT)
-                for x in range(pos - mid):
+                for _ in range(pos - mid):
                     self.requestClient(Command.FORWARD)
                 return
 
@@ -389,7 +389,7 @@ class IA:
         lastLook = self.lastLook
         i = 0
         if checkCurrentTile is False:
-            lastLook = lastLook.pop(0)
+            lastLook = lastLook[1:]
             i = 1
         for tile in lastLook:
             for elem in tile:
@@ -431,7 +431,7 @@ class IA:
         for costTuple in self.levelCosts[self.level - 1]:
             if costTuple[1] > self.inputTree["m" + costTuple[0].value][0]:
                 return
-            for i in range(costTuple[1]):
+            for _ in range(costTuple[1]):
                 self.requestClient(Command.SET_OBJECT, costTuple[0].value)
         self.requestClient(Command.INCANTATION)
         out = ""
@@ -559,7 +559,7 @@ class IA:
         """
         self.sendBroadcast(list(Message)[self.level].value)
         participantsId: List[int] = []
-        res: Tuple[int, str, List[int]] = self.checkBroadcastResponse()
+        res: Tuple[int, str, List[int], int] = self.checkBroadcastResponse()
         while len(participantsId) != self.levelParticipantsNb[self.level]:
             res = self.checkBroadcastResponse()
             participantsId = self.checkReceivedMessage(participantsId, res)
