@@ -14,7 +14,8 @@
 #include "zappy.h"
 #include "internal.h"
 
-bool cmd_sgt(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
+bool cmd_sgt(zappy_t *zappy, ntw_client_t *cl,
+    __attribute__((unused)) char **cmd_split)
 {
     char buff[512] = {0};
 

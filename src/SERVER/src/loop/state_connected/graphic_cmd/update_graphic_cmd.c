@@ -45,7 +45,7 @@ static bool update_cmd(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
 {
     bool status = false;
 
-    for (int i = 0; cmds_graphic[i] != NULL; i++) {
+    for (int i = 0; cmds_graphic[i][0] != '\0'; i++) {
         if (strcmp(cmd_split[0], cmds_graphic[i]) == 0) {
             status = graphic_funcs[i](zappy, cl, cmd_split);
             break;

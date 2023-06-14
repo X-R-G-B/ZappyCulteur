@@ -22,13 +22,10 @@ static void send_id(ntw_client_t *cl, int id)
     circular_buffer_write(cl->write_to_outside, buff);
 }
 
-static bool send_pos(zappy_t *zappy, ntw_client_t *cl, int x, int y)
+static bool send_pos(ntw_client_t *cl, int x, int y)
 {
     char buff[512] = {0};
 
-    if (x >= zappy->map->width || y >= zappy->map->height) {
-        return false;
-    }
     snprintf(buff, 511, "%d %d", x, y);
     circular_buffer_write(cl->write_to_outside, buff);
     return true;
@@ -55,19 +52,18 @@ bool cmd_pin(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
     int id = 0;
     trantorien_t *trantorien = NULL;
 
-    if (cmd_split[1] == NULL ||
+    if (zappy == NULL || cmd_split[1] == NULL ||
     x_strcontainc("0123456789", cmd_split[1][1]) == 0) {
         return false;
     }
     id = atoi(cmd_split[1] + 1);
     trantorien = zappy_trantorien_find_by_id(zappy, id);
-    if (trantorien == NULL) {
+    if (trantorien == NULL || trantorien->x >= zappy->map->width
+        || trantorien->y >= zappy->map->height) {
         return false;
     }
     send_id(cl, id);
-    if (send_pos(zappy, cl, trantorien->x, trantorien->y) != true) {
-        return false;
-    }
+    send_pos(cl, trantorien->x, trantorien->y);
     send_tr_ressources(cl, trantorien);
     return true;
 }
