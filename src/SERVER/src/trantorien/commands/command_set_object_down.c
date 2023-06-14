@@ -25,13 +25,14 @@ int command_set_object_down(trantorien_t *trantorien, zappy_t *zappy,
 {
     int i = 0;
 
-    if (trantorien == NULL || zappy == NULL || cl == NULL || action == NULL)
+    if (trantorien == NULL || zappy == NULL || cl == NULL || action == NULL) {
         return EXIT_FAILURE;
-    if (trantorien->ressources[action->param.object] > 0 &&
-            action->param.object < PLAYER) {
+    }
+    if (action->param.object < PLAYER && action->param.object >= FOOD &&
+            trantorien->ressources[action->param.object] > 0) {
         trantorien->ressources[action->param.object] -= 1;
         map_index_x_y_to_i(zappy->map, trantorien->x, trantorien->y, &i);
-        zappy->map[i].tiles->ressources[action->param.object] += 1;
+        zappy->map->tiles[i].ressources[action->param.object] += 1;
         circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
         send_broadcast(action->param.object, zappy->ntw, trantorien->id);
     } else {

@@ -35,6 +35,24 @@ namespace GUI {
                  * @param quantity the quantity of ressource
                  */
                 void createRessources(unsigned int x, unsigned int y, RessourcesType ressource, unsigned int quantity);
+                
+                /**
+                 * @brief Create a ressource on the floor
+                 * 
+                 * @param x the tile of number x
+                 * @param y the tile of number y
+                 * @param ressource the type of ressource
+                 */
+                void createRessource(unsigned int x, unsigned int y, RessourcesType ressource);
+
+                /**
+                 * @brief Remove ressources on the floor
+                 * 
+                 * @param x the tile of number x
+                 * @param y the tile of number y
+                 * @param ressource the type of ressource
+                 */
+                void removeRessources(Vector2F tile, RessourcesType ressource);
                 ~Floor() = default;
                 void update(double deltaTime) override;
             private:
@@ -44,7 +62,6 @@ namespace GUI {
                 void createDarkFloor(unsigned int x, unsigned int y);
                 void createLightFloor(unsigned int x, unsigned int y);
                 float computeRessourceSize();
-                void createRessource(unsigned int x, unsigned int y, RessourcesType ressource);
                 Vector2F computeRessourcePosition(unsigned int x, unsigned int y, float ressourceSize);
                 sf::Texture _txFloorDark;
                 sf::Texture _txFloorLight;          
