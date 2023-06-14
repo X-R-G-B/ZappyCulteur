@@ -169,13 +169,11 @@ class IA:
         print(res)
         res = res.split("[")[1].split("]")[0]
 
-        i = 1
         for elem in res.split(","):
             parsedElem = elem.strip().split(" ")
             self.inputTree["m" + parsedElem[0]][0] = int(
                 parsedElem[1]
             )
-            i += 1
 
     def lookForTree(self):
         """
