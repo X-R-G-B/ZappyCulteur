@@ -88,7 +88,6 @@ class IA:
             print("Not remaining slot")
             self.client.stopClient()
             sys.exit(84)
-        resSetup = ["1", "10 10"]
         if (len(resSetup[1].split(" ")) == 2):
             self.clientNb = int(resSetup[0])
             mapSize = resSetup[1].split(" ")
