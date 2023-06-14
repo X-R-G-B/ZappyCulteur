@@ -1,8 +1,10 @@
 from enum import Enum
+import time
 from typing import List, Tuple
 from zappy_ia.Client import Client
 from typing import Union
 import pandas as pd
+import os
 import joblib
 import sys
 
@@ -39,11 +41,15 @@ class IA:
         self.port: int = port
         self.machineName: str = machineName
         self.teamName: str = teamName
+        self.build(7)
+
+    def build(self, neededChild: int = 0):
+        self.neededChild = neededChild
         self.mapSize: Tuple[int, int] = [0, 0]
         self.clientNb: int = 0
         self.level: int = 1
         self.lastLook: List[List[Element]] = []
-        self.client: Client = Client(port, machineName)
+        self.client: Client = Client(self.port, self.machineName)
         self.inputTree: dict() = {
             "level": [self.level],
             "mfood": [0],
@@ -71,30 +77,58 @@ class IA:
         try:
             self.clf = joblib.load("src/AI/joblib/food.joblib")
         except FileNotFoundError:
-            try:
-                self.clf = joblib.load("joblib/food.joblib")
-            except FileNotFoundError:
-                print("File joblib not found", file=sys.stderr)
-                sys.exit(84)
+            print("File joblib not found", file=sys.stderr)
+            self.client.stopClient()
+            sys.exit(84)
 
         while self.client.output() != "WELCOME\n":
             pass
         resSetup = self.requestClient(self.teamName + "\n").split("\n")
-        self.clientNb = int(resSetup[0])
-        self.mapSize = [int(resSetup[1].split(" ")[0]), int(resSetup[1].split(" ")[1])]
+        if resSetup[0] == "ko":
+            print("Not remaining slot")
+            self.client.stopClient()
+            sys.exit(84)
+        if len(resSetup[1].split(" ")) == 2:
+            self.clientNb = int(resSetup[0])
+            mapSize = resSetup[1].split(" ")
+            self.mapSize = [int(mapSize[0]), int(mapSize[1])]
+        else:
+            self.clientNb = int(resSetup[0])
+            mapSize = mapSize.split("\n")[0].split(" ")
+            self.mapSize = [int(mapSize[0]), int(mapSize[1])]
         self.run()
+
+    def checkNeededChilds(self):
+        while self.neededChild > 0:
+            if int(self.requestClient(Command.CONNECT_NBR.value).split("\n")[0]) > 0:
+                print("newIA")
+                self.connectNewIA()
+            elif self.inputTree["mfood"][0] > 2:
+                print("newEgg")
+                self.createEgg()
+            else:
+                break
+            self.neededChild -= 1
+            print("neededchilds: " + str(self.neededChild))
 
     def run(self):
         continueRun = True
         try:
             while continueRun:
                 self.inventory()
+                self.checkNeededChilds()
                 self.lookForTree()
                 predictions = self.clf.predict(pd.DataFrame(self.inputTree))
                 for prediction in predictions:
                     self.outputTree[prediction]()
         except KeyboardInterrupt:
             return
+
+    def waitOutput(self) -> str:
+        res = ""
+        while res == "":
+            res = self.client.output()
+        return res
 
     def requestClient(
         self, command: Union[Command, str], arg: Union[Element, str] = ""
@@ -120,9 +154,7 @@ class IA:
         else:
             argToSend = arg
         self.client.input(toSend, argToSend)
-        res = ""
-        while res == "":
-            res = self.client.output()
+        res = self.waitOutput()
         if res == "ko":
             raise Exception("Server responsed ko to : " + toSend)
         return res
@@ -133,14 +165,12 @@ class IA:
             parse response in self.inputTree which is List
         """
         res = self.requestClient(Command.INVENTORY)
+        print(res)
         res = res.split("[")[1].split("]")[0]
 
-        i = 1
         for elem in res.split(","):
-            self.inputTree["m" + elem.split(" ")[1].strip()][0] = int(
-                elem.split(" ")[2].strip()
-            )
-            i += 1
+            parsedElem = elem.strip().split(" ")
+            self.inputTree["m" + parsedElem[0]][0] = int(parsedElem[1])
 
     def lookForTree(self):
         """
@@ -200,6 +230,17 @@ class IA:
                 for x in range(pos - mid):
                     self.requestClient(Command.FORWARD)
                 return
+
+    def connectNewIA(self):
+        self.pid = os.fork()
+        if self.pid == 0:
+            self.client.stopClient()
+            self.build(0)
+        time.sleep(0.5)
+
+    def createEgg(self):
+        self.requestClient(Command.FORK.value)
+        self.connectNewIA()
 
     def takeElementInLastLook(self, element: Element, pos: int):
         """
