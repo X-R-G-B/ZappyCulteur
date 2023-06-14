@@ -103,7 +103,7 @@ namespace GUI {
             }
         }
 
-        void Trantorian::setLevel(int level)
+        void Trantorian::setLevel(std::size_t level)
         {
             _level = level;
             for (auto &comp : _components) {
