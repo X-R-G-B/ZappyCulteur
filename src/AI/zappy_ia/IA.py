@@ -88,7 +88,7 @@ class IA:
             print("Not remaining slot")
             self.client.stopClient()
             sys.exit(84)
-        if (len(resSetup[1].split(" ")) == 2):
+        if len(resSetup[1].split(" ")) == 2:
             self.clientNb = int(resSetup[0])
             mapSize = resSetup[1].split(" ")
             self.mapSize = [int(mapSize[0]), int(mapSize[1])]
@@ -170,9 +170,7 @@ class IA:
 
         for elem in res.split(","):
             parsedElem = elem.strip().split(" ")
-            self.inputTree["m" + parsedElem[0]][0] = int(
-                parsedElem[1]
-            )
+            self.inputTree["m" + parsedElem[0]][0] = int(parsedElem[1])
 
     def lookForTree(self):
         """
