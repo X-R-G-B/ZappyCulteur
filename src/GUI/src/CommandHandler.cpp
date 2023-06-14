@@ -233,17 +233,18 @@ namespace GUI {
             while (ss >> id) {
                 playerIds.push_back(id);
             }
-            incantationId = incantationKey + std::to_string(x) + std::to_string(x);
+            incantationId = incantationKey + std::to_string(x) + std::to_string(y);
             try {
                 auto incantationEntity = std::make_shared<Entities::Incantation>(incantationId,
                                             Vector2F(x, y), Entities::EntityOrientation::UP);
-                _entityManager->addEntity(incantationEntity);
                 while (!playerIds.empty()) {
+                    id = playerIds.back();
                     auto entity = _entityManager->getEntityById(playerKey + id);
                     auto trantorian = std::static_pointer_cast<Entities::Trantorian>(entity);
                     incantationEntity->addTrantorian(trantorian);
                     playerIds.pop_back();
                 }
+                _entityManager->addEntity(incantationEntity);
             } catch (const Entities::EntitiesManagerException &e) {
                 std::cerr << e.what() << std::endl;
                 return (false);
@@ -255,19 +256,24 @@ namespace GUI {
         {
             std::stringstream ss(command);
             std::string cmd;
-            int x = 0;
-            int y = 0;
-            int result = 0;
+            float x = 0;
+            float y = 0;
+            std::size_t result = 0;
             std::string incantationId;
 
             if (!(ss >> cmd >> x >> y >> result)) {
                 return (false);
             }
-            incantationId = incantationKey + std::to_string(x) + std::to_string(x);
-            auto entity = _entityManager->getEntityById(incantationId);
-            auto incantation = std::static_pointer_cast<Entities::Incantation>(entity);
-            incantation->endIncantation(result);
-            _entityManager->killEntityById(incantationId);
+            incantationId = incantationKey + std::to_string(x) + std::to_string(y);
+            try {
+                auto entity = _entityManager->getEntityById(incantationId);
+                auto incantation = std::static_pointer_cast<Entities::Incantation>(entity);
+                incantation->endIncantation(result);
+                _entityManager->killEntityById(incantationId);
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return (false);
+            }
             return (true);
         }
 

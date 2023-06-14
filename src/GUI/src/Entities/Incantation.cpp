@@ -89,12 +89,15 @@ namespace GUI {
             sprite->setRect(rect);
         }
 
-        void Incantation::endIncantation(int result)
+        void Incantation::endIncantation(std::size_t result)
         {
             std::size_t level = 0;
+
             for (auto &it : _trantorians) {
                 level = it->getLevel();
-                it->setLevel(level + 1);
+                if (result > level) {
+                    it->setLevel(result);
+                }
             }
         }
 

@@ -21,7 +21,7 @@ namespace GUI {
                     EntityOrientation orientations);
                 ~Incantation();
                 void update(double deltaTime) final;
-                void endIncantation(int result);
+                void endIncantation(std::size_t result);
                 void addTrantorian(std::shared_ptr<Trantorian> trantorian);
             protected:
             private:
