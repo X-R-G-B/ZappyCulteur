@@ -130,8 +130,8 @@ namespace GUI {
             _networkManager.update();
             _entityManager->update(_deltatime);
             _commandHandler->update(_networkManager.getServerMessages());
-            _displayModule->handleEvents();
-            _displayModule->update();
+            _displayModule->handleEvents(_deltatime);
+            _displayModule->update(_deltatime);
         }
     }
 
