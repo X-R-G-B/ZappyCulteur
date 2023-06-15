@@ -75,10 +75,6 @@ namespace GUI {
 
     void App::launchApp()
     {
-        _networkManager.initConnection(_args[ipFlag], _args[portFlag]);
-        if (_networkManager.isConnected() == false) {
-            throw AppException("Connection error. Please check if the server exists.");
-        }
         try {
             initModules();
         } catch (const std::exception &err) {
@@ -170,6 +166,7 @@ namespace GUI {
         if (ac != 1) {
             try {
                 initArgs(av, ac);
+                _networkManager.initConnection(_args[ipFlag], _args[portFlag]);
                 launchApp();
             } catch (const std::exception &err) {
                 std::cerr << err.what() << std::endl;

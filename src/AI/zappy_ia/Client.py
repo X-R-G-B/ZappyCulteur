@@ -4,12 +4,14 @@ import socket
 import select
 import threading
 import time
+import logging
+import zappy_ia.Log as log
 from typing import List
 from zappy_ia.MessageEnum import Message
 
 
 class Client:
-    def __init__(self, port: int, server_ip: str = "localhost"):
+    def __init__(self, port: int, id: int, server_ip: str = "localhost"):
         self._client_socket: socket.socket = socket.socket(
             socket.AF_INET, socket.SOCK_STREAM
         )
@@ -30,7 +32,10 @@ class Client:
 
         self._sendLock: threading.Lock = threading.Lock()
         self._messToSend: List[str] = []
-
+        
+        self._id = id
+        self._filename = f"log/{self._id}ia.log"
+        
         self._thread: threading.Thread = threading.Thread(target=self.connect)
         self._thread.start()
         time.sleep(0.1)
@@ -82,8 +87,7 @@ class Client:
         self._sendLock.acquire()
         if len(self._messToSend) != 0:
             message = self._messToSend[-1]
-            print("Send: ", end="")
-            print(message.split("\n")[:-1])
+            log.write_to_file(self._filename, "Send: " + message)
             self._messToSend = self._messToSend[:-1]
             self._sendLock.release()
             if message != "\n":
@@ -129,8 +133,7 @@ class Client:
             self._messReceived = self._messReceived[:-1]
             self._receivedLock.release()
             if message != "" and message != "\n" and message.endswith("\n"):
-                print("Output: ", end="")
-                print(message.split("\n")[:-1])
+                log.write_to_file(self._filename, "Recv: " + message)
                 res = message
         else:
             self._receivedLock.release()

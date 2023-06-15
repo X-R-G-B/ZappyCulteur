@@ -1,9 +1,14 @@
 from enum import Enum
-from typing import Dict, List, Tuple
+from typing import List, Tuple, Dict
+from zappy_ia.Client import Client
 from typing import Union
+import zappy_ia.Log as log 
 import pandas as pd
+import time
+import os
 import joblib
 import random
+import sys
 from zappy_ia.Client import Client
 from zappy_ia.MessageEnum import Message
 
@@ -85,12 +90,21 @@ levelParticpantsNb: List[int] = [0, 0, 1, 1, 3, 3, 5, 5]
 
 class IA:
     def __init__(self, port: int, machineName: str, teamName: str):
-        self.teamName: str = teamName
+        self._port: int = port
+        self._machineName: str = machineName
+        self._teamName: str = teamName
+        self.build(7)
+
+    def build(self, neededChild: int = 0):
+        self._neededChild = neededChild
+        self._mapSize: Tuple[int, int] = (0, 0)
+        self._clientNb: int = 0
         self._level: int = 1
-        self.setId()
         self._lastLook: List[List[Element]] = []
-        self._client: Client = Client(port, machineName)
-        self._emitter: int = 0
+        self.setId()
+        self._filename = f"log/{self._id}ia.log"
+        log.configure_file(self._filename)
+        self._client: Client = Client(self._port, self._id ,self._machineName)
         self._inputTree: Dict = {
             "mfood": [0],
             "mlinemate": [0],
@@ -135,7 +149,7 @@ class IA:
     def connect(self):
         while self._client.output() != "WELCOME\n":
             pass
-        self._client.input(self.teamName + "\n")
+        self._client.input(self._teamName + "\n")
         resSetup = ""
         while resSetup == "":
             resSetup = self._client.output()
@@ -150,7 +164,37 @@ class IA:
                 "src/AI/joblib/level" + str(self._level) + ".joblib"
             )
         except FileNotFoundError:
-            raise Exception("Level not found")
+            print("File joblib not found", file=sys.stderr)
+            self._client.stopClient()
+            sys.exit(84)
+
+        while self._client.output() != "WELCOME\n":
+            pass
+        resSetup = self.requestClient(self._teamName + "\n").split("\n")
+        if resSetup[0] == "ko":
+            self._client.stopClient()
+            sys.exit(84)
+        if len(resSetup[1].split(" ")) == 2:
+            self.clientNb = int(resSetup[0])
+            mapSize = resSetup[1].split(" ")
+            self._mapSize = (int(mapSize[0]), int(mapSize[1]))
+        else:
+            self.clientNb = int(resSetup[0])
+            mapSize = resSetup[1].split("\n")[0].split(" ")
+            self._mapSize = (int(mapSize[0]), int(mapSize[1]))
+        self.run()
+
+    def checkNeededChilds(self):
+        while self._neededChild > 0:
+            if int(self.requestClient(Command.CONNECT_NBR.value).split("\n")[0]) > 0:
+                log.write_to_file(self._filename, "New child\n")
+                self.connectNewIA()
+            elif self._inputTree["mfood"][0] > 2:
+                log.write_to_file(self._filename, "New child\n")
+                self.createEgg()
+            else:
+                break
+            self._neededChild -= 1
 
     def run(self):
         continueRun = True
@@ -158,10 +202,11 @@ class IA:
             while continueRun:
                 self.checkElevationParticipant()
                 self.inventory()
+                self.checkNeededChilds()
                 self.lookForTree()
                 predictions = self._levelTree.predict(pd.DataFrame(self._inputTree))
                 for prediction in predictions:
-                    print(prediction)
+                    log.write_to_file(self._filename, prediction + "\n")
                     self._outputTree[prediction]()
         except KeyboardInterrupt:
             return
@@ -227,7 +272,8 @@ class IA:
         for broadcast in broadcasts:
             if broadcast[1].find(Message.L2.value[:-1]) == -1:
                 res.append(broadcast)
-                print(
+                log.write_to_file(
+                    self._filename,
                     "Received broadcast from :"
                     + str(broadcast[0])
                     + "\n: "
@@ -242,6 +288,12 @@ class IA:
         if len(liste) == 0:
             return (0, "", [0], 0)
         return liste[0]
+
+    def waitOutput(self) -> str:
+        res = ""
+        while res == "":
+            res = self._client.output()
+        return res
 
     def requestClient(
         self, command: Union[Command, str], arg: Union[Element, str] = ""
@@ -267,9 +319,9 @@ class IA:
         else:
             argToSend = arg
         self._client.input(toSend, argToSend)
-        res = ""
-        while res == "":
-            res = self._client.output()
+        res = self.waitOutput()
+        if res == "ko":
+            raise Exception("Server responsed ko to : " + toSend)
         return res
 
     def inventory(self):
@@ -280,11 +332,9 @@ class IA:
         res = self.requestClient(Command.INVENTORY)
         res = res.split("[")[1].split("]")[0]
 
-        i = 1
         for elem in res.split(","):
             parsedElem = elem.strip().split(" ")
             self._inputTree["m" + parsedElem[0]][0] = int(parsedElem[1])
-            i += 1
 
     def lookForTree(self):
         """
@@ -346,6 +396,30 @@ class IA:
                 return
 
     def takeElement(self, element: Element, pos: int):
+        """
+        This function move the ia to the pos of the element and pick it up
+
+        Parameters:
+        element (Element): element to take
+        pos (int): pos (in front of the ia) of the element
+        """
+        if pos < 0:
+            return
+        self.pathFinding(pos)
+        self.requestClient(Command.TAKE_OBJECT, element)
+    
+    def connectNewIA(self):
+        self.pid = os.fork()
+        if self.pid == 0:
+            self._client.stopClient()
+            self.build(0)
+        time.sleep(0.5)
+
+    def createEgg(self):
+        self.requestClient(Command.FORK.value)
+        self.connectNewIA()
+
+    def takeElementInLastLook(self, element: Element, pos: int):
         """
         This function move the ia to the pos of the element and pick it up
 
@@ -463,7 +537,7 @@ class IA:
                 toSendStr += " " + str(id_)
         codeStr: str = Message.CODE.value
         completeMessage: str = codeStr + "|" + str(self._id) + "|" + message + toSendStr
-        print("Send broadcast: " + completeMessage)
+        log.write_to_file(self._filename, "Send broadcast: " + completeMessage)
         self.requestClient(Command.BROADCAST, completeMessage)
 
     def isMyIdInList(self, list_: List[int]) -> bool:
@@ -514,7 +588,6 @@ class IA:
         return
 
     def elevationParticipant(self):
-        print("PARTICIPANT!: " + str(self._id))
         res = self.checkBroadcastResponse()
         while res[1] == "":
             res = self.checkBroadcastResponse()
@@ -524,13 +597,11 @@ class IA:
         haveToCome = False
         ready = False
         while haveToCome is False or ready is False:
-            print("haveToCome = " + str(haveToCome) + " ready = " + str(ready))
             self.takeClosestFood()
             if self._inputTree["mfood"][0] >= 13 and ready is False:
                 ready = True
                 self.sendBroadcast(Message.OK.value, [self._emitter])
             res = self.checkBroadcastResponse()
-            print("participant res[1] = " + res[1])
             if res[1] == Message.COME.value:
                 haveToCome = True
         self.joinEmitter()
