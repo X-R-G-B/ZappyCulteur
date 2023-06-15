@@ -242,6 +242,14 @@ class IA:
             if toSend[0] != 0 and self.isMyIdInList(toSend) is False:
                 continue
             resList.append((int(splittedRes[1]), splittedRes[2], toSend, direc))
+            log.write_to_file(
+                    self._filename,
+                    "Received broadcast from :"
+                    + str(splittedRes[1])
+                    + " : "
+                    + splittedRes[2]
+                    + "\n"
+                )
         return resList
 
     def checkBroadcastWithoutNewElevation(
@@ -258,14 +266,6 @@ class IA:
         for broadcast in broadcasts:
             if broadcast[1].find(Message.L2.value[:-1]) == -1:
                 res.append(broadcast)
-                log.write_to_file(
-                    self._filename,
-                    "Received broadcast from :"
-                    + str(broadcast[0])
-                    + " : "
-                    + broadcast[1]
-                    + "\n"
-                )
             else:
                 self.sendBroadcast(Message.KO.value, [broadcast[0]])
         return res
@@ -317,7 +317,12 @@ class IA:
             parse response in self._inputTree which is List
         """
         res = self.requestClient(Command.INVENTORY)
-        res = res.split("[")[1].split("]")[0]
+        try:
+            res = res.split("[")[1].split("]")[0]
+        except IndexError:
+            print(f"ID : {self._id}")
+            self._client.stopClient()
+            return
 
         for elem in res.split(","):
             parsedElem = elem.strip().split(" ")
@@ -344,7 +349,12 @@ class IA:
         self._lastLook.clear()
 
         res = self.requestClient(Command.LOOK)
-        res = res.split("[")[1].split("]")[0]
+        try:
+            res = res.split("[")[1].split("]")[0]
+        except IndexError:
+            print(f"ID : {self._id}")
+            self._client.stopClient()
+            return
 
         i = 0
         for tile in res.split(","):

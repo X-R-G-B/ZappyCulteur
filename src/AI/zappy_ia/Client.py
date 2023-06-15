@@ -71,7 +71,7 @@ class Client:
             self._broadcastLock.release()
         elif message:
             self._receivedLock.acquire()
-            if len(self._messReceived) == 0 or self._messReceived[0].endswith("\n"):
+            if len(self._messReceived) == 0 or self._messReceived[0].count("\n") > 0:
                 self._messReceived.insert(0, message)
             else:
                 self._messReceived[0] += message
@@ -135,11 +135,11 @@ class Client:
         self._receivedLock.acquire()
         if len(self._messReceived) != 0:
             message = self._messReceived[-1]
-            self._messReceived = self._messReceived[:-1]
             self._receivedLock.release()
             if message != "" and message != "\n" and message.endswith("\n"):
                 log.write_to_file(self._filename, "Recv: " + message)
                 res = message
+                self._messReceived = self._messReceived[:-1]
         else:
             self._receivedLock.release()
         time.sleep(0.1)
