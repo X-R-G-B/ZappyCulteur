@@ -32,10 +32,10 @@ class Client:
 
         self._sendLock: threading.Lock = threading.Lock()
         self._messToSend: List[str] = []
-        
+
         self._id = id
         self._filename = f"log/{self._id}ia.log"
-        
+
         self._thread: threading.Thread = threading.Thread(target=self.connect)
         self._thread.start()
         time.sleep(0.1)

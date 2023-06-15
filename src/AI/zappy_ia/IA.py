@@ -2,7 +2,7 @@ from enum import Enum
 from typing import List, Tuple, Dict
 from zappy_ia.Client import Client
 from typing import Union
-import zappy_ia.Log as log 
+import zappy_ia.Log as log
 import pandas as pd
 import time
 import os
@@ -105,7 +105,7 @@ class IA:
         self.setId()
         self._filename = f"log/{self._id}ia.log"
         log.configure_file(self._filename)
-        self._client: Client = Client(self._port, self._id ,self._machineName)
+        self._client: Client = Client(self._port, self._id, self._machineName)
         self._inputTree: Dict = {
             "mfood": [0],
             "mlinemate": [0],
@@ -243,13 +243,13 @@ class IA:
                 continue
             resList.append((int(splittedRes[1]), splittedRes[2], toSend, direc))
             log.write_to_file(
-                    self._filename,
-                    "Received broadcast from :"
-                    + str(splittedRes[1])
-                    + " : "
-                    + splittedRes[2]
-                    + "\n"
-                )
+                self._filename,
+                "Received broadcast from :"
+                + str(splittedRes[1])
+                + " : "
+                + splittedRes[2]
+                + "\n",
+            )
         return resList
 
     def checkBroadcastWithoutNewElevation(
@@ -408,7 +408,7 @@ class IA:
             return
         self.pathFinding(pos)
         self.requestClient(Command.TAKE_OBJECT, element)
-    
+
     def connectNewIA(self):
         self.pid = os.fork()
         if self.pid == 0:
@@ -537,7 +537,9 @@ class IA:
             for id_ in toSend:
                 toSendStr += " " + str(id_)
         codeStr: str = Message.CODE.value
-        completeMessage: str = codeStr + "|" + str(self._id) + "|" + message + toSendStr + "\n"
+        completeMessage: str = (
+            codeStr + "|" + str(self._id) + "|" + message + toSendStr + "\n"
+        )
         self.requestClient(Command.BROADCAST, completeMessage)
 
     def isMyIdInList(self, list_: List[int]) -> bool:
