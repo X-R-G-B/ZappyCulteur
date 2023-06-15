@@ -386,8 +386,8 @@ namespace GUI {
             auto floor = std::static_pointer_cast<GUI::Entities::Floor>(floorEntity);
             auto player = std::static_pointer_cast<GUI::Entities::Trantorian>(playerEntity);
             floor->createRessource(
-                player->getPosition().x == 0 ? 0 : player->getPosition().x / TILE_SIZE,
-                player->getPosition().y == 0 ? 0 : player->getPosition().y / TILE_SIZE,
+                player->getPosition().x == 0 ? 0 : static_cast<unsigned int>(player->getPosition().x / TILE_SIZE),
+                player->getPosition().y == 0 ? 0 : static_cast<unsigned int>(player->getPosition().y / TILE_SIZE),
                 rt
             );
             return true;
