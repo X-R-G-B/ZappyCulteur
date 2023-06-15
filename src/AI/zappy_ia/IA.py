@@ -317,6 +317,8 @@ class IA:
             parse response in self._inputTree which is List
         """
         res = self.requestClient(Command.INVENTORY)
+        if res == "ko\n":
+            return
         try:
             res = res.split("[")[1].split("]")[0]
         except IndexError:
@@ -349,6 +351,8 @@ class IA:
         self._lastLook.clear()
 
         res = self.requestClient(Command.LOOK)
+        if res == "ko\n":
+            return
         try:
             res = res.split("[")[1].split("]")[0]
         except IndexError:
