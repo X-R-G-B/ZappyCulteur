@@ -16,9 +16,8 @@ namespace GUI {
         static const std::string beePath = "src/GUI/assets/bees/beeLeft.png";
         static const std::string bodySpriteSuffix = "BodySprite";
         static const std::string levelTextSuffix = "LevelText";
+        static const std::string teamTextSuffix = "TeamText";
         static const std::size_t beeLayer = 50;
-        static const unsigned int beeWidth = 60;
-        static const unsigned int beeHeight = 60;
         Trantorian::Trantorian(
             const std::string &id,
             const std::string &team,
@@ -93,13 +92,22 @@ namespace GUI {
                         break;
                     }
                     case Components::CompType::TEXT: {
-                        auto text = std::static_pointer_cast<GUI::Components::Text>(comp);
-                        text->setPosition({_position.x, _position.y - levelYOffset});
+                        updateText(comp);
                         break;
                     }
                     default:
                         break;
                 }
+            }
+        }
+
+        void Trantorian::updateText(const std::shared_ptr<GUI::Components::IComponent> &comp)
+        {
+            auto text = std::static_pointer_cast<GUI::Components::Text>(comp);
+            if (text->getId() == _id + teamTextSuffix) {
+                text->setPosition({_position.x, _position.y + teamYOffset});
+            } else {
+                text->setPosition({_position.x, _position.y - levelYOffset});
             }
         }
 
@@ -190,7 +198,14 @@ namespace GUI {
                 color,
                 levelFontSize
             ));
-            _entityCompType.push_back(Components::CompType::SPRITE);
+            _components.push_back(std::make_shared<GUI::Components::Text>(
+                _id + teamTextSuffix,
+                _team,
+                Vector2F(_position.x, _position.y + teamYOffset),
+                color,
+                teamFontSize
+            ));
+            _entityCompType.push_back(Components::CompType::TEXT);
         }
     }
 }
