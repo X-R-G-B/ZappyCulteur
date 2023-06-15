@@ -12,7 +12,6 @@
 #include "SFML.hpp"
 #include "IEntity.hpp"
 #include "Sprite.hpp"
-#include "EventsManager.hpp"
 #include "CompQuery.hpp"
 #include "Floor.hpp"
 
@@ -178,17 +177,39 @@ namespace GUI {
             if (_event.type == sf::Event::Closed) {
                 eventsManager.addEvent(GUI::Event::WINDOW_CLOSED);
             }
-            for (auto &keyboardMapping : _keyboardMappings) {
-                if (sf::Keyboard::isKeyPressed(keyboardMapping.first)) {
-                    eventsManager.addEvent(keyboardMapping.second);
-                }
+            handleMouseEvents(eventsManager);
+            handleKeyboardEvents(eventsManager);
+        }
+    }
+
+    void SFML::handleMouseEvents(EventsManager &eventsManager)
+    {
+        if (_event.type == sf::Event::MouseWheelScrolled) {
+            if (_event.mouseWheelScroll.delta > 0) {
+                eventsManager.addEvent(GUI::Event::MOUSE_WHEEL_UP);
+            } else if (_event.mouseWheelScroll.delta < 0) {
+                eventsManager.addEvent(GUI::Event::MOUSE_WHEEL_DOWN);
             }
-            if (_event.type == sf::Event::MouseWheelScrolled) {
-                if (_event.mouseWheelScroll.delta > 0) {
-                    eventsManager.addEvent(GUI::Event::MOUSE_WHEEL_UP);
-                } else if (_event.mouseWheelScroll.delta < 0) {
-                   eventsManager.addEvent(GUI::Event::MOUSE_WHEEL_DOWN);
-                }
+        }
+        if (_event.type == sf::Event::MouseButtonPressed) {
+            if (_event.mouseButton.button == sf::Mouse::Left) {
+                eventsManager.addEvent(GUI::Event::MOUSE_LEFT_PRESSED);
+            } else if (_event.mouseButton.button == sf::Mouse::Right) {
+                eventsManager.addEvent(GUI::Event::MOUSE_RIGHT_PRESSED);
+            }
+        }
+    }
+
+    void SFML::handleKeyboardEvents(EventsManager &eventsManager)
+    {
+        for (auto &keyboardMapping : _keyboardMappings) {
+            if (sf::Keyboard::isKeyPressed(keyboardMapping.first)) {
+                eventsManager.addEvent(keyboardMapping.second);
+            }
+        }
+        if (_event.type == sf::Event::TextEntered) {
+            if (_event.text.unicode == '.') {
+                eventsManager.addEvent(GUI::Event::KEYBOARD_DOT_PRESSED);
             }
         }
     }
@@ -204,7 +225,8 @@ namespace GUI {
     {
         EventsManager &eventsManager = EventsManager::getInstance();
 
-        if (eventsManager.isEventTriggered(GUI::Event::WINDOW_CLOSED) == true) {
+        if (eventsManager.isEventTriggered(GUI::Event::WINDOW_CLOSED) == true ||
+            eventsManager.isEventTriggered(GUI::Event::KEYBOARD_ESCAPE_PRESSED) == true) {
             closeWindow();
         }
     }

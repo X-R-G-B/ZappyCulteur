@@ -67,11 +67,12 @@ namespace GUI {
         KEYBOARD_SHIFT_PRESSED,
         KEYBOARD_CTRL_PRESSED,
         KEYBOARD_ALT_PRESSED,
+        KEYBOARD_DOT_PRESSED,
         //MOUSE WHEEL
         MOUSE_WHEEL_UP,
         MOUSE_WHEEL_DOWN,
         //WINDOW EVENTS
-        WINDOW_CLOSED,
+        WINDOW_CLOSED
     };
 
     class EventsManager {

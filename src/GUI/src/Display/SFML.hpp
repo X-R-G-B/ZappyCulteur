@@ -11,6 +11,7 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include "EventsManager.hpp"
 #include "CompQuery.hpp"
 #include "ADisplayModule.hpp"
 #include "EntitiesManager.hpp"
@@ -49,6 +50,8 @@ namespace GUI {
                 Vector2F mapSize,
                 float offset
             );
+            void handleKeyboardEvents(EventsManager &eventsManager);
+            void handleMouseEvents(EventsManager &eventsManager);
             sf::Event _event;
             sf::Uint32 _winStyle;
             sf::RenderWindow _window;
