@@ -4,14 +4,13 @@ import socket
 import select
 import threading
 import time
-import logging
-import zappy_ia.Log as log
 from typing import List
-from zappy_ia.MessageEnum import Message
+from zappy_ia.Enums import Message
+import zappy_ia.Log as log
 
 
 class Client:
-    def __init__(self, port: int, id: int, server_ip: str = "localhost"):
+    def __init__(self, port: int, fileName: str, server_ip: str = "localhost"):
         self._client_socket: socket.socket = socket.socket(
             socket.AF_INET, socket.SOCK_STREAM
         )
@@ -33,8 +32,7 @@ class Client:
         self._sendLock: threading.Lock = threading.Lock()
         self._messToSend: List[str] = []
 
-        self._id = id
-        self._filename = f"log/{self._id}ia.log"
+        self._fileName: str = fileName
 
         self._thread: threading.Thread = threading.Thread(target=self.connect)
         self._thread.start()
@@ -92,7 +90,7 @@ class Client:
         self._sendLock.acquire()
         if len(self._messToSend) != 0:
             message = self._messToSend[-1]
-            log.write_to_file(self._filename, "Send: " + message)
+            log.write_to_file(self._fileName, "Send: " + message)
             self._messToSend = self._messToSend[:-1]
             self._sendLock.release()
             if message != "\n":
@@ -123,6 +121,10 @@ class Client:
         self._broadcastLock.acquire()
         if len(self._broadcastReceived) != 0:
             res = self._broadcastReceived
+            log.write_to_file(self._fileName, "Broadcast Recv:")
+            for broadcast in res:
+                print(broadcast)
+            print("")
             self._broadcastReceived = []
             self._broadcastLock.release()
         else:
@@ -137,7 +139,7 @@ class Client:
             message = self._messReceived[-1]
             self._receivedLock.release()
             if message != "" and message != "\n" and message.endswith("\n"):
-                log.write_to_file(self._filename, "Recv: " + message)
+                log.write_to_file(self._fileName, "Recv: " + message)
                 res = message
                 self._messReceived = self._messReceived[:-1]
         else:
