@@ -40,12 +40,17 @@ namespace GUI {
             private:
                 static constexpr int beeSpeed = 200;
                 static constexpr int beeAnimationDead = 2;
-                static constexpr int levelFontSize = 30;
+                static constexpr int levelFontSize = 26;
+                static constexpr int teamFontSize = 20;
                 static constexpr float levelYOffset = 30;
+                static constexpr unsigned int beeWidth = 60;
+                static constexpr unsigned int beeHeight = 60;
+                static constexpr float teamYOffset = beeHeight - 5;
                 void initDeathClock();
                 void createTextComponent();
                 void updatePosition(double deltaTime);
                 void updateComponents();
+                void updateText(const std::shared_ptr<GUI::Components::IComponent> &comp);
                 void initSprites();
                 size_t _level;
                 std::string _team;
