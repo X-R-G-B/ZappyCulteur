@@ -30,6 +30,16 @@ namespace GUI {
             _sprite.setTexture(texture);
         }
 
+        void Sprite::setRect(const sf::IntRect &rect)
+        {
+            _sprite.setTextureRect(rect);
+        }
+
+        sf::IntRect Sprite::getRect() const
+        {
+            return _sprite.getTextureRect();
+        }
+
         void Sprite::setPosition(const sf::Vector2f &position)
         {
             _sprite.setPosition(position);

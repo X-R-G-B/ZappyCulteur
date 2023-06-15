@@ -15,13 +15,10 @@
 #include "internal.h"
 #include "zappy.h"
 
-static bool send_pos(zappy_t *zappy, ntw_client_t *cl, int x, int y)
+static bool send_pos(ntw_client_t *cl, int x, int y)
 {
     char buff[512] = {0};
 
-    if (x >= zappy->map->width || y >= zappy->map->height) {
-        return false;
-    }
     snprintf(buff, 511, "%d %d", x, y);
     circular_buffer_write(cl->write_to_outside, buff);
     return true;
@@ -52,9 +49,7 @@ bool cmd_bct_x_y(zappy_t *zappy, ntw_client_t *cl, int x, int y)
         return false;
     }
     circular_buffer_write(cl->write_to_outside, "bct ");
-    if (send_pos(zappy, cl, x, y) == false) {
-        return false;
-    }
+    send_pos(cl, x, y);
     circular_buffer_write(cl->write_to_outside, " ");
     map_index_x_y_to_i(zappy->map, x, y, &i);
     send_ressources(zappy->map->tiles + i, cl);
@@ -68,7 +63,7 @@ bool cmd_bct(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
     int y;
     bool status = true;
 
-    if (cmd_split[1] == NULL || cmd_split[2] == NULL ||
+    if (zappy == NULL || cmd_split[1] == NULL || cmd_split[2] == NULL ||
             strlen(cmd_split[1]) == 0 || strlen(cmd_split[2]) == 0) {
         return false;
     }

@@ -84,10 +84,15 @@ SRC_LOOP_AICMD	=															\
 SRC_LOOP_AICMD	:=			$(addprefix ai_cmd/, $(SRC_LOOP_AICMD))
 
 SRC_LOOP_GRCMD	=															\
+							cmd_msz.c										\
 							cmd_bct.c										\
 							cmd_mct.c										\
-							cmd_msz.c										\
+							cmd_tna.c										\
 							cmd_ppo.c										\
+							cmd_plv.c										\
+							cmd_pin.c										\
+							cmd_sgt.c										\
+							cmd_sst.c										\
 							update_graphic_cmd.c
 SRC_LOOP_GRCMD	:=			$(addprefix graphic_cmd/, $(SRC_LOOP_GRCMD))
 
