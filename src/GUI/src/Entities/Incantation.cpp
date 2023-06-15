@@ -14,10 +14,10 @@ namespace GUI {
         static const std::string incantationPath = "src/GUI/assets/bees/evolution.png";
         static const std::size_t incantationLayer = 100;
         static const std::string spriteIncantationId = "IncantationSprite";
-        static constexpr unsigned int width = 176.4;
-        static constexpr unsigned int height = 104.4;
-        static constexpr unsigned int rectWidth = 96;
-        static constexpr unsigned int rectHeight = 58;
+        static constexpr unsigned int width = 176;
+        static constexpr unsigned int height = 104;
+        static constexpr int rectWidth = 96;
+        static constexpr int rectHeight = 58;
         Incantation::Incantation(
             const std::string &id,
             const Vector2F &position,
