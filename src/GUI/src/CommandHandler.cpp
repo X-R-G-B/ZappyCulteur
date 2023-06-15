@@ -12,6 +12,7 @@
 #include "Floor.hpp"
 #include "Ressources.hpp"
 #include "Trantorian.hpp"
+#include "Incantation.hpp"
 #include "IEntity.hpp"
 #include "Egg.hpp"
 
@@ -23,6 +24,8 @@ namespace GUI {
             {"pnw", COMMAND_TYPE::NEW_PLAYER},
             {"pnw", COMMAND_TYPE::NEW_PLAYER},
             {"ppo", COMMAND_TYPE::PLAYER_POSITION},
+            {"pie", COMMAND_TYPE::INCANTATION_END},
+            {"pic", COMMAND_TYPE::INCANTATION_START},
             {"enw", COMMAND_TYPE::EGG_LAID},
             {"edi", COMMAND_TYPE::EGG_DEATH},
             {"ebo", COMMAND_TYPE::EGG_PLAYER_CONNECTED},
@@ -40,15 +43,19 @@ namespace GUI {
                 {COMMAND_TYPE::EGG_LAID, &CommandHandler::setEggPosition},
                 {COMMAND_TYPE::EGG_DEATH, &CommandHandler::setEggDie},
                 {COMMAND_TYPE::EGG_PLAYER_CONNECTED, &CommandHandler::setEggDie},
-                {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand},
+                {COMMAND_TYPE::PLAYER_DEATH, &CommandHandler::setPlayerDeath},
+                {COMMAND_TYPE::INCANTATION_START, &CommandHandler::startIncantation},
+                {COMMAND_TYPE::INCANTATION_END, &CommandHandler::endIncantation},
                 {COMMAND_TYPE::PLAYER_DEATH, &CommandHandler::setPlayerDeath},
                 {COMMAND_TYPE::RESSOURCE_COLLECTING, &CommandHandler::setRessourceCollecting},
-                {COMMAND_TYPE::RESSOURCE_DROPPING, &CommandHandler::setRessourceDropping}
+                {COMMAND_TYPE::RESSOURCE_DROPPING, &CommandHandler::setRessourceDropping},
+                {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}
             })
         {}
 
         static const std::string eggKey = "Egg_";
         static const std::string playerKey = "Player_";
+        static const std::string incantationKey = "Incantation_";
 
         void CommandHandler::update(const std::vector<std::string> &commands)
         {
@@ -152,8 +159,11 @@ namespace GUI {
             }
 
             auto floor = std::static_pointer_cast<GUI::Entities::Floor>(entity);
-            ss >> cmd >> x >> y >> ressources[0].first >> ressources[1].first >> ressources[2].first >> ressources[3].first
-                >> ressources[4].first >> ressources[5].first >> ressources[6].first;
+            if (!(ss >> cmd >> x >> y >> ressources[0].first >> ressources[1].first >>
+                ressources[2].first >> ressources[3].first >> ressources[4].first >>
+                ressources[5].first >> ressources[6].first)) {
+                return (false);
+            }
             for (const auto &it : ressources) {
                 if (it.first > 0) {
                     floor->createRessources(x, y, it.second, it.first);
@@ -205,6 +215,67 @@ namespace GUI {
                 auto entity = _entityManager->getEntityById(playerKey + id);
                 auto trantorian = std::static_pointer_cast<Entities::Trantorian>(entity);
                 trantorian->setDead(true);
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return (false);
+            }
+            return (true);
+        }
+
+        bool CommandHandler::startIncantation(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string incantationId;
+            float x = 0;
+            float y = 0;
+            std::string level;
+            std::string id;
+            std::vector<std::string> playerIds;
+
+            if (!(ss >> cmd >> x >> y >> level)) {
+                return (false);
+            }
+            while (ss >> id) {
+                playerIds.push_back(id);
+            }
+            incantationId = incantationKey + std::to_string(x) + std::to_string(y);
+            try {
+                auto incantationEntity = std::make_shared<Entities::Incantation>(incantationId,
+                                            Vector2F(x, y), Entities::EntityOrientation::UP);
+                while (!playerIds.empty()) {
+                    id = playerIds.back();
+                    auto entity = _entityManager->getEntityById(playerKey + id);
+                    auto trantorian = std::static_pointer_cast<Entities::Trantorian>(entity);
+                    incantationEntity->addTrantorian(trantorian);
+                    playerIds.pop_back();
+                }
+                _entityManager->addEntity(incantationEntity);
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return (false);
+            }
+            return (true);
+        }
+
+        bool CommandHandler::endIncantation(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            float x = 0;
+            float y = 0;
+            std::size_t result = 0;
+            std::string incantationId;
+
+            if (!(ss >> cmd >> x >> y >> result)) {
+                return (false);
+            }
+            incantationId = incantationKey + std::to_string(x) + std::to_string(y);
+            try {
+                auto entity = _entityManager->getEntityById(incantationId);
+                auto incantation = std::static_pointer_cast<Entities::Incantation>(entity);
+                incantation->endIncantation(result);
+                _entityManager->killEntityById(incantationId);
             } catch (const Entities::EntitiesManagerException &e) {
                 std::cerr << e.what() << std::endl;
                 return (false);
