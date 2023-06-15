@@ -100,6 +100,7 @@ class IA:
         self._mapSize: Tuple[int, int] = (0, 0)
         self._clientNb: int = 0
         self._level: int = 1
+        self._emitter: int = 0
         self._lastLook: List[List[Element]] = []
         self.setId()
         self._filename = f"log/{self._id}ia.log"
@@ -168,29 +169,13 @@ class IA:
             self._client.stopClient()
             sys.exit(84)
 
-        while self._client.output() != "WELCOME\n":
-            pass
-        resSetup = self.requestClient(self._teamName + "\n").split("\n")
-        if resSetup[0] == "ko":
-            self._client.stopClient()
-            sys.exit(84)
-        if len(resSetup[1].split(" ")) == 2:
-            self.clientNb = int(resSetup[0])
-            mapSize = resSetup[1].split(" ")
-            self._mapSize = (int(mapSize[0]), int(mapSize[1]))
-        else:
-            self.clientNb = int(resSetup[0])
-            mapSize = resSetup[1].split("\n")[0].split(" ")
-            self._mapSize = (int(mapSize[0]), int(mapSize[1]))
-        self.run()
-
     def checkNeededChilds(self):
         while self._neededChild > 0:
             if int(self.requestClient(Command.CONNECT_NBR.value).split("\n")[0]) > 0:
                 log.write_to_file(self._filename, "New child\n")
                 self.connectNewIA()
             elif self._inputTree["mfood"][0] > 2:
-                log.write_to_file(self._filename, "New child\n")
+                log.write_to_file(self._filename, "New egg\n")
                 self.createEgg()
             else:
                 break
@@ -206,9 +191,10 @@ class IA:
                 self.lookForTree()
                 predictions = self._levelTree.predict(pd.DataFrame(self._inputTree))
                 for prediction in predictions:
-                    log.write_to_file(self._filename, prediction + "\n")
+                    log.write_to_file(self._filename, "Pred: " + prediction + "\n")
                     self._outputTree[prediction]()
         except KeyboardInterrupt:
+            self._client.stopClient()
             return
 
     def checkElevationParticipant(self):
@@ -276,8 +262,9 @@ class IA:
                     self._filename,
                     "Received broadcast from :"
                     + str(broadcast[0])
-                    + "\n: "
+                    + " : "
                     + broadcast[1]
+                    + "\n"
                 )
             else:
                 self.sendBroadcast(Message.KO.value, [broadcast[0]])
@@ -536,8 +523,7 @@ class IA:
             for id_ in toSend:
                 toSendStr += " " + str(id_)
         codeStr: str = Message.CODE.value
-        completeMessage: str = codeStr + "|" + str(self._id) + "|" + message + toSendStr
-        log.write_to_file(self._filename, "Send broadcast: " + completeMessage)
+        completeMessage: str = codeStr + "|" + str(self._id) + "|" + message + toSendStr + "\n"
         self.requestClient(Command.BROADCAST, completeMessage)
 
     def isMyIdInList(self, list_: List[int]) -> bool:

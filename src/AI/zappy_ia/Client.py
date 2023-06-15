@@ -62,7 +62,12 @@ class Client:
     def _checkMessage(self, message: str):
         if message.find(Message.CODE.value) != -1:
             self._broadcastLock.acquire()
-            self._broadcastReceived.insert(0, message)
+            if message.count("\n") == 1:
+                self._broadcastReceived.insert(0, message[:-1])
+            else:
+                for mess in message.split("\n"):
+                    if mess != "":
+                        self._broadcastReceived.insert(0, mess)
             self._broadcastLock.release()
         elif message:
             self._receivedLock.acquire()
