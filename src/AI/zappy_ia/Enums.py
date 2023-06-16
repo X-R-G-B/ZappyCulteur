@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Message(Enum):
     OK = "ok"
     KO = "ko"
@@ -13,6 +14,7 @@ class Message(Enum):
     COME = "come"
     CODE = "*$+"
 
+
 class Element(Enum):
     EMPTY = "empty"
     FOOD = "food"
@@ -23,6 +25,7 @@ class Element(Enum):
     MENDIANE = "mendiane"
     PHIRAS = "phiras"
     THYSTAME = "thystame"
+
 
 class Command(Enum):
     FORWARD = "Forward"
