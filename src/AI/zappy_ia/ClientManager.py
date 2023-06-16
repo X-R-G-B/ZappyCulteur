@@ -1,18 +1,18 @@
 from zappy_ia.Client import Client
+from zappy_ia.Log import LogGood
 from typing import List, Tuple
 from typing import Union
 from zappy_ia.Enums import Message, Element, Command
-import zappy_ia.Log as log
 
 
 class ClientManager:
     def __init__(
-        self, port: int, machineName: str, teamName: str, id: int, fileName: str
+        self, port: int, machineName: str, teamName: str, id: int, log: LogGood
     ):
         self._teamName: str = teamName
-        self._fileName = fileName
+        self._log: LogGood = log
         self._id: int = id
-        self._client: Client = Client(port, self._fileName, machineName)
+        self._client: Client = Client(port, log, machineName)
         self.connect()
 
     def stopClient(self):
@@ -61,13 +61,11 @@ class ClientManager:
             if toSend[0] != 0 and self.isMyIdInList(toSend) is False:
                 continue
             resList.append((int(splittedRes[1]), splittedRes[2], toSend, direc))
-            log.write_to_file(
-                self._fileName,
+            self._log.info(
                 "Received broadcast from :"
                 + str(splittedRes[1])
                 + " : "
                 + splittedRes[2]
-                + "\n",
             )
         return resList
 
