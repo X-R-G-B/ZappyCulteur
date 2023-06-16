@@ -1,5 +1,5 @@
 from typing import Dict, List, Tuple
-import zappy_ia.Log as log
+from zappy_ia.Log import LogGood
 from zappy_ia.ClientManager import ClientManager
 from zappy_ia.DecisionTree import DecisionTree
 from zappy_ia.ElevationParticipant import ElevationParticipant
@@ -18,10 +18,9 @@ class IA:
     def build(self, neededChilds: int):
         self._neededChilds = neededChilds
         self.setId()
-        self._fileName: str = f"log/{self._id}ia.log"
-        log.configure_file(self._fileName)
-        self._clientManager: ClientManager = ClientManager(self._port, self._machineName, self._teamName, self._id, self._fileName)
-        self._decisionTree: DecisionTree = DecisionTree(self._clientManager, self._fileName)
+        self._log = LogGood(f"log/{self._id}ia.log")
+        self._clientManager: ClientManager = ClientManager(self._port, self._machineName, self._teamName, self._id, self._log)
+        self._decisionTree: DecisionTree = DecisionTree(self._clientManager, self._log, self._id)
         self._elevationParticipant: ElevationParticipant = ElevationParticipant(self._clientManager, self._decisionTree)
         self.run()
 
@@ -30,7 +29,7 @@ class IA:
 
     def connectNewIA(self):
         self.pid = os.fork()
-        log.write_to_file(self._fileName, "new ia")
+        self._log.info("new ia")
         if self.pid == 0:
             self._clientManager.stopClient()
             self.build(0)
@@ -41,7 +40,6 @@ class IA:
         self.connectNewIA()
 
     def checkNeededChilds(self):
-        log.write_to_file(self._fileName, "in neededchilds +" + str(self._neededChilds) + "\n")
         while self._neededChilds > 0:
             if int(self._clientManager.requestClient(Command.CONNECT_NBR.value).split("\n")[0]) > 0:
                 self.connectNewIA()

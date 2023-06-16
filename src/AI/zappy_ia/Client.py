@@ -6,11 +6,12 @@ import threading
 import time
 from typing import List
 from zappy_ia.Enums import Message
+from zappy_ia.Log import LogGood
 import zappy_ia.Log as log
 
 
 class Client:
-    def __init__(self, port: int, fileName: str, server_ip: str = "localhost"):
+    def __init__(self, port: int, log: LogGood, server_ip: str = "localhost"):
         self._client_socket: socket.socket = socket.socket(
             socket.AF_INET, socket.SOCK_STREAM
         )
@@ -32,7 +33,7 @@ class Client:
         self._sendLock: threading.Lock = threading.Lock()
         self._messToSend: List[str] = []
 
-        self._fileName: str = fileName
+        self._log: LogGood = log
 
         self._thread: threading.Thread = threading.Thread(target=self.connect)
         self._thread.start()
@@ -84,7 +85,7 @@ class Client:
         for socket_ in read_sockets:
             if socket_ == self._client_socket:
                 message = socket_.recv(2048).decode()
-                log.write_to_file(self._fileName, "Recv: " + message)
+                self._log.info("Recv: " + message, end="")
                 self._checkMessage(message)
 
     def _addMessageToSend(self):
@@ -95,7 +96,7 @@ class Client:
             self._sendLock.release()
             if message != "\n":
                 self._inTreatment += 1
-                log.write_to_file(self._fileName, "Send: " + message)
+                self._log.info("Send: " + message, end="")
                 self._client_socket.sendall(message.encode())
         else:
             self._sendLock.release()
