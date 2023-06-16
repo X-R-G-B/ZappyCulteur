@@ -71,7 +71,7 @@ class IA:
                     self._elevationParticipant.checkElevationParticipant(
                         self._decisionTree.getCurrentLevel()
                     )
-                    == True
+                    is True
                 ):
                     self._decisionTree.incrementLevel()
                 self._decisionTree.predict()
