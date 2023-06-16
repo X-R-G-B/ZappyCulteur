@@ -1,6 +1,12 @@
 import os
 
 
+def clearDirectory(path: str):
+    if os.path.exists(path):
+        for file in os.listdir(path):
+            os.remove(os.path.join(path, file))
+
+
 class LogGood:
     def __init__(self, path: str, mode: str = "x") -> None:
         self._path = path
