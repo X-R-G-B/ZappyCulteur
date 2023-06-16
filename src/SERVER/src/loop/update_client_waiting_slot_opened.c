@@ -30,11 +30,11 @@ bool update_client_waiting_slot_opened(zappy_t *zappy, ntw_client_t *cl)
             zappy->trantoriens_available) == false) {
         return true;
     }
-    send_new_connection(zappy->ntw, cl);
     client->state = CONNECTED;
     client->type = AI;
     send_id(client, cl);
     send_size(zappy->args, cl);
     client->cl.ai.trantorien->id = client->id;
+    send_new_connection(zappy->ntw, cl);
     return true;
 }

@@ -24,7 +24,7 @@ bool cmd_pnw(ntw_t *ntw, ntw_client_t *cl)
         || client->cl.ai.trantorien == NULL) {
         return false;
     }
-    sprintf(buffer, "pnw %d %d %d %d %d %s\n", client->id,
+    snprintf(buffer, 511, "pnw %d %d %d %d %d %s\n", client->id,
     client->cl.ai.trantorien->x, client->cl.ai.trantorien->y,
     client->cl.ai.trantorien->direction, client->cl.ai.trantorien->level,
     client->cl.ai.trantorien->team_name);
