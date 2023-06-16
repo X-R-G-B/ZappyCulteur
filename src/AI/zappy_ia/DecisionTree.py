@@ -1,10 +1,10 @@
 import joblib
 import sys
-import zappy_ia.Log as log
 import pandas as pd
 from typing import Dict, List, Tuple
 from zappy_ia.ClientManager import ClientManager
 from zappy_ia.Enums import Message, Element, Command
+from zappy_ia.Log import LogGood
 
 levelParticpantsNb: List[int] = [0, 0, 1, 1, 3, 3, 5, 5]
 
@@ -42,10 +42,11 @@ levelCosts: List[List[Tuple[Element, int]]] = [
 
 
 class DecisionTree:
-    def __init__(self, clientManager: ClientManager, fileName: str):
+    def __init__(self, clientManager: ClientManager, log: LogGood, id: int):
         self._clientManager: ClientManager = clientManager
         self._level: int = 1
-        self._fileName: str = fileName
+        self._log: LogGood = log
+        self._id: int = id
         self.loadTree()
         self._lastLook: List[List[Element]] = []
         self._outputTree: Dict = {
@@ -93,7 +94,7 @@ class DecisionTree:
         self.lookForTree()
         predictions = self._levelTree.predict(pd.DataFrame(self._inputTree))
         for prediction in predictions:
-            log.write_to_file(self._fileName, "Pred:" + prediction + "\n")
+            self._log.info("Pred:" + prediction)
             self._outputTree[prediction]()
 
     def inventory(self):
