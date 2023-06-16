@@ -12,6 +12,7 @@
 #include "internal.h"
 #include "tlcstrings.h"
 #include "command_reponses.h"
+#include "broadcast_events.h"
 
 static const char cmds_graphic[NB_CMD_AVAILIBLE][6] = {
     "msz\n",
@@ -43,16 +44,21 @@ static bool
 
 static bool update_cmd(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
 {
+    bool is_entered = false;
     bool status = false;
 
     for (int i = 0; cmds_graphic[i][0] != '\0'; i++) {
         if (strcmp(cmd_split[0], cmds_graphic[i]) == 0) {
             status = graphic_funcs[i](zappy, cl, cmd_split);
+            is_entered = true;
             break;
         }
     }
     if (status == false) {
-        circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
+        if (is_entered == false)
+            cmd_sbp(cl);
+        else
+            cmd_suc(cl);
         status = true;
     }
     return status;

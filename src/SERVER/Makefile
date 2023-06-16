@@ -93,6 +93,20 @@ SRC_LOOP_GRCMD	=															\
 							cmd_pin.c										\
 							cmd_sgt.c										\
 							cmd_sst.c										\
+							cmd_pnw.c										\
+							cmd_pex.c										\
+							cmd_pbc.c										\
+							cmd_pfk.c										\
+							cmd_pdr.c										\
+							cmd_pgt.c										\
+							cmd_pdi.c										\
+							cmd_enw.c										\
+							cmd_ebo.c										\
+							cmd_edi.c										\
+							cmd_seg.c										\
+							cmd_smg.c										\
+							cmd_suc.c										\
+							cmd_sbp.c										\
 							update_graphic_cmd.c
 SRC_LOOP_GRCMD	:=			$(addprefix graphic_cmd/, $(SRC_LOOP_GRCMD))
 
@@ -186,6 +200,7 @@ SRC				:=															\
 							get_id.c										\
 							main.c											\
 							on_new_conn.c									\
+							zappy_check_end.c								\
 							zappy_create_initial_egg.c						\
 							zappy_destroy.c									\
 							zappy_find_trantorien_by_id.c					\

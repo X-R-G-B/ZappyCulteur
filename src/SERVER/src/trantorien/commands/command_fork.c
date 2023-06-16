@@ -6,10 +6,13 @@
 */
 
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include "ntw.h"
+#include "client.h"
 #include "zappy.h"
 #include "command_reponses.h"
+#include "broadcast_events.h"
 
 int command_fork(trantorien_t *trantorien, zappy_t *zappy,
 ntw_client_t *cl, action_t *action)
@@ -31,5 +34,6 @@ ntw_client_t *cl, action_t *action)
         return EXIT_FAILURE;
     }
     circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
+    cmd_enw(zappy->ntw, cl);
     return EXIT_FAILURE;
 }

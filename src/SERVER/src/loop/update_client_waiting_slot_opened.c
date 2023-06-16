@@ -6,9 +6,17 @@
 */
 
 #include <stdbool.h>
+#include <stdio.h>
 #include "client.h"
 #include "internal.h"
 #include "trantorien.h"
+#include "broadcast_events.h"
+
+static void send_new_connection(ntw_t *ntw, ntw_client_t *cl)
+{
+    cmd_ebo(ntw, cl);
+    cmd_pnw(ntw, cl);
+}
 
 bool update_client_waiting_slot_opened(zappy_t *zappy, ntw_client_t *cl)
 {
@@ -22,6 +30,7 @@ bool update_client_waiting_slot_opened(zappy_t *zappy, ntw_client_t *cl)
             zappy->trantoriens_available) == false) {
         return true;
     }
+    send_new_connection(zappy->ntw, cl);
     client->state = CONNECTED;
     client->type = AI;
     send_id(client, cl);

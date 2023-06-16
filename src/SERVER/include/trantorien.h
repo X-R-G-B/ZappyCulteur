@@ -85,6 +85,11 @@ typedef struct zappy_s zappy_t;
 void trantorien_reduce_freq(trantorien_t *trantorien, zappy_t *zappy,
     ntw_client_t *cl);
 
+/**
+** @brief Destroy an action
+** @param action
+**/
+void action_destroy(action_t *action);
 
 /**
 ** @brief Get the min case for the look around wiht substration
