@@ -132,7 +132,7 @@ class ClientManager:
         self._client.input(toSend, argToSend)
         res = self.waitOutput()
         if (res == "ko\n"):
-            raise Exception("Server responded ko to : " + toSend)
+            raise Exception(f"Server responded ko to : `{toSend}` (`{argToSend}`)")
         return res
 
     def sendBroadcast(self, message: str, toSend: List[int] = []):
@@ -140,8 +140,7 @@ class ClientManager:
         if len(toSend) == 0:
             toSendStr += "0"
         else:
-            for id_ in toSend:
-                toSendStr += " " + str(id_)
+            toSendStr += " ".join(map(str, toSend))
         codeStr: str = Message.CODE.value
-        completeMessage: str = codeStr + "|" + str(self._id) + "|" + message + toSendStr + "\n"
+        completeMessage: str = codeStr + "|" + str(self._id) + "|" + message + toSendStr
         self.requestClient(Command.BROADCAST, completeMessage)
