@@ -6,8 +6,11 @@ from zappy_ia.Enums import Message, Element, Command
 import zappy_ia.Log as log
 import sys
 
+
 class ClientManager:
-    def __init__(self, port: int, machineName: str, teamName: str, id: int, log: LogGood):
+    def __init__(
+        self, port: int, machineName: str, teamName: str, id: int, log: LogGood
+    ):
         self._teamName: str = teamName
         self._log: LogGood = log
         self._id: int = id
@@ -29,7 +32,7 @@ class ClientManager:
         if resSetup[0] == "ko":
             self.stopClient()
             raise Exception("Team name already taken")
-        if (len(resSetup) == 1):
+        if len(resSetup) == 1:
             resSetup = self.waitOutput()
 
     def isMyIdInList(self, list_: List[int]) -> bool:
@@ -61,11 +64,11 @@ class ClientManager:
                 continue
             resList.append((int(splittedRes[1]), splittedRes[2], toSend, direc))
             self._log.info(
-                    "Received broadcast from :"
-                    + str(splittedRes[1])
-                    + " : "
-                    + splittedRes[2]
-                )
+                "Received broadcast from :"
+                + str(splittedRes[1])
+                + " : "
+                + splittedRes[2]
+            )
         return resList
 
     def checkBroadcastWithoutNewElevation(
@@ -130,7 +133,7 @@ class ClientManager:
             argToSend = arg
         self._client.input(toSend, argToSend)
         res = self.waitOutput()
-        if (res == "ko\n"):
+        if res == "ko\n":
             raise Exception(f"Server responded ko to : `{toSend}` (`{argToSend}`)")
         return res
 

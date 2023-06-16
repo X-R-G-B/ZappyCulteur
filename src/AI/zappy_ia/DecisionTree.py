@@ -41,6 +41,7 @@ levelCosts: List[List[Tuple[Element, int]]] = [
     ],
 ]
 
+
 class DecisionTree:
     def __init__(self, clientManager: ClientManager, log: LogGood, id: int):
         self._clientManager: ClientManager = clientManager
@@ -292,7 +293,9 @@ class DecisionTree:
             if costTuple[1] > self._inputTree["m" + costTuple[0].value][0]:
                 return
             for _ in range(costTuple[1]):
-                self._clientManager.requestClient(Command.SET_OBJECT, costTuple[0].value)
+                self._clientManager.requestClient(
+                    Command.SET_OBJECT, costTuple[0].value
+                )
         self._clientManager.requestClient(Command.INCANTATION)
         out = ""
         while out == "":

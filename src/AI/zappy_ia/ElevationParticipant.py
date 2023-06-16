@@ -14,6 +14,7 @@ cmdDirections: Dict = {
     8: ["Forward\n", "Right\n", "Forward\n"],
 }
 
+
 class ElevationParticipant:
     def __init__(self, clientManager: ClientManager, decisionTree: DecisionTree):
         self._emitter: int = 0
@@ -74,7 +75,9 @@ class ElevationParticipant:
         return self.joinEmitter()
 
     def checkElevationParticipant(self, currentLevel: int) -> bool:
-        broadcasts: List[Tuple[int, str, List[int], int]] = self._clientManager.checkBroadcast()
+        broadcasts: List[
+            Tuple[int, str, List[int], int]
+        ] = self._clientManager.checkBroadcast()
         response: List[int] = []
         if len(broadcasts) == 0:
             return self.errorReturn()

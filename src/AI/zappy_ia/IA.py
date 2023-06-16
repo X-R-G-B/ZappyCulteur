@@ -8,6 +8,7 @@ import random
 import time
 import os
 
+
 class IA:
     def __init__(self, port: int, machineName: str, teamName: str):
         self._port: int = port
@@ -19,9 +20,15 @@ class IA:
         self._neededChilds = neededChilds
         self.setId()
         self._log = LogGood(f"log/{self._id}ia.log")
-        self._clientManager: ClientManager = ClientManager(self._port, self._machineName, self._teamName, self._id, self._log)
-        self._decisionTree: DecisionTree = DecisionTree(self._clientManager, self._log, self._id)
-        self._elevationParticipant: ElevationParticipant = ElevationParticipant(self._clientManager, self._decisionTree)
+        self._clientManager: ClientManager = ClientManager(
+            self._port, self._machineName, self._teamName, self._id, self._log
+        )
+        self._decisionTree: DecisionTree = DecisionTree(
+            self._clientManager, self._log, self._id
+        )
+        self._elevationParticipant: ElevationParticipant = ElevationParticipant(
+            self._clientManager, self._decisionTree
+        )
         self.run()
 
     def setId(self):
@@ -41,7 +48,14 @@ class IA:
 
     def checkNeededChilds(self):
         while self._neededChilds > 0:
-            if int(self._clientManager.requestClient(Command.CONNECT_NBR.value).split("\n")[0]) > 0:
+            if (
+                int(
+                    self._clientManager.requestClient(Command.CONNECT_NBR.value).split(
+                        "\n"
+                    )[0]
+                )
+                > 0
+            ):
                 self.connectNewIA()
             elif self._decisionTree.getCurrentFood() > 2:
                 self.createEgg()
@@ -54,7 +68,12 @@ class IA:
         try:
             while continueRun:
                 self.checkNeededChilds()
-                if (self._elevationParticipant.checkElevationParticipant(self._decisionTree.getCurrentLevel()) == True):
+                if (
+                    self._elevationParticipant.checkElevationParticipant(
+                        self._decisionTree.getCurrentLevel()
+                    )
+                    == True
+                ):
                     self._decisionTree.incrementLevel()
                 self._decisionTree.predict()
         except KeyboardInterrupt:
