@@ -38,12 +38,14 @@ $(LOCAL_DEPS)/simple: $(LOCAL_DEPS)/requirements.txt
 	$(MAKE) $(LOCAL_DEPS)/simple-force
 
 $(LOCAL_DEPS)/simple-force: $(LOCAL_DEPS)/requirements.txt
-	pip install --user piprepo
+	pip install --break-system-packages --user piprepo
 	pip download -d ./local_deps -r ./$(LOCAL_DEPS)/requirements.txt
 	piprepo build ./local_deps
 
-$(TARGET): $(LOCAL_DEPS)/simple
-	pip install --user -i ./local_deps/simple .
+$(TARGET):
+	([ ! -d $(LOCAL_DEPS)/simple ] && $(MAKE) $(LOCAL_DEPS)/simple-force) || \
+		true
+	pip install --break-system-packages --user -i ./local_deps/simple .
 	$(CP) "$(TARGET).py" "$(TARGET)"
 	$(TOEXEC) "$(TARGET)"
 
@@ -52,9 +54,8 @@ clean:
 	$(RM) -r $(PIP_TARGET).egg-info
 
 fclean: clean
-	pip uninstall -y $(PIP_TARGET) $(PIP_DEPS_RM)
+	pip uninstall --break-system-packages -y $(PIP_TARGET)
 	$(RM) $(LOCAL_DEPS)/requirements.txt
-	pip uninstall -y piprepo || true
 	$(RM) $(TARGET)
 
 fclean-simple: fclean
