@@ -113,6 +113,7 @@ class Client:
     def input(self, message: str, arg: str = ""):
         if arg != "":
             message += " " + arg
+        message = message.rstrip(" \n")
         if not message.endswith("\n"):
             message += "\n"
         self._sendLock.acquire()

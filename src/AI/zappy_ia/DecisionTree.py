@@ -106,7 +106,7 @@ class DecisionTree:
         try:
             res = res.split("[")[1].split("]")[0]
         except IndexError:
-            print(f"ID : {self._id}")
+            print(f"ID : {self._clientManager._id}")
             self._clientManager.stopClient()
             return
 
@@ -140,7 +140,7 @@ class DecisionTree:
         try:
             res = res.split("[")[1].split("]")[0]
         except IndexError:
-            print(f"ID : {self._id}")
+            print(f"ID : {self._clientManager._id}")
             self._clientManager.stopClient()
             return
 

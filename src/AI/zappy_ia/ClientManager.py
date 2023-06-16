@@ -132,7 +132,9 @@ class ClientManager:
         self._client.input(toSend, argToSend)
         res = self.waitOutput()
         if (res == "ko\n"):
-            raise Exception(f"Server responded ko to : `{toSend}` (`{argToSend}`)")
+            toSendOrd = list(map(ord, toSend))
+            argToSendOrd = list(map(ord, argToSend))
+            raise Exception(f"Server responded ko to : `{toSend}`({toSendOrd}) + `{argToSend}`({argToSendOrd})")
         return res
 
     def sendBroadcast(self, message: str, toSend: List[int] = []):
