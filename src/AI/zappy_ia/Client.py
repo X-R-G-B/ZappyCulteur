@@ -7,7 +7,6 @@ import time
 from typing import List
 from zappy_ia.Enums import Message
 from zappy_ia.Log import LogGood
-import zappy_ia.Log as log
 
 
 class Client:

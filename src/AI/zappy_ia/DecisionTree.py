@@ -1,6 +1,5 @@
 import joblib
 import sys
-import zappy_ia.Log as log
 import pandas as pd
 from typing import Dict, List, Tuple
 from zappy_ia.ClientManager import ClientManager

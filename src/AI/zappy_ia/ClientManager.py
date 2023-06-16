@@ -1,10 +1,8 @@
 from zappy_ia.Client import Client
 from zappy_ia.Log import LogGood
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 from typing import Union
 from zappy_ia.Enums import Message, Element, Command
-import zappy_ia.Log as log
-import sys
 
 
 class ClientManager:
