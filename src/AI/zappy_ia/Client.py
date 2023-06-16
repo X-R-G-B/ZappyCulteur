@@ -84,17 +84,18 @@ class Client:
         for socket_ in read_sockets:
             if socket_ == self._client_socket:
                 message = socket_.recv(2048).decode()
+                log.write_to_file(self._fileName, "Recv: " + message)
                 self._checkMessage(message)
 
     def _addMessageToSend(self):
         self._sendLock.acquire()
         if len(self._messToSend) != 0:
             message = self._messToSend[-1]
-            log.write_to_file(self._fileName, "Send: " + message)
             self._messToSend = self._messToSend[:-1]
             self._sendLock.release()
             if message != "\n":
                 self._inTreatment += 1
+                log.write_to_file(self._fileName, "Send: " + message)
                 self._client_socket.sendall(message.encode())
         else:
             self._sendLock.release()
@@ -121,10 +122,6 @@ class Client:
         self._broadcastLock.acquire()
         if len(self._broadcastReceived) != 0:
             res = self._broadcastReceived
-            log.write_to_file(self._fileName, "Broadcast Recv:")
-            for broadcast in res:
-                print(broadcast)
-            print("")
             self._broadcastReceived = []
             self._broadcastLock.release()
         else:
@@ -139,7 +136,6 @@ class Client:
             message = self._messReceived[-1]
             self._receivedLock.release()
             if message != "" and message != "\n" and message.endswith("\n"):
-                log.write_to_file(self._fileName, "Recv: " + message)
                 res = message
                 self._messReceived = self._messReceived[:-1]
         else:
