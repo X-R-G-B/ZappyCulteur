@@ -50,6 +50,19 @@ static bool
     NULL,
 };
 
+static void debug_error_print(const char *cmd, const char *all)
+{
+    fprintf(stderr, "Unknown command `%s`(", cmd);
+    for (int i = 0; cmd[i] != '\0'; i++) {
+        fprintf(stderr, " %d", cmd[i]);
+    }
+    fprintf(stderr, ") + `%s`(", all);
+    for (int i = 0; all[i] != '\0'; i++) {
+        fprintf(stderr, " %d", all[i]);
+    }
+    fprintf(stderr, ")\n");
+}
+
 static bool update_cmd(zappy_t *zappy, ntw_client_t *cl, char **cmd_split,
     char *cmd)
 {
@@ -66,7 +79,7 @@ static bool update_cmd(zappy_t *zappy, ntw_client_t *cl, char **cmd_split,
     }
     if (status == false) {
         circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
-        fprintf(stderr, "Unknown command (`%s`)\n", cmd);
+        debug_error_print(cmd_split[0], cmd);
         status = true;
     }
     return status;
