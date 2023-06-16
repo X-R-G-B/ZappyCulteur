@@ -5,7 +5,6 @@ from typing import Union
 from zappy_ia.Enums import Message, Element, Command
 
 
-
 class ClientManager:
     def __init__(
         self, port: int, machineName: str, teamName: str, id: int, log: LogGood
