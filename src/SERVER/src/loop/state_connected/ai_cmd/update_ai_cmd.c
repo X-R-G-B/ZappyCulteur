@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "circular_buffer.h"
 #include "client.h"
 #include "tlcstrings.h"
@@ -65,6 +66,7 @@ static bool update_cmd(zappy_t *zappy, ntw_client_t *cl, char **cmd_split,
     }
     if (status == false) {
         circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
+        fprintf(stderr, "Unknown command (`%s`)\n", cmd);
         status = true;
     }
     return status;
