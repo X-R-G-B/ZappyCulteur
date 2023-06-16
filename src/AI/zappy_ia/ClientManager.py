@@ -1,12 +1,14 @@
 from zappy_ia.Client import Client
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 from typing import Union
 from zappy_ia.Enums import Message, Element, Command
 import zappy_ia.Log as log
-import sys
+
 
 class ClientManager:
-    def __init__(self, port: int, machineName: str, teamName: str, id: int, fileName: str):
+    def __init__(
+        self, port: int, machineName: str, teamName: str, id: int, fileName: str
+    ):
         self._teamName: str = teamName
         self._fileName = fileName
         self._id: int = id
@@ -28,7 +30,7 @@ class ClientManager:
         if resSetup[0] == "ko":
             self.stopClient()
             raise Exception("Team name already taken")
-        if (len(resSetup) == 1):
+        if len(resSetup) == 1:
             resSetup = self.waitOutput()
 
     def isMyIdInList(self, list_: List[int]) -> bool:
@@ -60,13 +62,13 @@ class ClientManager:
                 continue
             resList.append((int(splittedRes[1]), splittedRes[2], toSend, direc))
             log.write_to_file(
-                    self._fileName,
-                    "Received broadcast from :"
-                    + str(splittedRes[1])
-                    + " : "
-                    + splittedRes[2]
-                    + "\n"
-                )
+                self._fileName,
+                "Received broadcast from :"
+                + str(splittedRes[1])
+                + " : "
+                + splittedRes[2]
+                + "\n",
+            )
         return resList
 
     def checkBroadcastWithoutNewElevation(
@@ -131,7 +133,7 @@ class ClientManager:
             argToSend = arg
         self._client.input(toSend, argToSend)
         res = self.waitOutput()
-        if (res == "ko\n"):
+        if res == "ko\n":
             raise Exception(f"Server responded ko to : `{toSend}` (`{argToSend}`)")
         return res
 
