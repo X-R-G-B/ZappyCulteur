@@ -8,11 +8,20 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "map.h"
 #include "ntw.h"
 #include "trantorien.h"
 #include "zappy.h"
 #include "client.h"
 #include "command_reponses.h"
+
+static const char *format_error_level = "Incantation: too many/less "
+                                        "trantoriens at level %d\n";
+
+static const char *format_error_resource = "Incantation: too less "
+                                            "resources of %d (on case: %d)\n";
+
+static const char *format_error_err = "Incantation: error\n";
 
 static const int level_ressources[LVL_MAX - 1][PLAYER] = {
     {1, 0, 0, 0, 0, 0},
@@ -53,19 +62,23 @@ static bool check_incantation_lvl_availability(trantorien_t *ref_trnt,
 bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
     ntw_t *ntw)
 {
-    int map_index = 0;
+    int map_i = 0;
 
     if (trantorien == NULL || map == NULL || ntw == NULL) {
+        fprintf(stderr, "%s", format_error_err);
         return false;
     }
-    map_index_x_y_to_i(map, trantorien->x, trantorien->y, &map_index);
+    map_index_x_y_to_i(map, trantorien->x, trantorien->y, &map_i);
     for (int i = FOOD; i < PLAYER; i++) {
-        if (map->tiles[map_index].ressources[i + LINEMATE] <
+        if (map->tiles[map_i].ressources[i + LINEMATE] <
                 level_ressources[trantorien->level - 1][i]) {
+            fprintf(stderr, format_error_resource, i + LINEMATE,
+                map->tiles[map_i].ressources[i + LINEMATE]);
             return false;
         }
     }
     if (check_incantation_lvl_availability(trantorien, ntw) == false) {
+        fprintf(stderr, format_error_level, trantorien->level);
         return false;
     }
     return true;
