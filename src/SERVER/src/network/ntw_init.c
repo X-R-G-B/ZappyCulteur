@@ -17,7 +17,7 @@
 #include <netdb.h>
 #include "ntw.h"
 
-static size_t socklen = sizeof(struct sockaddr_in);
+static const size_t socklen = sizeof(struct sockaddr_in);
 
 static void print_info_socket(struct sockaddr_in addr)
 {
