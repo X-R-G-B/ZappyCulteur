@@ -215,5 +215,10 @@ namespace GUI {
                 _tileSize
             ));
         }
+
+        Vector2F Floor::getMapSize()
+        {
+            return (Vector2F(_width * _tileSize, _height * _tileSize));
+        }
     }
 }

@@ -53,6 +53,13 @@ namespace GUI {
                  * @param ressource the type of ressource
                  */
                 void removeRessources(Vector2F tile, RessourcesType ressource);
+                
+                /**
+                 * @brief Get the size of the map (in float and not in tile)
+                 * 
+                 */
+                Vector2F getMapSize();
+                
                 ~Floor() = default;
                 void update(double deltaTime) override;
             private:
