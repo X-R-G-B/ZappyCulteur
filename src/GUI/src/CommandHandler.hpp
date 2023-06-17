@@ -132,6 +132,8 @@ namespace GUI {
 
             bool endIncantation(const std::string &command);
 
+            bool endGame(const std::string &command);
+
             bool unknowCommand(const std::string &command);
 
             /**

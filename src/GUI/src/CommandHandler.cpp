@@ -31,7 +31,8 @@ namespace GUI {
             {"ebo", COMMAND_TYPE::EGG_PLAYER_CONNECTED},
             {"pdi", COMMAND_TYPE::PLAYER_DEATH},
             {"pgt", COMMAND_TYPE::RESSOURCE_COLLECTING},
-            {"pdr", COMMAND_TYPE::RESSOURCE_DROPPING}
+            {"pdr", COMMAND_TYPE::RESSOURCE_DROPPING},
+            {"seg", COMMAND_TYPE::GAME_END}
         };
 
         CommandHandler::CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager)
@@ -49,6 +50,7 @@ namespace GUI {
                 {COMMAND_TYPE::PLAYER_DEATH, &CommandHandler::setPlayerDeath},
                 {COMMAND_TYPE::RESSOURCE_COLLECTING, &CommandHandler::setRessourceCollecting},
                 {COMMAND_TYPE::RESSOURCE_DROPPING, &CommandHandler::setRessourceDropping},
+                {COMMAND_TYPE::GAME_END, &CommandHandler::endGame},
                 {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}
             })
         {}
@@ -391,6 +393,24 @@ namespace GUI {
                 rt
             );
             return true;
+        }
+
+        bool CommandHandler::endGame(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string team;
+
+            if (!(ss >> cmd >> team)) {
+                return (false);
+            }
+            try {
+                // call the end screen with appropriate team name
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return false;
+            }
+            return (true);
         }
     }
 }
