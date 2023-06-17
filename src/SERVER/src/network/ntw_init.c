@@ -6,13 +6,40 @@
 */
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <ifaddrs.h>
+#include <netdb.h>
 #include "ntw.h"
+
+static size_t socklen = sizeof(struct sockaddr_in);
+
+static void print_info_socket(struct sockaddr_in addr)
+{
+    struct ifaddrs *ifaddr = NULL;
+    char host[512] = {0};
+
+    printf("INFO: listening on port: %d\n", ntohs(addr.sin_port));
+    if (getifaddrs(&ifaddr) == -1) {
+        perror("getifaddrs");
+        return;
+    }
+    for (struct ifaddrs *ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) {
+        if (ifa->ifa_addr == NULL) {
+            continue;
+        }
+        if (ifa->ifa_addr->sa_family == AF_INET && getnameinfo(ifa->ifa_addr,
+                socklen, host, 511, NULL, 0, NI_NUMERICHOST) == 0) {
+            printf("INFO: available at host: %s\n", host);
+        }
+    }
+    freeifaddrs(ifaddr);
+}
 
 static int create_socket(int port, int max_connected_clients)
 {
@@ -33,7 +60,7 @@ static int create_socket(int port, int max_connected_clients)
         perror("listen");
         return (-1);
     }
-    printf("INFO: listen on port: %d\n", ntohs(addr.sin_port));
+    print_info_socket(addr);
     return (fd);
 }
 
