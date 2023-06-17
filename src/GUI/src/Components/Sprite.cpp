@@ -15,8 +15,9 @@ namespace GUI {
             std::size_t layer,
             const Vector2F &position,
             unsigned int width,
-            unsigned int height
-        ) : AComponent(id, CompType::SPRITE),
+            unsigned int height,
+            Components::CompType compType
+        ) : AComponent(id, compType),
             _sprite(texture),
             _layer(layer)
         {

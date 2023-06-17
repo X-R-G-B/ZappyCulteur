@@ -119,6 +119,20 @@ namespace GUI {
              */
             const Vector2F &getMousePos();
 
+            /**
+             * @brief Add the world mouse position to the events manager
+             * 
+             * @param mousePos 
+             */
+            void addWorldMousePos(Vector2F mousePos);
+
+            /**
+             * @brief Return the mouse position in the world (not in the window)
+             * 
+             * @return Vector2F 
+             */
+            const Vector2F &getWorldMousePos();
+
         private:
             EventsManager();
             ~EventsManager() = default;
@@ -126,5 +140,6 @@ namespace GUI {
             EventsManager &operator=(const EventsManager &) = delete;
             std::vector<Event> _eventsList;
             Vector2F _mousePos;
+            Vector2F _worldMousePos;
     };
 }

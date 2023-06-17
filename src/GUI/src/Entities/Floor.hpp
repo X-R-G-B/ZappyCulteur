@@ -71,7 +71,7 @@ namespace GUI {
                 float computeRessourceSize();
                 Vector2F computeRessourcePosition(unsigned int x, unsigned int y, float ressourceSize);
                 sf::Texture _txFloorDark;
-                sf::Texture _txFloorLight;          
+                sf::Texture _txFloorLight;
                 std::unordered_map<RessourcesType, sf::Texture> _ressources;
                 unsigned int _width;
                 unsigned int _height;

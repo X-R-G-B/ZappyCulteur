@@ -103,6 +103,8 @@ namespace GUI {
         _isOpen = true;
         _view.setSize(static_cast<float>(_width), static_cast<float>(_height));
         _view.setCenter(static_cast<float>(_width) / 2, static_cast<float>(_height) / 2);
+        _HUDview.setSize(static_cast<float>(_width), static_cast<float>(_height));
+        _HUDview.setCenter(static_cast<float>(_width) / 2, static_cast<float>(_height) / 2);
     }
 
     void SFML::clear()
@@ -138,7 +140,23 @@ namespace GUI {
         clear();
         drawSprites();
         drawTexts();
+        _window.setView(_HUDview);
+        drawHUD();
+        _window.setView(_view);
         _window.display();
+    }
+
+    void SFML::drawHUD()
+    {
+        auto sprites = _entityManager->getComponentsByType(Components::CompType::HUDSPRITE);
+
+        for (const auto &sprite : *sprites) {
+            auto spritePtr = std::static_pointer_cast<GUI::Components::Sprite>(sprite);
+            if (spritePtr == nullptr) {
+                continue;
+            }
+            _window.draw(spritePtr->getSprite());
+        }
     }
 
     void SFML::drawSprites()
@@ -182,8 +200,22 @@ namespace GUI {
         }
     }
 
+    void SFML::handleMousePosEvents(EventsManager &eventsManager)
+    {
+        if (_event.type == sf::Event::MouseMoved) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(_window);
+            Vector2F mousePosF = {static_cast<float>(mousePos.x), static_cast<float>(mousePos.y)};
+            eventsManager.addMousePos(mousePosF);
+        }
+        sf::Vector2i mousePos = sf::Mouse::getPosition(_window);
+        sf::Vector2f worldMousePos = _window.mapPixelToCoords(mousePos);
+        Vector2F worldMousePosF = {worldMousePos.x, worldMousePos.y};
+        eventsManager.addWorldMousePos(worldMousePosF);
+    }
+
     void SFML::handleMouseEvents(EventsManager &eventsManager)
     {
+        handleMousePosEvents(eventsManager);
         if (_event.type == sf::Event::MouseWheelScrolled) {
             if (_event.mouseWheelScroll.delta > 0) {
                 eventsManager.addEvent(GUI::Event::MOUSE_WHEEL_UP);
