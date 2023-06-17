@@ -12,26 +12,30 @@ class ClientManager:
         self._teamName: str = teamName
         self._fileName = fileName
         self._id: int = id
-        self._client: Client = Client(port, self._fileName, machineName)
+        self._client: Client = Client(port, machineName)
         self.connect()
 
     def stopClient(self):
         self._client.stopClient
 
     def output(self) -> str:
-        return self._client.output()
+        res = self._client.output()
+        return res
 
     def connect(self):
         res = self.output()
         while res != "WELCOME\n":
             res = self.output()
             pass
+        log.write_to_file(self._fileName, "Received: " + res)
         resSetup = self.requestClient(self._teamName + "\n").split("\n")
+        log.write_to_file(self._fileName, "Received: " + resSetup[0] + "\n")
         if resSetup[0] == "ko":
             self.stopClient()
             raise Exception("Team name already taken")
         if len(resSetup) == 1:
             resSetup = self.waitOutput()
+            log.write_to_file(self._fileName, "Received: " + resSetup)
 
     def isMyIdInList(self, list_: List[int]) -> bool:
         for id_ in list_:
@@ -61,14 +65,11 @@ class ClientManager:
             if toSend[0] != 0 and self.isMyIdInList(toSend) is False:
                 continue
             resList.append((int(splittedRes[1]), splittedRes[2], toSend, direc))
-            log.write_to_file(
-                self._fileName,
-                "Received broadcast from :"
-                + str(splittedRes[1])
-                + " : "
-                + splittedRes[2]
-                + "\n",
-            )
+        if (len(resList) > 0):
+            log.write_to_file(self._fileName, "Received Broadcast:\n")
+            for broadcast in resList:
+                toSendStr = ' '.join(map(str, broadcast[2]))
+                log.write_to_file(self._fileName, "    from: " + str(broadcast[0]) + " : " + broadcast[1] + " to " + toSendStr + " dir: " + str(broadcast[3]) + "\n")
         return resList
 
     def checkBroadcastWithoutNewElevation(
@@ -85,13 +86,6 @@ class ClientManager:
         for broadcast in broadcasts:
             if broadcast[1].find(Message.L2.value[:-1]) == -1:
                 res.append(broadcast)
-                print(
-                    "Received broadcast from :"
-                    + str(broadcast[0])
-                    + " : "
-                    + broadcast[1]
-                    + "\n"
-                )
             else:
                 self.sendBroadcast(Message.KO.value, [broadcast[0]])
         return res
@@ -106,6 +100,7 @@ class ClientManager:
         res = ""
         while res == "":
             res = self.output()
+        log.write_to_file(self._fileName, "Received: " + res)
         return res
 
     def requestClient(
@@ -131,12 +126,14 @@ class ClientManager:
             argToSend = arg.value
         else:
             argToSend = arg
+        log.write_to_file(self._fileName, "[Send: " + toSend.split("\n")[0] + " " + argToSend + "]\n")
         self._client.input(toSend, argToSend)
         res = self.waitOutput()
         if (res == "ko\n"):
             toSendOrd = list(map(ord, toSend))
             argToSendOrd = list(map(ord, argToSend))
-            raise Exception(f"Server responded ko to : `{toSend}`({toSendOrd}) + `{argToSend}`({argToSendOrd})")
+            print(f"Server responded ko to : `{toSend}`({toSendOrd}) + `{argToSend}`({argToSendOrd})")
+            return "ko\n"
         return res
 
     def sendBroadcast(self, message: str, toSend: List[int] = []):

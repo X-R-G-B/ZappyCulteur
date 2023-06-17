@@ -27,7 +27,7 @@ class IA:
             self._clientManager, self._fileName
         )
         self._elevationParticipant: ElevationParticipant = ElevationParticipant(
-            self._clientManager, self._decisionTree
+            self._clientManager, self._decisionTree, self._fileName
         )
         self.run()
 
@@ -36,7 +36,6 @@ class IA:
 
     def connectNewIA(self):
         self.pid = os.fork()
-        log.write_to_file(self._fileName, "new ia")
         if self.pid == 0:
             self._clientManager.stopClient()
             self.build(0)
@@ -47,9 +46,6 @@ class IA:
         self.connectNewIA()
 
     def checkNeededChilds(self):
-        log.write_to_file(
-            self._fileName, "in neededchilds +" + str(self._neededChilds) + "\n"
-        )
         while self._neededChilds > 0:
             if (
                 int(

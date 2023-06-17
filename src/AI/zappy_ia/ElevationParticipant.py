@@ -1,3 +1,4 @@
+import zappy_ia.Log as log
 from typing import Dict, List, Tuple
 from zappy_ia.Enums import Message
 from zappy_ia.ClientManager import ClientManager
@@ -16,10 +17,11 @@ cmdDirections: Dict = {
 
 
 class ElevationParticipant:
-    def __init__(self, clientManager: ClientManager, decisionTree: DecisionTree):
+    def __init__(self, clientManager: ClientManager, decisionTree: DecisionTree, fileName: str):
         self._emitter: int = 0
         self._clientManager: ClientManager = clientManager
         self._decisionTree: DecisionTree = decisionTree
+        self._fileName: str = fileName
 
     def errorReturn(self) -> bool:
         self._emitter = 0
@@ -39,14 +41,10 @@ class ElevationParticipant:
             while res[1] != "come":
                 res = self._clientManager.checkBroadcastResponse()
         self._clientManager.sendBroadcast(Message.OK.value, [self._emitter])
-        out = self._clientManager.output()
-        while out == "":
-            out = self._clientManager.output()
+        out = self._clientManager.waitOutput()
         if out == "ko\n":
             return self.errorReturn()
-        out = ""
-        while out == "":
-            out = self._clientManager.output()
+        out = self._clientManager.waitOutput()
         if out != "ko\n":
             self._emitter = 0
             return True
@@ -63,13 +61,12 @@ class ElevationParticipant:
         haveToCome = False
         ready = False
         while haveToCome is False or ready is False:
-            print("haveToCome = " + str(haveToCome) + " ready = " + str(ready))
+            log.write_to_file(self._fileName, "in havetocome loop, haveToCome: " + str(haveToCome) + " ,ready: " + str(ready))
             self._decisionTree.takeClosestFood()
             if self._decisionTree.getCurrentFood() >= 13 and ready is False:
                 ready = True
                 self._clientManager.sendBroadcast(Message.OK.value, [self._emitter])
             res = self._clientManager.checkBroadcastResponse()
-            print("participant res[1] = " + res[1])
             if res[1] == Message.COME.value:
                 haveToCome = True
         return self.joinEmitter()

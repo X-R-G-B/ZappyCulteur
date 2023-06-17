@@ -295,9 +295,7 @@ class DecisionTree:
                     Command.SET_OBJECT, costTuple[0].value
                 )
         self._clientManager.requestClient(Command.INCANTATION)
-        out = ""
-        while out == "":
-            out = self._clientManager.output()
+        out = self._clientManager.waitOutput()
         if out != Message.KO.value + "\n":
             self.incrementLevel()
 
