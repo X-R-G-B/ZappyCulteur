@@ -1,4 +1,4 @@
-import zappy_ia.Log as log
+from zappy_ia.Log import LogGood
 from typing import Dict, List, Tuple
 from zappy_ia.Enums import Message
 from zappy_ia.ClientManager import ClientManager
@@ -17,11 +17,11 @@ cmdDirections: Dict = {
 
 
 class ElevationParticipant:
-    def __init__(self, clientManager: ClientManager, decisionTree: DecisionTree, fileName: str):
+    def __init__(self, clientManager: ClientManager, decisionTree: DecisionTree, log: LogGood):
         self._emitter: int = 0
+        self._log = log
         self._clientManager: ClientManager = clientManager
         self._decisionTree: DecisionTree = decisionTree
-        self._fileName: str = fileName
 
     def errorReturn(self) -> bool:
         self._emitter = 0
@@ -61,7 +61,7 @@ class ElevationParticipant:
         haveToCome = False
         ready = False
         while haveToCome is False or ready is False:
-            log.write_to_file(self._fileName, "in havetocome loop, haveToCome: " + str(haveToCome) + " ,ready: " + str(ready))
+            self._log.debug("in havetocome loop, haveToCome: " + str(haveToCome) + " ,ready: " + str(ready))
             self._decisionTree.takeClosestFood()
             if self._decisionTree.getCurrentFood() >= 13 and ready is False:
                 ready = True

@@ -80,7 +80,22 @@ class Client:
         for socket_ in read_sockets:
             if socket_ == self._client_socket:
                 message = socket_.recv(2048).decode()
-                self._checkMessage(message)
+                if message.count("\n") > 1:
+                    if (message.endswith("\n")):
+                        endClosed = True
+                    else:
+                        endClosed = False
+                    message = message.split("\n")
+                    i = 0
+                    for i in range(len(message)):
+                        if (message[i] == ""):
+                            continue
+                        if i < len(message) - 1 or endClosed:
+                            self._checkMessage(message[i] + "\n")
+                        else:
+                            self._checkMessage(message[i])
+                else:
+                    self._checkMessage(message)
 
     def _addMessageToSend(self):
         self._sendLock.acquire()

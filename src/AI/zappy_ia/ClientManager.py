@@ -33,9 +33,8 @@ class ClientManager:
         if resSetup[0] == "ko":
             self.stopClient()
             raise Exception("Team name already taken")
-        if len(resSetup) == 1:
-            resSetup = self.waitOutput()
-            self._log.info("Received: " + resSetup)
+        resSetup = self.waitOutput()
+        self._log.info("Received: " + resSetup)
 
     def isMyIdInList(self, list_: List[int]) -> bool:
         for id_ in list_:
@@ -66,10 +65,10 @@ class ClientManager:
                 continue
             resList.append((int(splittedRes[1]), splittedRes[2], toSend, direc))
         if (len(resList) > 0):
-            self._log.info(self._fileName, "Received Broadcast:\n")
+            self._log.info("Received Broadcast:\n")
             for broadcast in resList:
                 toSendStr = ' '.join(map(str, broadcast[2]))
-                self._log.info(self._fileName, "    from: " + str(broadcast[0]) + " : " + broadcast[1] + " to " + toSendStr + " dir: " + str(broadcast[3]) + "\n")
+                self._log.info("    from: " + str(broadcast[0]) + " : " + broadcast[1] + " to " + toSendStr + " dir: " + str(broadcast[3]) + "\n")
         return resList
 
     def checkBroadcastWithoutNewElevation(
@@ -97,10 +96,15 @@ class ClientManager:
         return liste[0]
 
     def waitOutput(self) -> str:
+        i = 0
         res = ""
         while res == "":
             res = self.output()
-        self._log.info(self._fileName, "Received: " + res)
+            i += 1
+            if (i > 15):
+                self._log.debug("15 check without response")
+                i = 0
+        self._log.info("Received: " + res)
         return res
 
     def requestClient(

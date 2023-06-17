@@ -56,9 +56,6 @@ static bool check_incantation_lvl_availability(trantorien_t *ref_trnt,
             nb_trantorien_lvl += 1;
         }
     }
-    if (nb_trantorien_lvl != nb_level_players[trantorien_lvl - 1]) {
-        printf("KO incantation: %d ia same level at the tile, %d needed", nb_trantorien_lvl, nb_level_players[trantorien_lvl - 1]);
-    }
     return (nb_trantorien_lvl == nb_level_players[trantorien_lvl - 1]);
 }
 

@@ -26,7 +26,7 @@ class IA:
             self._clientManager, self._log, self._id
         )
         self._elevationParticipant: ElevationParticipant = ElevationParticipant(
-            self._clientManager, self._decisionTree, self._fileName
+            self._clientManager, self._decisionTree, self._log
         )
         self.run()
 
