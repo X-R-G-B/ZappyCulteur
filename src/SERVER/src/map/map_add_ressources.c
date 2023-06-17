@@ -7,6 +7,8 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 #include "map.h"
 
 static float density[PLAYER] = {
@@ -19,15 +21,28 @@ static float density[PLAYER] = {
     0.05
 };
 
-static void add_ressources(map_tile_t *tile,
-    int const nb_step_int[PLAYER],
-    int nb_step[PLAYER])
+static void add_ressources(map_tile_t *tile, int nb_spawn_max[PLAYER],
+    int size_tile)
 {
     for (int i = 0; i < PLAYER; i++) {
-        nb_step[i] -= 1;
-        if (nb_step[i] <= 0) {
-            tile->ressources[i] += 1;
-            nb_step[i] = nb_step_int[i];
+        if (nb_spawn_max[i] <= 0 || rand() % size_tile != 0) {
+            continue;
+        }
+        tile->ressources[i] += 1;
+        nb_spawn_max[i] -= 1;
+    }
+}
+
+static void fill_map_add_ressources(map_t *map, int nb_spawn_max[PLAYER])
+{
+    int size_tile = map->height * map->width;
+
+    while (nb_spawn_max[FOOD] > 0 || nb_spawn_max[LINEMATE] > 0 ||
+            nb_spawn_max[DERAUMERE] > 0 || nb_spawn_max[SIBUR] > 0 ||
+            nb_spawn_max[MENDIANE] > 0 || nb_spawn_max[PHIRAS] > 0 ||
+            nb_spawn_max[THYSTAME] > 0) {
+        for (int i = 0; i < size_tile; i++) {
+            add_ressources(&map->tiles[i], nb_spawn_max, size_tile - i);
         }
     }
 }
@@ -52,8 +67,6 @@ static int *get_nb_ressources(map_tile_t *tiles, int width, int height)
 void map_add_ressources(map_t *map)
 {
     int nb_spawn_max[PLAYER] = {0};
-    int nb_step_int[PLAYER] = {0};
-    int nb_step[PLAYER] = {0};
     int *nb_ressources = NULL;
 
     if (map == NULL || map->tiles == NULL) {
@@ -63,11 +76,6 @@ void map_add_ressources(map_t *map)
     for (int i = 0; i < PLAYER; i++) {
         nb_spawn_max[i] = (density[i] * map->width * map->height)
             - nb_ressources[i];
-        nb_step_int[i] = map->width * map->height /
-            ((nb_spawn_max[i] <= 0) ? 0.5 : nb_spawn_max[i]);
-        nb_step[i] = nb_step_int[i];
     }
-    for (int i = 0; i < map->width * map->height; i++) {
-        add_ressources(map->tiles + i, nb_step_int, nb_step);
-    }
+    fill_map_add_ressources(map, nb_spawn_max);
 }
