@@ -1,4 +1,4 @@
-import zappy_ia.Log as log
+from zappy_ia.Log import LogGood
 from zappy_ia.ClientManager import ClientManager
 from zappy_ia.DecisionTree import DecisionTree
 from zappy_ia.ElevationParticipant import ElevationParticipant
@@ -18,13 +18,12 @@ class IA:
     def build(self, neededChilds: int):
         self._neededChilds = neededChilds
         self.setId()
-        self._fileName: str = f"log/{self._id}ia.log"
-        log.configure_file(self._fileName)
+        self._log = LogGood(f"log/{self._id}ia.log")
         self._clientManager: ClientManager = ClientManager(
-            self._port, self._machineName, self._teamName, self._id, self._fileName
+            self._port, self._machineName, self._teamName, self._id, self._log
         )
         self._decisionTree: DecisionTree = DecisionTree(
-            self._clientManager, self._fileName
+            self._clientManager, self._log, self._id
         )
         self._elevationParticipant: ElevationParticipant = ElevationParticipant(
             self._clientManager, self._decisionTree, self._fileName
@@ -68,7 +67,10 @@ class IA:
             while continueRun:
                 self.checkNeededChilds()
                 if (
-                    self._elevationParticipant.checkElevationParticipant(self._decisionTree.getCurrentLevel()) is True
+                    self._elevationParticipant.checkElevationParticipant(
+                        self._decisionTree.getCurrentLevel()
+                    )
+                    is True
                 ):
                     self._decisionTree.incrementLevel()
                 self._decisionTree.predict()
