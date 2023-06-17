@@ -216,7 +216,7 @@ CC				=			gcc
 
 TTARGET				:=		bin_test
 
-T_DIR				:=		tests
+T_DIR				:=		../../tests/SERVER
 
 T_SRC				:=		$(shell find $(T_DIR)/ -name '*.c' -type f)		\
 							$(filter-out src/main.c, $(SRC))

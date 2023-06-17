@@ -43,8 +43,9 @@ $(LOCAL_DEPS)/simple-force: $(LOCAL_DEPS)/requirements.txt
 	piprepo build ./local_deps
 
 $(TARGET):
-	([ ! -d $(LOCAL_DEPS)/simple ] && $(MAKE) $(LOCAL_DEPS)/simple-force) || \
-		true
+	if [ ! -d $(LOCAL_DEPS)/simple ]; \
+		then $(MAKE) $(LOCAL_DEPS)/simple-force; \
+	fi
 	pip install --break-system-packages --user -i ./local_deps/simple .
 	$(CP) "$(TARGET).py" "$(TARGET)"
 	$(TOEXEC) "$(TARGET)"
@@ -55,13 +56,16 @@ clean:
 
 fclean: clean
 	pip uninstall --break-system-packages -y $(PIP_TARGET)
-	$(RM) $(LOCAL_DEPS)/requirements.txt
 	$(RM) $(TARGET)
 
 fclean-simple: fclean
+	$(RM) $(LOCAL_DEPS)/requirements.txt
 	$(RM) -r $(LOCAL_DEPS)/simple
 	$(RM) $(LOCAL_DEPS)/*.whl
 
-re: fclean all
+re: fclean
+re: all
 
-re-simple: fclean-simple $(LOCAL_DEPS)/simple all
+re-simple: fclean-simple
+re-simple: $(LOCAL_DEPS)/simple
+re-simple: all
