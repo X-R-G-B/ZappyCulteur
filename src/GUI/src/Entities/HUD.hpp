@@ -48,7 +48,8 @@ namespace GUI {
                 void updateCounterBox();
                 void initTextures();
                 unsigned int getRessourceAmount(RessourcesType type, Vector2F tile);
-                void createQuantityText(const std::string &id, RessourcesType type, Vector2F pos);
+                void createQuantityText(const std::string &id, const Vector2F &pos);
+                void createSelectedTexts();
                 std::unordered_map<GUI::Entities::RessourcesType, Components::Text> _ressourcesTexts;
                 sf::Texture _txTileInfos;
                 sf::Texture _txSelectedTile;

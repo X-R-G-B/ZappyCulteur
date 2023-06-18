@@ -14,8 +14,8 @@
 namespace GUI {
     static const std::string windowName = "ZappyCulteur";
 
-    static constexpr std::size_t height = 1080;
-    static constexpr std::size_t width = 1920;
+    static constexpr unsigned int height = 1080;
+    static constexpr unsigned int width = 1920;
     static constexpr unsigned int framerateLimit = 60;
 
     static const std::string ipFlag = "-h";

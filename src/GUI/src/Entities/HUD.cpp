@@ -173,6 +173,7 @@ namespace GUI {
                     removeSelectedSprite();
                     removeInfoTexts();
                     createSelectedSprite();
+                    createSelectedTexts();
                 }
             }
         }
@@ -213,6 +214,18 @@ namespace GUI {
             );
         }
 
+        void HUD::createSelectedTexts()
+        {
+            for (const auto& [id, type] : idToRessourcesTypeMap) {
+                try {
+                    const GUI::Vector2F pos = ressourcesTextsPos.at(type);
+                    createQuantityText(id, pos);
+                } catch (const HUDException &e) {
+                    std::cerr << e.what() << std::endl;
+                }
+            }
+        }
+
         void HUD::createSelectedSprite()
         {
             _components.push_back(std::make_shared<GUI::Components::Sprite>(
@@ -239,12 +252,9 @@ namespace GUI {
                 infoHeight,
                 Components::CompType::HUDSPRITE
             ));
-            for (const auto& [id, type] : idToRessourcesTypeMap) {
-                createQuantityText(id, type, ressourcesTextsPos.at(type));
-            }
         }
 
-        void HUD::createQuantityText(const std::string &id, RessourcesType ressourceType, Vector2F pos)
+        void HUD::createQuantityText(const std::string &id, const Vector2F &pos)
         {
             static const std::string defaultText = "0";
             static constexpr std::size_t fontSize = 20;
