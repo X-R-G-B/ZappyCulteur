@@ -157,9 +157,17 @@ namespace GUI {
              */
             bool setRessourceCollecting(const std::string &command);
 
+            /**
+             * @brief Handle id and map size.
+             * @param command The command string.
+             * @return True if the command was handled successfully, false otherwise.
+             */
+            bool handleIdandMapSize(const std::string &command);
+
             std::shared_ptr<Entities::EntitiesManager> _entityManager;
-            std::function<void(const std::string &)> _sendToServerFunc;
             const std::unordered_map<COMMAND_TYPE, std::function<bool(CommandHandler &, const std::string &)>> _toCall;
+            std::function<void(const std::string &)> _sendToServerFunc;
+            std::size_t _connexionCmdRemaining;
         };
     }
 }

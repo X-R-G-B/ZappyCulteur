@@ -54,7 +54,8 @@ namespace GUI {
                 {COMMAND_TYPE::RESSOURCE_DROPPING, &CommandHandler::setRessourceDropping},
                 {COMMAND_TYPE::COMMAND_WELCOME, &CommandHandler::receiveFirstConnexion},
                 {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}
-            }), _sendToServerFunc(sendToServer)
+            }), _sendToServerFunc(sendToServer),
+            _connexionCmdRemaining(0)
         {}
 
         static const std::string eggKey = "Egg_";
@@ -67,6 +68,10 @@ namespace GUI {
             std::function<bool(CommandHandler &, const std::string &)> functionToCall;
 
             for (const auto &command : commands) {
+                if (_connexionCmdRemaining > 0) {
+                    handleIdandMapSize(command);
+                    continue;
+                }
                 commandKey = getCommandType(command);
                 auto elem = _toCall.at(commandKey);
                 if (std::invoke(elem, *this, command) == false) {
@@ -400,6 +405,22 @@ namespace GUI {
         bool CommandHandler::receiveFirstConnexion(const std::string &)
         {
             _sendToServerFunc("GRAPHIC\n");
+            _connexionCmdRemaining = 2;
+            return true;
+        }
+
+        bool CommandHandler::handleIdandMapSize(const std::string &command)
+        {
+            std::string newCommand;
+
+            _connexionCmdRemaining -= 1;
+            if (_connexionCmdRemaining == 0) {
+                newCommand = "msz " + command;
+                setMapSize(newCommand);
+                if (_entityManager->doesEntityExist("Floor") == false) {
+                    _sendToServerFunc("msz\n");
+                }
+            }
             return true;
         }
     }
