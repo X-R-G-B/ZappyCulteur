@@ -60,7 +60,7 @@ jobs:
     # If this step fails, then you should remove it and run the build manually (see below)
     - name: Build
       run: |
-        sudo apt install make cmake libsfml-dev python pip
+        sudo apt install make cmake libsfml-dev python3 pip
         make
 
     # ℹ️ Command-line programs to run using the OS shell.
