@@ -21,14 +21,17 @@ static float density[PLAYER] = {
     0.05
 };
 
-static void add_ressources(map_tile_t *tile, int nb_spawn_max[PLAYER],
+static void add_ressources(map_tile_t *tiles, int nb_spawn_max[PLAYER],
     int size_tile)
 {
+    int index = 0;
+
     for (int i = 0; i < PLAYER; i++) {
-        if (nb_spawn_max[i] <= 0 || rand() % size_tile != 0) {
+        if (nb_spawn_max[i] <= 0) {
             continue;
         }
-        tile->ressources[i] += 1;
+        index = rand() % size_tile;
+        tiles[index].ressources[i] += 1;
         nb_spawn_max[i] -= 1;
     }
 }
@@ -42,7 +45,7 @@ static void fill_map_add_ressources(map_t *map, int nb_spawn_max[PLAYER])
             nb_spawn_max[MENDIANE] > 0 || nb_spawn_max[PHIRAS] > 0 ||
             nb_spawn_max[THYSTAME] > 0) {
         for (int i = 0; i < size_tile; i++) {
-            add_ressources(&map->tiles[i], nb_spawn_max, size_tile - i);
+            add_ressources(map->tiles, nb_spawn_max, size_tile);
         }
     }
 }
