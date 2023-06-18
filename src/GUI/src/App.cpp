@@ -9,12 +9,13 @@
 #include <ctime>
 #include "App.hpp"
 #include "Floor.hpp"
+#include "HUD.hpp"
 
 namespace GUI {
     static const std::string windowName = "ZappyCulteur";
 
-    static constexpr std::size_t height = 1080;
-    static constexpr std::size_t width = 1920;
+    static constexpr unsigned int height = 1080;
+    static constexpr unsigned int width = 1920;
     static constexpr unsigned int framerateLimit = 60;
 
     static const std::string ipFlag = "-h";
@@ -155,6 +156,10 @@ namespace GUI {
             WINDOW_MODE::FULLSCREEN
         );
         _commandHandler = std::make_unique<CommandHandler::CommandHandler>(_entityManager);
+        _entityManager->addEntity(std::make_shared<GUI::Entities::HUD>(
+            "HUD",
+            _entityManager
+        ));
         if (_commandHandler == nullptr || _displayModule == nullptr) {
             throw AppException("Error while initializing app modules");
         }

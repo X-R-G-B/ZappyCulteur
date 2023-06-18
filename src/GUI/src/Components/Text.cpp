@@ -15,9 +15,10 @@ namespace GUI {
             const std::string &text,
             const Vector2F &position,
             Color color,
-            unsigned int size
+            unsigned int size,
+            CompType type
         ) :
-            AComponent(id, CompType::TEXT),
+            AComponent(id, type),
             _position(position),
             _color(color)
         {

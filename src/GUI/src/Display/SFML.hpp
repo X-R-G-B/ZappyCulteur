@@ -37,6 +37,7 @@ namespace GUI {
             void clear() final;
             void closeWindow()final;
             void drawSprites();
+            void drawHUD();
             void drawTexts();
             void createWindow() final;
             void setWindowStyle();
@@ -52,12 +53,14 @@ namespace GUI {
             );
             void handleKeyboardEvents(EventsManager &eventsManager);
             void handleMouseEvents(EventsManager &eventsManager);
+            void handleMousePosEvents(EventsManager &eventsManager);
             sf::Event _event;
             sf::Uint32 _winStyle;
             sf::RenderWindow _window;
             Components::CompQuery _compQuery;
             std::shared_ptr<Entities::EntitiesManager> _entityManager;
             sf::View _view;
+            sf::View _HUDview;
             float _camZoom;
     };
 }
