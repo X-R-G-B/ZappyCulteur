@@ -31,10 +31,13 @@ namespace GUI {
             {"ebo", COMMAND_TYPE::EGG_PLAYER_CONNECTED},
             {"pdi", COMMAND_TYPE::PLAYER_DEATH},
             {"pgt", COMMAND_TYPE::RESSOURCE_COLLECTING},
-            {"pdr", COMMAND_TYPE::RESSOURCE_DROPPING}
+            {"pdr", COMMAND_TYPE::RESSOURCE_DROPPING},
+            {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME}
         };
 
-        CommandHandler::CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager)
+        CommandHandler::CommandHandler(
+            std::shared_ptr<Entities::EntitiesManager> entityManager,
+            std::function<void(const std::string &)> sendToServer)
             : _entityManager(entityManager), _toCall({
                 {COMMAND_TYPE::MAP_SIZE, &CommandHandler::setMapSize},
                 {COMMAND_TYPE::NEW_PLAYER, &CommandHandler::setNewPlayer},
@@ -49,8 +52,9 @@ namespace GUI {
                 {COMMAND_TYPE::PLAYER_DEATH, &CommandHandler::setPlayerDeath},
                 {COMMAND_TYPE::RESSOURCE_COLLECTING, &CommandHandler::setRessourceCollecting},
                 {COMMAND_TYPE::RESSOURCE_DROPPING, &CommandHandler::setRessourceDropping},
+                {COMMAND_TYPE::COMMAND_WELCOME, &CommandHandler::receiveFirstConnexion},
                 {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}
-            })
+            }), _sendToServerFunc(sendToServer)
         {}
 
         static const std::string eggKey = "Egg_";
@@ -390,6 +394,12 @@ namespace GUI {
                 player->getPosition().y == 0 ? 0 : static_cast<unsigned int>(player->getPosition().y / TILE_SIZE),
                 rt
             );
+            return true;
+        }
+
+        bool CommandHandler::receiveFirstConnexion(const std::string &)
+        {
+            _sendToServerFunc("GRAPHIC\n");
             return true;
         }
     }

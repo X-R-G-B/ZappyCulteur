@@ -22,6 +22,7 @@
 
 #include <string>
 #include <vector>
+#include <functional>
 #include <iostream>
 #include <array>
 #include <stdexcept>
@@ -53,6 +54,13 @@ namespace GUI {
          * @param data string that end with newline character
          */
         void sendToServer(const std::string& data);
+
+        /**
+         * @brief get the function that send data to the server
+         * 
+         * @return std::function<void(const std::string&)> 
+         */
+        std::function<void(const std::string&)> getSendToServer();
 
         /**
          * @brief update the connection, send or receive data if needed
