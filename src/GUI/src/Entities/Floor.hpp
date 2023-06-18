@@ -59,6 +59,15 @@ namespace GUI {
                  * 
                  */
                 Vector2F getMapSize();
+
+                /**
+                 * @brief Get the amount of the specified ressource on a tile
+                 * 
+                 * @param tile the tile
+                 * @param ressource the ressource
+                 * @return unsigned int the amount of ressource
+                 */
+                unsigned int getRessourceAmount(Vector2F tile, RessourcesType ressource);
                 
                 ~Floor() = default;
                 void update(double deltaTime) override;
@@ -73,6 +82,7 @@ namespace GUI {
                 sf::Texture _txFloorDark;
                 sf::Texture _txFloorLight;
                 std::unordered_map<RessourcesType, sf::Texture> _ressources;
+                std::unordered_map<Vector2F, std::unordered_map<RessourcesType, unsigned int>> _ressourcesNumber;
                 unsigned int _width;
                 unsigned int _height;
                 float _tileSize;

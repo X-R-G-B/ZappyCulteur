@@ -10,11 +10,13 @@
 #include <chrono>
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include <unordered_map>
 #include "Trantorian.hpp"
 #include "Sprite.hpp"
 #include "AEntity.hpp"
 #include "Vector2F.hpp"
 #include "EntitiesManager.hpp"
+#include "Text.hpp"
 
 namespace GUI {
     namespace Entities {
@@ -30,8 +32,13 @@ namespace GUI {
             private:
                 void createSelectedSprite();
                 void removeSelectedSprite();
-                void updateInfosSprite();
+                void updateSelectedTile();
+                void removeInfoTexts();
+                void updateCounterBox();
                 void initTextures();
+                unsigned int getRessourceAmount(RessourcesType type, Vector2F tile);
+                void createQuantityText(const std::string &id, RessourcesType type, Vector2F pos);
+                std::unordered_map<GUI::Entities::RessourcesType, Components::Text> _ressourcesTexts;
                 sf::Texture _txTileInfos;
                 sf::Texture _txSelectedTile;
                 sf::Sprite _tileInfoSprite;

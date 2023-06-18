@@ -63,6 +63,21 @@ namespace GUI {
         {
         }
 
+        unsigned int Floor::getRessourceAmount(Vector2F tile, RessourcesType ressource)
+        {
+            float x = tile.x;
+            float y = tile.y;
+            
+            if (_ressourcesNumber.find(Vector2F(x, y)) == _ressourcesNumber.end()) {
+                return (0);
+            }
+            if (_ressourcesNumber.find(Vector2F(x, y))->second.find(ressource)
+                == _ressourcesNumber.find(Vector2F(x, y))->second.end()) {
+                return (0);
+            }
+            return (_ressourcesNumber.find(Vector2F(x, y))->second.find(ressource)->second);
+        }
+
         void Floor::initTexture()
         {
             if (_txFloorDark.loadFromFile(darkFloorPath) == false ||
@@ -161,6 +176,9 @@ namespace GUI {
                 ressourceSize,
                 ressourceSize
             ));
+            float xTile = static_cast<float>(x);
+            float yTile = static_cast<float>(y);
+            _ressourcesNumber[Vector2F(xTile, yTile)][ressource] += 1;
         }
 
         float Floor::computeRessourceSize()

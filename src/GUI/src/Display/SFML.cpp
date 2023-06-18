@@ -149,6 +149,7 @@ namespace GUI {
     void SFML::drawHUD()
     {
         auto sprites = _entityManager->getComponentsByType(Components::CompType::HUDSPRITE);
+        auto texts = _entityManager->getComponentsByType(Components::CompType::HUDTEXT);
 
         for (const auto &sprite : *sprites) {
             auto spritePtr = std::static_pointer_cast<GUI::Components::Sprite>(sprite);
@@ -156,6 +157,13 @@ namespace GUI {
                 continue;
             }
             _window.draw(spritePtr->getSprite());
+        }
+        for (const auto &text : *texts) {
+            auto textPtr = std::static_pointer_cast<GUI::Components::Text>(text);
+            if (textPtr == nullptr) {
+                continue;
+            }
+            _window.draw(textPtr->getText());
         }
     }
 
