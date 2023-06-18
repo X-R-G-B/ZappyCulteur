@@ -141,8 +141,6 @@ namespace GUI {
 
     void App::initModules()
     {
-        _networkManager.sendToServer("GRAPHIC\n");
-        _networkManager.sendToServer("msz\n");
         _entityManager = std::make_shared<GUI::Entities::EntitiesManager>();
         if (_entityManager == nullptr) {
             throw AppException("Error while creating EntityManager");
@@ -155,7 +153,10 @@ namespace GUI {
             framerateLimit,
             WINDOW_MODE::FULLSCREEN
         );
-        _commandHandler = std::make_unique<CommandHandler::CommandHandler>(_entityManager);
+        _commandHandler = std::make_unique<CommandHandler::CommandHandler>(
+            _entityManager,
+            _networkManager.getSendToServer()
+        );
         _entityManager->addEntity(std::make_shared<GUI::Entities::HUD>(
             "HUD",
             _entityManager
