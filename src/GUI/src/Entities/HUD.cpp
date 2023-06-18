@@ -73,15 +73,26 @@ static const std::unordered_map<std::string, GUI::Entities::RessourcesType> idTo
     { thystameTxtId, GUI::Entities::RessourcesType::THYSTAME }
 };
 
-//////////////////// END OF STATIC VARIABLES ///////////////////////////
+////////////////////////////////////////////////////////////////////////
 //                                                                    //
 //                                                                    //
 //                                                                    //
 //                                                                    //
 ////////////////////////////////////////////////////////////////////////
 
+
 namespace GUI {
     namespace Entities {
+
+        HUDException::HUDException(const std::string &msg)
+            : _msg(msg)
+        {}
+
+        const char *HUDException::what() const noexcept
+        {
+            return (_msg.c_str());
+        }
+
         HUD::HUD(
             const std::string &id,
             std::shared_ptr<Entities::EntitiesManager> &entitiesManager)
@@ -115,6 +126,7 @@ namespace GUI {
 
         void HUD::updateCounterBox()
         {
+            std::string id;
             const auto& texts = _entitiesManager->getComponentsByType(Components::CompType::HUDTEXT);
 
             for (const auto& text : *texts) {
@@ -122,15 +134,13 @@ namespace GUI {
                 if (textComponent == nullptr) {
                     continue;
                 }
-                if (auto textComponent = std::dynamic_pointer_cast<GUI::Components::Text>(text)) {
-                    std::string id = textComponent->getId();
-                    try {
-                        auto ressourceType = idToRessourcesTypeMap.at(id);
-                        auto amount = getRessourceAmount(ressourceType, _selectedTile);
-                        textComponent->setText(std::to_string(amount));
-                    } catch (const std::out_of_range& e) {
-                        continue;
-                    }
+                id = textComponent->getId();
+                try {
+                    auto ressourceType = idToRessourcesTypeMap.at(id);
+                    auto amount = getRessourceAmount(ressourceType, _selectedTile);
+                    textComponent->setText(std::to_string(amount));
+                } catch (const HUDException &e) {
+                    std::cerr << e.what() << std::endl;
                 }
             }
         }

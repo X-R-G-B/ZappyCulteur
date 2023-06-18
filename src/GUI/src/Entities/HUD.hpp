@@ -11,6 +11,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <unordered_map>
+#include <stdexcept>
 #include "Trantorian.hpp"
 #include "Sprite.hpp"
 #include "AEntity.hpp"
@@ -20,6 +21,16 @@
 
 namespace GUI {
     namespace Entities {
+
+        class HUDException : public std::exception {
+            public:
+                HUDException(const std::string &msg);
+                const char *what() const noexcept final;
+
+            private:
+                std::string _msg;
+        };
+
         class HUD : public AEntity {
             public:
                 HUD(
