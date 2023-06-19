@@ -12,19 +12,14 @@
 #include "internal.h"
 #include "client.h"
 
-bool cmd_edi(ntw_t *ntw, ntw_client_t *cl)
+bool cmd_edi(ntw_t *ntw, int id)
 {
-    client_t *client = NULL;
     char buff[512] = {0};
 
-    if (ntw == NULL || cl == NULL) {
+    if (ntw == NULL) {
         return false;
     }
-    client = L_DATA(cl);
-    if (client == NULL) {
-        return false;
-    }
-    snprintf(buff, 511, "edi %d\n", client->id);
-    circular_buffer_write(cl->write_to_outside, buff);
+    snprintf(buff, 511, "edi %d\n", id);
+    broadcast_graphic(ntw, buff);
     return true;
 }

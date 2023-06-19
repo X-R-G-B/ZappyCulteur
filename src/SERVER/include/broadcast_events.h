@@ -62,10 +62,10 @@ bool cmd_pgt(ntw_t *ntw, ntw_client_t *cl, action_t *action);
 /**
 ** @brief broadcast event pdi (player died)
 ** @param ntw
-** @param cl
+** @param id
 ** @return
 **/
-bool cmd_pdi(ntw_t *ntw, ntw_client_t *cl);
+bool cmd_pdi(ntw_t *ntw, int id);
 
 /**
 ** @brief broadcast event enw (new egg)
@@ -87,10 +87,10 @@ bool cmd_ebo(ntw_t *ntw, ntw_client_t *cl);
 /**
 ** @brief broadcast event edi (egg died)
 ** @param ntw
-** @param cl
+** @param id
 ** @return
 **/
-bool cmd_edi(ntw_t *ntw, ntw_client_t *cl);
+bool cmd_edi(ntw_t *ntw, int id);
 
 /**
 ** @brief broadcast event smg (server message)

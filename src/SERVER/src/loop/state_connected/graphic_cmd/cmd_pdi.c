@@ -12,16 +12,14 @@
 #include "internal.h"
 #include "client.h"
 
-bool cmd_pdi(ntw_t *ntw, ntw_client_t *cl)
+bool cmd_pdi(ntw_t *ntw, int id)
 {
     char buff[512] = {0};
-    client_t *client = NULL;
 
-    if (ntw == NULL || cl == NULL) {
+    if (ntw == NULL) {
         return false;
     }
-    client = L_DATA(cl);
-    snprintf(buff, 511, "pdi %d\n", client->id);
+    snprintf(buff, 511, "pdi %d\n", id);
     broadcast_graphic(ntw, buff);
     return true;
 }

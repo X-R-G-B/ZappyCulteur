@@ -83,9 +83,7 @@ static void update_trantoriens_available_food(ntw_t *ntw,
         if (trantorien == NULL) {
             continue;
         }
-        if (new_freq == true) {
-            update_food(ntw, trantorien, NULL, true);
-        }
+        update_food(ntw, trantorien, NULL, true);
     }
 }
 
@@ -102,9 +100,9 @@ bool loop(zappy_t *zappy, bool new_freq)
         }
         status = update_client(zappy, cl, new_freq) & status;
         update_clients_connections(zappy->ntw);
-        if (L_DATAT(client_t *, client)->type == AI && new_freq == true) {
+        if (L_DATAT(client_t *, cl)->type == AI && new_freq == true) {
             update_food(zappy->ntw,
-                L_DATAT(client_t *, client)->cl.ai.trantorien, cl, false);
+                L_DATAT(client_t *, cl)->cl.ai.trantorien, cl, false);
         }
     }
     update_trantoriens_available_food(zappy->ntw,
