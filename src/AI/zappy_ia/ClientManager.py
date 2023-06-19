@@ -36,11 +36,14 @@ class ClientManager:
         resSetup = self.waitOutput()
         self._log.info("Received: " + resSetup)
 
-    def isMyIdInList(self, list_: List[int]) -> bool:
+    def isIdInList(self, list_: List[int], toFindId: int) -> bool:
         for id_ in list_:
-            if self._id == id_:
+            if toFindId == id_:
                 return True
         return False
+
+    def isMyIdInList(self, list_: List[int]) -> bool:
+        return self.isIdInList(list_, self._id)
 
     def checkBroadcast(self) -> List[Tuple[int, str, List[int], int]]:
         """
@@ -147,8 +150,7 @@ class ClientManager:
             toSendOrd = list(map(ord, toSend))
             argToSendOrd = list(map(ord, argToSend))
             self._log.info(
-                f"Server responded ko to : `{toSend}`({toSendOrd}) + `{argToSend}`({argToSendOrd})"
-            )
+                "Server responded ko to : " + toSend + " " + argToSend)
             return "ko\n"
         return res
 
