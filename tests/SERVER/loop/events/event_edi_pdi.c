@@ -23,7 +23,7 @@ static void set_up_tests(zappy_t **zappy, int nb_client, int port,
 ntw_client_t **graphic)
 {
     static args_t args = {
-        .clients_per_teams = 1,
+        .clients_per_teams = 0,
         .teams_name = NULL,
         .freq = 1000,
         .height = 10,
@@ -73,7 +73,7 @@ ntw_client_t **graphic)
     }
 }
 
-Test(loop_event_edi, basic_edii)
+Test(loop_event_pdi, basic_pdi)
 {
     zappy_t *zappy = NULL;
     ntw_client_t *graph = NULL;
@@ -92,9 +92,63 @@ Test(loop_event_edi, basic_edii)
     while (circular_buffer_is_read_ready(client_e->write_to_outside) == false) {
         cr_assert_eq(loop(zappy, true), false);
     }
+    printf("result incantation = '%s'\n", circular_buffer_read(client_e->write_to_outside));
     snprintf(res, 511, "pic %d %d %d %d\n", c_e->cl.ai.trantorien->x, c_e->cl.ai.trantorien->y, c_e->cl.ai.trantorien->level, c_e->cl.ai.trantorien->id);
     cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
+    while (circular_buffer_is_read_ready(client_e->write_to_outside) == false) {
+        cr_assert_eq(loop(zappy, true), false);
+    }
+    printf("result incantation = '%s'\n", circular_buffer_read(client_e->write_to_outside));
     memset(res, 0, 512);
-    snprintf(res, 511, "edi %d\n", c_e->cl.ai.trantorien->id);
+    snprintf(res, 511, "pdi %d\n", c_e->cl.ai.trantorien->id);
+    cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
+}
+
+Test(loop_event_edi_pdi, basic_edi)
+{
+    zappy_t *zappy = NULL;
+    ntw_client_t *graph = NULL;
+    char res[512] = {0};
+
+    set_up_tests(&zappy, 1, 9500, &graph);
+    ntw_client_t *client_e = L_DATA(zappy->ntw->clients->start);
+    cr_assert_not_null(client_e);
+    client_t *c_e = L_DATA(client_e);
+    cr_assert_not_null(c_e);
+    c_e->cl.ai.trantorien->ressources[FOOD] = 1;
+    zappy->map->tiles[0].ressources[LINEMATE] = 1;
+    c_e->cl.ai.trantorien->x = 0;
+    c_e->cl.ai.trantorien->y = 0;
+    circular_buffer_write(client_e->read_from_outside, "Fork\n");
+    while (circular_buffer_is_read_ready(client_e->write_to_outside) == false) {
+        cr_assert_eq(loop(zappy, true), false);
+    }
+    printf("result fork = '%s'\n", circular_buffer_read(client_e->write_to_outside));
+    snprintf(res, 511, "pfk %d\n", c_e->cl.ai.trantorien->id);
+    cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
+    printf("len trantoriens available = %d\n", zappy->trantoriens_available->len);
+    trantorien_t *trantorien = L_DATA(zappy->trantoriens_available->end);
+    cr_assert_not_null(trantorien);
+    memset(res, 0, 512);
+    snprintf(res, 511, "enw %d %d %d %d\n", trantorien->id, c_e->cl.ai.trantorien->id, trantorien->x, trantorien->y);
+    cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
+    trantorien->ressources[FOOD] = 1;
+    circular_buffer_write(client_e->read_from_outside, "Incantation\n");
+    while (circular_buffer_is_read_ready(client_e->write_to_outside) == false) {
+        cr_assert_eq(loop(zappy, true), false);
+    }
+    printf("result incantation = '%s'\n", circular_buffer_read(client_e->write_to_outside));
+    memset(res, 0, 512);
+    snprintf(res, 511, "pic %d %d %d %d\n", c_e->cl.ai.trantorien->x, c_e->cl.ai.trantorien->y, c_e->cl.ai.trantorien->level, c_e->cl.ai.trantorien->id);
+    cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
+    while (circular_buffer_is_read_ready(client_e->write_to_outside) == false) {
+        cr_assert_eq(loop(zappy, true), false);
+    }
+    printf("result incantation = '%s'\n", circular_buffer_read(client_e->write_to_outside));
+    memset(res, 0, 512);
+    snprintf(res, 511, "pdi %d\n", c_e->cl.ai.trantorien->id);
+    cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
+    memset(res, 0, 512);
+    snprintf(res, 511, "edi %d\n", trantorien->id);
     cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
 }
