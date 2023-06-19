@@ -19,6 +19,8 @@
 
     #define NB_FREQ_BEFORE_RESOURCE 20
 
+extern const int level_ressources[LVL_MAX - 1][PLAYER];
+
 struct zappy_s {
     ntw_t *ntw;
     map_t *map;

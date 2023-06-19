@@ -178,6 +178,7 @@ SRC_TRNT		:=															\
 							trantorien_add_act_broadcast.c					\
 							trantorien_add_act_set.c						\
 							trantorien_add_act_take.c						\
+							trantorien_check_incantation.c					\
 							trantorien_destroy.c							\
 							trantorien_init.c								\
 							trantorien_is_cmd_availible.c					\
