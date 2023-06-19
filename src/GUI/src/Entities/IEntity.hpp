@@ -22,7 +22,8 @@ namespace GUI {
             RESOURCE,
             TRANTORIAN,
             EGG,
-            INCANTATION
+            INCANTATION,
+            HUD
         };
 
         enum class EntityOrientation {
