@@ -56,9 +56,9 @@ static bool update_cmd(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
     }
     if (status == false) {
         if (is_entered == false)
-            cmd_sbp(cl);
-        else
             cmd_suc(cl);
+        else
+            cmd_sbp(cl);
         status = true;
     }
     return status;
