@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2023
 ** ZappyCulteur
 ** File description:
-** event_pex
+** event_edi
 */
 
 #include <criterion/criterion.h>
@@ -73,30 +73,28 @@ ntw_client_t **graphic)
     }
 }
 
-Test(loop_event_pex, basic_pex)
+Test(loop_event_edi, basic_edii)
 {
     zappy_t *zappy = NULL;
     ntw_client_t *graph = NULL;
     char res[512] = {0};
 
-    set_up_tests(&zappy, 2, 9402, &graph);
-    ntw_client_t *client_r = L_DATA(zappy->ntw->clients->start);
-    ntw_client_t *client_e = L_DATA(zappy->ntw->clients->start->next);
-    cr_assert_not_null(client_r);
+    set_up_tests(&zappy, 1, 9500, &graph);
+    ntw_client_t *client_e = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client_e);
-    client_t *c_r = L_DATA(client_r);
     client_t *c_e = L_DATA(client_e);
-    cr_assert_not_null(c_r);
     cr_assert_not_null(c_e);
+    c_e->cl.ai.trantorien->ressources[FOOD] = 1;
+    zappy->map->tiles[0].ressources[LINEMATE] = 1;
     c_e->cl.ai.trantorien->x = 0;
     c_e->cl.ai.trantorien->y = 0;
-    c_r->cl.ai.trantorien->x = 0;
-    c_r->cl.ai.trantorien->y = 0;
-    circular_buffer_write(client_e->read_from_outside, "Eject\n");
+    circular_buffer_write(client_e->read_from_outside, "Incantation\n");
     while (circular_buffer_is_read_ready(client_e->write_to_outside) == false) {
         cr_assert_eq(loop(zappy, true), false);
     }
+    snprintf(res, 511, "pic %d %d %d %d\n", c_e->cl.ai.trantorien->x, c_e->cl.ai.trantorien->y, c_e->cl.ai.trantorien->level, c_e->cl.ai.trantorien->id);
+    cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
     memset(res, 0, 512);
-    snprintf(res, 511, "pex %d\n", c_r->cl.ai.trantorien->id);
+    snprintf(res, 511, "edi %d\n", c_e->cl.ai.trantorien->id);
     cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
 }

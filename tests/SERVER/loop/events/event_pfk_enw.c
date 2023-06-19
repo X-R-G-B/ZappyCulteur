@@ -80,7 +80,6 @@ Test(loop_event_pfk, basic_pfk)
     char res[512] = {0};
 
     set_up_tests(&zappy, 1, 9410, &graph);
-    cr_assert_not_null(zappy);
     ntw_client_t *client_e = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client_e);
     client_t *c_e = L_DATA(client_e);
@@ -100,7 +99,6 @@ Test(loop_event_pfk, basic_pfk_and_enw)
     char res[512] = {0};
 
     set_up_tests(&zappy, 1, 9411, &graph);
-    cr_assert_not_null(zappy);
     ntw_client_t *client_e = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client_e);
     client_t *c_e = L_DATA(client_e);
@@ -112,7 +110,6 @@ Test(loop_event_pfk, basic_pfk_and_enw)
     c_e->cl.ai.trantorien->x = 0;
     c_e->cl.ai.trantorien->y = 0;
     c_e->cl.ai.trantorien->level = 2;
-    printf("len before = %d\n", zappy->trantoriens_available->len);
     circular_buffer_write(client_e->read_from_outside, "Fork\n");
     while (circular_buffer_is_read_ready(client_e->write_to_outside) == false) {
         cr_assert_eq(loop(zappy, true), false);
@@ -120,11 +117,9 @@ Test(loop_event_pfk, basic_pfk_and_enw)
     memset(res, 0, 512);
     snprintf(res, 511, "pfk %d\n", c_e->cl.ai.trantorien->id);
     cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
-    printf("len: %d\n", zappy->trantoriens_available->len);
     trantorien_t *trantorien = L_DATA(zappy->trantoriens_available->end);
     cr_assert_not_null(trantorien);
     memset(res, 0, 512);
     snprintf(res, 511, "enw %d %d %d %d\n", trantorien->id, c_e->cl.ai.trantorien->id, trantorien->x, trantorien->y);
     cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
-    puts("ok");
 }

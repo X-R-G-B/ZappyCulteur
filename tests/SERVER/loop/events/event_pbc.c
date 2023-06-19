@@ -102,4 +102,5 @@ Test(loop_event_pbc, basic_pbc)
     memset(res, 0, 512);
     snprintf(res, 511, "pbc %d %s\n", c_e->id, msg);
     cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
+    zappy_destroy(zappy);
 }
