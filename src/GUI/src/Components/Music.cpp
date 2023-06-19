@@ -10,18 +10,10 @@
 namespace GUI {
     namespace Components {
 
-        Music::Music(
-            const std::string &id,
-            const std::string &path,
-            bool isLooping,
-            bool needToPlay,
-            float volume,
-            CompType type
-        ) : AComponent(id, type),
-            _volume(volume),
-            _isPlaying(false),
-            _isLooping(isLooping),
-            _needToPlay(needToPlay)
+        Music::Music(const std::string &id, const std::string &path,
+        bool isLooping, bool needToPlay, float volume, CompType type)
+            : AComponent(id, type), _volume(volume), _isPlaying(false),
+              _isLooping(isLooping), _needToPlay(needToPlay)
         {
             _music.openFromFile(path);
             _music.setLoop(_isLooping);
@@ -84,5 +76,5 @@ namespace GUI {
         {
             return _isLooping;
         }
-    }
-}
+    } // namespace Components
+} // namespace GUI

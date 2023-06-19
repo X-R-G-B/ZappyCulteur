@@ -1,0 +1,38 @@
+name: C++ Lint
+
+on:
+  push:
+    paths:
+      - 'src/GUI/**.cpp'
+      - 'src/GUI/**.hpp'
+
+jobs:
+  clang-format:
+    runs-on: ubuntu-latest
+    env:
+      workdir: ./src/GUI
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Deps
+      run: |
+        sudo apt install -y clang-format
+
+    - name: Lint
+      run: |
+        FILES=$(find src -name '*.cpp' -o -name '*.hpp')
+        clang-format --dry-run --Werror -style=file -i $FILES | tee lint-report.log
+      working-directory: ${{ env.workdir }}
+
+    - name: Upload Lint Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: lint-report.log
+        path: src/GUI/ling-report.log
+
+    - name: Is error ?
+      run: |
+        if [ ! -f 'lint-report.log' ]; then exit 0; fi
+        if [ -s 'lint-report.log' ]; then cat 'lint-report.log' && exit 1; fi
+      working-directory: ${{ env.workdir }}

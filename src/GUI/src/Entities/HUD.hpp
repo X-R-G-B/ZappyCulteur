@@ -7,18 +7,18 @@
 
 #pragma once
 
-#include <chrono>
 #include <SFML/Graphics.hpp>
+#include <chrono>
 #include <memory>
-#include <unordered_map>
 #include <stdexcept>
-#include "Trantorian.hpp"
-#include "Sprite.hpp"
 #include "AEntity.hpp"
-#include "Vector2F.hpp"
 #include "EntitiesManager.hpp"
-#include "Text.hpp"
 #include "Music.hpp"
+#include "Sprite.hpp"
+#include "Text.hpp"
+#include "Trantorian.hpp"
+#include "Vector2F.hpp"
+#include <unordered_map>
 
 namespace GUI {
     namespace Entities {
@@ -34,10 +34,8 @@ namespace GUI {
 
         class HUD : public AEntity {
             public:
-                HUD(
-                    const std::string &id,
-                    std::shared_ptr<Entities::EntitiesManager> &entitiesManager
-                );
+                HUD(const std::string &id,
+                std::shared_ptr<Entities::EntitiesManager> &entitiesManager);
                 ~HUD() = default;
                 void update(double deltaTime) final;
 
@@ -49,10 +47,14 @@ namespace GUI {
                 void updateCounterBox();
                 void initTextures();
                 void initMaintThemeMusic();
-                unsigned int getRessourceAmount(RessourcesType type, Vector2F tile);
-                void createQuantityText(const std::string &id, const Vector2F &pos);
+                unsigned int getRessourceAmount(
+                RessourcesType type, Vector2F tile);
+                void createQuantityText(
+                const std::string &id, const Vector2F &pos);
                 void createSelectedTexts();
-                std::unordered_map<GUI::Entities::RessourcesType, Components::Text> _ressourcesTexts;
+                std::unordered_map<GUI::Entities::RessourcesType,
+                Components::Text>
+                _ressourcesTexts;
                 sf::Texture _txTileInfos;
                 sf::Texture _txSelectedTile;
                 sf::Sprite _tileInfoSprite;
@@ -61,5 +63,5 @@ namespace GUI {
                 bool _isTileSelected = false;
                 std::shared_ptr<Entities::EntitiesManager> _entitiesManager;
         };
-    }
-}
+    } // namespace Entities
+} // namespace GUI

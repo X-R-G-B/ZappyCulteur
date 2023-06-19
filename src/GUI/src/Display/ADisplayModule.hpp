@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <memory>
 #include <SFML/Graphics.hpp>
+#include <memory>
 
 #include "IDisplayModule.hpp"
 
@@ -23,7 +23,8 @@ namespace GUI {
             virtual std::string getWindowTitle() final;
             virtual void setWindowTitle(std::string windowTitle) final;
             virtual unsigned int getFramerateLimit() final;
-            virtual void setFramerateLimit(unsigned int framerateLimit) override;
+            virtual void setFramerateLimit(
+            unsigned int framerateLimit) override;
             virtual void setWindowMode(WINDOW_MODE windowMode) final;
 
         protected:
@@ -38,4 +39,4 @@ namespace GUI {
             std::string _windowTitle;
             WINDOW_MODE _windowMode;
     };
-}
+} // namespace GUI

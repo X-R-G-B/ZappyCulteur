@@ -15,14 +15,9 @@ namespace GUI {
     namespace Components {
         class Music : public AComponent {
             public:
-                Music(
-                    const std::string &id,
-                    const std::string &path,
-                    bool isLooping = true,
-                    bool needToPlay = true,
-                    float volume = 100,
-                    CompType type = CompType::MUSIC
-                );
+                Music(const std::string &id, const std::string &path,
+                bool isLooping = true, bool needToPlay = true,
+                float volume = 100, CompType type = CompType::MUSIC);
                 ~Music() = default;
 
                 void setLooping(bool isLooping);
@@ -46,5 +41,5 @@ namespace GUI {
                 bool _needToPlay;
                 bool _needToStop;
         };
-    }
-}
+    } // namespace Components
+} // namespace GUI

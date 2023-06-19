@@ -2,4 +2,6 @@
 set -e
 set -x
 
-clang-format -i -style=file **.cpp **.hpp
+FILES=$(find src -name '*.cpp' -o -name '*.hpp')
+
+clang-format -i -style=file $FILES

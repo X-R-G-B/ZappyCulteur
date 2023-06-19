@@ -17,22 +17,26 @@ namespace GUI {
 
     Vector3F Vector3F::operator+(const Vector3F &vector) const
     {
-        return Vector3F(this->x + vector.x, this->y + vector.y, this->z + vector.z);
+        return Vector3F(
+        this->x + vector.x, this->y + vector.y, this->z + vector.z);
     }
 
     Vector3F Vector3F::operator-(const Vector3F &vector) const
     {
-        return Vector3F(this->x - vector.x, this->y - vector.y, this->z - vector.z);
+        return Vector3F(
+        this->x - vector.x, this->y - vector.y, this->z - vector.z);
     }
 
     Vector3F Vector3F::operator*(const Vector3F &vector) const
     {
-        return Vector3F(this->x * vector.x, this->y * vector.y, this->z * vector.z);
+        return Vector3F(
+        this->x * vector.x, this->y * vector.y, this->z * vector.z);
     }
 
     Vector3F Vector3F::operator/(const Vector3F &vector) const
     {
-        return Vector3F(this->x / vector.x, this->y / vector.y, this->z / vector.z);
+        return Vector3F(
+        this->x / vector.x, this->y / vector.y, this->z / vector.z);
     }
 
     Vector3F &Vector3F::operator+=(const Vector3F &vector)
@@ -69,12 +73,14 @@ namespace GUI {
 
     bool Vector3F::operator==(const Vector3F &vector) const
     {
-        return this->x == vector.x && this->y == vector.y && this->z == vector.z;
+        return this->x == vector.x && this->y == vector.y
+        && this->z == vector.z;
     }
 
     bool Vector3F::operator!=(const Vector3F &vector) const
     {
-        return this->x != vector.x || this->y != vector.y || this->z != vector.z;
+        return this->x != vector.x || this->y != vector.y
+        || this->z != vector.z;
     }
 
     Vector3F Vector3F::operator*(float value) const
@@ -128,4 +134,4 @@ namespace GUI {
         this->z += value;
         return *this;
     }
-}
+} // namespace GUI
