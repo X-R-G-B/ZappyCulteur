@@ -27,6 +27,7 @@ ntw_client_t *cl, action_t *action)
         zappy->map->width, zappy->map->height);
     new_trantorien->x = trantorien->x;
     new_trantorien->y = trantorien->y;
+    new_trantorien->id = get_id();
     if (!new_trantorien ||
         list_append(zappy->trantoriens_available, new_trantorien,
         (void (*)(void *)) &trantorien_destroy, NULL) == NULL) {
@@ -34,6 +35,6 @@ ntw_client_t *cl, action_t *action)
         return EXIT_FAILURE;
     }
     circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
-    cmd_enw(zappy->ntw, cl);
+    cmd_enw(zappy->ntw, new_trantorien, trantorien);
     return EXIT_FAILURE;
 }

@@ -70,10 +70,11 @@ bool cmd_pdi(ntw_t *ntw, ntw_client_t *cl);
 /**
 ** @brief broadcast event enw (new egg)
 ** @param ntw
-** @param cl
+** @param tr (trantorien)
+** @param parent (parent trantorien)
 ** @return bool
 **/
-bool cmd_enw(ntw_t *ntw, ntw_client_t *cl);
+bool cmd_enw(ntw_t *ntw, trantorien_t *tr, trantorien_t *parent);
 
 /**
 ** @brief broadcast event eht (egg hatched)

@@ -8,20 +8,18 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "ntw.h"
-#include "map.h"
 #include "internal.h"
 #include "client.h"
 
-bool cmd_enw(ntw_t *ntw, ntw_client_t *cl)
+bool cmd_enw(ntw_t *ntw, trantorien_t *tr, trantorien_t *parent)
 {
     char buff[512] = {0};
-    client_t *client = NULL;
 
-    if (ntw == NULL || cl == NULL) {
+    if (ntw == NULL || tr == NULL || parent == NULL) {
         return false;
     }
-    client = L_DATA(cl);
-    snprintf(buff, 511, "enw %d\n", client->id);
+    snprintf(buff, 511, "enw %d %d %d %d\n",
+        tr->id, parent->id, tr->x, tr->y);
     broadcast_graphic(ntw, buff);
     return true;
 }
