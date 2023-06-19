@@ -359,4 +359,5 @@ class DecisionTree:
             res = self._clientManager.checkBroadcastWithoutNewElevation()
             for mess in res:
                 participantsId = self.checkReceivedMessage(participantsId, mess)
+            self.takeClosestFood()
         self.waitParticipants(participantsId)
