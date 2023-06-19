@@ -27,11 +27,13 @@ void send_id(client_t *cc, ntw_client_t *cl);
 
 /**
 ** @brief update food for every trantoriens, associated or not with clients
+** @param ntw
 ** @param trantorien
 ** @param cl
-** @param new_freq
+** @param is_and_egg
 **/
-void update_food(trantorien_t *trantorien, ntw_client_t *cl, bool new_freq);
+void update_food(ntw_t *ntw, trantorien_t *trantorien,
+    ntw_client_t *cl, bool is_and_egg);
 
 // Update in states
 

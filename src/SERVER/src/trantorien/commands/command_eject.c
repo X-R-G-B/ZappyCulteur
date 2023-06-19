@@ -10,8 +10,8 @@
 #include "ntw.h"
 #include "zappy.h"
 #include "client.h"
-#include "../internal.h"
 #include "command_reponses.h"
+#include "broadcast_events.h"
 
 static void remove_eggs_on_tile(trantorien_t *tr_src,
     list_t *trantoriens_available)
@@ -32,19 +32,6 @@ static void remove_eggs_on_tile(trantorien_t *tr_src,
         list_remove_ptrnode(trantoriens_available, trantorien->data);
     }
     list_delete(to_remove);
-}
-
-static void send_eject_broadcast(ntw_client_t *cl, trantorien_t *tr)
-{
-    if (cl == NULL || tr == NULL) {
-        return;
-    }
-    if (tr->actions[0] != NULL) {
-        action_destroy(tr->actions[0]);
-        tr->actions[0] = NULL;
-        circular_buffer_write(cl->write_to_outside, KO_EJECT_RESPONSE);
-    }
-    circular_buffer_write(cl->write_to_outside, EJECT_RESPONSE);
 }
 
 static void apply_eject_tr_pos(trantorien_t *trantorien,
@@ -72,6 +59,21 @@ static void apply_eject_tr_pos(trantorien_t *trantorien,
     }
 }
 
+static void send_eject_broadcast(ntw_t *ntw, ntw_client_t *cl,
+    trantorien_t *tr)
+{
+    if (cl == NULL || tr == NULL) {
+        return;
+    }
+    if (tr->actions[0] != NULL) {
+        action_destroy(tr->actions[0]);
+        tr->actions[0] = NULL;
+        circular_buffer_write(cl->write_to_outside, KO_EJECT_RESPONSE);
+    }
+    cmd_pex(ntw, cl, tr);
+    circular_buffer_write(cl->write_to_outside, EJECT_RESPONSE);
+}
+
 int command_eject(trantorien_t *trantorien_src, zappy_t *zappy,
 ntw_client_t *cl_src, action_t *action)
 {
@@ -90,7 +92,7 @@ ntw_client_t *cl_src, action_t *action)
         if (!(IS_SAME_TR_POS(trantorien_src, tr)) || tr == trantorien_src)
             continue;
         apply_eject_tr_pos(tr, trantorien_src->direction, zappy->map);
-        send_eject_broadcast(L_DATA(client), tr);
+        send_eject_broadcast(zappy->ntw, L_DATA(client), tr);
     }
     circular_buffer_write(cl_src->write_to_outside, OK_RESPONSE);
     remove_eggs_on_tile(trantorien_src, zappy->trantoriens_available);

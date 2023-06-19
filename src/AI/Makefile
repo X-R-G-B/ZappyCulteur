@@ -61,13 +61,16 @@ clean:
 fclean: clean
 	pip uninstall --break-system-packages -y $(PIP_TARGET) || \
 		pip uninstall -y $(PIP_TARGET)
-	$(RM) $(LOCAL_DEPS)/requirements.txt
 	$(RM) $(TARGET)
 
 fclean-simple: fclean
+	$(RM) $(LOCAL_DEPS)/requirements.txt
 	$(RM) -r $(LOCAL_DEPS)/simple
 	$(RM) $(LOCAL_DEPS)/*.whl
 
-re: fclean all
+re: fclean
+re: all
 
-re-simple: fclean-simple $(LOCAL_DEPS)/simple all
+re-simple: fclean-simple
+re-simple: $(LOCAL_DEPS)/simple
+re-simple: all

@@ -11,14 +11,7 @@
 #include "ntw.h"
 #include "zappy.h"
 #include "command_reponses.h"
-
-static void send_broadcast(enum ressource_e obj, ntw_t *ntw, int player_id)
-{
-    char buff[512] = {0};
-
-    snprintf(buff, 511, "pgt %d %d\n", player_id, obj);
-    broadcast_graphic(ntw, buff);
-}
+#include "broadcast_events.h"
 
 int command_take_object(trantorien_t *trantorien, zappy_t *zappy,
     ntw_client_t *cl, action_t *action)
@@ -34,7 +27,7 @@ int command_take_object(trantorien_t *trantorien, zappy_t *zappy,
         zappy->map->tiles[i].ressources[action->param.object] -= 1;
         trantorien->ressources[action->param.object] += 1;
         circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
-        send_broadcast(action->param.object, zappy->ntw, trantorien->id);
+        cmd_pgt(zappy->ntw, cl, action);
     } else {
         fprintf(stderr, "Take object %d (available: %d)\n",
             action->param.object,
