@@ -64,11 +64,21 @@ class ClientManager:
             if toSend[0] != 0 and self.isMyIdInList(toSend) is False:
                 continue
             resList.append((int(splittedRes[1]), splittedRes[2], toSend, direc))
-        if (len(resList) > 0):
+        if len(resList) > 0:
             self._log.info("Received Broadcast:\n")
             for broadcast in resList:
-                toSendStr = ' '.join(map(str, broadcast[2]))
-                self._log.info("    from: " + str(broadcast[0]) + " : " + broadcast[1] + " to " + toSendStr + " dir: " + str(broadcast[3]) + "\n")
+                toSendStr = " ".join(map(str, broadcast[2]))
+                self._log.info(
+                    "    from: "
+                    + str(broadcast[0])
+                    + " : "
+                    + broadcast[1]
+                    + " to "
+                    + toSendStr
+                    + " dir: "
+                    + str(broadcast[3])
+                    + "\n"
+                )
         return resList
 
     def checkBroadcastWithoutNewElevation(
@@ -101,7 +111,7 @@ class ClientManager:
         while res == "":
             res = self.output()
             i += 1
-            if (i > 15):
+            if i > 15:
                 self._log.debug("15 check without response")
                 i = 0
         self._log.info("Received: " + res)
@@ -133,10 +143,12 @@ class ClientManager:
         self._log.info("[Send: " + toSend.split("\n")[0] + " " + argToSend + "]\n")
         self._client.input(toSend, argToSend)
         res = self.waitOutput()
-        if (res == "ko\n"):
+        if res == "ko\n":
             toSendOrd = list(map(ord, toSend))
             argToSendOrd = list(map(ord, argToSend))
-            self._log.info(f"Server responded ko to : `{toSend}`({toSendOrd}) + `{argToSend}`({argToSendOrd})")
+            self._log.info(
+                f"Server responded ko to : `{toSend}`({toSendOrd}) + `{argToSend}`({argToSendOrd})"
+            )
             return "ko\n"
         return res
 
