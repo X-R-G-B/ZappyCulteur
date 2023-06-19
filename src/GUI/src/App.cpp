@@ -151,7 +151,7 @@ namespace GUI {
             width,
             height,
             framerateLimit,
-            WINDOW_MODE::FULLSCREEN
+            WINDOW_MODE::WINDOWED
         );
         _commandHandler = std::make_unique<CommandHandler::CommandHandler>(
             _entityManager,

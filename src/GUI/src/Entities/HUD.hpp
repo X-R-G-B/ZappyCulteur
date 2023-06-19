@@ -18,6 +18,7 @@
 #include "Vector2F.hpp"
 #include "EntitiesManager.hpp"
 #include "Text.hpp"
+#include "Music.hpp"
 
 namespace GUI {
     namespace Entities {
@@ -47,6 +48,7 @@ namespace GUI {
                 void removeInfoTexts();
                 void updateCounterBox();
                 void initTextures();
+                void initMaintThemeMusic();
                 unsigned int getRessourceAmount(RessourcesType type, Vector2F tile);
                 void createQuantityText(const std::string &id, const Vector2F &pos);
                 void createSelectedTexts();
