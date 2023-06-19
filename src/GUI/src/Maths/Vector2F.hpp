@@ -6,6 +6,7 @@
 */
 
 #pragma once
+#include <functional>
 
 namespace GUI {
     class Vector2F {
@@ -34,3 +35,13 @@ namespace GUI {
             bool operator!=(const Vector2F &vector) const;
     };
 }
+
+template<>
+struct std::hash<GUI::Vector2F> {
+    size_t operator()(const GUI::Vector2F& vector) const;
+};
+
+template<>
+struct std::equal_to<GUI::Vector2F> {
+    bool operator()(const GUI::Vector2F& lhs, const GUI::Vector2F& rhs) const;
+};

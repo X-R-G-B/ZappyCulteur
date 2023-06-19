@@ -9,33 +9,34 @@
 #include <cstdlib>
 #include <ctime>
 #include "Floor.hpp"
+#include "EventsManager.hpp"
+
+static const std::unordered_map<GUI::Entities::RessourcesType, std::string> idOfRessources = {
+    {GUI::Entities::RessourcesType::FOOD, "_FOOD"},
+    {GUI::Entities::RessourcesType::LINEMATE, "_LINEMATE"},
+    {GUI::Entities::RessourcesType::DERAUMERE, "_DERAUMERE"},
+    {GUI::Entities::RessourcesType::SIBUR, "_SIBUR"},
+    {GUI::Entities::RessourcesType::MENDIANE, "_MENDIANE"},
+    {GUI::Entities::RessourcesType::PHIRAS, "_PHIRAS"},
+    {GUI::Entities::RessourcesType::THYSTAME, "_THYSTAME"}
+};
+
+static const std::unordered_map<GUI::Entities::RessourcesType, std::string> pathToData = {
+    {GUI::Entities::RessourcesType::FOOD, "src/GUI/assets/environment/honey.png"},
+    {GUI::Entities::RessourcesType::LINEMATE, "src/GUI/assets/environment/rocks.png"},
+    {GUI::Entities::RessourcesType::DERAUMERE, "src/GUI/assets/environment/flower.png"},
+    {GUI::Entities::RessourcesType::SIBUR, "src/GUI/assets/environment/rose.png"},
+    {GUI::Entities::RessourcesType::MENDIANE, "src/GUI/assets/environment/hibiscus.png"},
+    {GUI::Entities::RessourcesType::PHIRAS, "src/GUI/assets/environment/camellia.png"},
+    {GUI::Entities::RessourcesType::THYSTAME, "src/GUI/assets/environment/dahlia.png"}
+};
+
+static const std::size_t ressourceLayer = 20;
+static const std::string darkFloorPath = "src/GUI/assets/environment/darkFloor.png";
+static const std::string lightFloorPath = "src/GUI/assets/environment/lightFloor.png";
 
 namespace GUI {
     namespace Entities {
-
-        static const std::unordered_map<RessourcesType, std::string> idOfRessources = {
-            {RessourcesType::FOOD, "_FOOD"},
-            {RessourcesType::LINEMATE, "_LINEMATE"},
-            {RessourcesType::DERAUMERE, "_DERAUMERE"},
-            {RessourcesType::SIBUR, "_SIBUR"},
-            {RessourcesType::MENDIANE, "_MENDIANE"},
-            {RessourcesType::PHIRAS, "_PHIRAS"},
-            {RessourcesType::THYSTAME, "_THYSTAME"}
-        };
-
-        static const std::unordered_map<RessourcesType, std::string> pathToData = {
-            {RessourcesType::FOOD, "src/GUI/assets/environment/honey.png"},
-            {RessourcesType::LINEMATE, "src/GUI/assets/environment/rocks.png"},
-            {RessourcesType::DERAUMERE, "src/GUI/assets/environment/flower.png"},
-            {RessourcesType::SIBUR, "src/GUI/assets/environment/rose.png"},
-            {RessourcesType::MENDIANE, "src/GUI/assets/environment/hibiscus.png"},
-            {RessourcesType::PHIRAS, "src/GUI/assets/environment/camellia.png"},
-            {RessourcesType::THYSTAME, "src/GUI/assets/environment/camellia.png"}
-        };
-
-        static const std::size_t ressourceLayer = 20;
-        static const std::string darkFloorPath = "src/GUI/assets/environment/darkFloor.png";
-        static const std::string lightFloorPath = "src/GUI/assets/environment/lightFloor.png";
 
         Floor::Floor(
             const std::string &id,
@@ -60,6 +61,21 @@ namespace GUI {
 
         void Floor::update(double)
         {
+        }
+
+        unsigned int Floor::getRessourceAmount(Vector2F tile, RessourcesType ressource)
+        {
+            float x = tile.x;
+            float y = tile.y;
+            
+            if (_ressourcesNumber.find(Vector2F(x, y)) == _ressourcesNumber.end()) {
+                return (0);
+            }
+            if (_ressourcesNumber.find(Vector2F(x, y))->second.find(ressource)
+                == _ressourcesNumber.find(Vector2F(x, y))->second.end()) {
+                return (0);
+            }
+            return (_ressourcesNumber.find(Vector2F(x, y))->second.find(ressource)->second);
         }
 
         void Floor::initTexture()
@@ -160,6 +176,9 @@ namespace GUI {
                 ressourceSize,
                 ressourceSize
             ));
+            float xTile = static_cast<float>(x);
+            float yTile = static_cast<float>(y);
+            _ressourcesNumber[Vector2F(xTile, yTile)][ressource] += 1;
         }
 
         float Floor::computeRessourceSize()
@@ -214,6 +233,11 @@ namespace GUI {
                 _tileSize,
                 _tileSize
             ));
+        }
+
+        Vector2F Floor::getMapSize()
+        {
+            return (Vector2F(_width * _tileSize, _height * _tileSize));
         }
     }
 }

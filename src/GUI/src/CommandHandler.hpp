@@ -12,6 +12,7 @@
 #include <string>
 #include <unordered_map>
 #include <functional>
+#include "NetworkManager.hpp"
 #include "EntitiesManager.hpp"
 
 namespace GUI {
@@ -41,7 +42,8 @@ namespace GUI {
             GAME_END,
             SERVER_MESSAGE,
             UNKNOW_COMMAND,
-            COMMAND_PARAMETER
+            COMMAND_PARAMETER,
+            COMMAND_WELCOME
         };
 
         /**
@@ -58,7 +60,7 @@ namespace GUI {
              * @brief Constructor for CommandHandler.
              * @param entityManager A shared pointer to the EntityManager.
              */
-            CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager);
+            CommandHandler(std::shared_ptr<Entities::EntitiesManager> entityManager, std::function<void(const std::string &)> sendToServerFunc);
 
             /**
              * @brief Destructor for CommandHandler.
@@ -126,6 +128,13 @@ namespace GUI {
              */
             bool setEggDie(const std::string &command);
 
+            /**
+             * @brief Receive WELCOME and send GRAPHIC command.
+             * @param command The command string.
+             * @return True if the connection was successful, false otherwise.
+             */
+            bool receiveFirstConnexion(const std::string &command);
+
             bool setPlayerDeath(const std::string &command);
 
             bool startIncantation(const std::string &command);
@@ -148,8 +157,17 @@ namespace GUI {
              */
             bool setRessourceCollecting(const std::string &command);
 
+            /**
+             * @brief Handle id and map size.
+             * @param command The command string.
+             * @return True if the command was handled successfully, false otherwise.
+             */
+            bool handleIdandMapSize(const std::string &command);
+
             std::shared_ptr<Entities::EntitiesManager> _entityManager;
             const std::unordered_map<COMMAND_TYPE, std::function<bool(CommandHandler &, const std::string &)>> _toCall;
+            std::function<void(const std::string &)> _sendToServerFunc;
+            std::size_t _connexionCmdRemaining;
         };
     }
 }
