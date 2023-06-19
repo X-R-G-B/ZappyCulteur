@@ -109,14 +109,12 @@ class DecisionTree:
         try:
             rescpy = res
             res = res.split("[")[1].split("]")[0]
-        except IndexError:
+            for elem in res.split(","):
+                parsedElem = elem.strip().split(" ")
+                self._inputTree["m" + parsedElem[0]][0] = int(parsedElem[1])
+        except (IndexError, ValueError) as error:
             print(f"ID : {self._clientManager._id} crashed in inventory when received : ", rescpy)
             self._clientManager.stopClient()
-            return
-
-        for elem in res.split(","):
-            parsedElem = elem.strip().split(" ")
-            self._inputTree["m" + parsedElem[0]][0] = int(parsedElem[1])
 
     def lookForTree(self):
         """
@@ -300,10 +298,13 @@ class DecisionTree:
                 )
         res = self._clientManager.requestClient(Command.INCANTATION)
         if (res == "ko\n"):
+            self._clientManager.requestClient(Command.FORWARD)
             return
         out = self._clientManager.waitOutput()
         if out != Message.KO.value + "\n":
             self.incrementLevel()
+        else:
+            self._clientManager.requestClient(Command.FORWARD)
 
     def takeClosestFood(self):
         self.look()
@@ -363,12 +364,13 @@ class DecisionTree:
         This function is call by decision tree when the ia have the stones for elevation,
             the ia call others to try elevation
         """
-        self._clientManager.sendBroadcast(list(Message)[self._level].value)
         participantsId: List[int] = []
         res: List[Tuple[int, str, List[int], int]] = []
-        time.sleep(1)
-        res = self._clientManager.checkBroadcastWithoutNewElevation()
-        for mess in res:
-            participantsId = self.checkReceivedMessage(participantsId, mess)
-        if len(participantsId) == levelParticipantsNb[self._level]:
-            self.waitParticipants(participantsId)
+        while len(participantsId) < levelParticipantsNb[self._level]:
+            self._clientManager.sendBroadcast(list(Message)[self._level].value)
+            res = self._clientManager.checkBroadcastWithoutNewElevation()
+            for mess in res:
+                participantsId = self.checkReceivedMessage(participantsId, mess)
+            self.takeClosestFood()
+        self._clientManager.sendBroadcast(Message.OK.value, participantsId)
+        self.waitParticipants(participantsId)

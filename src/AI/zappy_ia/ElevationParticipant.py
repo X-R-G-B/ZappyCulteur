@@ -53,11 +53,38 @@ class ElevationParticipant:
         else:
             return self.errorReturn()
 
+    def checkBroadcastEmitter(self) -> List[Tuple[int, str, List[int], int]]:
+        broadcasts = self._clientManager.checkBroadcast()
+        res: List[Tuple[int, str, List[int], int]] = []
+        for mess in broadcasts:
+            if mess[2][0] == 0:
+                if mess[0] == self._emitter:
+                    continue
+                else:
+                    self._clientManager.sendBroadcast(Message.KO.value, [mess[0]])
+            elif mess[0] == self._emitter:
+                res.append(mess)
+            else:
+                self._log.debug("weird message in check broadcast emitter: " + mess[1])
+        return res
+
+    def waitNextStep(self) -> bool:
+        okNb = 0
+        res: Tuple[int, str, List[int], int] = [0, "", [], 0]
+        while okNb < 2:
+            res = self.checkBroadcastEmitter()
+            for mess in res:
+                if mess[1] == Message.KO.value:
+                    return False
+                elif mess[1] == Message.OK.value:
+                    okNb += 1
+                else:
+                    self._log.debug("weird message in wait next step: " + mess[1])
+            self._decisionTree.takeClosestFood()
+        return True
+
     def elevationParticipant(self) -> bool:
-        res = self._clientManager.checkBroadcastResponse()
-        while res[1] == "":
-            res = self._clientManager.checkBroadcastResponse()
-        if res[1] == Message.KO.value:
+        if self.waitNextStep() == False:
             return self.errorReturn()
         haveToCome = False
         ready = False

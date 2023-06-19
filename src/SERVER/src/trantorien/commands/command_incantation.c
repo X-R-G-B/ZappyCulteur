@@ -15,7 +15,10 @@
 #include "client.h"
 #include "command_reponses.h"
 
-static const char *format_error_level = "Incantation: too many/less "
+static const char *format_error_too_many_level = "Incantation: too many"
+                                        "trantoriens at level %d\n";
+
+static const char *format_error_too_less_level = "Incantation: too less "
                                         "trantoriens at level %d\n";
 
 static const char *format_error_resource = "Incantation: too less "
@@ -56,6 +59,11 @@ static bool check_incantation_lvl_availability(trantorien_t *ref_trnt,
             nb_trantorien_lvl += 1;
         }
     }
+    if (nb_trantorien_lvl < nb_level_players[trantorien_lvl - 1]) {
+        fprintf(stderr, format_error_too_less_level, trantorien_lvl);
+    } else if (nb_trantorien_lvl > nb_level_players[trantorien_lvl - 1]) {
+        fprintf(stderr, format_error_too_many_level, trantorien_lvl);
+    }
     return (nb_trantorien_lvl == nb_level_players[trantorien_lvl - 1]);
 }
 
@@ -78,7 +86,6 @@ bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
         }
     }
     if (check_incantation_lvl_availability(trantorien, ntw) == false) {
-        fprintf(stderr, format_error_level, trantorien->level);
         return false;
     }
     return true;
