@@ -45,6 +45,7 @@ namespace GUI {
             void moveCamera(double deltaTime);
             void zoomCamera();
             void lookForCloseEvent();
+            void playMusics();
             void applyCamMovements(
                 sf::Vector2f viewCenter,
                 sf::Vector2f viewSize,

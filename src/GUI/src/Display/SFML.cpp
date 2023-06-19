@@ -14,6 +14,7 @@
 #include "Sprite.hpp"
 #include "CompQuery.hpp"
 #include "Floor.hpp"
+#include "Music.hpp"
 
 static const std::unordered_map<sf::Keyboard::Key, GUI::Event> _keyboardMappings = {
     {sf::Keyboard::Num1, GUI::Event::KEYBOARD_1_PRESSED},
@@ -138,12 +139,33 @@ namespace GUI {
         moveCamera(deltaTime);
         zoomCamera();
         clear();
+        playMusics();
         drawSprites();
         drawTexts();
         _window.setView(_HUDview);
         drawHUD();
         _window.setView(_view);
         _window.display();
+    }
+
+    void SFML::playMusics()
+    {
+        auto musics = _entityManager->getComponentsByType(Components::CompType::MUSIC);
+
+        for (const auto &music : *musics) {
+            auto musicPtr = std::static_pointer_cast<GUI::Components::Music>(music);
+            if (musicPtr == nullptr) {
+                continue;
+            }
+            if (musicPtr->getNeedToPlay() == true) {
+                musicPtr->play();
+                musicPtr->setNeedToPlay(false);
+            }
+            if (musicPtr->getNeedToStop() == true) {
+                musicPtr->stop();
+                musicPtr->setNeedToStop(false);
+            }
+        }
     }
 
     void SFML::drawHUD()
