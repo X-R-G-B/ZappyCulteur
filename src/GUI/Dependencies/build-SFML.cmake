@@ -1,6 +1,6 @@
 if (WIN32)
     include(FetchContent)
-    set(SFML_BUILD_AUDIO OFF)
+    set(SFML_BUILD_AUDIO ON)
     set(SFML_BUILD_NETWORK OFF)
     set(SFML_BUILD_DOC OFF)
     set(SFML_BUILD_EXAMPLES OFF)
@@ -15,10 +15,11 @@ if (WIN32)
         sfml-graphics
         sfml-window
         sfml-system
+        sfml-audio
     )
 else()
     find_library(SFML sfml-graphics sfml-window sfml-system)
     target_link_libraries(${PROJECT_NAME} PRIVATE
-        sfml-graphics sfml-window sfml-system
+        sfml-graphics sfml-window sfml-system sfml-audio
     )
 endif()

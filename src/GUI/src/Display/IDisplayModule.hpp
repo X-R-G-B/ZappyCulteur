@@ -6,17 +6,13 @@
 */
 
 #pragma once
-#include <vector>
 #include <memory>
-#include "IEntity.hpp"
+#include <vector>
 #include "EntitiesManager.hpp"
+#include "IEntity.hpp"
 
 namespace GUI {
-        enum class WINDOW_MODE {
-            WINDOWED,
-            FULLSCREEN,
-            BORDERLESS
-        };
+    enum class WINDOW_MODE { WINDOWED, FULLSCREEN, BORDERLESS };
 
     class IDisplayModule {
         public:
@@ -25,8 +21,8 @@ namespace GUI {
              * @brief Clear, draw and display (sprites, sounds, etc...)
              * @param entitiesManger
              */
-            virtual void update() = 0;
-            
+            virtual void update(double deltaTime) = 0;
+
             /**
              * @brief say if the window is open or not
              */
@@ -34,8 +30,10 @@ namespace GUI {
 
             /**
              * @brief handle events (keyboard, mouse, etc...)
+             *
+             * @param deltaTime
              */
-            virtual void handleEvents() = 0;
+            virtual void handleEvents(double deltaTime) = 0;
 
             /**
              * @brief set the framerate limit of the window
@@ -92,4 +90,4 @@ namespace GUI {
              */
             virtual void setWindowMode(WINDOW_MODE windowMode) = 0;
     };
-}
+} // namespace GUI

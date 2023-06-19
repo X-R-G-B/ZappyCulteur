@@ -5,16 +5,17 @@
 ** app
 */
 
-#include <sstream>
-#include <ctime>
 #include "App.hpp"
+#include <ctime>
+#include <sstream>
 #include "Floor.hpp"
+#include "HUD.hpp"
 
 namespace GUI {
     static const std::string windowName = "ZappyCulteur";
 
-    static constexpr std::size_t height = 1080;
-    static constexpr std::size_t width = 1920;
+    static constexpr unsigned int height = 1080;
+    static constexpr unsigned int width = 1920;
     static constexpr unsigned int framerateLimit = 60;
 
     static const std::string ipFlag = "-h";
@@ -22,17 +23,18 @@ namespace GUI {
 
     static const std::string defaultIp = "ip";
     static const std::string defaultPort = "port";
-    App::AppException::AppException(const std::string &msg)
-        : _msg(msg){}
-    
+    App::AppException::AppException(const std::string &msg) : _msg(msg)
+    {
+    }
+
     const char *App::AppException::what() const noexcept
     {
         return (_msg.c_str());
     }
 
-    App::App() :
-        _lastTime(std::chrono::system_clock::now()),
-        _timeSinceLastServerAsk(0)
+    App::App()
+        : _lastTime(std::chrono::system_clock::now()),
+          _timeSinceLastServerAsk(0)
     {
         _args[ipFlag] = std::string(defaultIp);
         _args[portFlag] = std::string(defaultPort);
@@ -86,8 +88,8 @@ namespace GUI {
         gameLoop();
     }
 
-    //for now, we ask the server for updates every second
-    //next, we will ask in function of the time unit of the server
+    // for now, we ask the server for updates every second
+    // next, we will ask in function of the time unit of the server
     void App::askNetworkForUpdate()
     {
         std::string currentPlayerId;
@@ -126,8 +128,8 @@ namespace GUI {
             _networkManager.update();
             _entityManager->update(_deltatime);
             _commandHandler->update(_networkManager.getServerMessages());
-            _displayModule->handleEvents();
-            _displayModule->update();
+            _displayModule->handleEvents(_deltatime);
+            _displayModule->update(_deltatime);
         }
     }
 
@@ -140,21 +142,16 @@ namespace GUI {
 
     void App::initModules()
     {
-        _networkManager.sendToServer("GRAPHIC\n");
-        _networkManager.sendToServer("msz\n");
         _entityManager = std::make_shared<GUI::Entities::EntitiesManager>();
         if (_entityManager == nullptr) {
             throw AppException("Error while creating EntityManager");
         }
-        _displayModule = std::make_unique<GUI::SFML>(
-            _entityManager,
-            windowName,
-            width,
-            height,
-            framerateLimit,
-            WINDOW_MODE::FULLSCREEN
-        );
-        _commandHandler = std::make_unique<CommandHandler::CommandHandler>(_entityManager);
+        _displayModule = std::make_unique<GUI::SFML>(_entityManager, windowName,
+        width, height, framerateLimit, WINDOW_MODE::WINDOWED);
+        _commandHandler = std::make_unique<CommandHandler::CommandHandler>(
+        _entityManager, _networkManager.getSendToServer());
+        _entityManager->addEntity(
+        std::make_shared<GUI::Entities::HUD>("HUD", _entityManager));
         if (_commandHandler == nullptr || _displayModule == nullptr) {
             throw AppException("Error while initializing app modules");
         }
@@ -176,4 +173,4 @@ namespace GUI {
         }
         return 0;
     }
-}
+} // namespace GUI

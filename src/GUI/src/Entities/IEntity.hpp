@@ -7,12 +7,12 @@
 
 #pragma once
 
-#include <string>
+#include <SFML/Graphics.hpp>
 #include <exception>
 #include <memory>
-#include <SFML/Graphics.hpp>
-#include "Vector2F.hpp"
+#include <string>
 #include "IComponent.hpp"
+#include "Vector2F.hpp"
 
 namespace GUI {
     namespace Entities {
@@ -22,7 +22,8 @@ namespace GUI {
             RESOURCE,
             TRANTORIAN,
             EGG,
-            INCANTATION
+            INCANTATION,
+            HUD
         };
 
         enum class EntityOrientation {
@@ -41,6 +42,7 @@ namespace GUI {
             public:
                 EntityException(const std::string &message);
                 const char *what() const noexcept override;
+
             private:
                 std::string _message;
         };
@@ -59,11 +61,14 @@ namespace GUI {
                 virtual const std::string &getId() const = 0;
                 virtual void setOrientation(EntityOrientation orientation) = 0;
                 virtual EntityOrientation getOrientation() const = 0;
-                virtual const std::vector<Components::CompType> &getCompType() const = 0;
-                virtual const std::vector<std::shared_ptr<Components::IComponent>>
-                    &getComponents() const = 0;
-                virtual std::unique_ptr<std::vector<std::shared_ptr<Components::IComponent>>>
-                    getComponentsByType(Components::CompType type) const = 0;
+                virtual const std::vector<Components::CompType> &
+                getCompType() const = 0;
+                virtual const std::vector<
+                std::shared_ptr<Components::IComponent>> &
+                getComponents() const = 0;
+                virtual std::unique_ptr<
+                std::vector<std::shared_ptr<Components::IComponent>>>
+                getComponentsByType(Components::CompType type) const = 0;
         };
-    }
-}
+    } // namespace Entities
+} // namespace GUI
