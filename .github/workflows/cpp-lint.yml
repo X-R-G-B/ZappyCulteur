@@ -29,7 +29,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: lint-report.log
-        path: src/GUI/ling-report.log
+        path: src/GUI/lint-report.log
 
     - name: Is error ?
       run: |
