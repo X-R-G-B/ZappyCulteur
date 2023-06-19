@@ -129,7 +129,7 @@ namespace GUI {
         } else if (_windowMode == WINDOW_MODE::BORDERLESS) {
             _winStyle = sf::Style::None;
         } else {
-            _winStyle = sf::Style::Default;
+            _winStyle = sf::Style::Titlebar | sf::Style::Close;
         }
     }
 
