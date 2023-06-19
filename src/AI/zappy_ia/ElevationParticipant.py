@@ -17,7 +17,9 @@ cmdDirections: Dict = {
 
 
 class ElevationParticipant:
-    def __init__(self, clientManager: ClientManager, decisionTree: DecisionTree, log: LogGood):
+    def __init__(
+        self, clientManager: ClientManager, decisionTree: DecisionTree, log: LogGood
+    ):
         self._emitter: int = 0
         self._log = log
         self._clientManager: ClientManager = clientManager
@@ -56,12 +58,16 @@ class ElevationParticipant:
         while res[1] == "":
             res = self._clientManager.checkBroadcastResponse()
         if res[1] == Message.KO.value:
-            self._emitter = 0
             return self.errorReturn()
         haveToCome = False
         ready = False
         while haveToCome is False or ready is False:
-            self._log.debug("in havetocome loop, haveToCome: " + str(haveToCome) + " ,ready: " + str(ready))
+            self._log.debug(
+                "in havetocome loop, haveToCome: "
+                + str(haveToCome)
+                + " ,ready: "
+                + str(ready)
+            )
             self._decisionTree.takeClosestFood()
             if self._decisionTree.getCurrentFood() >= 13 and ready is False:
                 ready = True

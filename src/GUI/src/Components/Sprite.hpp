@@ -21,7 +21,8 @@ namespace GUI {
                     std::size_t layer,
                     const Vector2F &position = Vector2F(0, 0),
                     unsigned int width = 0,
-                    unsigned int height = 0
+                    unsigned int height = 0,
+                    Components::CompType compType = Components::CompType::SPRITE
                 );
                 ~Sprite() = default;
                 void setTexture(sf::Texture &texture);

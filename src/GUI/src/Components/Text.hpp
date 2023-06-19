@@ -21,7 +21,8 @@ namespace GUI {
                     const std::string &text,
                     const Vector2F &position,
                     Color _color,
-                    unsigned int size = 20
+                    unsigned int size = 20,
+                    CompType type = CompType::TEXT
                 );
                 ~Text() = default;
                 void setPosition(const Vector2F &position);

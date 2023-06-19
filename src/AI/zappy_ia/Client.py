@@ -7,6 +7,7 @@ import time
 from typing import List
 from zappy_ia.Enums import Message
 
+
 class Client:
     def __init__(self, port: int, server_ip: str = "localhost"):
         self._client_socket: socket.socket = socket.socket(
@@ -81,14 +82,14 @@ class Client:
             if socket_ == self._client_socket:
                 message = socket_.recv(2048).decode()
                 if message.count("\n") > 1:
-                    if (message.endswith("\n")):
+                    if message.endswith("\n"):
                         endClosed = True
                     else:
                         endClosed = False
                     message = message.split("\n")
                     i = 0
                     for i in range(len(message)):
-                        if (message[i] == ""):
+                        if message[i] == "":
                             continue
                         if i < len(message) - 1 or endClosed:
                             self._checkMessage(message[i] + "\n")

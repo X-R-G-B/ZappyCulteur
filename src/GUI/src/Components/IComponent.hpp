@@ -18,6 +18,8 @@ namespace GUI {
             TEXT,
             MUSIC,
             SOUND,
+            HUDSPRITE,
+            HUDTEXT,
         };
 
         class IComponent {

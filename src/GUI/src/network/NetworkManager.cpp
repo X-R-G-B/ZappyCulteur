@@ -215,4 +215,11 @@ namespace GUI {
         FD_ZERO(&_exceptfds);
         FD_SET(_serverSocket, &_exceptfds);
     }
+
+    std::function<void(const std::string&)> NetworkManager::getSendToServer()
+    {
+        return [this](const std::string& data) {
+            sendToServer(data);
+        };
+    }
 }
