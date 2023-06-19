@@ -20,7 +20,7 @@ jobs:
         sudo apt install -y clang-format
 
     - name: Lint
-      run: clang-format --dry-run --Werror -i -style=file **.cpp **.hpp | tee lint-report.log
+      run: clang-format --dry-run --Werror -style=file -i **/*.cpp **/*.hpp | tee lint-report.log
       working-directory: ${{ env.workdir }}
 
     - name: Upload Lint Report
