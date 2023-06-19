@@ -23,8 +23,6 @@ namespace GUI {
         return _framerateLimit;
     }
 
-
-
     void ADisplayModule::setWidth(unsigned int width)
     {
         _width = width;
@@ -60,4 +58,4 @@ namespace GUI {
         _windowMode = windowMode;
         switchWindowMode();
     }
-}
+} // namespace GUI

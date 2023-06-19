@@ -9,17 +9,10 @@
 
 namespace GUI {
     namespace Components {
-        Sprite::Sprite(
-            const std::string &id,
-            sf::Texture &texture,
-            std::size_t layer,
-            const Vector2F &position,
-            unsigned int width,
-            unsigned int height,
-            Components::CompType compType
-        ) : AComponent(id, compType),
-            _sprite(texture),
-            _layer(layer)
+        Sprite::Sprite(const std::string &id, sf::Texture &texture,
+        std::size_t layer, const Vector2F &position, unsigned int width,
+        unsigned int height, Components::CompType compType)
+            : AComponent(id, compType), _sprite(texture), _layer(layer)
         {
             _position = sf::Vector2f(position.x, position.y);
             _sprite.setPosition(_position);
@@ -64,13 +57,11 @@ namespace GUI {
         void Sprite::applySize(unsigned int width, unsigned int height)
         {
             if (width != 0 && height != 0) {
-                _sprite.setScale(
-                    sf::Vector2f(
-                        static_cast<float>(width) / _sprite.getTexture()->getSize().x,
-                        static_cast<float>(height) / _sprite.getTexture()->getSize().y
-                    )
-                );
+                _sprite.setScale(sf::Vector2f(
+                static_cast<float>(width) / _sprite.getTexture()->getSize().x,
+                static_cast<float>(height)
+                / _sprite.getTexture()->getSize().y));
             }
         }
-    }
-}
+    } // namespace Components
+} // namespace GUI

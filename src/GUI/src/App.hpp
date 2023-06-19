@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <memory>
 #include <chrono>
+#include <memory>
+#include "CommandHandler.hpp"
+#include "EntitiesManager.hpp"
 #include "IDisplayModule.hpp"
 #include "NetworkManager.hpp"
-#include "CommandHandler.hpp"
 #include "SFML.hpp"
-#include "EntitiesManager.hpp"
 
 namespace GUI {
     class App {
@@ -24,6 +24,7 @@ namespace GUI {
                     ~AppException() = default;
 
                     const char *what() const noexcept override;
+
                 private:
                     std::string _msg;
             };
@@ -51,4 +52,4 @@ namespace GUI {
             std::chrono::time_point<std::chrono::system_clock> _lastTime;
             double _timeSinceLastServerAsk;
     };
-}
+} // namespace GUI

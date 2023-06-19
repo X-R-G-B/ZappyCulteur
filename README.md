@@ -82,7 +82,7 @@ dnf install SFML-devel SFML
 # Arch-based
 pacman -S python python-pip
 # Debian-based
-apt install python pip
+apt install python3 pip
 # Fedora
 dnf install python pip
 # Windows: available on microsoft store
