@@ -8,10 +8,23 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "map.h"
 #include "ntw.h"
+#include "trantorien.h"
 #include "zappy.h"
 #include "client.h"
 #include "command_reponses.h"
+
+static const char *format_error_too_many_level = "Incantation: too many"
+                                        "trantoriens at level %d\n";
+
+static const char *format_error_too_less_level = "Incantation: too less "
+                                        "trantoriens at level %d\n";
+
+static const char *format_error_resource = "Incantation: too less "
+                                            "resources of %d (on case: %d)\n";
+
+static const char *format_error_err = "Incantation: error\n";
 
 static const int level_ressources[LVL_MAX - 1][PLAYER] = {
     {1, 0, 0, 0, 0, 0},
@@ -46,21 +59,29 @@ static bool check_incantation_lvl_availability(trantorien_t *ref_trnt,
             nb_trantorien_lvl += 1;
         }
     }
+    if (nb_trantorien_lvl < nb_level_players[trantorien_lvl - 1]) {
+        fprintf(stderr, format_error_too_less_level, trantorien_lvl);
+    } else if (nb_trantorien_lvl > nb_level_players[trantorien_lvl - 1]) {
+        fprintf(stderr, format_error_too_many_level, trantorien_lvl);
+    }
     return (nb_trantorien_lvl == nb_level_players[trantorien_lvl - 1]);
 }
 
 bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
     ntw_t *ntw)
 {
-    int map_index = 0;
+    int map_i = 0;
 
     if (trantorien == NULL || map == NULL || ntw == NULL) {
+        fprintf(stderr, "%s", format_error_err);
         return false;
     }
-    map_index_x_y_to_i(map, trantorien->x, trantorien->y, &map_index);
+    map_index_x_y_to_i(map, trantorien->x, trantorien->y, &map_i);
     for (int i = FOOD; i < PLAYER; i++) {
-        if (map[map_index].tiles->ressources[i + LINEMATE] <
+        if (map->tiles[map_i].ressources[i + LINEMATE] <
                 level_ressources[trantorien->level - 1][i]) {
+            fprintf(stderr, format_error_resource, i + LINEMATE,
+                map->tiles[map_i].ressources[i + LINEMATE]);
             return false;
         }
     }
@@ -70,7 +91,7 @@ bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
     return true;
 }
 
-static void update_level_trantoriens(ntw_t *ntw, int lvl)
+static void update_level_trantoriens(ntw_t *ntw, int lvl, trantorien_t *tr)
 {
     client_t *cl = NULL;
     ntw_client_t *cc = NULL;
@@ -80,7 +101,9 @@ static void update_level_trantoriens(ntw_t *ntw, int lvl)
         cc = L_DATA(client);
         cl = L_DATA(cc);
         if (cl == NULL || cl->type != AI || cl->cl.ai.trantorien == NULL ||
-                cl->cl.ai.trantorien->level != lvl - 1 || cc == NULL) {
+                cl->cl.ai.trantorien->level != lvl - 1 || cc == NULL ||
+                cl->cl.ai.trantorien->x != tr->x ||
+                cl->cl.ai.trantorien->y != tr->y) {
             continue;
         }
         cl->cl.ai.trantorien->level = lvl;
@@ -98,7 +121,7 @@ static void update_case_ressources(map_t *map, trantorien_t *trnt, int lvl,
 
     map_index_x_y_to_i(map, trnt->x, trnt->y, &map_index);
     for (int i = FOOD; i < PLAYER; i++) {
-        map[map_index].tiles->ressources[i + LINEMATE] -=
+        map->tiles[map_index].ressources[i + LINEMATE] -=
             level_ressources[lvl - 1][i];
     }
     snprintf(buff, 511, "pie %d %d %d\n", trnt->x, trnt->y,
@@ -118,12 +141,12 @@ int command_incantation(trantorien_t *trantorien, zappy_t *zappy,
             == false) {
         circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
         snprintf(buff, 511, "pie %d %d %d\n", trantorien->x,
-            trantorien->y, -1);
+            trantorien->y, trantorien->level);
         broadcast_graphic(zappy->ntw, buff);
         return EXIT_SUCCESS;
     }
     update_case_ressources(zappy->map, trantorien, trantorien->level,
         zappy->ntw);
-    update_level_trantoriens(zappy->ntw, trantorien->level + 1);
+    update_level_trantoriens(zappy->ntw, trantorien->level + 1, trantorien);
     return EXIT_SUCCESS;
 }

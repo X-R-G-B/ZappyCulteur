@@ -943,3 +943,268 @@ Test(loop_cmd_ai_broadcast, basic_15)
     cr_assert_str_eq(circular_buffer_read(client_r->write_to_outside), "message 0, ceci est un message\n");
     cr_assert_eq(circular_buffer_read(client_r->write_to_outside), NULL);
 }
+
+/*
+ * R: receiver (direction: WEST(4))
+ * E: emitter
+  0   1   2   3   4   5   6   7   8   9
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 0
+|---|---|---|---|---|---|---|---|---|---|
+|   | 2 | 3 | 4 |   |   |   |   |   |   | 1
+|---|---|---|---|---|---|---|---|---|---|
+|   | 1 | R | 5E|   |   |   |   |   |   | 2
+|---|---|---|---|---|---|---|---|---|---|
+|   | 8 | 7 | 6 |   |   |   |   |   |   | 3
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 4
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 5
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 6
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 7
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 8
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 9
+|---|---|---|---|---|---|---|---|---|---|
+*/
+Test(loop_cmd_ai_broadcast, basic_11)
+{
+    zappy_t *zappy = NULL;
+    ntw_client_t *graph = NULL;
+
+    set_up_tests(&zappy, 2, 8393, &graph);
+    ntw_client_t *client_r = L_DATA(zappy->ntw->clients->start);
+    ntw_client_t *client_e = L_DATA(zappy->ntw->clients->start->next);
+    cr_assert_not_null(client_r);
+    cr_assert_not_null(client_e);
+    client_t *c_r = L_DATA(client_r);
+    client_t *c_e = L_DATA(client_e);
+    cr_assert_not_null(c_r);
+    cr_assert_not_null(c_e);
+    c_e->cl.ai.trantorien->x = 3;
+    c_e->cl.ai.trantorien->y = 2;
+    c_r->cl.ai.trantorien->x = 2;
+    c_r->cl.ai.trantorien->y = 2;
+    c_r->cl.ai.trantorien->direction = WEST;
+    circular_buffer_write(client_e->read_from_outside, "Broadcast ceci est un message\n");
+    while (circular_buffer_is_read_ready(client_e->write_to_outside) == false) {
+        cr_assert_eq(loop(zappy, true), false);
+    }
+    cr_assert_str_eq(circular_buffer_read(client_e->write_to_outside), OK_RESPONSE);
+    cr_assert_str_eq(circular_buffer_read(client_r->write_to_outside), "message 5, ceci est un message\n");
+}
+
+/*
+ * R: receiver (direction: WEST(4))
+ * E: emitter
+  0   1   2   3   4   5   6   7   8   9
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 0
+|---|---|---|---|---|---|---|---|---|---|
+|   | 2 | 3 | 4 |   |   |   |   |   |   | 1
+|---|---|---|---|---|---|---|---|---|---|
+|   | 1 | R | 5 |   |   |   |   |   |   | 2
+|---|---|---|---|---|---|---|---|---|---|
+|   | 8 | 7E| 6 |   |   |   |   |   |   | 3
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 4
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 5
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 6
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 7
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 8
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 9
+|---|---|---|---|---|---|---|---|---|---|
+*/
+Test(loop_cmd_ai_broadcast, basic_12)
+{
+    zappy_t *zappy = NULL;
+    ntw_client_t *graph = NULL;
+
+    set_up_tests(&zappy, 2, 8394, &graph);
+    ntw_client_t *client_r = L_DATA(zappy->ntw->clients->start);
+    ntw_client_t *client_e = L_DATA(zappy->ntw->clients->start->next);
+    cr_assert_not_null(client_r);
+    cr_assert_not_null(client_e);
+    client_t *c_r = L_DATA(client_r);
+    client_t *c_e = L_DATA(client_e);
+    cr_assert_not_null(c_r);
+    cr_assert_not_null(c_e);
+    c_e->cl.ai.trantorien->x = 2;
+    c_e->cl.ai.trantorien->y = 3;
+    c_r->cl.ai.trantorien->x = 2;
+    c_r->cl.ai.trantorien->y = 2;
+    c_r->cl.ai.trantorien->direction = WEST;
+    circular_buffer_write(client_e->read_from_outside, "Broadcast ceci est un message\n");
+    while (circular_buffer_is_read_ready(client_e->write_to_outside) == false) {
+        cr_assert_eq(loop(zappy, true), false);
+    }
+    cr_assert_str_eq(circular_buffer_read(client_e->write_to_outside), OK_RESPONSE);
+    cr_assert_str_eq(circular_buffer_read(client_r->write_to_outside), "message 7, ceci est un message\n");
+}
+
+/*
+ * R: receiver (direction: NORTH(1))
+ * E: emitter
+  0   1   2   3   4   5   6   7   8   9
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 0
+|---|---|---|---|---|---|---|---|---|---|
+|   | 8 | 1 | 2 |   |   |   |   |   |   | 1
+|---|---|---|---|---|---|---|---|---|---|
+|   | 7 | R | 3 |   |   |   |   |   |   | 2
+|---|---|---|---|---|---|---|---|---|---|
+|   | 6 | 5E| 4 |   |   |   |   |   |   | 3
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 4
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 5
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 6
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 7
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 8
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 9
+|---|---|---|---|---|---|---|---|---|---|
+*/
+Test(loop_cmd_ai_broadcast, basic_13)
+{
+    zappy_t *zappy = NULL;
+    ntw_client_t *graph = NULL;
+
+    set_up_tests(&zappy, 2, 8395, &graph);
+    ntw_client_t *client_r = L_DATA(zappy->ntw->clients->start);
+    ntw_client_t *client_e = L_DATA(zappy->ntw->clients->start->next);
+    cr_assert_not_null(client_r);
+    cr_assert_not_null(client_e);
+    client_t *c_r = L_DATA(client_r);
+    client_t *c_e = L_DATA(client_e);
+    cr_assert_not_null(c_r);
+    cr_assert_not_null(c_e);
+    c_e->cl.ai.trantorien->x = 2;
+    c_e->cl.ai.trantorien->y = 3;
+    c_r->cl.ai.trantorien->x = 2;
+    c_r->cl.ai.trantorien->y = 2;
+    c_r->cl.ai.trantorien->direction = NORTH;
+    circular_buffer_write(client_e->read_from_outside, "Broadcast ceci est un message\n");
+    while (circular_buffer_is_read_ready(client_e->write_to_outside) == false) {
+        cr_assert_eq(loop(zappy, true), false);
+    }
+    cr_assert_str_eq(circular_buffer_read(client_e->write_to_outside), OK_RESPONSE);
+    cr_assert_str_eq(circular_buffer_read(client_r->write_to_outside), "message 5, ceci est un message\n");
+}
+
+/*
+ * R: receiver (direction: NORTH(1))
+ * E: emitter
+  0   1   2   3   4   5   6   7   8   9
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 0
+|---|---|---|---|---|---|---|---|---|---|
+|   | 8 | 1E| 2 |   |   |   |   |   |   | 1
+|---|---|---|---|---|---|---|---|---|---|
+|   | 7 | R | 3 |   |   |   |   |   |   | 2
+|---|---|---|---|---|---|---|---|---|---|
+|   | 6 | 5 | 4 |   |   |   |   |   |   | 3
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 4
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 5
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 6
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 7
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 8
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 9
+|---|---|---|---|---|---|---|---|---|---|
+*/
+Test(loop_cmd_ai_broadcast, basic_14)
+{
+    zappy_t *zappy = NULL;
+    ntw_client_t *graph = NULL;
+
+    set_up_tests(&zappy, 2, 8396, &graph);
+    ntw_client_t *client_r = L_DATA(zappy->ntw->clients->start);
+    ntw_client_t *client_e = L_DATA(zappy->ntw->clients->start->next);
+    cr_assert_not_null(client_r);
+    cr_assert_not_null(client_e);
+    client_t *c_r = L_DATA(client_r);
+    client_t *c_e = L_DATA(client_e);
+    cr_assert_not_null(c_r);
+    cr_assert_not_null(c_e);
+    c_e->cl.ai.trantorien->x = 2;
+    c_e->cl.ai.trantorien->y = 1;
+    c_r->cl.ai.trantorien->x = 2;
+    c_r->cl.ai.trantorien->y = 2;
+    c_r->cl.ai.trantorien->direction = NORTH;
+    circular_buffer_write(client_e->read_from_outside, "Broadcast ceci est un message\n");
+    while (circular_buffer_is_read_ready(client_e->write_to_outside) == false) {
+        cr_assert_eq(loop(zappy, true), false);
+    }
+    cr_assert_str_eq(circular_buffer_read(client_e->write_to_outside), OK_RESPONSE);
+    cr_assert_str_eq(circular_buffer_read(client_r->write_to_outside), "message 1, ceci est un message\n");
+}
+
+/*
+ * R: receiver (direction: NORTH(1))
+ * E: emitter
+  0   1   2   3   4   5   6   7   8   9
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 0
+|---|---|---|---|---|---|---|---|---|---|
+|   | 8 | 1 | 2 |   |   |   |   |   |   | 1
+|---|---|---|---|---|---|---|---|---|---|
+|   | 7 | RE| 3 |   |   |   |   |   |   | 2
+|---|---|---|---|---|---|---|---|---|---|
+|   | 6 | 5 | 4 |   |   |   |   |   |   | 3
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 4
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 5
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 6
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 7
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 8
+|---|---|---|---|---|---|---|---|---|---|
+|   |   |   |   |   |   |   |   |   |   | 9
+|---|---|---|---|---|---|---|---|---|---|
+*/
+Test(loop_cmd_ai_broadcast, basic_15)
+{
+    zappy_t *zappy = NULL;
+    ntw_client_t *graph = NULL;
+
+    set_up_tests(&zappy, 2, 8397, &graph);
+    ntw_client_t *client_r = L_DATA(zappy->ntw->clients->start);
+    ntw_client_t *client_e = L_DATA(zappy->ntw->clients->start->next);
+    cr_assert_not_null(client_r);
+    cr_assert_not_null(client_e);
+    client_t *c_r = L_DATA(client_r);
+    client_t *c_e = L_DATA(client_e);
+    cr_assert_not_null(c_r);
+    cr_assert_not_null(c_e);
+    c_e->cl.ai.trantorien->x = 2;
+    c_e->cl.ai.trantorien->y = 2;
+    c_r->cl.ai.trantorien->x = 2;
+    c_r->cl.ai.trantorien->y = 2;
+    c_r->cl.ai.trantorien->direction = NORTH;
+    circular_buffer_write(client_e->read_from_outside, "Broadcast ceci est un message\n");
+    while (circular_buffer_is_read_ready(client_e->write_to_outside) == false) {
+        cr_assert_eq(loop(zappy, true), false);
+    }
+    cr_assert_str_eq(circular_buffer_read(client_e->write_to_outside), OK_RESPONSE);
+    cr_assert_str_eq(circular_buffer_read(client_r->write_to_outside), "message 0, ceci est un message\n");
+}

@@ -36,6 +36,9 @@ int command_take_object(trantorien_t *trantorien, zappy_t *zappy,
         circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
         send_broadcast(action->param.object, zappy->ntw, trantorien->id);
     } else {
+        fprintf(stderr, "Take object %d (available: %d)\n",
+            action->param.object,
+            zappy->map->tiles[i].ressources[action->param.object]);
         circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
     }
     return EXIT_SUCCESS;
