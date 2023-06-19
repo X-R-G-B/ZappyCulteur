@@ -73,6 +73,16 @@ static const std::unordered_map<std::string, GUI::Entities::RessourcesType> idTo
     { thystameTxtId, GUI::Entities::RessourcesType::THYSTAME }
 };
 
+//////////////////////////// MAIN THEME MUSIC //////////////////////////
+//                                                                    //
+//                                                                    //
+//                                                                    //
+//                                                                    //
+////////////////////////////////////////////////////////////////////////
+
+const static std::string mainThemeMusicId = "mainThemeMusicId";
+const static std::string mainThemeMusicPath = "src/GUI/assets/musics/mainTheme.ogg";
+
 ////////////////////////////////////////////////////////////////////////
 //                                                                    //
 //                                                                    //
@@ -110,7 +120,19 @@ namespace GUI {
             _entityCompType.push_back(Components::CompType::HUDSPRITE);
             _entityCompType.push_back(Components::CompType::HUDTEXT);
             _entityCompType.push_back(Components::CompType::SPRITE);
+            _entityCompType.push_back(Components::CompType::MUSIC);
             initTextures();
+            initMaintThemeMusic();
+        }
+
+        void HUD::initMaintThemeMusic()
+        {
+            _components.push_back(std::make_shared<GUI::Components::Music>(
+                mainThemeMusicId,
+                mainThemeMusicPath,
+                true,
+                true
+            ));
         }
 
         void HUD::update(double)
