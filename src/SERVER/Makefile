@@ -17,7 +17,7 @@ CFLAGS			=															\
 							-Ilibs/tinylibc/includes						\
 							-Ilibs/circularbuffer/includes					\
 							-MMD											\
-							-g3
+							-02
 
 LDFLAGS			=															\
 							-L $(LIBS_DIR)/circularbuffer/					\

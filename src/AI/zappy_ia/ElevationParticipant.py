@@ -77,9 +77,9 @@ class ElevationParticipant:
             if self._decisionTree.getCurrentFood() < 8:
                 self._decisionTree.takeClosestFood()
 
-    def checkBroadcastEmitter(self) -> List[Tuple[int, str, List[int], int]]:
+    def checkBroadcastEmitter(self) -> List[Tuple(int, str, List[int], int)]:
         broadcasts = self._clientManager.checkBroadcast()
-        res: List[Tuple[int, str, List[int], int]] = []
+        res: List[Tuple(int, str, List[int], int)] = []
         for mess in broadcasts:
             if mess[2][0] == 0:
                 if mess[0] == self._emitter:
@@ -94,7 +94,7 @@ class ElevationParticipant:
 
     def waitNextStep(self) -> bool:
         okNb = 0
-        res: Tuple[int, str, List[int], int] = [0, "", [], 0]
+        res: Tuple(int, str, List[int], int) = [0, "", [], 0]
         while okNb < 2:
             res = self.checkBroadcastEmitter()
             for mess in res:
@@ -130,7 +130,7 @@ class ElevationParticipant:
 
     def checkElevationParticipant(self, currentLevel: int) -> bool:
         broadcasts: List[
-            Tuple[int, str, List[int], int]
+            Tuple(int, str, List[int], int)
         ] = self._clientManager.checkBroadcast()
         response: List[int] = []
         if len(broadcasts) == 0:
