@@ -50,9 +50,10 @@ namespace GUI {
                     endScreenId,
                     _texture,
                     endScreenLayer,
-                    Vector2F(_position.x * TILE_SIZE, _position.y * TILE_SIZE),
-                    width,
-                    height
+                    Vector2F(0, 0),
+                    _width,
+                    _height,
+                    Components::CompType::HUDSPRITE
                 );
                 _components.clear();
                 _components.push_back(sprite);
