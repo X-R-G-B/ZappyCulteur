@@ -12,10 +12,10 @@
 
 namespace GUI {
     enum class Event {
-        //MOUSE EVENTS
+        // MOUSE EVENTS
         MOUSE_LEFT_PRESSED,
         MOUSE_RIGHT_PRESSED,
-        //KEYBOARD NUMBERS
+        // KEYBOARD NUMBERS
         KEYBOARD_1_PRESSED,
         KEYBOARD_2_PRESSED,
         KEYBOARD_3_PRESSED,
@@ -26,7 +26,7 @@ namespace GUI {
         KEYBOARD_8_PRESSED,
         KEYBOARD_9_PRESSED,
         KEYBOARD_0_PRESSED,
-        //KEYBOARD LETTERS
+        // KEYBOARD LETTERS
         KEYBOARD_A_PRESSED,
         KEYBOARD_B_PRESSED,
         KEYBOARD_C_PRESSED,
@@ -53,12 +53,12 @@ namespace GUI {
         KEYBOARD_X_PRESSED,
         KEYBOARD_Y_PRESSED,
         KEYBOARD_Z_PRESSED,
-        //KEYBOARD ARROWS
+        // KEYBOARD ARROWS
         KEYBOARD_UP_PRESSED,
         KEYBOARD_DOWN_PRESSED,
         KEYBOARD_LEFT_PRESSED,
         KEYBOARD_RIGHT_PRESSED,
-        //KEYBOARD SPECIALS
+        // KEYBOARD SPECIALS
         KEYBOARD_SPACE_PRESSED,
         KEYBOARD_ENTER_PRESSED,
         KEYBOARD_BACKSPACE_PRESSED,
@@ -68,56 +68,69 @@ namespace GUI {
         KEYBOARD_CTRL_PRESSED,
         KEYBOARD_ALT_PRESSED,
         KEYBOARD_DOT_PRESSED,
-        //MOUSE WHEEL
+        // MOUSE WHEEL
         MOUSE_WHEEL_UP,
         MOUSE_WHEEL_DOWN,
-        //WINDOW EVENTS
+        // WINDOW EVENTS
         WINDOW_CLOSED
     };
 
     class EventsManager {
         public:
-            
             /**
              * @brief Get the Events Manager object
-             * 
-             * @return EventsManager& 
+             *
+             * @return EventsManager&
              */
             static EventsManager &getInstance();
 
             /**
              * @brief Add an event to the events list
-             * 
-             * @param event 
+             *
+             * @param event
              */
             void addEvent(Event event);
 
             /**
              * @brief Clear the current events list
-             * 
+             *
              */
             void clearEvents();
 
             /**
              * @brief Return if the event is triggered
-             * 
-             * @param event 
+             *
+             * @param event
              */
             bool isEventTriggered(Event event);
 
             /**
              * @brief Add the mouse position to the events manager
-             * 
-             * @param mousePos 
+             *
+             * @param mousePos
              */
             void addMousePos(Vector2F mousePos);
 
             /**
              * @brief Return the mouse position
-             * 
-             * @return Vector2F 
+             *
+             * @return Vector2F
              */
             const Vector2F &getMousePos();
+
+            /**
+             * @brief Add the world mouse position to the events manager
+             *
+             * @param mousePos
+             */
+            void addWorldMousePos(Vector2F mousePos);
+
+            /**
+             * @brief Return the mouse position in the world (not in the window)
+             *
+             * @return Vector2F
+             */
+            const Vector2F &getWorldMousePos();
 
         private:
             EventsManager();
@@ -126,5 +139,6 @@ namespace GUI {
             EventsManager &operator=(const EventsManager &) = delete;
             std::vector<Event> _eventsList;
             Vector2F _mousePos;
+            Vector2F _worldMousePos;
     };
-}
+} // namespace GUI

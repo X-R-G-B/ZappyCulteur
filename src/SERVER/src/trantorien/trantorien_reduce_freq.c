@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include "circular_buffer.h"
+#include "llog.h"
 #include "ntw.h"
 #include "zappy.h"
 #include "internal.h"
@@ -34,25 +35,31 @@ static void trantorien_need_update(trantorien_t *trantorien, zappy_t *zappy,
 {
     if (trantorien_commands[action->code] == NULL) {
         circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
-        fprintf(stderr, "%s%d\n", "Command not handled: ", action->code);
+        llog_write_f(LOG_FILE_AIC, LLOG_WARNING, "command not handled: %d",
+            action->code);
         return;
     }
     trantorien_commands[action->code](trantorien, zappy, cl, action);
 }
 
-static void move_up(action_t *actions[NB_PARALLEL_ACTION],
-    trantorien_t *trantorien, zappy_t *zappy, ntw_client_t *cl)
+static void move_up(trantorien_t *trantorien, zappy_t *zappy,
+    ntw_client_t *cl)
 {
     for (int i = 1; i < NB_PARALLEL_ACTION; i++) {
-        actions[i - 1] = actions[i];
+        trantorien->actions[i - 1] = trantorien->actions[i];
     }
-    actions[NB_PARALLEL_ACTION - 1] = NULL;
-    if (actions[0] == NULL) {
+    trantorien->actions[NB_PARALLEL_ACTION - 1] = NULL;
+    if (trantorien->actions[0] == NULL ||
+            trantorien->actions[0]->code != INCANTATION) {
         return;
     }
-    if (actions[0]->code == INCANTATION) {
-        broadcast_incantation_start(trantorien, zappy, cl);
+    if (broadcast_incantation_start(trantorien, zappy) == true) {
+        return;
     }
+    circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
+    action_destroy(trantorien->actions[0]);
+    trantorien->actions[0] = NULL;
+    move_up(trantorien, zappy, cl);
 }
 
 void trantorien_reduce_freq(trantorien_t *trantorien, zappy_t *zappy,
@@ -64,13 +71,16 @@ void trantorien_reduce_freq(trantorien_t *trantorien, zappy_t *zappy,
         return;
     }
     if (trantorien->actions[0] == NULL) {
-        move_up(trantorien->actions, trantorien, zappy, cl);
+        move_up(trantorien, zappy, cl);
+    }
+    if (trantorien->actions[0] == NULL) {
+        return;
     }
     trantorien->actions[0]->freq--;
     if (trantorien->actions[0]->freq == 0) {
         trantorien_need_update(trantorien, zappy, cl, trantorien->actions[0]);
         action_destroy(trantorien->actions[0]);
         trantorien->actions[0] = NULL;
-        move_up(trantorien->actions, trantorien, zappy, cl);
+        move_up(trantorien, zappy, cl);
     }
 }

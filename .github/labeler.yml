@@ -1,0 +1,21 @@
+documentation:
+- README.md
+
+enhancement:
+- src/AI/**/*.py
+- src/GUI/**/*.hpp
+- src/GUI/**/*.cpp
+- src/SERVER/**/*.c
+- src/SERVER/**/*.h
+
+cicd:
+- .github/workflows/*.yml
+
+SERVER:
+- src/SERVER/*
+
+AI:
+- src/AI/*
+
+GUI:
+- src/GUI/*

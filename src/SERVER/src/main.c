@@ -10,6 +10,8 @@
 #include "args.h"
 #include "ntw.h"
 #include "zappy.h"
+#include "client.h"
+#include "broadcast_events.h"
 
 static int server_update(time_t *s_timeout, suseconds_t *m_timeout,
     zappy_t *zappy)
@@ -27,6 +29,7 @@ static int server_update(time_t *s_timeout, suseconds_t *m_timeout,
     ntw_wait_till_events(zappy->ntw, s_timeout, m_timeout);
     ntw_loop(zappy->ntw);
     is_end = loop(zappy, new_freq);
+    is_end = check_end(zappy, is_end);
     return is_end;
 }
 

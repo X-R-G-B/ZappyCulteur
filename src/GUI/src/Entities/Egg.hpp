@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <vector>
 #include <SFML/Graphics.hpp>
+#include <vector>
 #include "AEntity.hpp"
 #include "Sprite.hpp"
 
@@ -16,9 +16,7 @@ namespace GUI {
     namespace Entities {
         class Egg : public AEntity {
             public:
-                Egg(const std::string &id,
-                    const Vector2F &position
-                );
+                Egg(const std::string &id, const Vector2F &position);
                 ~Egg() = default;
                 void update(double deltaTime) final;
 
@@ -26,5 +24,5 @@ namespace GUI {
                 void initSprites();
                 sf::Texture _texture;
         };
-    }
-}
+    } // namespace Entities
+} // namespace GUI

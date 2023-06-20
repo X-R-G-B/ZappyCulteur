@@ -18,9 +18,6 @@ set_target_properties(
 
 ##################### CMAKE OPTIONS #######################
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 if(UNIX)
     target_compile_options(
         ${PROJECT_NAME}
@@ -44,6 +41,12 @@ if(WIN32)
         PRIVATE ws2_32
     )
 endif()
+
+target_compile_features(
+    ${PROJECT_NAME}
+    PRIVATE
+    cxx_std_20
+)
 
 ##################### SRC #################################
 

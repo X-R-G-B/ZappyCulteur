@@ -20,6 +20,7 @@
 #include "map.h"
 #include "client.h"
 #include "internal.h"
+#include "broadcast_events.h"
 
 /*   -0.5    0.5
 |  -1  |  +0  |  +1  |
@@ -127,6 +128,7 @@ int command_broadcast(trantorien_t *trnt, zappy_t *zappy,
         return EXIT_FAILURE;
     }
     spread_broadcast(trnt, zappy, action->param.broadcast_msg);
+    cmd_pbc(zappy->ntw, cl, action);
     circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
     return EXIT_SUCCESS;
 }

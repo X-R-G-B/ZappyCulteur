@@ -15,14 +15,10 @@ namespace GUI {
     namespace Components {
         class Sprite : public AComponent {
             public:
-                Sprite(
-                    const std::string &id,
-                    sf::Texture &texture,
-                    std::size_t layer,
-                    const Vector2F &position = Vector2F(0, 0),
-                    unsigned int width = 0,
-                    unsigned int height = 0
-                );
+                Sprite(const std::string &id, sf::Texture &texture,
+                std::size_t layer, const Vector2F &position = Vector2F(0, 0),
+                unsigned int width = 0, unsigned int height = 0,
+                Components::CompType compType = Components::CompType::SPRITE);
                 ~Sprite() = default;
                 void setTexture(sf::Texture &texture);
                 void setPosition(const sf::Vector2f &position);
@@ -39,5 +35,5 @@ namespace GUI {
                 sf::Vector2f _position;
                 sf::IntRect _rect;
         };
-    }
-}
+    } // namespace Components
+} // namespace GUI

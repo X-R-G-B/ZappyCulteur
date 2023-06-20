@@ -10,6 +10,7 @@
 #include <string.h>
 #include "tlcstrings.h"
 #include "trantorien.h"
+#include "zappy.h"
 
 trantorien_t *trantorien_init(const char *team_name, int width, int height)
 {
