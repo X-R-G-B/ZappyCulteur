@@ -201,7 +201,7 @@ Test(loop_event_seg, basic_lvl_8)
         cr_assert_eq(loop(zappy, true), false);
     }
     memset(res, 0, 512);
-    snprintf(res, 511, "pie %d %d %d\n", c_e->cl.ai.trantorien->x, c_e->cl.ai.trantorien->y, c_e->cl.ai.trantorien->level);
+    snprintf(res, 511, "pie %d %d Current level:%d\n", c_e->cl.ai.trantorien->x, c_e->cl.ai.trantorien->y, c_e->cl.ai.trantorien->level);
     cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
     ntw_client_t *client_r = L_DATA(zappy->ntw->clients->start->next);
     cr_assert_not_null(client_r);
