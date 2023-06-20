@@ -1,10 +1,11 @@
 from zappy_ia.Log import LogGood
 from typing import Dict, List, Tuple
-from zappy_ia.Enums import Message
+from zappy_ia.Enums import Message, ServerRes
 from zappy_ia.ClientManager import ClientManager
 from zappy_ia.DecisionTree import DecisionTree
 
 cmdDirections: Dict = {
+    0: [],
     1: ["Forward\n"],
     2: ["Forward\n", "Left\n", "Forward\n"],
     3: ["Left\n", "Forward\n"],
@@ -30,28 +31,51 @@ class ElevationParticipant:
         return False
 
     def sendAllCommand(self, messages: List[str]):
+        self._log.debug("sendAllCommand start")
         for message in messages:
             self._clientManager.requestClient(message)
+        self._log.debug("sendAllCommand end")
 
-    def joinEmitter(self):
-        res = self._clientManager.checkBroadcastResponse()
-        while res[1] != "come":
-            res = self._clientManager.checkBroadcastResponse()
-        while res[3] != 0 and res[1] == "come":
-            self.sendAllCommand(cmdDirections[res[3]])
-            res = self._clientManager.checkBroadcastResponse()
-            while res[1] != "come":
-                res = self._clientManager.checkBroadcastResponse()
+    def checkWaitNextLastOK(self) -> int:
+        out = self._clientManager.output()
+        if out == ServerRes.ELEVATION_UNDERWAY.value:
+            out = self._clientManager.waitOutput()
+            if out == ServerRes.KO.value:
+                return 1
+            else:
+                self._emitter = 0
+                return 2
+        return 0
+
+    def checkElevationResponse(self):
         self._clientManager.sendBroadcast(Message.OK.value, [self._emitter])
-        out = self._clientManager.waitOutput()
-        if out == "ko\n":
-            return self.errorReturn()
-        out = self._clientManager.waitOutput()
-        if out != "ko\n":
-            self._emitter = 0
-            return True
-        else:
-            return self.errorReturn()
+        res: Tuple(int, str, List[int], int) = [0, "", [0], 0]
+        while res[1] != Message.KO.value:
+            checkRes = self.checkWaitNextLastOK()
+            if checkRes == 1:
+                return self.errorReturn()
+            elif checkRes == 2:
+                return True
+            res = self._clientManager.checkBroadcastResponse()
+        return self.errorReturn()
+
+    def joinEmitter(self) -> bool:
+        receivedDir0 = 2
+        res: Tuple(int, str, List[int], int) = [0, "", [0], 0]
+        while receivedDir0 > 0:
+            self._log.debug("join emitter, receivedDir0: " + str(receivedDir0))
+            res = self._clientManager.checkBroadcastResponse()
+            while res[1] != Message.COME.value:
+                res = self._clientManager.checkBroadcastResponse()
+            self._log.debug("res: " + res[1])
+            if res[3] == 0:
+                receivedDir0 -= 1
+            elif receivedDir0 < 2 and res[3] != 0:
+                receivedDir0 = 2
+            self.sendAllCommand(cmdDirections[res[3]])
+            self._decisionTree.takeFoodIfAtFeet()
+            if (self._decisionTree.getCurrentFood() < 8):
+                self._decisionTree.takeClosestFood()
 
     def checkBroadcastEmitter(self) -> List[Tuple[int, str, List[int], int]]:
         broadcasts = self._clientManager.checkBroadcast()

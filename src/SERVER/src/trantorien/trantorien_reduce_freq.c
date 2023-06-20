@@ -47,17 +47,17 @@ static void move_up(trantorien_t *trantorien, zappy_t *zappy,
         trantorien->actions[i - 1] = trantorien->actions[i];
     }
     trantorien->actions[NB_PARALLEL_ACTION - 1] = NULL;
-    if (trantorien->actions[0] == NULL) {
+    if (trantorien->actions[0] == NULL ||
+            trantorien->actions[0]->code != INCANTATION) {
         return;
     }
-    if (trantorien->actions[0]->code == INCANTATION) {
-        if (broadcast_incantation_start(trantorien, zappy) == false) {
-            circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
-            action_destroy(trantorien->actions[0]);
-            trantorien->actions[0] = NULL;
-            move_up(trantorien, zappy, cl);
-        }
+    if (broadcast_incantation_start(trantorien, zappy) == true) {
+        return;
     }
+    circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
+    action_destroy(trantorien->actions[0]);
+    trantorien->actions[0] = NULL;
+    move_up(trantorien, zappy, cl);
 }
 
 void trantorien_reduce_freq(trantorien_t *trantorien, zappy_t *zappy,

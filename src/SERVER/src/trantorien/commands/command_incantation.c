@@ -15,18 +15,7 @@
 #include "client.h"
 #include "command_reponses.h"
 
-static const char *format_error_too_many_level = "Incantation: too many"
-                                        "trantoriens at level %d\n";
-
-static const char *format_error_too_less_level = "Incantation: too less "
-                                        "trantoriens at level %d\n";
-
-static const char *format_error_resource = "Incantation: too less "
-                                            "resources of %d (on case: %d)\n";
-
-static const char *format_error_err = "Incantation: error\n";
-
-static const int level_ressources[LVL_MAX - 1][PLAYER] = {
+const int level_ressources[LVL_MAX - 1][PLAYER] = {
     {1, 0, 0, 0, 0, 0},
     {1, 1, 1, 0, 0, 0},
     {2, 0, 1, 0, 2, 0},
@@ -35,61 +24,6 @@ static const int level_ressources[LVL_MAX - 1][PLAYER] = {
     {1, 2, 3, 0, 1, 0},
     {2, 2, 2, 2, 2, 1},
 };
-
-static const int nb_level_players[LVL_MAX - 1] = {
-    1, 2, 2, 4, 4, 6, 6
-};
-
-static bool check_incantation_lvl_availability(trantorien_t *ref_trnt,
-    ntw_t *ntw)
-{
-    int nb_trantorien_lvl = 0;
-    int trantorien_lvl = ref_trnt->level;
-    client_t *cl = NULL;
-    trantorien_t *trnt = NULL;
-
-    for (L_EACH(client, ntw->clients)) {
-        cl = L_DATA(L_DATAT(ntw_client_t *, client));
-        if (cl == NULL || cl->type != AI || cl->cl.ai.trantorien == NULL) {
-            continue;
-        }
-        trnt = cl->cl.ai.trantorien;
-        if (trnt->level == ref_trnt->level && ref_trnt->x == trnt->x
-                && ref_trnt->y == trnt->y) {
-            nb_trantorien_lvl += 1;
-        }
-    }
-    if (nb_trantorien_lvl < nb_level_players[trantorien_lvl - 1]) {
-        fprintf(stderr, format_error_too_less_level, trantorien_lvl);
-    } else if (nb_trantorien_lvl > nb_level_players[trantorien_lvl - 1]) {
-        fprintf(stderr, format_error_too_many_level, trantorien_lvl);
-    }
-    return (nb_trantorien_lvl == nb_level_players[trantorien_lvl - 1]);
-}
-
-bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
-    ntw_t *ntw)
-{
-    int map_i = 0;
-
-    if (trantorien == NULL || map == NULL || ntw == NULL) {
-        fprintf(stderr, "%s", format_error_err);
-        return false;
-    }
-    map_index_x_y_to_i(map, trantorien->x, trantorien->y, &map_i);
-    for (int i = FOOD; i < PLAYER; i++) {
-        if (map->tiles[map_i].ressources[i + LINEMATE] <
-                level_ressources[trantorien->level - 1][i]) {
-            fprintf(stderr, format_error_resource, i + LINEMATE,
-                map->tiles[map_i].ressources[i + LINEMATE]);
-            return false;
-        }
-    }
-    if (check_incantation_lvl_availability(trantorien, ntw) == false) {
-        return false;
-    }
-    return true;
-}
 
 static void update_level_trantoriens(ntw_t *ntw, int lvl, trantorien_t *tr)
 {

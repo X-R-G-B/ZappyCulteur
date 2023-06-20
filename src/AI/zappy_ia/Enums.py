@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 class Message(Enum):
     OK = "ok"
     KO = "ko"
@@ -14,6 +13,12 @@ class Message(Enum):
     COME = "come"
     CODE = "*$+"
 
+
+class ServerRes(Enum):
+    OK = "ok\n"
+    KO = "ko\n"
+    ELEVATION_UNDERWAY = "Elevation underway\n"
+    DEAD = "dead\n"
 
 class Element(Enum):
     EMPTY = "empty"

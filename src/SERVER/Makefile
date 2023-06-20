@@ -93,6 +93,20 @@ SRC_LOOP_GRCMD	=															\
 							cmd_pin.c										\
 							cmd_sgt.c										\
 							cmd_sst.c										\
+							cmd_pnw.c										\
+							cmd_pex.c										\
+							cmd_pbc.c										\
+							cmd_pfk.c										\
+							cmd_pdr.c										\
+							cmd_pgt.c										\
+							cmd_pdi.c										\
+							cmd_enw.c										\
+							cmd_ebo.c										\
+							cmd_edi.c										\
+							cmd_seg.c										\
+							cmd_smg.c										\
+							cmd_suc.c										\
+							cmd_sbp.c										\
 							update_graphic_cmd.c
 SRC_LOOP_GRCMD	:=			$(addprefix graphic_cmd/, $(SRC_LOOP_GRCMD))
 
@@ -164,6 +178,7 @@ SRC_TRNT		:=															\
 							trantorien_add_act_broadcast.c					\
 							trantorien_add_act_set.c						\
 							trantorien_add_act_take.c						\
+							trantorien_check_incantation.c					\
 							trantorien_destroy.c							\
 							trantorien_init.c								\
 							trantorien_is_cmd_availible.c					\
@@ -186,6 +201,7 @@ SRC				:=															\
 							get_id.c										\
 							main.c											\
 							on_new_conn.c									\
+							zappy_check_end.c								\
 							zappy_create_initial_egg.c						\
 							zappy_destroy.c									\
 							zappy_find_trantorien_by_id.c					\
@@ -201,7 +217,7 @@ CC				=			gcc
 
 TTARGET				:=		bin_test
 
-T_DIR				:=		tests
+T_DIR				:=		../../tests/SERVER
 
 T_SRC				:=		$(shell find $(T_DIR)/ -name '*.c' -type f)		\
 							$(filter-out src/main.c, $(SRC))
@@ -268,7 +284,7 @@ tests_run:		fclean $(T_OBJ)
 tests_run:		$(LIBS_DIR)/tinylibc/libtinylibc.a
 tests_run:		$(LIBS_DIR)/circularbuffer/libcircularbuffer.a
 	$(CC) $(T_OBJ) -o $(TTARGET) $(LDFLAGS) $(CFLAGS)
-	./$(TTARGET) || exit 1
+	./$(TTARGET) -j1 || exit 1
 	gcovr --exclude-directories tests || true
 	gcovr --exclude-directories tests --branch || true
 	true

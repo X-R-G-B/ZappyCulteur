@@ -3,7 +3,7 @@ import sys
 import pandas as pd
 from typing import Dict, List, Tuple
 from zappy_ia.ClientManager import ClientManager
-from zappy_ia.Enums import Message, Element, Command
+from zappy_ia.Enums import Message, Element, Command, ServerRes
 from zappy_ia.Log import LogGood
 import time
 
@@ -44,6 +44,7 @@ levelCosts: List[List[Tuple[Element, int]]] = [
 
 class DecisionTree:
     def __init__(self, clientManager: ClientManager, log: LogGood, id: int):
+        self._participantsId: List[int] = []
         self._clientManager: ClientManager = clientManager
         self._level: int = 1
         self._log: LogGood = log
@@ -105,7 +106,7 @@ class DecisionTree:
         """
         res = self._clientManager.requestClient(Command.INVENTORY)
         rescpy = ""
-        if res == "ko\n":
+        if res == ServerRes.KO.value:
             return
         try:
             rescpy = res
@@ -139,7 +140,7 @@ class DecisionTree:
 
         res = self._clientManager.requestClient(Command.LOOK)
         rescpy = ""
-        if res == "ko\n":
+        if res == ServerRes.KO.value:
             return
         try:
             rescpy = res
@@ -290,6 +291,14 @@ class DecisionTree:
             self._clientManager.stopClient()
             sys.exit(84)
 
+    def checkElevationFinalRes(self):
+        out = self._clientManager.waitOutput()
+        if out != ServerRes.KO.value:
+            self.incrementLevel()
+        elif self._level == 1:
+            self._clientManager.requestClient(Command.FORWARD)
+        self._participantsId = []
+
     def elevation(self):
         for costTuple in levelCosts[self._level - 1]:
             if costTuple[1] > self._inputTree["m" + costTuple[0].value][0]:
@@ -299,13 +308,14 @@ class DecisionTree:
                     Command.SET_OBJECT, costTuple[0].value
                 )
         res = self._clientManager.requestClient(Command.INCANTATION)
-        if res == "ko\n":
-            self._clientManager.requestClient(Command.FORWARD)
-        out = self._clientManager.waitOutput()
-        if out != Message.KO.value + "\n":
-            self.incrementLevel()
-        else:
-            self._clientManager.requestClient(Command.FORWARD)
+        if res == ServerRes.KO.value:
+            if (self._level == 1):
+                self._clientManager.requestClient(Command.FORWARD)
+            else:
+                self._clientManager.sendBroadcast(Message.KO.value, self._participantsId)
+                self._participantsId = []
+            return
+        self.checkElevationFinalRes()
 
     def takeClosestFood(self):
         self.look()
@@ -316,21 +326,34 @@ class DecisionTree:
             self.takeElement(Element.FOOD, foodPos)
         self.inventory()
 
-    def checkReceivedMessage(
-        self, participantsId: List[int], res: Tuple[int, str, List[int], int]
-    ) -> List[int]:
+    def checkReceivedMessage(self, res: Tuple[int, str, List[int], int]):
         self._log.debug("message: " + res[1])
-        if res[1] == Message.OK.value or res[1] == "ok\n":
-            if len(participantsId) < levelParticipantsNb[self._level]:
+        if res[1] == Message.OK.value:
+            if len(self._participantsId) < levelParticipantsNb[self._level]:
                 self._log.debug("res ok")
-                participantsId.append(res[0])
+                self._participantsId.append(res[0])
                 self._clientManager.sendBroadcast(Message.OK.value, [res[0]])
             else:
                 self._log.debug("res ko")
                 self._clientManager.sendBroadcast(Message.KO.value, [res[0]])
-        return participantsId
 
-    def waitParticipants(self, participantsId: List[int]):
+    def takeFoodIfAtFeet(self):
+        self.look()
+        for elem in self._lastLook[0]:
+            if elem == Element.FOOD:
+                self._clientManager.requestClient(Command.TAKE_OBJECT, Element.FOOD)
+
+    def checkArrivedParticipants(self):
+        arrivedParticipants = 0
+        while arrivedParticipants < levelParticipantsNb[self._level]:
+            self.takeFoodIfAtFeet()
+            self._clientManager.sendBroadcast(Message.COME.value, self._participantsId)
+            res = self._clientManager.checkBroadcastWithoutNewElevation()
+            for mess in res:
+                if mess[1] == Message.OK.value:
+                    arrivedParticipants += 1
+
+    def waitParticipants(self):
         readyParticipants = 0
         self.inventory()
         res: List[Tuple[int, str, List[int], int]] = []
@@ -344,20 +367,14 @@ class DecisionTree:
                 if (
                     mess[1] == Message.OK.value
                 ):
-                    if self._clientManager.isIdInList(participantsId, mess[0]):
+                    if self._clientManager.isIdInList(self._participantsId, mess[0]):
                         self._log.debug("readyParticipants nb: " + str(readyParticipants))
                         readyParticipants += 1
                     else:
                         self._log.debug("resp ko in waitparticipant")
                         self._clientManager.sendBroadcast(Message.KO.value, [mess[0]])
             self.inventory()
-        arrivedParticipants = 0
-        while arrivedParticipants < levelParticipantsNb[self._level]:
-            self._clientManager.sendBroadcast(Message.COME.value, participantsId)
-            res = self._clientManager.checkBroadcastWithoutNewElevation()
-            for mess in res:
-                if mess[1] == Message.OK.value:
-                    arrivedParticipants += 1
+        self.checkArrivedParticipants()
         self.elevation()
 
     def elevationEmitter(self):
@@ -365,13 +382,13 @@ class DecisionTree:
         This function is call by decision tree when the ia have the stones for elevation,
             the ia call others to try elevation
         """
-        participantsId: List[int] = []
+        self._participantsId = []
         res: List[Tuple[int, str, List[int], int]] = []
-        while len(participantsId) < levelParticipantsNb[self._level]:
+        while len(self._participantsId) < levelParticipantsNb[self._level]:
             self._clientManager.sendBroadcast(list(Message)[self._level].value)
             res = self._clientManager.checkBroadcastWithoutNewElevation()
             for mess in res:
-                participantsId = self.checkReceivedMessage(participantsId, mess)
+                self.checkReceivedMessage(mess)
             self.takeClosestFood()
-        self._clientManager.sendBroadcast(Message.OK.value, participantsId)
-        self.waitParticipants(participantsId)
+        self._clientManager.sendBroadcast(Message.OK.value, self._participantsId)
+        self.waitParticipants()

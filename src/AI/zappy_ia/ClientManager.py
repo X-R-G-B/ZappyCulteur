@@ -2,7 +2,7 @@ from zappy_ia.Client import Client
 from zappy_ia.Log import LogGood
 from typing import List, Tuple
 from typing import Union
-from zappy_ia.Enums import Message, Element, Command
+from zappy_ia.Enums import Message, Element, Command, ServerRes
 
 
 class ClientManager:
@@ -143,15 +143,15 @@ class ClientManager:
             argToSend = arg.value
         else:
             argToSend = arg
+        if self.output() == ServerRes.DEAD:
+            self._log.info("Received: DEAD")
         self._log.info("[Send: " + toSend.split("\n")[0] + " " + argToSend + "]\n")
         self._client.input(toSend, argToSend)
         res = self.waitOutput()
-        if res == "ko\n":
-            toSendOrd = list(map(ord, toSend))
-            argToSendOrd = list(map(ord, argToSend))
+        if res == ServerRes.KO.value:
             self._log.info(
                 "Server responded ko to : " + toSend + " " + argToSend)
-            return "ko\n"
+            return ServerRes.KO.value
         return res
 
     def sendBroadcast(self, message: str, toSend: List[int] = []):
