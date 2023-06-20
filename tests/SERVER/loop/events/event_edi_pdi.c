@@ -150,6 +150,6 @@ Test(loop_event_edi_pdi, basic_edi)
     snprintf(res, 511, "edi %d\n", id_dead_egg);
     cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
     memset(res, 0, 512);
-    snprintf(res, 511, "pie %d %d %d\n", c_e->cl.ai.trantorien->x, c_e->cl.ai.trantorien->y, c_e->cl.ai.trantorien->level);
+    snprintf(res, 511, "pie %d %d Current level:%d\n", c_e->cl.ai.trantorien->x, c_e->cl.ai.trantorien->y, c_e->cl.ai.trantorien->level);
     cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
 }

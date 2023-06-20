@@ -77,7 +77,7 @@ static void update_case_ressources(map_t *map, trantorien_t *trnt, int lvl,
         map->tiles[map_index].ressources[i + LINEMATE] -=
             level_ressources[lvl - 1][i];
     }
-    snprintf(buff, 511, "pie %d %d %d\n", trnt->x, trnt->y,
+    snprintf(buff, 511, "pie %d %d Current level:%d\n", trnt->x, trnt->y,
         trnt->level + 1);
     broadcast_graphic(ntw, buff);
 }
@@ -93,7 +93,7 @@ int command_incantation(trantorien_t *trantorien, zappy_t *zappy,
     if (check_incantation_availability(trantorien, zappy->map, zappy->ntw)
             == false) {
         faill_all_update(zappy->ntw, trantorien->level, trantorien);
-        snprintf(buff, 511, "pie %d %d %d\n", trantorien->x,
+        snprintf(buff, 511, "pie %d %d Current level:%d\n", trantorien->x,
             trantorien->y, trantorien->level);
         broadcast_graphic(zappy->ntw, buff);
         return EXIT_SUCCESS;
