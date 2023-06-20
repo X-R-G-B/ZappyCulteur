@@ -13,6 +13,7 @@
 #include "Ressources.hpp"
 #include "Trantorian.hpp"
 #include "Incantation.hpp"
+#include "EndScreen.hpp"
 #include "IEntity.hpp"
 #include "Egg.hpp"
 
@@ -58,6 +59,7 @@ namespace GUI {
         static const std::string eggKey = "Egg_";
         static const std::string playerKey = "Player_";
         static const std::string incantationKey = "Incantation_";
+        static const std::string endScreenKey = "EndScreen";
 
         void CommandHandler::update(const std::vector<std::string> &commands)
         {
@@ -404,8 +406,13 @@ namespace GUI {
             if (!(ss >> cmd >> team)) {
                 return (false);
             }
+            auto endScreenEntity = std::make_shared<Entities::EndScreen>(
+                endScreenKey,
+                Vector2F(0, 0)
+            );
             try {
-                // call the end screen with appropriate team name
+                endScreenEntity->initEndScreenSprite();
+                _entityManager->addEntity(endScreenEntity);
             } catch (const Entities::EntitiesManagerException &e) {
                 std::cerr << e.what() << std::endl;
                 return false;
