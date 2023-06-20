@@ -74,7 +74,7 @@ class ElevationParticipant:
                 receivedDir0 = 2
             self.sendAllCommand(cmdDirections[res[3]])
             self._decisionTree.takeFoodIfAtFeet()
-            if (self._decisionTree.getCurrentFood() < 8):
+            if self._decisionTree.getCurrentFood() < 8:
                 self._decisionTree.takeClosestFood()
 
     def checkBroadcastEmitter(self) -> List[Tuple[int, str, List[int], int]]:
@@ -108,7 +108,7 @@ class ElevationParticipant:
         return True
 
     def elevationParticipant(self) -> bool:
-        if self.waitNextStep() == False:
+        if self.waitNextStep() is False:
             return self.errorReturn()
         haveToCome = False
         ready = False

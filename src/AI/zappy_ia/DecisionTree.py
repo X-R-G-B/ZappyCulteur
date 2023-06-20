@@ -5,7 +5,6 @@ from typing import Dict, List, Tuple
 from zappy_ia.ClientManager import ClientManager
 from zappy_ia.Enums import Message, Element, Command, ServerRes
 from zappy_ia.Log import LogGood
-import time
 
 levelParticipantsNb: List[int] = [0, 0, 1, 1, 3, 3, 5, 5]
 
@@ -315,10 +314,12 @@ class DecisionTree:
                 )
         res = self._clientManager.requestClient(Command.INCANTATION)
         if res == ServerRes.KO.value:
-            if (self._level == 1):
+            if self._level == 1:
                 self._clientManager.requestClient(Command.FORWARD)
             else:
-                self._clientManager.sendBroadcast(Message.KO.value, self._participantsId)
+                self._clientManager.sendBroadcast(
+                    Message.KO.value, self._participantsId
+                )
                 self._participantsId = []
             return
         self.checkElevationFinalRes()
@@ -372,7 +373,9 @@ class DecisionTree:
             for mess in res:
                 if mess[1] == Message.OK.value:
                     if self._clientManager.isIdInList(self._participantsId, mess[0]):
-                        self._log.debug("readyParticipants nb: " + str(readyParticipants))
+                        self._log.debug(
+                            "readyParticipants nb: " + str(readyParticipants)
+                        )
                         readyParticipants += 1
                     else:
                         self._log.debug("resp ko in waitparticipant")

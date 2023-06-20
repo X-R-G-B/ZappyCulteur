@@ -149,8 +149,7 @@ class ClientManager:
         self._client.input(toSend, argToSend)
         res = self.waitOutput()
         if res == ServerRes.KO.value:
-            self._log.info(
-                "Server responded ko to : " + toSend + " " + argToSend)
+            self._log.info("Server responded ko to : " + toSend + " " + argToSend)
             return ServerRes.KO.value
         return res
 
