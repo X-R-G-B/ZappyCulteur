@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include "circular_buffer.h"
+#include "llog.h"
 #include "ntw.h"
 #include "zappy.h"
 #include "internal.h"
@@ -34,7 +35,8 @@ static void trantorien_need_update(trantorien_t *trantorien, zappy_t *zappy,
 {
     if (trantorien_commands[action->code] == NULL) {
         circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
-        fprintf(stderr, "%s%d\n", "Command not handled: ", action->code);
+        llog_write_f(LOG_FILE_AIC, LLOG_WARNING, "command not handled: %d",
+            action->code);
         return;
     }
     trantorien_commands[action->code](trantorien, zappy, cl, action);

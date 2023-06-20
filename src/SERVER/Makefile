@@ -70,7 +70,7 @@ SRC_CLIENT		:=			$(addprefix client/, $(SRC_CLIENT))
 SRC_LLOG		:=															\
 							internal.c										\
 							write_f.c										\
-							write_fd.c										\
+							write_fd.c
 SRC_LLOG		:=			$(addprefix llog/, $(SRC_LLOG))
 
 # LOOP -----------------------------------------------------------------------
@@ -244,8 +244,8 @@ all: $(TARGET)
 all_fast:
 	@$(MAKE) -j --no-print-directory -C . all
 
-$(TARGET):												$(OBJ)
-$(TARGET):								$(LIBS_DIR)/tinylibc/libtinylibc.a
+$(TARGET):						$(OBJ)
+$(TARGET):						$(LIBS_DIR)/tinylibc/libtinylibc.a
 $(TARGET):						$(LIBS_DIR)/circularbuffer/libcircularbuffer.a
 	@$(ECHO) $(CYAN)'==< CFLAGS >==:'$(RESET) '$(CFLAGS)'
 	@$(ECHO) $(CYAN)'==< LDFLAGS >==:'$(RESET) '$(LDFLAGS)'

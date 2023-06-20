@@ -47,6 +47,25 @@ static void update_level_trantoriens(ntw_t *ntw, int lvl, trantorien_t *tr)
     }
 }
 
+static void faill_all_update(ntw_t *ntw, int lvl, trantorien_t *tr)
+{
+    client_t *cl = NULL;
+    ntw_client_t *cc = NULL;
+
+    for (L_EACH(client, ntw->clients)) {
+        cc = L_DATA(client);
+        cl = L_DATA(cc);
+        if (cl == NULL || cl->type != AI || cl->cl.ai.trantorien == NULL ||
+                cl->cl.ai.trantorien->level != lvl || cc == NULL ||
+                cl->cl.ai.trantorien->x != tr->x ||
+                cl->cl.ai.trantorien->y != tr->y) {
+            continue;
+        }
+        cl->cl.ai.trantorien->incantation = NULL;
+        circular_buffer_write(cc->write_to_outside, "ko");
+    }
+}
+
 static void update_case_ressources(map_t *map, trantorien_t *trnt, int lvl,
     ntw_t *ntw)
 {
@@ -73,7 +92,7 @@ int command_incantation(trantorien_t *trantorien, zappy_t *zappy,
     }
     if (check_incantation_availability(trantorien, zappy->map, zappy->ntw)
             == false) {
-        circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
+        faill_all_update(zappy->ntw, trantorien->level, trantorien);
         snprintf(buff, 511, "pie %d %d %d\n", trantorien->x,
             trantorien->y, trantorien->level);
         broadcast_graphic(zappy->ntw, buff);
