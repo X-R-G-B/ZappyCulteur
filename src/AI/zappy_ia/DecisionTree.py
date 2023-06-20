@@ -114,7 +114,10 @@ class DecisionTree:
                 parsedElem = elem.strip().split(" ")
                 self._inputTree["m" + parsedElem[0]][0] = int(parsedElem[1])
         except (IndexError, ValueError):
-            print(f"ID : {self._clientManager._id} crashed in inventory when received : ", rescpy)
+            print(
+                f"ID : {self._clientManager._id} crashed in inventory when received : ",
+                rescpy,
+            )
             self._clientManager.stopClient()
 
     def lookForTree(self):
@@ -145,7 +148,10 @@ class DecisionTree:
             rescpy = res
             res = res.split("[")[1].split("]")[0]
         except IndexError:
-            print(f"ID : {self._clientManager._id} crashed in look when received : ", rescpy)
+            print(
+                f"ID : {self._clientManager._id} crashed in look when received : ",
+                rescpy,
+            )
             self._clientManager.stopClient()
             return
 
@@ -341,11 +347,11 @@ class DecisionTree:
             self.takeClosestFood()
             res = self._clientManager.checkBroadcastWithoutNewElevation()
             for mess in res:
-                if (
-                    mess[1] == Message.OK.value
-                ):
+                if mess[1] == Message.OK.value:
                     if self._clientManager.isIdInList(participantsId, mess[0]):
-                        self._log.debug("readyParticipants nb: " + str(readyParticipants))
+                        self._log.debug(
+                            "readyParticipants nb: " + str(readyParticipants)
+                        )
                         readyParticipants += 1
                     else:
                         self._log.debug("resp ko in waitparticipant")

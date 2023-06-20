@@ -149,8 +149,7 @@ class ClientManager:
         if res == "ko\n":
             toSendOrd = list(map(ord, toSend))
             argToSendOrd = list(map(ord, argToSend))
-            self._log.info(
-                "Server responded ko to : " + toSend + " " + argToSend)
+            self._log.info("Server responded ko to : " + toSend + " " + argToSend)
             return "ko\n"
         return res
 
