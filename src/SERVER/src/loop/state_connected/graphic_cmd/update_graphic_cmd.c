@@ -8,10 +8,14 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "circular_buffer.h"
 #include "internal.h"
+#include "llog.h"
+#include "ntw.h"
 #include "tlcstrings.h"
 #include "command_reponses.h"
+#include "broadcast_events.h"
 
 static const char cmds_graphic[NB_CMD_AVAILIBLE][6] = {
     "msz\n",
@@ -41,21 +45,36 @@ static bool
     NULL,
 };
 
+static void debug_error(ntw_client_t *cl, bool is_entered)
+{
+    if (is_entered == false) {
+        cmd_suc(cl);
+        llog_write_fd(STDERR_FILENO, LLOG_WARNING, "unknown command");
+        llog_write_f(LOG_FILE_GUIC, LLOG_WARNING, "unknown command");
+    } else {
+        cmd_sbp(cl);
+        llog_write_fd(STDERR_FILENO, LLOG_WARNING, "bad command syntax");
+        llog_write_f(LOG_FILE_GUIC, LLOG_WARNING, "bad command syntax");
+    }
+}
+
 static bool update_cmd(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
 {
+    bool is_entered = false;
     bool status = false;
 
     for (int i = 0; cmds_graphic[i][0] != '\0'; i++) {
         if (strcmp(cmd_split[0], cmds_graphic[i]) == 0) {
             status = graphic_funcs[i](zappy, cl, cmd_split);
+            is_entered = true;
             break;
         }
     }
-    if (status == false) {
-        circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
-        status = true;
+    if (status == true) {
+        return status;
     }
-    return status;
+    debug_error(cl, is_entered);
+    return true;
 }
 
 bool update_graphic_cmd(zappy_t *zappy, ntw_client_t *cl)

@@ -11,12 +11,8 @@
 namespace GUI {
     class Color {
         public:
-            Color(
-                std::uint8_t red,
-                std::uint8_t green,
-                std::uint8_t blue,
-                std::uint8_t alpha = 255
-            );
+            Color(std::uint8_t red, std::uint8_t green, std::uint8_t blue,
+            std::uint8_t alpha = 255);
             ~Color() = default;
             std::uint8_t getRed() const;
             std::uint8_t getGreen() const;
@@ -33,4 +29,4 @@ namespace GUI {
             std::uint8_t _blue;
             std::uint8_t _alpha;
     };
-}
+} // namespace GUI

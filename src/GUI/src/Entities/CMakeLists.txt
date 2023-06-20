@@ -15,4 +15,5 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/Incantation.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Ressources.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/EndScreen.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/HUD.cpp
 )

@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2023
 ** ZappyCulteur
 ** File description:
-** cmd_fork
+** cmd_connect_nbr
 */
 
 #include <criterion/criterion.h>
@@ -18,15 +18,17 @@
 
 static void set_up_tests(zappy_t **zappy, int nb_client, int port)
 {
-    args_t args = {
+    static args_t args = {
         .clients_per_teams = 1,
-        .teams_name = list_create(),
-        .freq = 1,
+        .teams_name = NULL,
+        .freq = 1000,
         .height = 10,
         .width = 10,
         .is_ok = true,
-        .port = port,
+        .port = 0,
     };
+    args.port = port;
+    args.teams_name = list_create();
     *zappy = zappy_init(&args);
     ntw_client_t *client;
 
@@ -53,19 +55,23 @@ static void set_up_tests(zappy_t **zappy, int nb_client, int port)
     }
 }
 
-Test(loop_cmd_ai_fork, fork_test_1)
+Test(loop_cmd_connect_nbr, connect_nbr_test_1)
 {
     zappy_t *zappy = NULL;
+    trantorien_t *tr_test = NULL;
 
-    set_up_tests(&zappy, 1, 9110);
+    set_up_tests(&zappy, 1, 9200);
     ntw_client_t *client = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client);
     client_t *c = L_DATA(client);
     cr_assert_not_null(c);
-    circular_buffer_write(client->read_from_outside, "Fork\n");
+    tr_test = trantorien_init(c->cl.ai.trantorien->team_name, 10, 10);
+    cr_assert_not_null(tr_test);
+    list_append(zappy->trantoriens_available, tr_test,
+        (void (*) (void *)) trantorien_destroy, NULL);
+    circular_buffer_write(client->read_from_outside, "Connect_nbr\n");
     while (circular_buffer_is_read_ready(client->write_to_outside) == false) {
         cr_assert_eq(loop(zappy, true), false);
     }
-    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "ok\n");
-    cr_assert_eq(zappy->trantoriens_available->len, 1);
+    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "1\n");
 }

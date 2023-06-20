@@ -7,8 +7,8 @@
 
 #include <stdbool.h>
 #include "circular_buffer.h"
-#include "client.h"
 #include "ntw.h"
+#include "client.h"
 
 bool broadcast_graphic(ntw_t *ntw, const char *msg)
 {

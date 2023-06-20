@@ -1,0 +1,90 @@
+Language: Cpp
+ColumnLimit: '80'
+ReflowComments: true
+AlignAfterOpenBracket: DontAlign
+AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
+IndentWrappedFunctionNames: 'false'
+AccessModifierOffset: 0
+IndentAccessModifiers: true
+BinPackArguments: true
+BinPackParameters: true
+AlignOperands: false
+BreakBeforeBraces: Custom
+
+BraceWrapping:
+    AfterCaseLabel: false
+    AfterControlStatement: false
+    AfterEnum: false
+    AfterFunction: true
+    AfterNamespace: false
+    AfterStruct: false
+    AfterUnion: false
+    AfterExternBlock: true
+    BeforeCatch: false
+    BeforeElse: false
+    IndentBraces: false
+    SplitEmptyFunction: true
+    SplitEmptyRecord: true
+    SplitEmptyNamespace: true
+
+AlwaysBreakAfterReturnType: None
+
+TabWidth: '4'
+UseTab: Never
+IndentPPDirectives: BeforeHash
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+Cpp11BracedListStyle: true
+PointerAlignment: Right
+SpacesInCStyleCastParentheses: false
+SpaceAfterCStyleCast: true
+SpaceAfterLogicalNot: 'false'
+SpaceBeforeAssignmentOperators: 'true'
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: 'false'
+SpacesInAngles: false
+SpacesInParentheses: 'false'
+SpacesInSquareBrackets: 'false'
+SpacesInContainerLiterals: 'false'
+SpaceAfterTemplateKeyword: 'true'
+IndentCaseLabels: 'true'
+NamespaceIndentation: All
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: None
+AllowShortLoopsOnASingleLine: 'false'
+AllowShortBlocksOnASingleLine: 'true'
+AllowShortCaseLabelsOnASingleLine: 'true'
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 1
+AlignConsecutiveMacros: true
+AlignEscapedNewlines: Left
+AlignTrailingComments: true
+BreakStringLiterals: true
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeTernaryOperators: true
+SortIncludes: true
+IncludeBlocks: Preserve
+IncludeCategories:
+IncludeCategories:
+  - Regex:           '^"[[:alnum:]./]+"'       # Any "my_header.h"
+    Priority:        3
+  - Regex:           '<criterion/[a-z]+\.h>'  # Criterion headers
+    Priority:        2
+  - Regex:           '<[[:alnum:]./]+>'        # System/Standard libs
+    Priority:        1
+
+# Sort 'using' declarations
+SortUsingDeclarations: true
+
+BasedOnStyle: LLVM
+AlwaysBreakBeforeMultilineStrings: 'true'
+ContinuationIndentWidth: '0'
+IndentWidth: '4'
+PenaltyBreakAssignment: '0'
+SpaceBeforeCpp11BracedList: 'true'
+SpaceBeforeRangeBasedForLoopColon: 'true'
+
+# To totally disable format
+DisableFormat: 'false'

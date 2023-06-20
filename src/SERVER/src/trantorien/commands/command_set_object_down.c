@@ -11,6 +11,7 @@
 #include "ntw.h"
 #include "zappy.h"
 #include "command_reponses.h"
+#include "broadcast_events.h"
 
 static void send_broadcast(enum ressource_e obj, ntw_t *ntw, int player_id)
 {
@@ -35,6 +36,7 @@ int command_set_object_down(trantorien_t *trantorien, zappy_t *zappy,
         zappy->map->tiles[i].ressources[action->param.object] += 1;
         circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
         send_broadcast(action->param.object, zappy->ntw, trantorien->id);
+        cmd_pdr(zappy->ntw, cl, action);
     } else {
         circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
     }

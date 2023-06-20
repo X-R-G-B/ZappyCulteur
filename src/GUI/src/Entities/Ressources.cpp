@@ -28,5 +28,5 @@ namespace GUI {
         {
             return nbr > static_cast<int>(rt);
         }
-    }
-}
+    } // namespace Entities
+} // namespace GUI

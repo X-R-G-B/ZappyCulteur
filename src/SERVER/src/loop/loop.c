@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include "args.h"
 #include "client.h"
+#include "llog.h"
 #include "map.h"
 #include "ntw.h"
 #include "tlcllists.h"
@@ -67,11 +68,12 @@ static void check_ressources(zappy_t *zappy, bool new_freq)
     if (zappy->before_add_resources <= 0) {
         map_add_ressources(zappy->map);
         zappy->before_add_resources = NB_FREQ_BEFORE_RESOURCE;
+        llog_write_f(LOG_FILE_SERVER, LLOG_TRACE, "added ressources to map");
     }
 }
 
-static void update_trantoriens_available_food(list_t *trantoriens_available,
-    bool new_freq)
+static void update_trantoriens_available_food(ntw_t *ntw,
+    list_t *trantoriens_available, bool new_freq)
 {
     trantorien_t *trantorien = NULL;
 
@@ -83,7 +85,7 @@ static void update_trantoriens_available_food(list_t *trantoriens_available,
         if (trantorien == NULL) {
             continue;
         }
-        update_food(trantorien, NULL, new_freq);
+        update_food(ntw, trantorien, NULL, true);
     }
 }
 
@@ -100,11 +102,13 @@ bool loop(zappy_t *zappy, bool new_freq)
         }
         status = update_client(zappy, cl, new_freq) & status;
         update_clients_connections(zappy->ntw);
-        if (L_DATAT(client_t *, client)->type == AI) {
-            update_food(L_DATAT(client_t *, client)->cl.ai.trantorien,
-                cl, new_freq);
+        if (L_DATAT(client_t *, cl)->type == AI && new_freq == true) {
+            update_food(zappy->ntw,
+                L_DATAT(client_t *, cl)->cl.ai.trantorien, cl, false);
         }
     }
-    update_trantoriens_available_food(zappy->trantoriens_available, new_freq);
+    update_trantoriens_available_food(zappy->ntw,
+        zappy->trantoriens_available, new_freq);
+    kill_dead_ai(zappy);
     return !status;
 }

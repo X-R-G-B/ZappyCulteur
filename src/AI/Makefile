@@ -27,6 +27,7 @@ LOCAL_DEPS	=		local_deps
 CP			?=		cp
 RM			?=		rm -f
 TOEXEC		?=		chmod +x
+CURDIR		=		$(shell pwd)
 
 all: $(TARGET)
 
@@ -38,14 +39,18 @@ $(LOCAL_DEPS)/simple: $(LOCAL_DEPS)/requirements.txt
 	$(MAKE) $(LOCAL_DEPS)/simple-force
 
 $(LOCAL_DEPS)/simple-force: $(LOCAL_DEPS)/requirements.txt
-	pip install --break-system-packages --user piprepo
+	pip install --break-system-packages --user piprepo || \
+		pip install --user piprepo
 	pip download -d ./local_deps -r ./$(LOCAL_DEPS)/requirements.txt
 	piprepo build ./local_deps
 
 $(TARGET):
-	([ ! -d $(LOCAL_DEPS)/simple ] && $(MAKE) $(LOCAL_DEPS)/simple-force) || \
-		true
-	pip install --break-system-packages --user -i ./local_deps/simple .
+	if [ ! -d $(LOCAL_DEPS)/simple ]; then \
+		$(MAKE) $(LOCAL_DEPS)/simple-force; \
+	fi
+	pip install --break-system-packages --user \
+		-i file:$(CURDIR)/local_deps/simple . || \
+		pip install --user -i ./local_deps/simple .
 	$(CP) "$(TARGET).py" "$(TARGET)"
 	$(TOEXEC) "$(TARGET)"
 
@@ -54,14 +59,18 @@ clean:
 	$(RM) -r $(PIP_TARGET).egg-info
 
 fclean: clean
-	pip uninstall --break-system-packages -y $(PIP_TARGET)
-	$(RM) $(LOCAL_DEPS)/requirements.txt
+	pip uninstall --break-system-packages -y $(PIP_TARGET) || \
+		pip uninstall -y $(PIP_TARGET)
 	$(RM) $(TARGET)
 
 fclean-simple: fclean
+	$(RM) $(LOCAL_DEPS)/requirements.txt
 	$(RM) -r $(LOCAL_DEPS)/simple
 	$(RM) $(LOCAL_DEPS)/*.whl
 
-re: fclean all
+re: fclean
+re: all
 
-re-simple: fclean-simple $(LOCAL_DEPS)/simple all
+re-simple: fclean-simple
+re-simple: $(LOCAL_DEPS)/simple
+re-simple: all

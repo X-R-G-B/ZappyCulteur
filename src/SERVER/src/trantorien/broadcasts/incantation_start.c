@@ -24,13 +24,13 @@ static void process_start_incant_trnt(ntw_client_t *cl, list_t *list_trnt,
     trnt->incantation = ref_trnt->actions[0];
 }
 
-static void broadcast_incantation(trantorien_t *ref_trantorien, ntw_t *ntw,
+static void broadcast_incantation(trantorien_t *ref_tr, ntw_t *ntw,
     list_t *list_trnt)
 {
-    int trantorien_lvl = ref_trantorien->level;
+    int trantorien_lvl = ref_tr->level;
     client_t *cl = NULL;
     ntw_client_t *ntw_cl = NULL;
-    trantorien_t *trantorien = NULL;
+    trantorien_t *tr = NULL;
 
     for (L_EACH(client, ntw->clients)) {
         ntw_cl = L_DATA(client);
@@ -38,13 +38,12 @@ static void broadcast_incantation(trantorien_t *ref_trantorien, ntw_t *ntw,
         if (cl == NULL || cl->type != AI) {
             continue;
         }
-        trantorien = cl->cl.ai.trantorien;
-        if (trantorien != NULL && trantorien->level == trantorien_lvl
-                && ref_trantorien->x == trantorien->x
-                && ref_trantorien->y == trantorien->y) {
-            process_start_incant_trnt(ntw_cl, list_trnt, trantorien,
-                ref_trantorien);
+        tr = cl->cl.ai.trantorien;
+        if (tr == NULL || tr->level != trantorien_lvl || ref_tr->x != tr->x ||
+                ref_tr->y != tr->y) {
+            continue;
         }
+        process_start_incant_trnt(ntw_cl, list_trnt, tr, ref_tr);
     }
 }
 
@@ -69,20 +68,19 @@ static void send_broadcast_graph(ntw_t *ntw, list_t *list_trnt,
     broadcast_graphic(ntw, buff);
 }
 
-void broadcast_incantation_start(trantorien_t *ref_trantorien, zappy_t *zappy,
-    ntw_client_t *cl)
+bool broadcast_incantation_start(trantorien_t *ref_trantorien, zappy_t *zappy)
 {
     list_t *list_trnt = NULL;
 
     if (check_incantation_availability(
             ref_trantorien, zappy->map, zappy->ntw) == false) {
-        circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
-        return;
+        return false;
     }
     list_trnt = list_create();
     if (list_trnt == NULL) {
-        return;
+        return false;
     }
     broadcast_incantation(ref_trantorien, zappy->ntw, list_trnt);
     send_broadcast_graph(zappy->ntw, list_trnt, ref_trantorien);
+    return true;
 }

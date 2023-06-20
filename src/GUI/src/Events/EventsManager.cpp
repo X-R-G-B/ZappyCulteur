@@ -7,9 +7,9 @@
 
 #include "EventsManager.hpp"
 
-GUI::EventsManager::EventsManager() :
-    _mousePos({0, 0})
-{}
+GUI::EventsManager::EventsManager() : _mousePos({0, 0}), _worldMousePos({0, 0})
+{
+}
 
 void GUI::EventsManager::addEvent(GUI::Event event)
 {
@@ -33,11 +33,22 @@ const GUI::Vector2F &GUI::EventsManager::getMousePos()
 
 bool GUI::EventsManager::isEventTriggered(Event event)
 {
-    return std::find(_eventsList.begin(), _eventsList.end(), event) != _eventsList.end();
+    return std::find(_eventsList.begin(), _eventsList.end(), event)
+    != _eventsList.end();
 }
 
 GUI::EventsManager &GUI::EventsManager::getInstance()
 {
     static EventsManager instance;
     return instance;
+}
+
+void GUI::EventsManager::addWorldMousePos(Vector2F mousePos)
+{
+    _worldMousePos = mousePos;
+}
+
+const GUI::Vector2F &GUI::EventsManager::getWorldMousePos()
+{
+    return _worldMousePos;
 }
