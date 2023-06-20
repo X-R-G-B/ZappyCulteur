@@ -66,6 +66,13 @@ SRC_CLIENT		:=															\
 SRC_CLIENT		:=			$(addprefix client/, $(SRC_CLIENT))
 
 
+# LLOG -----------------------------------------------------------------------
+SRC_LLOG		:=															\
+							internal.c										\
+							write_f.c										\
+							write_fd.c
+SRC_LLOG		:=			$(addprefix llog/, $(SRC_LLOG))
+
 # LOOP -----------------------------------------------------------------------
 SRC_LOOP_AICMD	=															\
 							cmd_broadcast.c									\
@@ -118,11 +125,11 @@ SRC_LOOP_CONN	:=			$(addprefix state_connected/, $(SRC_LOOP_CONN))
 
 SRC_LOOP		:=															\
 							$(SRC_LOOP_CONN)								\
+							kill_dead_ai.c									\
 							loop.c											\
 							update_client_not_connected.c					\
 							update_client_waiting_slot_opened.c				\
 							update_client_waiting_team_name.c				\
-							refuse_client_connection.c						\
 							update_food.c
 SRC_LOOP		:=			$(addprefix loop/, $(SRC_LOOP))
 
@@ -193,6 +200,7 @@ SRC_TRNT		:=			$(addprefix trantorien/, $(SRC_TRNT))
 SRC				:=															\
 							$(SRC_ARGS)										\
 							$(SRC_CLIENT)									\
+							$(SRC_LLOG)										\
 							$(SRC_LOOP)										\
 							$(SRC_MAP)										\
 							$(SRC_NTW)										\
@@ -236,8 +244,8 @@ all: $(TARGET)
 all_fast:
 	@$(MAKE) -j --no-print-directory -C . all
 
-$(TARGET):												$(OBJ)
-$(TARGET):								$(LIBS_DIR)/tinylibc/libtinylibc.a
+$(TARGET):						$(OBJ)
+$(TARGET):						$(LIBS_DIR)/tinylibc/libtinylibc.a
 $(TARGET):						$(LIBS_DIR)/circularbuffer/libcircularbuffer.a
 	@$(ECHO) $(CYAN)'==< CFLAGS >==:'$(RESET) '$(CFLAGS)'
 	@$(ECHO) $(CYAN)'==< LDFLAGS >==:'$(RESET) '$(LDFLAGS)'
@@ -278,6 +286,7 @@ re:														all
 
 tests_run:		CFLAGS += $(TFLAGS)
 tests_run: 		CFLAGS := $(filter-out -O2, $(CFLAGS))
+tests_run:		CFLAGS += -g3
 tests_run:		LDFLAGS += $(CR_TEST_LDFLAGS)
 tests_run:		SRC := $(filter-out src/main.c, $(SRC))
 tests_run:		fclean $(T_OBJ)

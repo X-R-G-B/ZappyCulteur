@@ -7,6 +7,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include "llog.h"
 #include "trantorien.h"
 #include "internal.h"
 
@@ -16,6 +17,8 @@ bool trantorien_add_act(trantorien_t *trantorien, enum cmd_code_e cmd)
     action_t *action = NULL;
 
     if (trantorien_is_cmd_availible(trantorien) == false) {
+        llog_write_f(LOG_FILE_AIC, LLOG_WARNING,
+            "too many cmd (player AI id:%d)", trantorien->id);
         return false;
     }
     action = action_init(cmd, 0, NULL);

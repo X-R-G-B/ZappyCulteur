@@ -11,17 +11,6 @@
     #include "ntw.h"
     #include "zappy.h"
 
-    #define _CL_TYPE(is_g) (is_g) ? "graphic" : "ai"
-    #define _INF_MESS "INFO: client is: %s: %d\n"
-    #define DEBUG_CLIENT_LOGIN(is_g, cc) _INF_MESS, _CL_TYPE(is_g), cc->id
-
-/**
-** @brief Refuse client connection
-** @param ntw the ntw
-** @param cl the client
-**/
-void refuse_client_connection(ntw_t *ntw, ntw_client_t *cl);
-
 void send_size(args_t *args, ntw_client_t *cl);
 void send_id(client_t *cc, ntw_client_t *cl);
 
@@ -34,6 +23,13 @@ void send_id(client_t *cc, ntw_client_t *cl);
 **/
 void update_food(ntw_t *ntw, trantorien_t *trantorien,
     ntw_client_t *cl, bool is_and_egg);
+
+/**
+** @brief Kill all non alive AI and egg
+**
+** @param zappy the zappy
+**/
+void kill_dead_ai(zappy_t *zappy);
 
 // Update in states
 

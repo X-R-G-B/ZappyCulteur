@@ -1,5 +1,13 @@
+/*
+** EPITECH PROJECT, 2023
+** zappy server
+** File description:
+** check incantation
+*/
+
 #include <stdbool.h>
 #include <stdio.h>
+#include "llog.h"
 #include "ntw.h"
 #include "client.h"
 #include "trantorien.h"
@@ -27,9 +35,11 @@ static const int nb_level_players[LVL_MAX - 1] = {
 static void print_debug_error(int nb_tr_case, int lvl, int id)
 {
     if (nb_tr_case < nb_level_players[lvl - 1]) {
-        fprintf(stderr, format_error_too_less_level, lvl, id);
+        llog_write_f(LOG_FILE_AIC, LLOG_WARNING, format_error_too_less_level,
+            lvl, id);
     } else if (nb_tr_case > nb_level_players[lvl - 1]) {
-        fprintf(stderr, format_error_too_many_level, lvl, id);
+        llog_write_f(LOG_FILE_AIC, LLOG_WARNING, format_error_too_many_level,
+            lvl, id);
     }
 }
 
@@ -69,7 +79,8 @@ bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
     for (int i = FOOD; i < PLAYER; i++) {
         if (map->tiles[map_i].ressources[i + LINEMATE] <
                 level_ressources[trantorien->level - 1][i]) {
-            fprintf(stderr, format_error_resource, i + LINEMATE,
+            llog_write_f(LOG_FILE_AIC, LLOG_WARNING, format_error_resource,
+                i + LINEMATE,
                 map->tiles[map_i].ressources[i + LINEMATE], trantorien->id);
             return false;
         }
