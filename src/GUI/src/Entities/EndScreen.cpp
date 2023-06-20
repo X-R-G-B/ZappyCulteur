@@ -11,7 +11,7 @@
 
 namespace GUI {
     namespace Entities {
-        static const std::string filePath = "src/GUI/assets/menu/BeautifulSteve.png";
+        static const std::string filePath = "src/GUI/assets/menu/VeryBeautifullSteve.png";
         static const std::size_t endScreenLayer = 500;
         static const std::string endScreenId = "EndScreen";
         static const std::string textId = "TeamName";
