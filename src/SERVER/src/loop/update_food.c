@@ -19,7 +19,7 @@ static void send_event_death(ntw_t *ntw, int id, bool is_an_egg)
 }
 
 void update_food(ntw_t *ntw, trantorien_t *trantorien,
-ntw_client_t *cl, bool is_an_egg)
+    ntw_client_t *cl, bool is_an_egg)
 {
     if (trantorien == NULL || trantorien->alive == false) {
         return;

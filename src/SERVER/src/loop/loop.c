@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include "args.h"
 #include "client.h"
+#include "llog.h"
 #include "map.h"
 #include "ntw.h"
 #include "tlcllists.h"
@@ -67,6 +68,7 @@ static void check_ressources(zappy_t *zappy, bool new_freq)
     if (zappy->before_add_resources <= 0) {
         map_add_ressources(zappy->map);
         zappy->before_add_resources = NB_FREQ_BEFORE_RESOURCE;
+        llog_write_f(LOG_FILE_SERVER, LLOG_TRACE, "added ressources to map");
     }
 }
 
