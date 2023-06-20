@@ -9,6 +9,7 @@
 #include <stddef.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <time.h>
 #include "tlcstrings.h"
 #include "tlcstdios.h"
 #include "llog.h"
@@ -28,6 +29,23 @@ static const char level_values[MAX_LLOG_LEVEL][MAX_CHAR_VALUES] = {
     "\033[30mTRACE\033[0m"
 };
 
+static const char *get_asciitime(void)
+{
+    time_t t = time(NULL);
+    struct tm *timeinfo;
+    char *buf = NULL;
+
+    timeinfo = localtime(&t);
+    buf = asctime(timeinfo);
+    if (buf == NULL || x_strlen(buf) == 0) {
+        return buf;
+    }
+    if (buf[x_strlen(buf) - 1] == '\n') {
+        buf[x_strlen(buf) - 1] = '\0';
+    }
+    return buf;
+}
+
 static int write_format(int fd, const char *fmt, va_list ap,
     enum llog_level level)
 {
@@ -39,7 +57,8 @@ static int write_format(int fd, const char *fmt, va_list ap,
     if (buf == NULL) {
         return -1;
     }
-    final = x_sprintf("[%s] %s\n", level_values[level], buf);
+    final = x_sprintf("%s [%s] %s\n", get_asciitime(), level_values[level],
+        buf);
     free(buf);
     if (final == NULL) {
         return -1;
