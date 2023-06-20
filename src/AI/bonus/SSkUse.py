@@ -29,13 +29,13 @@ if __name__ == "__main__":
 
     try:
         clf = joblib.load(argParser.parse_args().tree)
-    except:
+    except FileNotFoundError:
         print("Error: Tree file not found")
         sys.exit(84)
 
     try:
         testData = pd.read_csv(argParser.parse_args().file)
-    except:
+    except FileNotFoundError:
         print("Error: CSV file not found")
         sys.exit(84)
 

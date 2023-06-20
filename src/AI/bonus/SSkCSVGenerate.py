@@ -2,7 +2,7 @@ import random
 import csv
 import argparse
 import sys
-from typing import List, Tuple, Dict
+from typing import List, Tuple
 
 
 levelCosts: List[List[Tuple[str, int]]] = [

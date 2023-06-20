@@ -27,7 +27,7 @@ if __name__ == "__main__":
 
     try:
         df = pd.read_csv(fileName)
-    except:
+    except FileNotFoundError:
         print("Error: file not found")
         sys.exit(84)
 
