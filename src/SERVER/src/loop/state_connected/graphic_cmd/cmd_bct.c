@@ -9,11 +9,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ntw.h"
 #include "circular_buffer.h"
+#include "ntw.h"
 #include "map.h"
 #include "internal.h"
-#include "zappy.h"
 
 static bool send_pos(ntw_client_t *cl, int x, int y)
 {

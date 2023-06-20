@@ -59,7 +59,7 @@ bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
     }
     map_index_x_y_to_i(map, trantorien->x, trantorien->y, &map_index);
     for (int i = FOOD; i < PLAYER; i++) {
-        if (map[map_index].tiles->ressources[i + LINEMATE] <
+        if (map->tiles[map_index].ressources[i + LINEMATE] <
                 level_ressources[trantorien->level - 1][i]) {
             return false;
         }

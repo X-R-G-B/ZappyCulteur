@@ -10,6 +10,7 @@
 #include "zappy.h"
 #include "internal.h"
 #include "trantorien.h"
+#include "broadcast_events.h"
 
 bool cmd_incantation(__attribute__((unused)) zappy_t *zappy, ntw_client_t *cl,
     __attribute__((unused)) char **cmd_split)
