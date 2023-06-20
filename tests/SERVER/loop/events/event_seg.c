@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2023
 ** ZappyCulteur
 ** File description:
-** event_suc
+** event_seg
 */
 
 #include <criterion/criterion.h>
@@ -51,10 +51,10 @@ ntw_client_t **graphic)
 
         cr_assert_not_null(c);
         c->id = get_id();
-        strcpy(c->name, "test");
+        strcpy(c->name, "Team1");
         c->state = CONNECTED;
         c->type = AI;
-        c->cl.ai.trantorien = trantorien_init("mdr", args.width, args.height);
+        c->cl.ai.trantorien = trantorien_init("Team1", args.width, args.height);
         c->cl.ai.trantorien->id = c->id;
         c->height = args.height;
         c->width = args.width;
@@ -73,12 +73,13 @@ ntw_client_t **graphic)
     }
 }
 
-Test(loop_event_suc, basic_suc)
+Test(loop_event_seg, basic_alone)
 {
     zappy_t *zappy = NULL;
     ntw_client_t *graph = NULL;
+    char res[512] = {0};
 
-    set_up_tests(&zappy, 1, 9600, &graph);
+    set_up_tests(&zappy, 2, 9500, &graph);
     ntw_client_t *client_e = L_DATA(zappy->ntw->clients->start);
     cr_assert_not_null(client_e);
     client_t *c_e = L_DATA(client_e);
@@ -87,9 +88,26 @@ Test(loop_event_suc, basic_suc)
     zappy->map->tiles[0].ressources[LINEMATE] = 1;
     c_e->cl.ai.trantorien->x = 0;
     c_e->cl.ai.trantorien->y = 0;
-    circular_buffer_write(graph->read_from_outside, "caca\n");
-    while (circular_buffer_is_read_ready(graph->write_to_outside) == false) {
+    circular_buffer_write(client_e->read_from_outside, "Incantation\n");
+    while (circular_buffer_is_read_ready(client_e->write_to_outside) == false) {
         cr_assert_eq(loop(zappy, true), false);
     }
-    cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), "suc\n");
+    cr_assert_str_eq(circular_buffer_read(client_e->write_to_outside), "Elevation underway\n");
+    snprintf(res, 511, "pic %d %d %d %d\n", c_e->cl.ai.trantorien->x, c_e->cl.ai.trantorien->y, c_e->cl.ai.trantorien->level, c_e->cl.ai.trantorien->id);
+    cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
+    while (circular_buffer_is_read_ready(client_e->write_to_outside) == false) {
+        cr_assert_eq(loop(zappy, true), false);
+    }
+    cr_assert_str_eq(circular_buffer_read(client_e->write_to_outside), "dead\n");
+    memset(res, 0, 512);
+    snprintf(res, 511, "pdi %d\n", c_e->cl.ai.trantorien->id);
+    cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
+    ntw_client_t *client_r = L_DATA(zappy->ntw->clients->start->next);
+    cr_assert_not_null(client_r);
+    cr_assert_eq(check_end(zappy, true), false);
+    client_t *c_r = L_DATA(client_r);
+    cr_assert_not_null(c_r);
+    memset(res, 0, 512);
+    snprintf(res, 511, "seg %s\n", c_r->cl.ai.trantorien->team_name);
+    cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
 }

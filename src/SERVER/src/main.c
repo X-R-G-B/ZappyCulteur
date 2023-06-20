@@ -13,30 +13,6 @@
 #include "client.h"
 #include "broadcast_events.h"
 
-static void broadcast_end(zappy_t *zappy)
-{
-    client_t *alive_client = NULL;
-    client_t *client = NULL;
-
-    for (L_EACH(data, zappy->ntw->clients)) {
-        client = L_DATA(L_DATAT(ntw_client_t *, data));
-        if (client == NULL || client->type != AI
-            || client->cl.ai.trantorien == NULL) {
-            continue;
-        }
-        if (client->cl.ai.trantorien->level == 8) {
-            cmd_seg(zappy->ntw, client);
-            return;
-        }
-        if (client->cl.ai.trantorien->alive == true) {
-            alive_client = client;
-        }
-    }
-    if (alive_client != NULL) {
-        cmd_seg(zappy->ntw, alive_client);
-    }
-}
-
 static int server_update(time_t *s_timeout, suseconds_t *m_timeout,
     zappy_t *zappy)
 {
@@ -53,6 +29,7 @@ static int server_update(time_t *s_timeout, suseconds_t *m_timeout,
     ntw_wait_till_events(zappy->ntw, s_timeout, m_timeout);
     ntw_loop(zappy->ntw);
     is_end = loop(zappy, new_freq);
+    is_end = check_end(zappy, is_end);
     return is_end;
 }
 
