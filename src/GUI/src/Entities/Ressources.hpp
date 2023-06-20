@@ -24,5 +24,5 @@ namespace GUI {
         bool operator<(int nbr, Entities::RessourcesType rt);
         bool operator>(Entities::RessourcesType rt, int nbr);
         bool operator>(int nbr, Entities::RessourcesType rt);
-    }
-}
+    } // namespace Entities
+} // namespace GUI

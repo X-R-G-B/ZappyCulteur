@@ -34,14 +34,13 @@ namespace GUI {
             bool operator==(const Vector2F &vector) const;
             bool operator!=(const Vector2F &vector) const;
     };
-}
+} // namespace GUI
 
-template<>
-struct std::hash<GUI::Vector2F> {
-    size_t operator()(const GUI::Vector2F& vector) const;
+template <> struct std::hash<GUI::Vector2F> {
+        size_t operator()(const GUI::Vector2F &vector) const;
 };
 
-template<>
-struct std::equal_to<GUI::Vector2F> {
-    bool operator()(const GUI::Vector2F& lhs, const GUI::Vector2F& rhs) const;
+template <> struct std::equal_to<GUI::Vector2F> {
+        bool operator()(
+        const GUI::Vector2F &lhs, const GUI::Vector2F &rhs) const;
 };

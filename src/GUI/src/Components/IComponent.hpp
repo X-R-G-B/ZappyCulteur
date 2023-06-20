@@ -35,5 +35,5 @@ namespace GUI {
                  */
                 virtual CompType getType() const = 0;
         };
-    }
-}
+    } // namespace Components
+} // namespace GUI

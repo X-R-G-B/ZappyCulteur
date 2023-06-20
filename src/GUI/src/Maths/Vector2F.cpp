@@ -119,14 +119,17 @@ namespace GUI {
         this->y += value;
         return *this;
     }
-}
+} // namespace GUI
 
-size_t std::hash<GUI::Vector2F>::operator()(const GUI::Vector2F& vector) const {
-    size_t hashX = hash<float>{}(vector.x);
-    size_t hashY = hash<float>{}(vector.y);
+size_t std::hash<GUI::Vector2F>::operator()(const GUI::Vector2F &vector) const
+{
+    size_t hashX = hash<float> {}(vector.x);
+    size_t hashY = hash<float> {}(vector.y);
     return hashX ^ (hashY << 1);
 }
 
-bool std::equal_to<GUI::Vector2F>::operator()(const GUI::Vector2F& lhs, const GUI::Vector2F& rhs) const {
+bool std::equal_to<GUI::Vector2F>::operator()(
+const GUI::Vector2F &lhs, const GUI::Vector2F &rhs) const
+{
     return lhs.x == rhs.x && lhs.y == rhs.y;
 }

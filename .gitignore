@@ -1004,6 +1004,7 @@ zappy_gui
 zappy_server
 vgcore.*
 *.clang-format
+!src/GUI/.clang-format
 *.vscode/
 *.idea
 *.gcno

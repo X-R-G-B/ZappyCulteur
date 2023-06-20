@@ -34,4 +34,4 @@ namespace GUI {
             bool operator==(const Vector3F &vector) const;
             bool operator!=(const Vector3F &vector) const;
     };
-}
+} // namespace GUI

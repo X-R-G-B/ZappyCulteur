@@ -9,41 +9,44 @@
 
 namespace GUI {
 
-    NetworkManager::NetworkException::NetworkException(const std::string &message) :
-        _message(message)
-    {}
-    const char *NetworkManager::NetworkException::what() const noexcept { 
+    NetworkManager::NetworkException::NetworkException(
+    const std::string &message)
+        : _message(message)
+    {
+    }
+    const char *NetworkManager::NetworkException::what() const noexcept
+    {
         return _message.c_str();
     }
 
-    NetworkManager::NetworkManager() :
-        _isConnected(false)
-    {}
+    NetworkManager::NetworkManager() : _isConnected(false)
+    {
+    }
 
     NetworkManager::~NetworkManager()
     {
         deconnectFromServer();
-        #ifdef _WIN32
-            WSACleanup();
-        #endif
+#ifdef _WIN32
+        WSACleanup();
+#endif
     }
 
     void NetworkManager::deconnectFromServer()
     {
-        #ifdef _WIN32
-            if (_serverSocket != INVALID_SOCKET) {
-                shutdown(_serverSocket, SD_BOTH);
-                closesocket(_serverSocket);
-            }
-        #else
-            if (_serverSocket != -1) {
-                shutdown(_serverSocket, SHUT_RDWR);
-                close(_serverSocket);
-            }
-        #endif
+#ifdef _WIN32
+        if (_serverSocket != INVALID_SOCKET) {
+            shutdown(_serverSocket, SD_BOTH);
+            closesocket(_serverSocket);
+        }
+#else
+        if (_serverSocket != -1) {
+            shutdown(_serverSocket, SHUT_RDWR);
+            close(_serverSocket);
+        }
+#endif
     }
 
-    void NetworkManager::sendToServer(const std::string& data)
+    void NetworkManager::sendToServer(const std::string &data)
     {
         if (data.empty() == true || data.back() != '\n') {
             return;
@@ -55,7 +58,9 @@ namespace GUI {
     {
         if (_isConnected == true) {
             updateFds();
-            if (select(_serverSocket + 1, &_readfds, &_writefds, &_exceptfds, &_tv) == -1) {
+            if (select(
+                _serverSocket + 1, &_readfds, &_writefds, &_exceptfds, &_tv)
+            == -1) {
                 throw NetworkException("Error: select failed");
             }
             if (FD_ISSET(_serverSocket, &_exceptfds)) {
@@ -65,7 +70,8 @@ namespace GUI {
             if (FD_ISSET(_serverSocket, &_readfds)) {
                 receiveData();
             }
-            if (FD_ISSET(_serverSocket, &_writefds) && _dataToSend.empty() == false) {
+            if (FD_ISSET(_serverSocket, &_writefds)
+            && _dataToSend.empty() == false) {
                 sendData();
             }
         }
@@ -78,7 +84,7 @@ namespace GUI {
         return messages;
     }
 
-    void NetworkManager::setIp(const std::string& ip)
+    void NetworkManager::setIp(const std::string &ip)
     {
         if (ip == "localhost") {
             _ip = "127.0.0.1";
@@ -87,7 +93,7 @@ namespace GUI {
         }
     }
 
-    void NetworkManager::setPort(const std::string& port)
+    void NetworkManager::setPort(const std::string &port)
     {
         _port = port;
     }
@@ -125,16 +131,17 @@ namespace GUI {
         }
     }
 
-    void NetworkManager::initConnection(const std::string &ip, const std::string &port)
+    void NetworkManager::initConnection(
+    const std::string &ip, const std::string &port)
     {
         setIp(ip);
         setPort(port);
-        #ifdef _WIN32
-            _wsa = {0};
-            if (WSAStartup(MAKEWORD(2, 2), &_wsa) != 0) {
-                throw NetworkException("Error: WSAStartup failed");
-            }
-        #endif
+#ifdef _WIN32
+        _wsa = {0};
+        if (WSAStartup(MAKEWORD(2, 2), &_wsa) != 0) {
+            throw NetworkException("Error: WSAStartup failed");
+        }
+#endif
         _addr.sin_family = AF_INET;
         _addr.sin_port = htons(static_cast<u_short>(std::stoul(_port)));
         _addr.sin_addr.s_addr = inet_addr(_ip.c_str());
@@ -151,7 +158,9 @@ namespace GUI {
 
     void NetworkManager::connectSocket()
     {
-        if (connect(_serverSocket, reinterpret_cast<struct sockaddr*>(&_addr), sizeof(_addr)) == -1) {
+        if (connect(_serverSocket, reinterpret_cast<struct sockaddr *>(&_addr),
+            sizeof(_addr))
+        == -1) {
             deconnectFromServer();
             throw NetworkException("Error: cannot connect to server");
         }
@@ -174,17 +183,15 @@ namespace GUI {
         int nbBytes = 0;
         std::string message;
         std::array<char, BUFFER_SIZE> buffer = {0};
-        
+
         while (true) {
             nbBytes = recv(_serverSocket, buffer.data(), BUFFER_SIZE, 0);
-            if (nbBytes <= 0)
-            {
+            if (nbBytes <= 0) {
                 _isConnected = false;
                 throw NetworkException("Error: read failed");
             }
             message += std::string(buffer.data(), nbBytes);
-            if (message.back() == '\n')
-            {
+            if (message.back() == '\n') {
                 break;
             }
         }
@@ -194,10 +201,12 @@ namespace GUI {
     void NetworkManager::sendData()
     {
         std::string toSend = "";
-    
+
         while (_dataToSend.empty() == false) {
             toSend = _dataToSend.front();
-            if (send(_serverSocket, toSend.c_str(), static_cast<int>(toSend.size()), 0) == -1) {
+            if (send(_serverSocket, toSend.c_str(),
+                static_cast<int>(toSend.size()), 0)
+            == -1) {
                 _isConnected = false;
                 throw NetworkException("Error: write failed");
             } else {
@@ -216,10 +225,10 @@ namespace GUI {
         FD_SET(_serverSocket, &_exceptfds);
     }
 
-    std::function<void(const std::string&)> NetworkManager::getSendToServer()
+    std::function<void(const std::string &)> NetworkManager::getSendToServer()
     {
-        return [this](const std::string& data) {
+        return [this](const std::string &data) {
             sendToServer(data);
         };
     }
-}
+} // namespace GUI

@@ -107,5 +107,6 @@ bool loop(zappy_t *zappy, bool new_freq)
     }
     update_trantoriens_available_food(zappy->ntw,
         zappy->trantoriens_available, new_freq);
+    kill_dead_ai(zappy);
     return !status;
 }

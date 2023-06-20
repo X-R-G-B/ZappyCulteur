@@ -35,6 +35,13 @@ void send_id(client_t *cc, ntw_client_t *cl);
 void update_food(ntw_t *ntw, trantorien_t *trantorien,
     ntw_client_t *cl, bool is_and_egg);
 
+/**
+** @brief Kill all non alive AI and egg
+**
+** @param zappy the zappy
+**/
+void kill_dead_ai(zappy_t *zappy);
+
 // Update in states
 
 bool update_client_not_connected(zappy_t *zappy, ntw_client_t *cl);
