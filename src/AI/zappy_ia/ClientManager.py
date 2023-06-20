@@ -41,8 +41,8 @@ class ClientManager:
                 return True
         return False
 
-    def isMyIdInList(self, list_: List[int]) -> bool:
-        return self.isIdInList(list_, self._id)
+    def isMyIdInList(self, idList: List[int]) -> bool:
+        return self.isIdInList(idList, self._id)
 
     def checkBroadcast(self) -> List[Tuple(int, str, List[int], int)]:
         """
