@@ -77,12 +77,30 @@ static bool check_team_end(zappy_t *zappy)
     }
 }
 
+static bool check_win(zappy_t *zappy)
+{
+    client_t *cl = NULL;
+
+    for (L_EACH(data, zappy->ntw->clients)) {
+        cl = L_DATA(L_DATAT(ntw_client_t *, data));
+        if (cl == NULL || cl->type != AI || cl->cl.ai.trantorien == NULL) {
+            continue;
+        }
+        if (cl->cl.ai.trantorien->alive == true
+                && cl->cl.ai.trantorien->level == LVL_MAX) {
+            cmd_seg(zappy->ntw, cl);
+            return true;
+        }
+    }
+    return false;
+}
+
 bool check_end(zappy_t *zappy, bool is_end)
 {
     if (is_end == false || zappy->is_end) {
         return false;
     }
-    if (check_team_end(zappy) == true) {
+    if (check_win(zappy) == true || check_team_end(zappy) == true) {
         zappy->is_end = true;
         return false;
     }

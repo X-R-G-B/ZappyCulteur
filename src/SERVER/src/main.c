@@ -51,7 +51,6 @@ static int server_start(args_t *args)
     while (is_end == false) {
         is_end = server_update(&s_timeout, &m_timeout, zappy);
     }
-    broadcast_end(zappy);
     zappy_destroy(zappy);
     return 0;
 }
