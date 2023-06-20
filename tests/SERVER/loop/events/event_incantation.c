@@ -102,6 +102,12 @@ Test(loop_event_pic_and_pie, basic_pic_and_pie)
     memset(res, 0, 512);
     snprintf(res, 511, "pic %d %d %d %d\n", c_e->cl.ai.trantorien->x, c_e->cl.ai.trantorien->y, c_e->cl.ai.trantorien->level, c_e->cl.ai.trantorien->id);
     cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
+    while (circular_buffer_is_read_ready(graph->write_to_outside) == false) {
+        cr_assert_eq(loop(zappy, true), false);
+    }
+    memset(res, 0, 512);
+    snprintf(res, 511, "pie %d %d Current level:%d\n", c_e->cl.ai.trantorien->x, c_e->cl.ai.trantorien->y, c_e->cl.ai.trantorien->level);
+    cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
 }
 
 Test(loop_event_pic_and_pie, complex_pic_and_pie)
@@ -136,5 +142,11 @@ Test(loop_event_pic_and_pie, complex_pic_and_pie)
     }
     memset(res, 0, 512);
     snprintf(res, 511, "pic %d %d %d %d %d\n", c_e->cl.ai.trantorien->x, c_e->cl.ai.trantorien->y, c_e->cl.ai.trantorien->level, c_r->cl.ai.trantorien->id, c_e->cl.ai.trantorien->id);
+    cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
+    while (circular_buffer_is_read_ready(graph->write_to_outside) == false) {
+        cr_assert_eq(loop(zappy, true), false);
+    }
+    memset(res, 0, 512);
+    snprintf(res, 511, "pie %d %d Current level:%d\n", c_e->cl.ai.trantorien->x, c_e->cl.ai.trantorien->y, c_e->cl.ai.trantorien->level);
     cr_assert_str_eq(circular_buffer_read(graph->write_to_outside), res);
 }
