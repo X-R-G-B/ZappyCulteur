@@ -168,7 +168,6 @@ SRC_TRNT_CMD	:=															\
 							command_take_object.c							\
 							command_look_around.c							\
 							command_look_around_sides.c						\
-							command_look_around_utils.c						\
 							command_inventory.c								\
 							command_move.c									\
 							command_turn.c									\
