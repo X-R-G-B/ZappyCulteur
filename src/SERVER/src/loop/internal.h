@@ -11,10 +11,6 @@
     #include "ntw.h"
     #include "zappy.h"
 
-    #define _CL_TYPE(is_g) (is_g) ? "graphic" : "ai"
-    #define _INF_MESS "INFO: client is: %s: %d\n"
-    #define DEBUG_CLIENT_LOGIN(is_g, cc) _INF_MESS, _CL_TYPE(is_g), cc->id
-
 void send_size(args_t *args, ntw_client_t *cl);
 void send_id(client_t *cc, ntw_client_t *cl);
 
