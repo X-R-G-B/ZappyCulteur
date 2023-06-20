@@ -64,7 +64,7 @@ static bool check_team_end(zappy_t *zappy)
         }
         if (cl->cl.ai.trantorien->alive == true
             && is_an_existing_team(teams,
-           cl->cl.ai.trantorien->team_name) == false) {
+            cl->cl.ai.trantorien->team_name) == false) {
             list_append(teams, cl, NULL, NULL);
         }
     }
@@ -72,9 +72,8 @@ static bool check_team_end(zappy_t *zappy)
         zappy->trantoriens_available) == true) {
         cmd_seg(zappy->ntw, L_DATA(teams->start));
         return true;
-    } else {
-        return false;
     }
+    return false;
 }
 
 static bool check_win(zappy_t *zappy)
