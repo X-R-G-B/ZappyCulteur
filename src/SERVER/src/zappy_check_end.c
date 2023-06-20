@@ -33,11 +33,10 @@ static bool check_egg_end(client_t *client, list_t *tr_available)
     trantorien_t *tr = NULL;
     char *last_team = NULL;
 
-    if (client == NULL) {
-        if (tr_available->len == 0)
-            return true;
-        else
-            return false;
+    if (client == NULL && tr_available->len == 0) {
+        return true;
+    } else if (client == NULL){
+        return false;
     }
     last_team = client->cl.ai.trantorien->team_name;
     for (L_EACH(data, tr_available)) {
