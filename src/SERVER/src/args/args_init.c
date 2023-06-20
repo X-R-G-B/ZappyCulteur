@@ -6,6 +6,7 @@
 */
 
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "args.h"
@@ -70,6 +71,18 @@ static bool parse_args(int ac, const char *const av[], args_t *args)
     return args->is_ok;
 }
 
+static void set_default_args(args_t *args)
+{
+    args->port = 4242;
+    args->width = 10;
+    args->height = 10;
+    args->freq = 100;
+    args->clients_per_teams = 1;
+    args->teams_name = list_create();
+    list_append(args->teams_name, "Team1", NULL, NULL);
+    printf("INFO: No args, setting default args\n");
+}
+
 args_t *args_init(int ac, const char *const av[])
 {
     args_t *args = NULL;
@@ -81,6 +94,10 @@ args_t *args_init(int ac, const char *const av[])
     memset(args, 0, sizeof(args_t));
     args->port = -1;
     args->is_ok = true;
-    parse_args(ac, av, args);
+    if (ac == 1) {
+        set_default_args(args);
+    } else {
+        parse_args(ac, av, args);
+    }
     return args;
 }
