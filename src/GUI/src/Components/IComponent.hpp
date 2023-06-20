@@ -20,6 +20,7 @@ namespace GUI {
             SOUND,
             HUDSPRITE,
             HUDTEXT,
+            INPUTFIELD
         };
 
         class IComponent {

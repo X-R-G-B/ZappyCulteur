@@ -11,6 +11,12 @@
 #include "Vector2F.hpp"
 
 namespace GUI {
+
+    enum class EventsState {
+        FOCUS_UI,
+        FOCUS_GAME
+    };
+
     enum class Event {
         // MOUSE EVENTS
         MOUSE_LEFT_PRESSED,
@@ -132,6 +138,40 @@ namespace GUI {
              */
             const Vector2F &getWorldMousePos();
 
+            /**
+             * @brief Get a string from an event (keyboards only)
+             * 
+             * @param event
+             * @return std::string 
+             */
+            std::string getEventKey(GUI::Event);
+
+            /**
+             * @brief Return if the events is focused on the UI
+             * 
+             * @return bool
+             */
+            bool isFocusedOnUI();
+
+            /**
+             * @brief Return if the events is focused on the game
+             * 
+             * @return bool
+             */
+            bool isFocusedOnGame();
+
+            /**
+             * @brief Set the focus on the UI
+             * 
+             */
+            void GUI::EventsManager::setFocusOnUI();
+
+             /**
+             * @brief Set the focus on the game
+             * 
+             */
+            void GUI::EventsManager::setFocusOnGame();
+
         private:
             EventsManager();
             ~EventsManager() = default;
@@ -139,6 +179,7 @@ namespace GUI {
             EventsManager &operator=(const EventsManager &) = delete;
             std::vector<Event> _eventsList;
             Vector2F _mousePos;
+            EventsState _state;
             Vector2F _worldMousePos;
     };
 } // namespace GUI
