@@ -104,6 +104,7 @@ class DecisionTree:
             parse response in self._inputTree which is List
         """
         res = self._clientManager.requestClient(Command.INVENTORY)
+        rescpy = ""
         if res == "ko\n":
             return
         try:
@@ -112,7 +113,7 @@ class DecisionTree:
             for elem in res.split(","):
                 parsedElem = elem.strip().split(" ")
                 self._inputTree["m" + parsedElem[0]][0] = int(parsedElem[1])
-        except (IndexError, ValueError) as error:
+        except (IndexError, ValueError):
             print(f"ID : {self._clientManager._id} crashed in inventory when received : ", rescpy)
             self._clientManager.stopClient()
 
@@ -137,6 +138,7 @@ class DecisionTree:
         self._lastLook.clear()
 
         res = self._clientManager.requestClient(Command.LOOK)
+        rescpy = ""
         if res == "ko\n":
             return
         try:
@@ -297,9 +299,8 @@ class DecisionTree:
                     Command.SET_OBJECT, costTuple[0].value
                 )
         res = self._clientManager.requestClient(Command.INCANTATION)
-        if (res == "ko\n"):
+        if res == "ko\n":
             self._clientManager.requestClient(Command.FORWARD)
-            return
         out = self._clientManager.waitOutput()
         if out != Message.KO.value + "\n":
             self.incrementLevel()
