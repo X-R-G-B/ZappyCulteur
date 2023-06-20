@@ -28,7 +28,8 @@ static const char level_values[MAX_LLOG_LEVEL][MAX_CHAR_VALUES] = {
     "\033[30mTRACE\033[0m"
 };
 
-static int write_format(int fd, const char *fmt, va_list ap, enum llog_level level)
+static int write_format(int fd, const char *fmt, va_list ap,
+    enum llog_level level)
 {
     int ret;
     char *buf = NULL;

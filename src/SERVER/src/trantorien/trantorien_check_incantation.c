@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** zappy server
+** File description:
+** check incantation
+*/
+
 #include <stdbool.h>
 #include <stdio.h>
 #include "llog.h"
