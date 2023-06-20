@@ -62,7 +62,7 @@ static void faill_all_update(ntw_t *ntw, int lvl, trantorien_t *tr)
             continue;
         }
         cl->cl.ai.trantorien->incantation = NULL;
-        circular_buffer_write(cc->write_to_outside, "ko");
+        circular_buffer_write(cc->write_to_outside, KO_RESPONSE);
     }
 }
 

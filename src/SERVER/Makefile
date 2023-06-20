@@ -286,6 +286,7 @@ re:														all
 
 tests_run:		CFLAGS += $(TFLAGS)
 tests_run: 		CFLAGS := $(filter-out -O2, $(CFLAGS))
+tests_run:		CFLAGS += -g3
 tests_run:		LDFLAGS += $(CR_TEST_LDFLAGS)
 tests_run:		SRC := $(filter-out src/main.c, $(SRC))
 tests_run:		fclean $(T_OBJ)
