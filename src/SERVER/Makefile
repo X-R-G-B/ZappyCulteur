@@ -104,6 +104,7 @@ SRC_LOOP_CONN	:=			$(addprefix state_connected/, $(SRC_LOOP_CONN))
 
 SRC_LOOP		:=															\
 							$(SRC_LOOP_CONN)								\
+							kill_dead_ai.c									\
 							loop.c											\
 							update_client_not_connected.c					\
 							update_client_waiting_slot_opened.c				\

@@ -33,6 +33,13 @@ void send_id(client_t *cc, ntw_client_t *cl);
 **/
 void update_food(trantorien_t *trantorien, ntw_client_t *cl, bool new_freq);
 
+/**
+** @brief Kill all non alive AI and egg
+**
+** @param zappy the zappy
+**/
+void kill_dead_ai(zappy_t *zappy);
+
 // Update in states
 
 bool update_client_not_connected(zappy_t *zappy, ntw_client_t *cl);
