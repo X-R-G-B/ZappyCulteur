@@ -107,8 +107,8 @@ bool loop(zappy_t *zappy, bool new_freq)
                 L_DATAT(client_t *, cl)->cl.ai.trantorien, cl, false);
         }
     }
-    update_trantoriens_available_food(zappy->ntw,
-        zappy->trantoriens_available, new_freq);
-    check_end(zappy, status);
+    update_trantoriens_available_food(zappy->ntw,zappy->trantoriens_available,
+        new_freq);
+    kill_dead_ai(zappy);
     return !status;
 }
