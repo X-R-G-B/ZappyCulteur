@@ -435,7 +435,8 @@ namespace GUI {
             }
             auto endScreenEntity = std::make_shared<Entities::EndScreen>(
                 endScreenKey,
-                Vector2F(0, 0)
+                Vector2F(0, 0),
+                team
             );
             try {
                 endScreenEntity->initEndScreenSprite();

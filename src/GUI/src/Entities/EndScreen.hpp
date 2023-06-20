@@ -16,10 +16,10 @@ namespace GUI {
             public:
                 EndScreen(const std::string &id,
                             const Vector2F &position,
+                            const std::string &teamName = "NONE",
                             unsigned int width = 1920,
                             unsigned int height = 1080,
-                            EntityOrientation orientation = EntityOrientation::UP,
-                            const std::string &teamName = "NONE");
+                            EntityOrientation orientation = EntityOrientation::UP);
                 ~EndScreen();
 
                 void update(double deltaTime) final;

@@ -9,19 +9,21 @@
 #include "Components/Text.hpp"
 #include "EndScreen.hpp"
 
+static const std::string filePath = "src/GUI/assets/menu/VeryBeautifullSteve.png";
+static const std::size_t endScreenLayer = 500;
+static const std::string endScreenId = "EndScreen";
+static const std::string textId = "TeamName";
+static const unsigned int winTeamTxtSize = 250;
+
 namespace GUI {
     namespace Entities {
-        static const std::string filePath = "src/GUI/assets/menu/VeryBeautifullSteve.png";
-        static const std::size_t endScreenLayer = 500;
-        static const std::string endScreenId = "EndScreen";
-        static const std::string textId = "TeamName";
 
         EndScreen::EndScreen(const std::string &id,
                                 const Vector2F &position,
+                                const std::string &teamName,
                                 unsigned int width,
                                 unsigned int height,
-                                EntityOrientation orientation,
-                                const std::string &teamName)
+                                EntityOrientation orientation)
             : AEntity(
                 id,
                 position,
@@ -60,7 +62,7 @@ namespace GUI {
                     Components::CompType::HUDSPRITE
                 );
                 auto text = std::make_shared<GUI::Components::Text>(
-                    textId, _teamName, Vector2F(50, 50), color, 30, Components::CompType::HUDTEXT
+                    textId, _teamName, Vector2F(50, 300), color, winTeamTxtSize, Components::CompType::HUDTEXT
                 );
                 _components.clear();
                 _components.push_back(sprite);
