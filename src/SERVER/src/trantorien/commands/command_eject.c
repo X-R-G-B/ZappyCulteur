@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include "llog.h"
 #include "ntw.h"
 #include "zappy.h"
 #include "client.h"
@@ -28,6 +29,8 @@ static void remove_eggs_on_tile(trantorien_t *tr_src,
             list_append(to_remove, trantorien, NULL, NULL);
         }
     }
+    llog_write_f(LOG_FILE_AIC, LLOG_INFO, "removed %d eggs on tile x:%d y:%d",
+        to_remove->len, tr_src->x, tr_src->y);
     for (L_EACH(trantorien, to_remove)) {
         list_remove_ptrnode(trantoriens_available, trantorien->data);
     }

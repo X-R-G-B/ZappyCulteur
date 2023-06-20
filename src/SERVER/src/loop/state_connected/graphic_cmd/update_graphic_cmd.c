@@ -8,8 +8,11 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "circular_buffer.h"
 #include "internal.h"
+#include "llog.h"
+#include "ntw.h"
 #include "tlcstrings.h"
 #include "command_reponses.h"
 #include "broadcast_events.h"
@@ -42,6 +45,19 @@ static bool
     NULL,
 };
 
+static void debug_error(ntw_client_t *cl, bool is_entered)
+{
+    if (is_entered == false) {
+        cmd_suc(cl);
+        llog_write_fd(STDERR_FILENO, LLOG_WARNING, "unknown command");
+        llog_write_f(LOG_FILE_GUIC, LLOG_WARNING, "unknown command");
+    } else {
+        cmd_sbp(cl);
+        llog_write_fd(STDERR_FILENO, LLOG_WARNING, "bad command syntax");
+        llog_write_f(LOG_FILE_GUIC, LLOG_WARNING, "bad command syntax");
+    }
+}
+
 static bool update_cmd(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
 {
     bool is_entered = false;
@@ -54,15 +70,11 @@ static bool update_cmd(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
             break;
         }
     }
-    if (status == false) {
-        if (is_entered == false) {
-            cmd_suc(cl);
-        } else {
-            cmd_sbp(cl);
-        }
-        status = true;
+    if (status == true) {
+        return status;
     }
-    return status;
+    debug_error(cl, is_entered);
+    return true;
 }
 
 bool update_graphic_cmd(zappy_t *zappy, ntw_client_t *cl)

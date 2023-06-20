@@ -133,8 +133,7 @@ bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
 void send_tile_ressources(ntw_client_t *cl, map_tile_t *tile,
     int message_state);
 
-void broadcast_incantation_start(trantorien_t *ref_trantorien, zappy_t *zappy,
-    ntw_client_t *cl);
+bool broadcast_incantation_start(trantorien_t *ref_trantorien, zappy_t *zappy);
 
 /**
 ** @brief assign a trantorien to a client
