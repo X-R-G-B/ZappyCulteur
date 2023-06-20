@@ -8,6 +8,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include "Vector2F.hpp"
 
 namespace GUI {
@@ -18,10 +19,8 @@ namespace GUI {
     };
 
     enum class Event {
-        // MOUSE EVENTS
-        MOUSE_LEFT_PRESSED,
-        MOUSE_RIGHT_PRESSED,
         // KEYBOARD NUMBERS
+        KEYBOARD_0_PRESSED = 0,
         KEYBOARD_1_PRESSED,
         KEYBOARD_2_PRESSED,
         KEYBOARD_3_PRESSED,
@@ -31,9 +30,8 @@ namespace GUI {
         KEYBOARD_7_PRESSED,
         KEYBOARD_8_PRESSED,
         KEYBOARD_9_PRESSED,
-        KEYBOARD_0_PRESSED,
         // KEYBOARD LETTERS
-        KEYBOARD_A_PRESSED,
+        KEYBOARD_A_PRESSED = 10,
         KEYBOARD_B_PRESSED,
         KEYBOARD_C_PRESSED,
         KEYBOARD_D_PRESSED,
@@ -74,6 +72,9 @@ namespace GUI {
         KEYBOARD_CTRL_PRESSED,
         KEYBOARD_ALT_PRESSED,
         KEYBOARD_DOT_PRESSED,
+        // MOUSE EVENTS
+        MOUSE_LEFT_PRESSED,
+        MOUSE_RIGHT_PRESSED,
         // MOUSE WHEEL
         MOUSE_WHEEL_UP,
         MOUSE_WHEEL_DOWN,
@@ -164,13 +165,13 @@ namespace GUI {
              * @brief Set the focus on the UI
              * 
              */
-            void GUI::EventsManager::setFocusOnUI();
+            void setFocusOnUI();
 
              /**
              * @brief Set the focus on the game
              * 
              */
-            void GUI::EventsManager::setFocusOnGame();
+            void setFocusOnGame();
 
         private:
             EventsManager();

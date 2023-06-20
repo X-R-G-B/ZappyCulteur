@@ -27,18 +27,20 @@ namespace GUI {
                 Vector2F getPosition() const;
                 void setText(const std::string &text);
                 const sf::Text &getText() const;
+                const sf::Sprite &getSprite() const;
                 void update();
 
             private:
                 void checkForFocus();
                 void updateEvents();
-                static constexpr char *FONT_PATH = "src/GUI/assets/fonts/mainFont.ttf";
-                static constexpr std::size_t MAX_CHARACTERS = 20;
                 sf::Text _text;
                 sf::Font _font;
                 Vector2F _position;
-                Color _color;
                 std::string _placeholder;
+                sf::Texture _texture;
+                sf::Texture _textureFocused;
+                sf::Sprite _sprite;
+                sf::Sprite _spriteFocused;
                 bool _isFocused;
         };
     }

@@ -9,6 +9,14 @@
 #include "InputField.hpp"
 #include "EventsManager.hpp"
 
+static const std::string FONT_PATH = "src/GUI/assets/fonts/mainFont.ttf";
+static const std::string COMP_UI_PATH = "src/GUI/assets/components/inputField.png";
+static const std::string COMP_UI_PATH_FOCUSED = "src/GUI/assets/components/inputFieldFocused.png";
+static const GUI::Vector2F TEXT_OFFSET = {20, 25};
+static constexpr std::size_t MAX_CHARACTERS = 20;
+static const float SIZE_X = 451;
+static const float SIZE_Y = 86;
+
 static const std::vector<GUI::Event> validKeys = {
     GUI::Event::KEYBOARD_A_PRESSED,
     GUI::Event::KEYBOARD_B_PRESSED,
@@ -77,17 +85,18 @@ namespace GUI {
         {
             _font.loadFromFile(FONT_PATH);
             _text.setString(placeholder);
-            _text.setPosition(position.x, position.y);
+            _text.setPosition(position.x + TEXT_OFFSET.x, position.y + TEXT_OFFSET.y);
             _text.setFillColor(
-                sf::Color(
-                    color.getRed(),
-                    color.getGreen(),
-                    color.getBlue(),
-                    color.getAlpha()
-                )
+                sf::Color::White
             );
             _text.setFont(_font);
             _text.setCharacterSize(size);
+            _texture.loadFromFile(COMP_UI_PATH);
+            _sprite.setTexture(_texture);
+            _sprite.setPosition(position.x, position.y);
+            _textureFocused.loadFromFile(COMP_UI_PATH_FOCUSED);
+            _spriteFocused.setTexture(_textureFocused);
+            _spriteFocused.setPosition(position.x, position.y);
         }
 
         void InputField::setPosition(const Vector2F &position)
@@ -133,13 +142,18 @@ namespace GUI {
         {
             if (EventsManager::getInstance().isEventTriggered(Event::MOUSE_LEFT_PRESSED) == true &&
                 EventsManager::getInstance().getMousePos().x >= _position.x &&
-                EventsManager::getInstance().getMousePos().x <= _position.x + _text.getLocalBounds().width &&
+                EventsManager::getInstance().getMousePos().x <= _position.x + SIZE_X &&
                 EventsManager::getInstance().getMousePos().y >= _position.y &&
-                EventsManager::getInstance().getMousePos().y <= _position.y + _text.getLocalBounds().height) {
+                EventsManager::getInstance().getMousePos().y <= _position.y + SIZE_Y) {
                 if (_text.getString() == _placeholder) {
                     _text.setString("");
                     _isFocused = true;
                 }
+            } else if (EventsManager::getInstance().isEventTriggered(Event::MOUSE_LEFT_PRESSED) == true) {
+                if (_text.getString() == "") {
+                    _text.setString(_placeholder);
+                }
+                _isFocused = false;
             }
         }
 
@@ -156,6 +170,15 @@ namespace GUI {
         const sf::Text &InputField::getText() const
         {
             return _text;
+        }
+
+        const sf::Sprite &InputField::getSprite() const
+        {
+            if (_isFocused == true) {
+                return _spriteFocused;
+            } else {
+                return _sprite;
+            }
         }
     }
 }

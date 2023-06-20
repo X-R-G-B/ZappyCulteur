@@ -13,6 +13,7 @@
 #include "IEntity.hpp"
 #include "Music.hpp"
 #include "Sprite.hpp"
+#include "InputField.hpp"
 #include <unordered_map>
 
 static const std::unordered_map<sf::Keyboard::Key, GUI::Event>
@@ -172,6 +173,8 @@ namespace GUI {
         _entityManager->getComponentsByType(Components::CompType::HUDSPRITE);
         auto texts =
         _entityManager->getComponentsByType(Components::CompType::HUDTEXT);
+        auto inputFields =
+        _entityManager->getComponentsByType(Components::CompType::INPUTFIELD);
 
         for (const auto &sprite : *sprites) {
             auto spritePtr =
@@ -188,6 +191,15 @@ namespace GUI {
                 continue;
             }
             _window.draw(textPtr->getText());
+        }
+        for (const auto &inputField : *inputFields) {
+            auto inputFieldPtr =
+            std::static_pointer_cast<GUI::Components::InputField>(inputField);
+            if (inputFieldPtr == nullptr) {
+                continue;
+            }
+            _window.draw(inputFieldPtr->getSprite());
+            _window.draw(inputFieldPtr->getText());
         }
     }
 
