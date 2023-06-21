@@ -15,6 +15,7 @@ GUI::EventsManager::EventsManager() :
 }
 
 void GUI::EventsManager::addEvent(GUI::Event event)
+{
     _eventsList.push_back(event);
 }
 
