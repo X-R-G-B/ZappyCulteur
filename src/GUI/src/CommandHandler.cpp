@@ -22,6 +22,7 @@
 
 namespace GUI {
     namespace CommandHandler {
+
         static const std::unordered_map<std::string, COMMAND_TYPE>
         commandProtocol = {{"msz", COMMAND_TYPE::MAP_SIZE},
         {"bct", COMMAND_TYPE::MAP_CONTENT}, {"pnw", COMMAND_TYPE::NEW_PLAYER},
@@ -37,6 +38,7 @@ namespace GUI {
         {"pbc", COMMAND_TYPE::BROADCAST},
         {"seg", COMMAND_TYPE::GAME_END},
         {"smg", COMMAND_TYPE::SERVER_MESSAGE},
+        {"suc", COMMAND_TYPE::SERVER_UNKNOW_COMMAND},
         {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME},
         };
 
@@ -66,6 +68,7 @@ namespace GUI {
               {COMMAND_TYPE::GAME_END, &CommandHandler::endGame},
               {COMMAND_TYPE::BROADCAST, &CommandHandler::broadcastMessage},
               {COMMAND_TYPE::SERVER_MESSAGE, &CommandHandler::serverMessage},
+              {COMMAND_TYPE::SERVER_UNKNOW_COMMAND, &CommandHandler::serverUnknowCommand},
               {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}}),
               _sendToServerFunc(sendToServer), _connexionCmdRemaining(0)
         {
@@ -438,6 +441,12 @@ namespace GUI {
             : static_cast<unsigned int>(player->getPosition().y / TILE_SIZE),
             rt);
             return true;
+        }
+
+        bool CommandHandler::serverUnknowCommand([[maybe_unused]]const std::string &command)
+        {
+            std::cout << "Server did not recognize our command" << std::endl;
+            return (true);
         }
 
         bool CommandHandler::endGame(const std::string &command)
