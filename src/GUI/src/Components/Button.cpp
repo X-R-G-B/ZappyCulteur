@@ -38,7 +38,7 @@ namespace GUI {
             _text.setFillColor(sf::Color::White);
             _text.setPosition(_position.x + BTN_TEXT_OFFSET.x, _position.y + BTN_TEXT_OFFSET.y);
         }
-  
+
         void Button::initSprites()
         {
             _textures[ButtonState::NONE].loadFromFile(BTN_UI_PATH);
