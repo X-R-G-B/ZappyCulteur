@@ -115,6 +115,11 @@ namespace GUI {
             }
         }
 
+        std::string InputField::getTextString() const
+        {
+            return _text.getString();
+        }
+
         void InputField::updateEvents()
         {
             std::string temp = _text.getString();

@@ -11,6 +11,7 @@
 #include "AComponent.hpp"
 #include "Vector2F.hpp"
 #include "Color.hpp"
+#include <string>
 
 namespace GUI {
     namespace Components {
@@ -29,6 +30,7 @@ namespace GUI {
                 const sf::Text &getText() const;
                 const sf::Sprite &getSprite() const;
                 void update();
+                std::string getTextString() const;
 
             private:
                 void checkForFocus();

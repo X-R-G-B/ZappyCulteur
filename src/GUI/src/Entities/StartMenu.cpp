@@ -8,7 +8,6 @@
 #include "startMenu.hpp"
 #include "Components/Sprite.hpp"
 #include "EventsManager.hpp"
-#include "InputField.hpp"
 
 static const std::string ID = "startMenu";
 static const std::string MENU_BG_PATH = "src/GUI/assets/UI/menu.png";
@@ -43,7 +42,9 @@ namespace GUI {
         startMenu::startMenu()
             : AEntity(ID, MENU_POSITION, MENU_ROTATION, MENU_SCALE,
             EntityType::HUD, EntityOrientation::UP),
-            _isGameStarted(false)
+            _isGameStarted(false),
+            _ipInputField(nullptr),
+            _portInputField(nullptr)
         {
             _entityCompType.push_back(Components::CompType::TEXT);
             _entityCompType.push_back(Components::CompType::INPUTFIELD);
@@ -56,6 +57,9 @@ namespace GUI {
 
         void startMenu::update(double)
         {
+            if (EventsManager::getInstance().isEventTriggered(BTN_PLAY_EVENT)) {
+                _isGameStarted = true;
+            }
         }
 
         void startMenu::initMusic()
@@ -67,6 +71,7 @@ namespace GUI {
         void startMenu::initComponents()
         {
             initMusic();
+            initInputFields();
             _backgroundTexture.loadFromFile(MENU_BG_PATH);
             _components.push_back(std::make_shared<Components::Sprite>(
                 MENU_BG_ID,
@@ -76,18 +81,6 @@ namespace GUI {
                 BG_WITH,
                 BG_HEIGHT,
                 Components::CompType::HUDSPRITE
-            ));
-            _components.push_back(std::make_shared<Components::InputField>(
-                IP_INPUT_ID,
-                IP_INPUT_PLACEHOLDER,
-                IP_INPUT_POSITION,
-                INPUT_SIZE
-            ));
-            _components.push_back(std::make_shared<Components::InputField>(
-                PORT_INPUT_ID,
-                PORT_INPUT_PLACEHOLDER,
-                PORT_INPUT_POSITION,
-                INPUT_SIZE
             ));
             _components.push_back(std::make_shared<Components::Button>(
                 BTN_PLAY_ID,
@@ -103,14 +96,51 @@ namespace GUI {
             ));
         }
 
-        const std::string &startMenu::getIP() const
+        void startMenu::initInputFields()
         {
-            return "";
+            _ipInputField = std::make_shared<Components::InputField>(
+                IP_INPUT_ID,
+                IP_INPUT_PLACEHOLDER,
+                IP_INPUT_POSITION,
+                INPUT_SIZE
+            );
+            _portInputField = std::make_shared<Components::InputField>(
+                PORT_INPUT_ID,
+                PORT_INPUT_PLACEHOLDER,
+                PORT_INPUT_POSITION,
+                INPUT_SIZE
+            );
+            _components.push_back(_ipInputField);
+            _components.push_back(_portInputField);
         }
 
-        const std::string &startMenu::getPort() const
+        void startMenu::cleanInputFields(std::string &str)
         {
-            return "";
+            str.erase(std::remove_if(str.begin(), str.end(), [](char c) {
+                return !(std::isdigit(c) || c == '.' || std::isalpha(c));
+            }), str.end());
+        }
+
+        const std::string &startMenu::getIP()
+        {
+            if (_ipInputField != nullptr) {
+                _ip = _ipInputField->getTextString();
+                cleanInputFields(_ip);
+                return _ip;
+            } else {
+                return "";
+            }
+        }
+
+        const std::string &startMenu::getPort()
+        {
+            if (_portInputField != nullptr) {
+                _port = _portInputField->getTextString();
+                cleanInputFields(_port);
+                return _port;
+            } else {
+                return "";
+            }
         }
 
         bool startMenu::isGameStarted() const
