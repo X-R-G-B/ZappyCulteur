@@ -162,9 +162,11 @@ namespace GUI {
                 bool serverMessage(const std::string &command);
           
                 bool serverUnknowCommand(const std::string &command);
-                
+      
                 bool timeUnitRequest(const std::string &command);
-
+          
+                bool expulsion(const std::string &command);
+          
                 bool timeUnitModification(const std::string &command);
 
                 bool unknowCommand(const std::string &command);
