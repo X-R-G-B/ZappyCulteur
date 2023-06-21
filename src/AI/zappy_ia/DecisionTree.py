@@ -1,4 +1,5 @@
 import joblib
+from datetime import datetime
 import sys
 import pandas as pd
 from typing import Dict, List, Tuple
@@ -93,7 +94,9 @@ class DecisionTree:
     def predict(self):
         self.inventory()
         self.lookForTree()
+        curTime = datetime.now()
         predictions = self._levelTree.predict(pd.DataFrame(self._inputTree))
+        self._log.debug("predict time: : " + str(datetime.now() - curTime))
         for prediction in predictions:
             self._log.info("Pred:" + prediction)
             self._outputTree[prediction]()
@@ -331,7 +334,6 @@ class DecisionTree:
             self.findFood()
         else:
             self.takeElement(Element.FOOD, foodPos)
-        self.inventory()
 
     def checkReceivedMessage(self, res: Tuple[int, str, List[int], int]):
         self._log.debug("message: " + res[1])
@@ -362,8 +364,8 @@ class DecisionTree:
 
     def waitParticipants(self):
         readyParticipants = 0
-        self.inventory()
         res: List[Tuple[int, str, List[int], int]] = []
+        self.inventory()
         while (
             readyParticipants < levelParticipantsNb[self._level]
             or self._inputTree["mfood"][0] < 13
@@ -389,6 +391,10 @@ class DecisionTree:
         This function is call by decision tree when the ia have the stones for elevation,
             the ia call others to try elevation
         """
+        res = self._clientManager.checkBroadcast()
+        for mess in res:
+            if mess[1] == "levelup" + str(self._level):
+                return
         self._participantsId = []
         res: List[Tuple[int, str, List[int], int]] = []
         while len(self._participantsId) < levelParticipantsNb[self._level]:

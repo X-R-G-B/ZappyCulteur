@@ -5,7 +5,7 @@ import select
 import threading
 import time
 from typing import List
-from zappy_ia.Enums import Message
+from zappy_ia.Enums import Message, ServerRes
 
 
 class Client:
@@ -13,6 +13,8 @@ class Client:
         self._client_socket: socket.socket = socket.socket(
             socket.AF_INET, socket.SOCK_STREAM
         )
+        self._dead: bool = False
+
         self._server_ip: str = server_ip
         self._isConnected: bool = False
         self._port: int = port
@@ -34,6 +36,9 @@ class Client:
         self._thread: threading.Thread = threading.Thread(target=self.connect)
         self._thread.start()
         time.sleep(0.1)
+
+    def isDead(self) -> bool:
+        return self._dead
 
     def connect(self):
         self._client_socket.connect((self._server_ip, self._port))
@@ -64,6 +69,8 @@ class Client:
                     if mess != "":
                         self._broadcastReceived.insert(0, mess)
             self._broadcastLock.release()
+        elif message.find(ServerRes.DEAD.value):
+            self._dead = True
         elif message:
             self._receivedLock.acquire()
             if len(self._messReceived) == 0 or self._messReceived[0].count("\n") > 0:

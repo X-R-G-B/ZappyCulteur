@@ -4,7 +4,7 @@ from zappy_ia.DecisionTree import DecisionTree
 from zappy_ia.ElevationParticipant import ElevationParticipant
 from zappy_ia.Enums import Command
 import random
-import time
+from datetime import datetime
 import os
 
 
@@ -38,7 +38,6 @@ class IA:
         if self.pid == 0:
             self._clientManager.stopClient()
             self.build(0)
-        time.sleep(0.5)
 
     def createEgg(self):
         self._clientManager.requestClient(Command.FORK.value)
@@ -65,6 +64,10 @@ class IA:
         continueRun = True
         try:
             while continueRun:
+                curTime = datetime.now()
+                if self._clientManager.isDead() == True:
+                    self._log.info("IS DEAD")
+                    return
                 self.checkNeededChilds()
                 if (
                     self._elevationParticipant.checkElevationParticipant(
@@ -74,6 +77,8 @@ class IA:
                 ):
                     self._decisionTree.incrementLevel()
                 self._decisionTree.predict()
+                self._log.debug("main loop time: " + str(datetime.now() - curTime))
         except KeyboardInterrupt:
             self._clientManager.stopClient()
             return
+        self._clientManager.stopClient()

@@ -119,6 +119,11 @@ class ClientManager:
         self._log.info("Received: " + res)
         return res
 
+    def isDead(self) -> bool:
+        return self._client.isDead()
+
+    def input(self, command: Union[Command, str], arg: Union[Element, str] = ""):
+
     def requestClient(
         self, command: Union[Command, str], arg: Union[Element, str] = ""
     ) -> str:
@@ -142,8 +147,6 @@ class ClientManager:
             argToSend = arg.value
         else:
             argToSend = arg
-        if self.output() == ServerRes.DEAD:
-            self._log.info("Received: DEAD")
         self._log.info("[Send: " + toSend.split("\n")[0] + " " + argToSend + "]\n")
         self._client.input(toSend, argToSend)
         res = self.waitOutput()
