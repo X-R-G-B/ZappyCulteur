@@ -11,7 +11,10 @@
 #include "ntw.h"
 #include "zappy.h"
 #include "command_reponses.h"
+#include "llog.h"
 #include "broadcast_events.h"
+
+static const char *format_err = "Take object %d (available: %d)\n";
 
 int command_take_object(trantorien_t *trantorien, zappy_t *zappy,
     ntw_client_t *cl, action_t *action)
@@ -29,6 +32,9 @@ int command_take_object(trantorien_t *trantorien, zappy_t *zappy,
         circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
         cmd_pgt(zappy->ntw, cl, action);
     } else {
+        llog_write_f(LOG_FILE_AIC, LLOG_WARNING, format_err,
+            action->param.object,
+            zappy->map->tiles[i].ressources[action->param.object]);
         circular_buffer_write(cl->write_to_outside, KO_RESPONSE);
     }
     return EXIT_SUCCESS;

@@ -21,10 +21,10 @@ bool cmd_plv(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
     trantorien_t *trantorien = NULL;
 
     if (cmd_split[1] == NULL ||
-    x_strcontainc("0123456789", cmd_split[1][1]) == 0) {
+            x_strcontainc("0123456789", cmd_split[1][0]) == 0) {
         return false;
     }
-    id = atoi(cmd_split[1] + 1);
+    id = atoi(cmd_split[1]);
     trantorien = zappy_trantorien_find_by_id(zappy, id);
     if (trantorien == NULL) {
         return false;

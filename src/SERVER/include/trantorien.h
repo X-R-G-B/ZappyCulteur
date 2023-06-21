@@ -92,26 +92,6 @@ void trantorien_reduce_freq(trantorien_t *trantorien, zappy_t *zappy,
 void action_destroy(action_t *action);
 
 /**
-** @brief Get the min case for the look around wiht substration
-**
-** @param x
-** @param lvl
-** @param size
-** @return int
-**/
-int get_min_case_sub(int x, int lvl, int size);
-
-/**
-** @brief Get the min case for the look around wiht addition
-**
-** @param x
-** @param lvl
-** @param size
-** @return int
-**/
-int get_min_case_add(int x, int lvl, int size);
-
-/**
 ** @brief check if the trantorien can do an incantation
 **
 ** @param trantorien
@@ -133,8 +113,7 @@ bool check_incantation_availability(trantorien_t *trantorien, map_t *map,
 void send_tile_ressources(ntw_client_t *cl, map_tile_t *tile,
     int message_state);
 
-void broadcast_incantation_start(trantorien_t *ref_trantorien, zappy_t *zappy,
-    ntw_client_t *cl);
+bool broadcast_incantation_start(trantorien_t *ref_trantorien, zappy_t *zappy);
 
 /**
 ** @brief assign a trantorien to a client

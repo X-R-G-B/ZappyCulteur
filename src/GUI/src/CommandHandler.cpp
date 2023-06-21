@@ -15,22 +15,35 @@
 #include "Incantation.hpp"
 #include "Ressources.hpp"
 #include "Trantorian.hpp"
+#include "Incantation.hpp"
+#include "EndScreen.hpp"
+#include "IEntity.hpp"
+#include "Egg.hpp"
 
 namespace GUI {
     namespace CommandHandler {
+
         static const std::unordered_map<std::string, COMMAND_TYPE>
         commandProtocol = {{"msz", COMMAND_TYPE::MAP_SIZE},
-        {"bct", COMMAND_TYPE::MAP_CONTENT}, {"pnw", COMMAND_TYPE::NEW_PLAYER},
-        {"pnw", COMMAND_TYPE::NEW_PLAYER},
-        {"ppo", COMMAND_TYPE::PLAYER_POSITION},
-        {"pie", COMMAND_TYPE::INCANTATION_END},
-        {"pic", COMMAND_TYPE::INCANTATION_START},
-        {"enw", COMMAND_TYPE::EGG_LAID}, {"edi", COMMAND_TYPE::EGG_DEATH},
-        {"ebo", COMMAND_TYPE::EGG_PLAYER_CONNECTED},
-        {"pdi", COMMAND_TYPE::PLAYER_DEATH},
-        {"pgt", COMMAND_TYPE::RESSOURCE_COLLECTING},
-        {"pdr", COMMAND_TYPE::RESSOURCE_DROPPING},
-        {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME}};
+            {"bct", COMMAND_TYPE::MAP_CONTENT}, {"pnw", COMMAND_TYPE::NEW_PLAYER},
+            {"pnw", COMMAND_TYPE::NEW_PLAYER},
+            {"ppo", COMMAND_TYPE::PLAYER_POSITION},
+            {"pie", COMMAND_TYPE::INCANTATION_END},
+            {"pic", COMMAND_TYPE::INCANTATION_START},
+            {"enw", COMMAND_TYPE::EGG_LAID}, {"edi", COMMAND_TYPE::EGG_DEATH},
+            {"ebo", COMMAND_TYPE::EGG_PLAYER_CONNECTED},
+            {"pdi", COMMAND_TYPE::PLAYER_DEATH},
+            {"pgt", COMMAND_TYPE::RESSOURCE_COLLECTING},
+            {"pdr", COMMAND_TYPE::RESSOURCE_DROPPING},
+            {"pbc", COMMAND_TYPE::BROADCAST},
+            {"seg", COMMAND_TYPE::GAME_END},
+            {"smg", COMMAND_TYPE::SERVER_MESSAGE},
+            {"suc", COMMAND_TYPE::SERVER_UNKNOW_COMMAND},
+            {"pex", COMMAND_TYPE::EXPULSION},
+            {"sgt", COMMAND_TYPE::TIME_UNIT_REQUEST},
+            {"sst", COMMAND_TYPE::TIME_UNIT_MODIFICATION},
+            {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME},
+        };
 
         CommandHandler::CommandHandler(
         std::shared_ptr<Entities::EntitiesManager> entityManager,
@@ -55,6 +68,13 @@ namespace GUI {
               &CommandHandler::setRessourceDropping},
               {COMMAND_TYPE::COMMAND_WELCOME,
               &CommandHandler::receiveFirstConnexion},
+              {COMMAND_TYPE::GAME_END, &CommandHandler::endGame},
+              {COMMAND_TYPE::BROADCAST, &CommandHandler::broadcastMessage},
+              {COMMAND_TYPE::SERVER_MESSAGE, &CommandHandler::serverMessage},
+              {COMMAND_TYPE::TIME_UNIT_MODIFICATION, &CommandHandler::timeUnitModification},
+              {COMMAND_TYPE::SERVER_UNKNOW_COMMAND, &CommandHandler::serverUnknowCommand},
+              {COMMAND_TYPE::TIME_UNIT_REQUEST, &CommandHandler::timeUnitRequest},
+              {COMMAND_TYPE::EXPULSION, &CommandHandler::expulsion},
               {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}}),
               _sendToServerFunc(sendToServer), _connexionCmdRemaining(0), _isReadyToReceive(false)
         {
@@ -63,6 +83,8 @@ namespace GUI {
         static const std::string eggKey = "Egg_";
         static const std::string playerKey = "Player_";
         static const std::string incantationKey = "Incantation_";
+        static const std::string invocationStateKo = "ko";
+        static const std::string endScreenKey = "EndScreen";
 
         void CommandHandler::update(const std::vector<std::string> &commands)
         {
@@ -278,19 +300,30 @@ namespace GUI {
             std::string cmd;
             float x = 0;
             float y = 0;
-            std::size_t result = 0;
+            std::string result;
+            std::string tmp;
             std::string incantationId;
 
-            if (!(ss >> cmd >> x >> y >> result)) {
+            if (!(ss >> cmd >> x >> y)) {
                 return (false);
             }
-            incantationId =
-            incantationKey + std::to_string(x) + std::to_string(y);
+            std::cout << ss.str() << std::endl;
+            while (ss >> tmp) {
+                result.append(tmp);
+
+            }
+            incantationId = incantationKey + std::to_string(x) + std::to_string(y);
             try {
                 auto entity = _entityManager->getEntityById(incantationId);
                 auto incantation =
                 std::static_pointer_cast<Entities::Incantation>(entity);
-                incantation->endIncantation(result);
+                if (result.find(invocationStateKo) != std::string::npos) {
+                    incantation->endIncantation(0);
+                } else {
+                    std::string nbr = result.substr(result.find(":"));
+                    std::size_t level = static_cast<std::size_t>(std::stoi(nbr.substr(1)));
+                    incantation->endIncantation(level);
+                }
                 _entityManager->killEntityById(incantationId);
             } catch (const Entities::EntitiesManagerException &e) {
                 std::cerr << e.what() << std::endl;
@@ -416,11 +449,129 @@ namespace GUI {
             return true;
         }
 
+        bool CommandHandler::serverUnknowCommand([[maybe_unused]]const std::string &command)
+        {
+            std::cout << "Server did not recognize our command" << std::endl;
+            return (true);
+        }
+
+        bool CommandHandler::endGame(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string team;
+
+            if (!(ss >> cmd >> team)) {
+                return (false);
+            }
+            auto endScreenEntity = std::make_shared<Entities::EndScreen>(
+                endScreenKey,
+                Vector2F(0, 0),
+                team
+            );
+            try {
+                endScreenEntity->initEndScreenSprite();
+                _entityManager->addEntity(endScreenEntity);
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return false;
+            }
+            return (true);
+        }
+
         bool CommandHandler::receiveFirstConnexion(const std::string &)
         {
             _sendToServerFunc("GRAPHIC\n");
             _connexionCmdRemaining = 2;
             return true;
+        }
+
+        bool CommandHandler::broadcastMessage(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string tmp;
+            std::string message;
+
+            if (!(ss >> cmd)) {
+                return (false);
+            }
+            while (ss >> tmp) {
+                message.append(tmp);
+            }
+            try {
+                // Call the textarea entity to add a new message inside
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return false;
+            }
+            return (true);
+        }
+        
+        bool CommandHandler::timeUnitModification(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::size_t time = 0;
+
+            if (!(ss >> cmd >> time)) {
+                return (false);
+            }
+            std::cout << "Time server modification : " << time << std::endl;
+            return (true);
+        }
+
+
+        bool CommandHandler::timeUnitRequest(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::size_t time;
+
+            if (!(ss >> cmd >> time)) {
+                return (false);
+            }
+            // Change the time unit get
+            return (true);
+        }
+
+        bool CommandHandler::serverMessage(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string tmp;
+            std::string message;
+
+            if (!(ss >> cmd)) {
+                return (false);
+            }
+            while (ss >> tmp) {
+                message.append(tmp);
+            }
+            std::cout << "Message from server : " << message << std::endl;
+            return (true);
+        }
+
+        bool CommandHandler::expulsion(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string id;
+            std::string trantorianId;
+
+            if (!(ss >> cmd >> id)) {
+                return (false);
+            }
+            trantorianId += playerKey + id;
+            try {
+                auto player = _entityManager->getEntityById(trantorianId);
+                // implement expulsion animation
+                std::cout << "Trantorian expulsion id : " << id << std::endl;
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return false;
+            }
+            return (true);
         }
 
         bool CommandHandler::handleIdandMapSize(const std::string &command)

@@ -7,12 +7,18 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <unistd.h>
 #include "circular_buffer.h"
+#include "llog.h"
 #include "ntw.h"
 #include "client.h"
 #include "tlcllists.h"
 #include "trantorien.h"
 #include "zappy.h"
+
+static const char *format_egg = "%d dead eggs removed";
+
+static const char *format_ai = "%d dead client AI removed";
 
 static int kill_dead_egg(zappy_t *zappy)
 {
@@ -67,9 +73,9 @@ void kill_dead_ai(zappy_t *zappy)
     nb_rm_egg = kill_dead_egg(zappy);
     nb_rm_trnt = kill_dead_trnt(zappy);
     if (nb_rm_egg != 0) {
-        fprintf(stderr, "INFO: %d dead eggs removed\n", nb_rm_egg);
+        llog_write_fd(STDERR_FILENO, LLOG_INFO, format_egg, nb_rm_egg);
     }
     if (nb_rm_trnt != 0) {
-        fprintf(stderr, "INFO: %d dead client AI removed\n", nb_rm_trnt);
+        llog_write_fd(STDERR_FILENO, LLOG_INFO, format_ai, nb_rm_trnt);
     }
 }

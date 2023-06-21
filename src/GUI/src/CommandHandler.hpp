@@ -42,6 +42,7 @@ namespace GUI {
             GAME_END,
             SERVER_MESSAGE,
             UNKNOW_COMMAND,
+            SERVER_UNKNOW_COMMAND,
             COMMAND_PARAMETER,
             COMMAND_WELCOME
         };
@@ -159,7 +160,21 @@ namespace GUI {
 
                 bool startIncantation(const std::string &command);
 
+                bool endGame(const std::string &command);
+
                 bool endIncantation(const std::string &command);
+
+                bool broadcastMessage(const std::string &command);
+
+                bool serverMessage(const std::string &command);
+          
+                bool serverUnknowCommand(const std::string &command);
+      
+                bool timeUnitRequest(const std::string &command);
+          
+                bool expulsion(const std::string &command);
+          
+                bool timeUnitModification(const std::string &command);
 
                 bool unknowCommand(const std::string &command);
 

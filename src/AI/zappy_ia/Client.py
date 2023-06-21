@@ -5,108 +5,158 @@ import select
 import threading
 import time
 from typing import List
+from zappy_ia.Enums import Message
 
 
 class Client:
     def __init__(self, port: int, server_ip: str = "localhost"):
-        self.client_socket: socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_ip: int = server_ip
-        self.isConnected: bool = False
-        self.port: int = port
+        self._client_socket: socket.socket = socket.socket(
+            socket.AF_INET, socket.SOCK_STREAM
+        )
+        self._server_ip: str = server_ip
+        self._isConnected: bool = False
+        self._port: int = port
 
-        self.inTreatment: int = 0
+        self._inTreatment: int = 0
 
-        self.stopLock: threading.Lock = threading.Lock()
-        self.stop: bool = False
+        self._stopLock: threading.Lock = threading.Lock()
+        self._stop: bool = False
 
-        self.receivedLock: threading.Lock = threading.Lock()
-        self.messReceived: List[str] = []
+        self._receivedLock: threading.Lock = threading.Lock()
+        self._messReceived: List[str] = []
 
-        self.sendLock: threading.Lock = threading.Lock()
-        self.messToSend: List[str] = []
+        self._broadcastLock: threading.Lock = threading.Lock()
+        self._broadcastReceived: List[str] = []
 
-        self.thread: threading.Thread = threading.Thread(target=self.connect)
-        self.thread.start()
+        self._sendLock: threading.Lock = threading.Lock()
+        self._messToSend: List[str] = []
+
+        self._thread: threading.Thread = threading.Thread(target=self.connect)
+        self._thread.start()
         time.sleep(0.1)
 
     def connect(self):
-        self.client_socket.connect((self.server_ip, self.port))
-        self.isConnected = True
+        self._client_socket.connect((self._server_ip, self._port))
+        self._isConnected = True
 
-        self.client_socket.setblocking(False)
+        self._client_socket.setblocking(False)
 
-        self.stopLock.acquire()
-        while self.isConnected and self.stop is False:
-            self.stopLock.release()
+        self._stopLock.acquire()
+        while self._isConnected and self._stop is False:
+            self._stopLock.release()
             read_sockets, write_sockets, error_sockets = select.select(
-                [self.client_socket], [self.client_socket], [self.client_socket], 0
+                [self._client_socket], [self._client_socket], [self._client_socket], 0
             )
-            self.read(read_sockets)
-            self.write(write_sockets)
-            self.handleError(error_sockets)
-            self.stopLock.acquire()
+            self._read(read_sockets)
+            self._write(write_sockets)
+            self._handleError(error_sockets)
+            self._stopLock.acquire()
 
-        self.client_socket.close()
+        self._client_socket.close()
 
-    def read(self, read_sockets):
+    def _checkMessage(self, message: str):
+        if message.find(Message.CODE.value) != -1:
+            self._broadcastLock.acquire()
+            if message.count("\n") == 1:
+                self._broadcastReceived.insert(0, message[:-1])
+            else:
+                for mess in message.split("\n"):
+                    if mess != "":
+                        self._broadcastReceived.insert(0, mess)
+            self._broadcastLock.release()
+        elif message:
+            self._receivedLock.acquire()
+            if len(self._messReceived) == 0 or self._messReceived[0].count("\n") > 0:
+                self._messReceived.insert(0, message)
+            else:
+                self._messReceived[0] += message
+            self._receivedLock.release()
+            if self._inTreatment > 0:
+                self._inTreatment -= 1
+        else:
+            self._client_socket.close()
+            self._isConnected = False
+
+    def _read(self, read_sockets):
         for socket_ in read_sockets:
-            if socket_ == self.client_socket:
+            if socket_ == self._client_socket:
                 message = socket_.recv(2048).decode()
-                if message:
-                    self.receivedLock.acquire()
-                    print("Recv: ", end="")
-                    print(message.split("\n")[:-1])
-                    self.messReceived.insert(0, message)
-                    self.receivedLock.release()
-                    if self.inTreatment > 0:
-                        self.inTreatment -= 1
+                if message.count("\n") > 1:
+                    if message.endswith("\n"):
+                        endClosed = True
+                    else:
+                        endClosed = False
+                    message = message.split("\n")
+                    i = 0
+                    for i in range(len(message)):
+                        if message[i] == "":
+                            continue
+                        if i < len(message) - 1 or endClosed:
+                            self._checkMessage(message[i] + "\n")
+                        else:
+                            self._checkMessage(message[i])
                 else:
-                    self.client_socket.close()
-                    self.isConnected = False
+                    self._checkMessage(message)
 
-    def write(self, write_sockets):
+    def _addMessageToSend(self):
+        self._sendLock.acquire()
+        if len(self._messToSend) != 0:
+            message = self._messToSend[-1]
+            self._messToSend = self._messToSend[:-1]
+            self._sendLock.release()
+            if message != "\n":
+                self._inTreatment += 1
+                self._client_socket.sendall(message.encode())
+        else:
+            self._sendLock.release()
+
+    def _write(self, write_sockets):
         for socket_ in write_sockets:
-            if socket_ == self.client_socket and self.inTreatment < 10:
-                self.sendLock.acquire()
-                if len(self.messToSend) != 0:
-                    message = self.messToSend[-1]
-                    print("Send: ", end="")
-                    print(message.split("\n")[:-1])
-                    self.messToSend = self.messToSend[:-1]
-                    self.sendLock.release()
-                    if message != "\n":
-                        self.inTreatment += 1
-                        self.client_socket.sendall(message.encode())
-                else:
-                    self.sendLock.release()
+            if socket_ == self._client_socket and self._inTreatment < 10:
+                self._addMessageToSend()
 
-    def handleError(self, error_sockets):
+    def _handleError(self, error_sockets):
         for socket_ in error_sockets:
-            if socket_ == self.client_socket:
+            if socket_ == self._client_socket:
                 raise Exception("Socket error")
 
     def input(self, message: str, arg: str = ""):
         if arg != "":
-            message += " " + arg + "\n"
-        self.sendLock.acquire()
-        self.messToSend.insert(0, message)
-        self.sendLock.release()
+            message += " " + arg
+        message = message.rstrip(" \n")
+        if not message.endswith("\n"):
+            message += "\n"
+        self._sendLock.acquire()
+        self._messToSend.insert(0, message)
+        self._sendLock.release()
+
+    def outputBroadcast(self) -> List[str]:
+        res = []
+        self._broadcastLock.acquire()
+        if len(self._broadcastReceived) != 0:
+            res = self._broadcastReceived
+            self._broadcastReceived = []
+            self._broadcastLock.release()
+        else:
+            self._broadcastLock.release()
+        time.sleep(0.1)
+        return res
 
     def output(self) -> str:
         res = ""
-        self.receivedLock.acquire()
-        if len(self.messReceived) != 0:
-            message = self.messReceived[-1]
-            self.messReceived = self.messReceived[:-1]
-            self.receivedLock.release()
-            if message != "" or message != "\n":
+        self._receivedLock.acquire()
+        if len(self._messReceived) != 0:
+            message = self._messReceived[-1]
+            self._receivedLock.release()
+            if message != "" and message != "\n" and message.endswith("\n"):
                 res = message
+                self._messReceived = self._messReceived[:-1]
         else:
-            self.receivedLock.release()
+            self._receivedLock.release()
         time.sleep(0.1)
         return res
 
     def stopClient(self):
-        self.stopLock.acquire()
-        self.stop = True
-        self.stopLock.release()
+        self._stopLock.acquire()
+        self._stop = True
+        self._stopLock.release()

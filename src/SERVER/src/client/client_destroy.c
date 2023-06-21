@@ -6,6 +6,8 @@
 */
 
 #include <stdio.h>
+#include <unistd.h>
+#include "llog.h"
 #include "client.h"
 #include "trantorien.h"
 
@@ -18,5 +20,5 @@ void client_destroy(client_t *cl)
     if (cl->type == AI) {
         trantorien_destroy(cl->cl.ai.trantorien);
     }
-    printf("%s%d\n", "INFO: client destroyed: ", cl->id);
+    llog_write_fd(STDERR_FILENO, LLOG_INFO, "client destroyed: %d", cl->id);
 }

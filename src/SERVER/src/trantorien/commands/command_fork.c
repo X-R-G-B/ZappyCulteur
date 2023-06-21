@@ -15,7 +15,7 @@
 #include "broadcast_events.h"
 
 int command_fork(trantorien_t *trantorien, zappy_t *zappy,
-ntw_client_t *cl, action_t *action)
+    ntw_client_t *cl, action_t *action)
 {
     trantorien_t *new_trantorien = NULL;
 
@@ -36,5 +36,5 @@ ntw_client_t *cl, action_t *action)
     }
     circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
     cmd_enw(zappy->ntw, new_trantorien, trantorien);
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
 }

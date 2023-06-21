@@ -145,7 +145,7 @@ Test(loop_cmd_ai_incantation, no_linemate_after)
     }
     cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "ko\n");
     tmp = circular_buffer_read(graph->write_to_outside);
-    char buff1[] = "pie 0 0 Current level:-1\n\0";
+    char buff1[] = "pie 0 0 Current level:1\n\0";
     cr_assert_str_eq(tmp, buff1);
     cr_assert_eq(zappy->map->tiles[0].ressources[LINEMATE], 0);
 }

@@ -66,6 +66,13 @@ SRC_CLIENT		:=															\
 SRC_CLIENT		:=			$(addprefix client/, $(SRC_CLIENT))
 
 
+# LLOG -----------------------------------------------------------------------
+SRC_LLOG		:=															\
+							internal.c										\
+							write_f.c										\
+							write_fd.c
+SRC_LLOG		:=			$(addprefix llog/, $(SRC_LLOG))
+
 # LOOP -----------------------------------------------------------------------
 SRC_LOOP_AICMD	=															\
 							cmd_broadcast.c									\
@@ -123,7 +130,6 @@ SRC_LOOP		:=															\
 							update_client_not_connected.c					\
 							update_client_waiting_slot_opened.c				\
 							update_client_waiting_team_name.c				\
-							refuse_client_connection.c						\
 							update_food.c
 SRC_LOOP		:=			$(addprefix loop/, $(SRC_LOOP))
 
@@ -162,7 +168,6 @@ SRC_TRNT_CMD	:=															\
 							command_take_object.c							\
 							command_look_around.c							\
 							command_look_around_sides.c						\
-							command_look_around_utils.c						\
 							command_inventory.c								\
 							command_move.c									\
 							command_turn.c									\
@@ -179,6 +184,7 @@ SRC_TRNT		:=															\
 							trantorien_add_act_broadcast.c					\
 							trantorien_add_act_set.c						\
 							trantorien_add_act_take.c						\
+							trantorien_check_incantation.c					\
 							trantorien_destroy.c							\
 							trantorien_init.c								\
 							trantorien_is_cmd_availible.c					\
@@ -193,6 +199,7 @@ SRC_TRNT		:=			$(addprefix trantorien/, $(SRC_TRNT))
 SRC				:=															\
 							$(SRC_ARGS)										\
 							$(SRC_CLIENT)									\
+							$(SRC_LLOG)										\
 							$(SRC_LOOP)										\
 							$(SRC_MAP)										\
 							$(SRC_NTW)										\
@@ -236,8 +243,8 @@ all: $(TARGET)
 all_fast:
 	@$(MAKE) -j --no-print-directory -C . all
 
-$(TARGET):												$(OBJ)
-$(TARGET):								$(LIBS_DIR)/tinylibc/libtinylibc.a
+$(TARGET):						$(OBJ)
+$(TARGET):						$(LIBS_DIR)/tinylibc/libtinylibc.a
 $(TARGET):						$(LIBS_DIR)/circularbuffer/libcircularbuffer.a
 	@$(ECHO) $(CYAN)'==< CFLAGS >==:'$(RESET) '$(CFLAGS)'
 	@$(ECHO) $(CYAN)'==< LDFLAGS >==:'$(RESET) '$(LDFLAGS)'

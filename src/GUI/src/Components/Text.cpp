@@ -17,7 +17,14 @@ namespace GUI {
             _font.loadFromFile(FONT_PATH);
             _text.setString(text);
             _text.setPosition(position.x, position.y);
-            _text.setFillColor(sf::Color::White);
+            _text.setFillColor(
+                sf::Color(
+                    color.getRed(),
+                    color.getGreen(),
+                    color.getBlue(),
+                    color.getAlpha()
+                )
+                );
             _text.setFont(_font);
             _text.setCharacterSize(size);
         }
