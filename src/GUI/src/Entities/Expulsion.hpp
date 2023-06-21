@@ -15,8 +15,8 @@ namespace GUI {
         class Expulsion : public AEntity {
             public:
                 Expulsion(const std::string &id, const Vector2F &position,
-                    EntityOrientation orientations, unsigned int width = 0,
-                            unsigned int height = 0);
+                    EntityOrientation orientations = EntityOrientation::UP, unsigned int width = 60,
+                            unsigned int height = 60);
                 ~Expulsion();
 
                 void update(double deltaTime) final;

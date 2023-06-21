@@ -10,12 +10,11 @@
 #include "Components/Sprite.hpp"
 #include "EntitiesManager.hpp"
 
-static const std::string expulsionPath = "";
+static const std::string expulsionPath = "src/GUI/assets/environment/Explosion-PNG-HD.png";
 static const std::size_t expulsionLayer = 100;
 
 namespace GUI {
     namespace Entities {
-
         Expulsion::Expulsion(const std::string &id,
                                 const Vector2F &position,
                                 EntityOrientation orientation,
@@ -32,7 +31,7 @@ namespace GUI {
             _width(width),
             _height(height),
             _isExpulsed(false),
-            _timeDispawn(6)
+            _timeDispawn(2)
         {
             _deathClock = std::chrono::system_clock::now();
         }
