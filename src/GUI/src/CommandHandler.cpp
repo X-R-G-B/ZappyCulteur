@@ -39,6 +39,7 @@ namespace GUI {
         {"seg", COMMAND_TYPE::GAME_END},
         {"smg", COMMAND_TYPE::SERVER_MESSAGE},
         {"suc", COMMAND_TYPE::SERVER_UNKNOW_COMMAND},
+        {"sst", COMMAND_TYPE::TIME_UNIT_MODIFICATION},
         {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME},
         };
 
@@ -68,6 +69,7 @@ namespace GUI {
               {COMMAND_TYPE::GAME_END, &CommandHandler::endGame},
               {COMMAND_TYPE::BROADCAST, &CommandHandler::broadcastMessage},
               {COMMAND_TYPE::SERVER_MESSAGE, &CommandHandler::serverMessage},
+              {COMMAND_TYPE::TIME_UNIT_MODIFICATION, &CommandHandler::timeUnitModification},
               {COMMAND_TYPE::SERVER_UNKNOW_COMMAND, &CommandHandler::serverUnknowCommand},
               {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}}),
               _sendToServerFunc(sendToServer), _connexionCmdRemaining(0)
@@ -501,6 +503,20 @@ namespace GUI {
             }
             return (true);
         }
+        
+        bool CommandHandler::timeUnitModification(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::size_t time = 0;
+
+            if (!(ss >> cmd >> time)) {
+                return (false);
+            }
+            std::cout << "Time server modification : " << time << std::endl;
+            return (true);
+        }
+
 
         bool CommandHandler::serverMessage(const std::string &command)
         {
