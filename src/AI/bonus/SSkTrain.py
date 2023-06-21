@@ -1,3 +1,4 @@
+from typing import NoReturn
 import pydotplus
 import joblib
 import sys
@@ -7,11 +8,10 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.tree import export_graphviz
-from IPython.display import Image
 
 
 class Argparse(argparse.ArgumentParser):
-    def error(self, message):
+    def error(self, message) -> NoReturn:
         sys.stderr.write("error: %s\n" % message)
         self.print_help()
         sys.exit(84)
@@ -28,8 +28,7 @@ if __name__ == "__main__":
     try:
         df = pd.read_csv(fileName)
     except FileNotFoundError:
-        print("Error: file not found")
-        sys.exit(84)
+        argParser.error("File not found")
 
     X = df.drop(columns=["response"], axis=1)
     y = df["response"]
@@ -52,5 +51,7 @@ if __name__ == "__main__":
         clf, out_file=None, feature_names=X.columns, class_names=y.unique()
     )
     graph = pydotplus.graph_from_dot_data(dot_data)
-    Image(graph.create_png())
-    graph.write_png(fileName.split(".")[0] + ".png")
+    if isinstance(graph, pydotplus.graphviz.Dot):
+        graph.write(fileName.split(".")[0] + ".png", prog=None, format="png")
+    else:
+        print("Error transformation of png")
