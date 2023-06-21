@@ -32,6 +32,7 @@ namespace GUI {
             {"pdi", COMMAND_TYPE::PLAYER_DEATH},
             {"pgt", COMMAND_TYPE::RESSOURCE_COLLECTING},
             {"pdr", COMMAND_TYPE::RESSOURCE_DROPPING},
+            {"suc", COMMAND_TYPE::SERVER_UNKNOW_COMMAND},
             {"seg", COMMAND_TYPE::GAME_END}
         };
 
@@ -51,6 +52,7 @@ namespace GUI {
                 {COMMAND_TYPE::RESSOURCE_COLLECTING, &CommandHandler::setRessourceCollecting},
                 {COMMAND_TYPE::RESSOURCE_DROPPING, &CommandHandler::setRessourceDropping},
                 {COMMAND_TYPE::GAME_END, &CommandHandler::endGame},
+                {COMMAND_TYPE::SERVER_UNKNOW_COMMAND, &CommandHandler::serverUnknowCommand},
                 {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}
             })
         {}
@@ -393,6 +395,12 @@ namespace GUI {
                 rt
             );
             return true;
+        }
+
+        bool CommandHandler::serverUnknowCommand([[maybe_unused]]const std::string &command)
+        {
+            std::cout << "Server did not recognize our command" << std::endl;
+            return (true);
         }
 
         bool CommandHandler::endGame(const std::string &command)
