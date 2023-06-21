@@ -473,10 +473,14 @@ namespace GUI {
         {
             std::stringstream ss(command);
             std::string cmd;
+            std::string tmp;
             std::string message;
 
-            if (!(ss >> cmd >> message)) {
+            if (!(ss >> cmd)) {
                 return (false);
+            }
+            while (ss >> tmp) {
+                message.append(tmp);
             }
             try {
                 // Call the textarea entity to add a new message inside
