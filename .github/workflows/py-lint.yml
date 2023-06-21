@@ -23,7 +23,7 @@ jobs:
         pip install pyright
 
     - name: Lint
-      run: cd src/AI && pyright **.py
+      run: cd src/AI && pyright ./zappy_ia ./zappy_ai.py
 
   ruff:
     runs-on: ubuntu-latest
