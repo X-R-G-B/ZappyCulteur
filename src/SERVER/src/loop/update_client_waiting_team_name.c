@@ -29,16 +29,11 @@ static const char *format_str_ai = "client AI (team:%s), waiting slot...";
 
 void send_id(client_t *cc, ntw_client_t *cl)
 {
-    char *id_to_str = NULL;
+    char buff[512] = {0};
 
     cc->id = get_id();
-    id_to_str = x_itoa(cc->id);
-    if (id_to_str == NULL) {
-        return;
-    }
-    circular_buffer_write(cl->write_to_outside, id_to_str);
-    free(id_to_str);
-    circular_buffer_write(cl->write_to_outside, "\n");
+    snprintf(buff, 511, "%d\n", cc->id);
+    circular_buffer_write(cl->write_to_outside, buff);
 }
 
 void send_size(args_t *args, ntw_client_t *cl)
