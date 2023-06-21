@@ -15,6 +15,7 @@
 #include "Music.hpp"
 #include "Sprite.hpp"
 #include "InputField.hpp"
+#include "Button.hpp"
 
 static const std::unordered_map<sf::Keyboard::Key, GUI::Event>
 _keyboardMappings = {{sf::Keyboard::Num1, GUI::Event::KEYBOARD_1_PRESSED},
@@ -175,6 +176,8 @@ namespace GUI {
         _entityManager->getComponentsByType(Components::CompType::HUDTEXT);
         auto inputFields =
         _entityManager->getComponentsByType(Components::CompType::INPUTFIELD);
+        auto buttons =
+        _entityManager->getComponentsByType(Components::CompType::BUTTON);
 
         for (const auto &sprite : *sprites) {
             auto spritePtr =
@@ -200,6 +203,15 @@ namespace GUI {
             }
             _window.draw(inputFieldPtr->getSprite());
             _window.draw(inputFieldPtr->getText());
+        }
+        for (const auto &button : *buttons) {
+            auto buttonPtr =
+            std::static_pointer_cast<GUI::Components::Button>(button);
+            if (buttonPtr == nullptr) {
+                continue;
+            }
+            _window.draw(buttonPtr->getSprite());
+            _window.draw(buttonPtr->getText());
         }
     }
 
@@ -307,8 +319,8 @@ namespace GUI {
         EventsManager &eventsManager = EventsManager::getInstance();
 
         if (eventsManager.isEventTriggered(GUI::Event::WINDOW_CLOSED) == true
-        || eventsManager.isEventTriggered(GUI::Event::KEYBOARD_ESCAPE_PRESSED)
-        == true) {
+        || eventsManager.isEventTriggered(GUI::Event::KEYBOARD_ESCAPE_PRESSED)== true
+        || eventsManager.isEventTriggered(GUI::Event::QUIT_GAME) == true) {
             closeWindow();
         }
     }

@@ -13,6 +13,7 @@
 #include "AEntity.hpp"
 #include "EntitiesManager.hpp"
 #include "Music.hpp"
+#include "Button.hpp"
 
 namespace GUI {
     namespace Entities {

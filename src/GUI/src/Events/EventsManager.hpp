@@ -79,7 +79,17 @@ namespace GUI {
         MOUSE_WHEEL_UP,
         MOUSE_WHEEL_DOWN,
         // WINDOW EVENTS
-        WINDOW_CLOSED
+        WINDOW_CLOSED,
+        // OTHERS
+        START_GAME,
+        PAUSE_GAME,
+        RESUME_GAME,
+        QUIT_GAME,
+        SOUND_ON,
+        SOUND_OFF,
+        SOUND_DOWN,
+        SOUND_UP,
+        SETTING
     };
 
     class EventsManager {

@@ -28,6 +28,14 @@ static const std::string IP_INPUT_PLACEHOLDER = "Enter IP";
 static const std::string PORT_INPUT_PLACEHOLDER = "Enter Port";
 static const std::string menuMusicId = "menuMusic";
 static const std::string menuMusicPath = "src/GUI/assets/musics/menu.ogg";
+const std::string BTN_PLAY_ID = "startButton";
+static const std::string BTN_PLAY_TEXT = "Start";
+static const GUI::Vector2F BTN_PLAY_POSITION = {1425, 800};
+static GUI::Event BTN_PLAY_EVENT = GUI::Event::START_GAME;
+static const std::string BTN_QUIT_ID = "quitButton";
+static const std::string BTN_QUIT_TEXT = "Quit Game";
+static const GUI::Vector2F BTN_QUIT_POSITION = {1425, 900};
+static const GUI::Event BTN_QUIT_EVENT = GUI::Event::QUIT_GAME;
 
 namespace GUI {
     namespace Entities {
@@ -42,6 +50,7 @@ namespace GUI {
             _entityCompType.push_back(Components::CompType::SPRITE);
             _entityCompType.push_back(Components::CompType::HUDSPRITE);
             _entityCompType.push_back(Components::CompType::MUSIC);
+            _entityCompType.push_back(Components::CompType::BUTTON);
             initComponents();
         }
 
@@ -79,6 +88,18 @@ namespace GUI {
                 PORT_INPUT_PLACEHOLDER,
                 PORT_INPUT_POSITION,
                 INPUT_SIZE
+            ));
+            _components.push_back(std::make_shared<Components::Button>(
+                BTN_PLAY_ID,
+                BTN_PLAY_TEXT,
+                BTN_PLAY_POSITION,
+                BTN_PLAY_EVENT
+            ));
+            _components.push_back(std::make_shared<Components::Button>(
+                BTN_QUIT_ID,
+                BTN_QUIT_TEXT,
+                BTN_QUIT_POSITION,
+                BTN_QUIT_EVENT
             ));
         }
 

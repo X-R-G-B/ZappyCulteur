@@ -79,9 +79,10 @@ namespace GUI {
 
         _entityManager->killAllEntities();
         _entityManager->addEntity(startMenu);
-        while (startMenu->isGameStarted() == false) {
-            _entityManager->update(_deltatime);
+        while (startMenu->isGameStarted() == false
+        && _displayModule->isOpen()) {
             _displayModule->handleEvents(_deltatime);
+            _entityManager->update(_deltatime);
             _displayModule->update(_deltatime);
         }
         _networkManager.initConnection(startMenu->getIP(), startMenu->getPort());

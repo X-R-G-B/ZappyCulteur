@@ -14,4 +14,5 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/Text.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/InputField.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Music.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Button.cpp
 )

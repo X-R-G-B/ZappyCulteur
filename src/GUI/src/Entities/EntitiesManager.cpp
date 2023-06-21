@@ -8,6 +8,7 @@
 #include "EntitiesManager.hpp"
 #include "Trantorian.hpp"
 #include "InputField.hpp"
+#include "Button.hpp"
 
 namespace GUI {
     namespace Entities {
@@ -27,6 +28,7 @@ namespace GUI {
         {
             auto inputField = getComponentsByType(Components::CompType::INPUTFIELD);
             auto trantorians = getEntitiesByType(EntityType::TRANTORIAN);
+            auto buttons = getComponentsByType(Components::CompType::BUTTON);
             
             for (auto &entity : _entities) {
                 entity->update(deltaTime);
@@ -40,6 +42,10 @@ namespace GUI {
             }
             for (const auto &it : *inputField) {
                 auto component = std::static_pointer_cast<Components::InputField>(it);
+                component->update();
+            }
+            for (const auto &it : *buttons) {
+                auto component = std::static_pointer_cast<Components::Button>(it);
                 component->update();
             }
         }
