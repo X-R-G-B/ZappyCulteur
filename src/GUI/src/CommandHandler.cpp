@@ -39,6 +39,7 @@ namespace GUI {
         {"seg", COMMAND_TYPE::GAME_END},
         {"smg", COMMAND_TYPE::SERVER_MESSAGE},
         {"suc", COMMAND_TYPE::SERVER_UNKNOW_COMMAND},
+        {"sgt", COMMAND_TYPE::TIME_UNIT_REQUEST},
         {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME},
         };
 
@@ -69,6 +70,7 @@ namespace GUI {
               {COMMAND_TYPE::BROADCAST, &CommandHandler::broadcastMessage},
               {COMMAND_TYPE::SERVER_MESSAGE, &CommandHandler::serverMessage},
               {COMMAND_TYPE::SERVER_UNKNOW_COMMAND, &CommandHandler::serverUnknowCommand},
+              {COMMAND_TYPE::TIME_UNIT_REQUEST, &CommandHandler::timeUnitRequest},
               {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}}),
               _sendToServerFunc(sendToServer), _connexionCmdRemaining(0)
         {
@@ -499,6 +501,19 @@ namespace GUI {
                 std::cerr << e.what() << std::endl;
                 return false;
             }
+            return (true);
+        }
+
+        bool CommandHandler::timeUnitRequest(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::size_t time;
+
+            if (!(ss >> cmd >> time)) {
+                return (false);
+            }
+            // Change the time unit get
             return (true);
         }
 
