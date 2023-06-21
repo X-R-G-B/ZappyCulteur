@@ -158,6 +158,8 @@ namespace GUI {
 
                 bool broadcastMessage(const std::string &command);
 
+                bool serverMessage(const std::string &command);
+
                 bool unknowCommand(const std::string &command);
 
                 /**
