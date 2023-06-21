@@ -85,6 +85,9 @@ namespace GUI {
             _entityManager->update(_deltatime);
             _displayModule->update(_deltatime);
         }
+        if (_displayModule->isOpen() == false) {
+            return;
+        }
         _networkManager.initConnection(startMenu->getIP(), startMenu->getPort());
         _entityManager->killEntityById(MenuEntityID);
     }
