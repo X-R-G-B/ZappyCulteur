@@ -10,9 +10,9 @@
 #include <SFML/Graphics.hpp>
 #include <chrono>
 #include <memory>
-#include <stdexcept>
 #include "AEntity.hpp"
 #include "EntitiesManager.hpp"
+#include "Music.hpp"
 
 namespace GUI {
     namespace Entities {
@@ -28,6 +28,7 @@ namespace GUI {
             private:
                 void initComponents();
                 bool _isGameStarted;
+                void initMusic();
                 sf::Texture _backgroundTexture;
         };
     } // namespace Entities

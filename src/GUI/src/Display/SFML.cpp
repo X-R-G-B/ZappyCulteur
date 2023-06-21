@@ -5,16 +5,16 @@
 ** SFML
 */
 
-#include "SFML.hpp"
 #include <algorithm>
+#include <unordered_map>
 #include <iostream>
 #include "CompQuery.hpp"
+#include "SFML.hpp"
 #include "Floor.hpp"
 #include "IEntity.hpp"
 #include "Music.hpp"
 #include "Sprite.hpp"
 #include "InputField.hpp"
-#include <unordered_map>
 
 static const std::unordered_map<sf::Keyboard::Key, GUI::Event>
 _keyboardMappings = {{sf::Keyboard::Num1, GUI::Event::KEYBOARD_1_PRESSED},

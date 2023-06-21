@@ -26,6 +26,8 @@ static const unsigned int BG_WITH = 1920;
 static const unsigned int BG_HEIGHT = 1080;
 static const std::string IP_INPUT_PLACEHOLDER = "Enter IP";
 static const std::string PORT_INPUT_PLACEHOLDER = "Enter Port";
+static const std::string menuMusicId = "menuMusic";
+static const std::string menuMusicPath = "src/GUI/assets/musics/menu.ogg";
 
 namespace GUI {
     namespace Entities {
@@ -39,16 +41,23 @@ namespace GUI {
             _entityCompType.push_back(Components::CompType::INPUTFIELD);
             _entityCompType.push_back(Components::CompType::SPRITE);
             _entityCompType.push_back(Components::CompType::HUDSPRITE);
+            _entityCompType.push_back(Components::CompType::MUSIC);
             initComponents();
         }
 
         void startMenu::update(double)
         {
+        }
 
+        void startMenu::initMusic()
+        {
+            _components.push_back(std::make_shared<GUI::Components::Music>(
+            menuMusicId, menuMusicPath, true, true));
         }
 
         void startMenu::initComponents()
         {
+            initMusic();
             _backgroundTexture.loadFromFile(MENU_BG_PATH);
             _components.push_back(std::make_shared<Components::Sprite>(
                 MENU_BG_ID,
