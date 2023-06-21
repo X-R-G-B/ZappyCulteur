@@ -90,8 +90,7 @@ Test(loop_event_at_login, pwn_and_ebo)
     while (circular_buffer_is_read_ready(client->write_to_outside) == false) {
         cr_assert_eq(loop(zappy, true), false);
     }
-    snprintf(res, 511, "%d\n", c->cl.ai.trantorien->id);
-    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), res);
+    cr_assert_str_eq(circular_buffer_read(client->write_to_outside), "0\n");
     while (circular_buffer_is_read_ready(client->write_to_outside) == false) {
         cr_assert_eq(loop(zappy, true), false);
     }
