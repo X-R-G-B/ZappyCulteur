@@ -19,7 +19,7 @@ namespace GUI {
         return _message.c_str();
     }
 
-    NetworkManager::NetworkManager() : _isConnected(false)
+    NetworkManager::NetworkManager() : _isConnected(false), _portInt(0)
     {
     }
 
@@ -96,6 +96,11 @@ namespace GUI {
     void NetworkManager::setPort(const std::string &port)
     {
         _port = port;
+        try {
+            _portInt = std::stoul(_port);
+        } catch (const std::exception &) {
+            throw NetworkException("Error: invalid port");
+        }
     }
 
     bool NetworkManager::isConnected() const
@@ -143,7 +148,7 @@ namespace GUI {
         }
 #endif
         _addr.sin_family = AF_INET;
-        _addr.sin_port = htons(static_cast<u_short>(std::stoul(_port)));
+        _addr.sin_port = htons(static_cast<u_short>(_portInt));
         _addr.sin_addr.s_addr = inet_addr(_ip.c_str());
         connectToServer();
     }
