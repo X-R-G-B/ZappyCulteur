@@ -10,7 +10,7 @@
 #include <sstream>
 #include "Floor.hpp"
 #include "HUD.hpp"
-#include "startMenu.hpp"
+#include "StartMenu.hpp"
 
 static const std::string windowName = "ZappyCulteur";
 

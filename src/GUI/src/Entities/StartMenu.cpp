@@ -5,7 +5,7 @@
 ** startMenu
 */
 
-#include "startMenu.hpp"
+#include "StartMenu.hpp"
 #include "Components/Sprite.hpp"
 #include "EventsManager.hpp"
 
