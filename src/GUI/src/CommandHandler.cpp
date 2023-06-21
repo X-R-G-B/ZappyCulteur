@@ -34,6 +34,7 @@ namespace GUI {
         {"pdi", COMMAND_TYPE::PLAYER_DEATH},
         {"pgt", COMMAND_TYPE::RESSOURCE_COLLECTING},
         {"pdr", COMMAND_TYPE::RESSOURCE_DROPPING},
+        {"pbc", COMMAND_TYPE::BROADCAST},
         {"seg", COMMAND_TYPE::GAME_END},
         {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME},
         };
@@ -62,6 +63,7 @@ namespace GUI {
               {COMMAND_TYPE::COMMAND_WELCOME,
               &CommandHandler::receiveFirstConnexion},
               {COMMAND_TYPE::GAME_END, &CommandHandler::endGame},
+              {COMMAND_TYPE::BROADCAST, &CommandHandler::broadcastMessage},
               {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}}),
               _sendToServerFunc(sendToServer), _connexionCmdRemaining(0)
         {
@@ -465,6 +467,28 @@ namespace GUI {
             _sendToServerFunc("GRAPHIC\n");
             _connexionCmdRemaining = 2;
             return true;
+        }
+
+        bool CommandHandler::broadcastMessage(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string tmp;
+            std::string message;
+
+            if (!(ss >> cmd)) {
+                return (false);
+            }
+            while (ss >> tmp) {
+                message.append(tmp);
+            }
+            try {
+                // Call the textarea entity to add a new message inside
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return false;
+            }
+            return (true);
         }
 
         bool CommandHandler::handleIdandMapSize(const std::string &command)
