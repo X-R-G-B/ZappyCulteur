@@ -108,7 +108,7 @@ make
 # ./zappy_server --help
 ./zappy_server -p 4042 -x 10 -y 20 -n abc -c 5 -f 50
 ```
-2. ont one terminal
+2. ont one terminal (**only tested on linux**)
 ```bash
 docker run -it --rm --name zappy -v "$PWD:/code" -v "/dev/dri/:/dev/dri/" -v "/tmp/.X11-unix/:/tmp/.X11-unix/" -v "$HOME/.Xauthority:/root/.Xauthority" --network=host  -w "/code" docker.io/epitechcontent/epitest-docker
 make
