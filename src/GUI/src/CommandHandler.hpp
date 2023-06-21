@@ -156,6 +156,8 @@ namespace GUI {
 
                 bool endIncantation(const std::string &command);
 
+                bool broadcastMessage(const std::string &command);
+
                 bool unknowCommand(const std::string &command);
 
                 /**
