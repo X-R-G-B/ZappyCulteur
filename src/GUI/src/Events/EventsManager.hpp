@@ -8,14 +8,19 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include "Vector2F.hpp"
 
 namespace GUI {
+
+    enum class EventsState {
+        FOCUS_UI,
+        FOCUS_GAME
+    };
+
     enum class Event {
-        // MOUSE EVENTS
-        MOUSE_LEFT_PRESSED,
-        MOUSE_RIGHT_PRESSED,
         // KEYBOARD NUMBERS
+        KEYBOARD_0_PRESSED = 0,
         KEYBOARD_1_PRESSED,
         KEYBOARD_2_PRESSED,
         KEYBOARD_3_PRESSED,
@@ -25,9 +30,8 @@ namespace GUI {
         KEYBOARD_7_PRESSED,
         KEYBOARD_8_PRESSED,
         KEYBOARD_9_PRESSED,
-        KEYBOARD_0_PRESSED,
         // KEYBOARD LETTERS
-        KEYBOARD_A_PRESSED,
+        KEYBOARD_A_PRESSED = 10,
         KEYBOARD_B_PRESSED,
         KEYBOARD_C_PRESSED,
         KEYBOARD_D_PRESSED,
@@ -68,11 +72,24 @@ namespace GUI {
         KEYBOARD_CTRL_PRESSED,
         KEYBOARD_ALT_PRESSED,
         KEYBOARD_DOT_PRESSED,
+        // MOUSE EVENTS
+        MOUSE_LEFT_PRESSED,
+        MOUSE_RIGHT_PRESSED,
         // MOUSE WHEEL
         MOUSE_WHEEL_UP,
         MOUSE_WHEEL_DOWN,
         // WINDOW EVENTS
-        WINDOW_CLOSED
+        WINDOW_CLOSED,
+        // OTHERS
+        START_GAME,
+        PAUSE_GAME,
+        RESUME_GAME,
+        QUIT_GAME,
+        SOUND_ON,
+        SOUND_OFF,
+        SOUND_DOWN,
+        SOUND_UP,
+        SETTING
     };
 
     class EventsManager {
@@ -132,6 +149,40 @@ namespace GUI {
              */
             const Vector2F &getWorldMousePos();
 
+            /**
+             * @brief Get a string from an event (keyboards only)
+             * 
+             * @param event
+             * @return std::string 
+             */
+            std::string getEventKey(GUI::Event);
+
+            /**
+             * @brief Return if the events is focused on the UI
+             * 
+             * @return bool
+             */
+            bool isFocusedOnUI();
+
+            /**
+             * @brief Return if the events is focused on the game
+             * 
+             * @return bool
+             */
+            bool isFocusedOnGame();
+
+            /**
+             * @brief Set the focus on the UI
+             * 
+             */
+            void setFocusOnUI();
+
+             /**
+             * @brief Set the focus on the game
+             * 
+             */
+            void setFocusOnGame();
+
         private:
             EventsManager();
             ~EventsManager() = default;
@@ -140,5 +191,6 @@ namespace GUI {
             std::vector<Event> _eventsList;
             Vector2F _mousePos;
             Vector2F _worldMousePos;
+            EventsState _state;
     };
 } // namespace GUI

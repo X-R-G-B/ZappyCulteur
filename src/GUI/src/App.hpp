@@ -42,6 +42,7 @@ namespace GUI {
             void printHelp();
             void askNetworkForUpdate();
             void updateTime();
+            void createHUD();
 
             NetworkManager _networkManager;
             std::unordered_map<std::string, std::string> _args;

@@ -7,7 +7,10 @@
 
 #include "EventsManager.hpp"
 
-GUI::EventsManager::EventsManager() : _mousePos({0, 0}), _worldMousePos({0, 0})
+GUI::EventsManager::EventsManager() :
+    _mousePos({0, 0}),
+    _worldMousePos({0, 0}),
+    _state(GUI::EventsState::FOCUS_UI)
 {
 }
 
@@ -51,4 +54,40 @@ void GUI::EventsManager::addWorldMousePos(Vector2F mousePos)
 const GUI::Vector2F &GUI::EventsManager::getWorldMousePos()
 {
     return _worldMousePos;
+}
+
+std::string GUI::EventsManager::getEventKey(GUI::Event event)
+{
+   std::string keyStr;
+
+    if (event >= GUI::Event::KEYBOARD_0_PRESSED &&
+        event <= GUI::Event::KEYBOARD_9_PRESSED) {
+        keyStr = std::to_string(static_cast<int>(event));
+    } else if (event >= GUI::Event::KEYBOARD_A_PRESSED &&
+        event <= GUI::Event::KEYBOARD_Z_PRESSED) {
+        keyStr = static_cast<char>(static_cast<int>(event) + 55);
+    } else if (event == GUI::Event::KEYBOARD_DOT_PRESSED) {
+        keyStr = ".";
+    }
+    return keyStr;
+}
+
+bool GUI::EventsManager::isFocusedOnUI()
+{
+    return _state == GUI::EventsState::FOCUS_UI ? true : false;
+}
+
+bool GUI::EventsManager::isFocusedOnGame()
+{
+    return _state == GUI::EventsState::FOCUS_GAME ? true : false;
+}
+
+void GUI::EventsManager::setFocusOnUI()
+{
+    _state = GUI::EventsState::FOCUS_UI;
+}
+
+void GUI::EventsManager::setFocusOnGame()
+{
+    _state = GUI::EventsState::FOCUS_GAME;
 }
