@@ -7,6 +7,7 @@
 
 #include "EntitiesManager.hpp"
 #include "Trantorian.hpp"
+#include "Expulsion.hpp"
 
 namespace GUI {
     namespace Entities {
@@ -28,10 +29,18 @@ namespace GUI {
                 entity->update(deltaTime);
             }
             auto trantorians = getEntitiesByType(EntityType::TRANTORIAN);
+            auto expulsions = getEntitiesByType(EntityType::EXPULSION);
             for (const auto &it : *trantorians) {
                 auto entity =
                 std::static_pointer_cast<Entities::Trantorian>(it);
                 if (entity->getDispawned()) {
+                    killEntityById(entity->getId());
+                }
+            }
+            for (const auto &it : *expulsions) {
+                auto entity =
+                std::static_pointer_cast<Entities::Expulsion>(it);
+                if (entity->getExpulsed()) {
                     killEntityById(entity->getId());
                 }
             }

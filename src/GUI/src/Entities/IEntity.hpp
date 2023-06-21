@@ -23,6 +23,7 @@ namespace GUI {
             TRANTORIAN,
             EGG,
             INCANTATION,
+            EXPULSION,
             HUD
         };
 
