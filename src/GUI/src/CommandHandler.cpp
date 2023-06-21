@@ -288,9 +288,7 @@ namespace GUI {
             }
             std::cout << ss.str() << std::endl;
             while (ss >> tmp) {
-                std::cout << "tmp value: " << tmp << std::endl;
                 result.append(tmp);
-                std::cout << "result value: " << result << std::endl;
 
             }
             incantationId = incantationKey + std::to_string(x) + std::to_string(y);
