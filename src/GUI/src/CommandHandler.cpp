@@ -70,6 +70,7 @@ namespace GUI {
         static const std::string eggKey = "Egg_";
         static const std::string playerKey = "Player_";
         static const std::string incantationKey = "Incantation_";
+        static const std::string invocationStateKo = "ko";
         static const std::string endScreenKey = "EndScreen";
 
         void CommandHandler::update(const std::vector<std::string> &commands)
@@ -286,19 +287,30 @@ namespace GUI {
             std::string cmd;
             float x = 0;
             float y = 0;
-            std::size_t result = 0;
+            std::string result;
+            std::string tmp;
             std::string incantationId;
 
-            if (!(ss >> cmd >> x >> y >> result)) {
+            if (!(ss >> cmd >> x >> y)) {
                 return (false);
             }
-            incantationId =
-            incantationKey + std::to_string(x) + std::to_string(y);
+            std::cout << ss.str() << std::endl;
+            while (ss >> tmp) {
+                result.append(tmp);
+
+            }
+            incantationId = incantationKey + std::to_string(x) + std::to_string(y);
             try {
                 auto entity = _entityManager->getEntityById(incantationId);
                 auto incantation =
                 std::static_pointer_cast<Entities::Incantation>(entity);
-                incantation->endIncantation(result);
+                if (result.find(invocationStateKo) != std::string::npos) {
+                    incantation->endIncantation(0);
+                } else {
+                    std::string nbr = result.substr(result.find(":"));
+                    std::size_t level = static_cast<std::size_t>(std::stoi(nbr.substr(1)));
+                    incantation->endIncantation(level);
+                }
                 _entityManager->killEntityById(incantationId);
             } catch (const Entities::EntitiesManagerException &e) {
                 std::cerr << e.what() << std::endl;
