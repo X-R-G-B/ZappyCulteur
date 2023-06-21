@@ -16,6 +16,7 @@ static const GUI::Vector2F BTN_TEXT_OFFSET = {40, 15};
 static constexpr unsigned int BTN_FONT_SIZE = 30;
 static const float BTN_SIZE_X = 451;
 static const float BTN_SIZE_Y = 86;
+static const std::string PATH_FONT = "src/GUI/assets/fonts/mainFont.ttf";
 
 namespace GUI {
     namespace Components {
@@ -30,7 +31,7 @@ namespace GUI {
         {
             initSprites();
             _state = ButtonState::NONE;
-            _font.loadFromFile(FONT_PATH);
+            _font.loadFromFile(PATH_FONT);
             _text.setFont(_font);
             _text.setString(text);
             _text.setCharacterSize(BTN_FONT_SIZE);
