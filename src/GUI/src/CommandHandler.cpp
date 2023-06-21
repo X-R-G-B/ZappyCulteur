@@ -15,6 +15,10 @@
 #include "Incantation.hpp"
 #include "Ressources.hpp"
 #include "Trantorian.hpp"
+#include "Incantation.hpp"
+#include "EndScreen.hpp"
+#include "IEntity.hpp"
+#include "Egg.hpp"
 
 namespace GUI {
     namespace CommandHandler {
@@ -30,7 +34,9 @@ namespace GUI {
         {"pdi", COMMAND_TYPE::PLAYER_DEATH},
         {"pgt", COMMAND_TYPE::RESSOURCE_COLLECTING},
         {"pdr", COMMAND_TYPE::RESSOURCE_DROPPING},
-        {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME}};
+        {"seg", COMMAND_TYPE::GAME_END},
+        {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME},
+        };
 
         CommandHandler::CommandHandler(
         std::shared_ptr<Entities::EntitiesManager> entityManager,
@@ -55,6 +61,7 @@ namespace GUI {
               &CommandHandler::setRessourceDropping},
               {COMMAND_TYPE::COMMAND_WELCOME,
               &CommandHandler::receiveFirstConnexion},
+              {COMMAND_TYPE::GAME_END, &CommandHandler::endGame},
               {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}}),
               _sendToServerFunc(sendToServer), _connexionCmdRemaining(0)
         {
@@ -64,6 +71,7 @@ namespace GUI {
         static const std::string playerKey = "Player_";
         static const std::string incantationKey = "Incantation_";
         static const std::string invocationStateKo = "ko";
+        static const std::string endScreenKey = "EndScreen";
 
         void CommandHandler::update(const std::vector<std::string> &commands)
         {
@@ -426,6 +434,30 @@ namespace GUI {
             : static_cast<unsigned int>(player->getPosition().y / TILE_SIZE),
             rt);
             return true;
+        }
+
+        bool CommandHandler::endGame(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string team;
+
+            if (!(ss >> cmd >> team)) {
+                return (false);
+            }
+            auto endScreenEntity = std::make_shared<Entities::EndScreen>(
+                endScreenKey,
+                Vector2F(0, 0),
+                team
+            );
+            try {
+                endScreenEntity->initEndScreenSprite();
+                _entityManager->addEntity(endScreenEntity);
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return false;
+            }
+            return (true);
         }
 
         bool CommandHandler::receiveFirstConnexion(const std::string &)
