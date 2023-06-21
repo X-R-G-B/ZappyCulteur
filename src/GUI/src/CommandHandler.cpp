@@ -25,22 +25,23 @@ namespace GUI {
 
         static const std::unordered_map<std::string, COMMAND_TYPE>
         commandProtocol = {{"msz", COMMAND_TYPE::MAP_SIZE},
-        {"bct", COMMAND_TYPE::MAP_CONTENT}, {"pnw", COMMAND_TYPE::NEW_PLAYER},
-        {"pnw", COMMAND_TYPE::NEW_PLAYER},
-        {"ppo", COMMAND_TYPE::PLAYER_POSITION},
-        {"pie", COMMAND_TYPE::INCANTATION_END},
-        {"pic", COMMAND_TYPE::INCANTATION_START},
-        {"enw", COMMAND_TYPE::EGG_LAID}, {"edi", COMMAND_TYPE::EGG_DEATH},
-        {"ebo", COMMAND_TYPE::EGG_PLAYER_CONNECTED},
-        {"pdi", COMMAND_TYPE::PLAYER_DEATH},
-        {"pgt", COMMAND_TYPE::RESSOURCE_COLLECTING},
-        {"pdr", COMMAND_TYPE::RESSOURCE_DROPPING},
-        {"pbc", COMMAND_TYPE::BROADCAST},
-        {"seg", COMMAND_TYPE::GAME_END},
-        {"smg", COMMAND_TYPE::SERVER_MESSAGE},
-        {"suc", COMMAND_TYPE::SERVER_UNKNOW_COMMAND},
-        {"sst", COMMAND_TYPE::TIME_UNIT_MODIFICATION},
-        {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME},
+            {"bct", COMMAND_TYPE::MAP_CONTENT}, {"pnw", COMMAND_TYPE::NEW_PLAYER},
+            {"pnw", COMMAND_TYPE::NEW_PLAYER},
+            {"ppo", COMMAND_TYPE::PLAYER_POSITION},
+            {"pie", COMMAND_TYPE::INCANTATION_END},
+            {"pic", COMMAND_TYPE::INCANTATION_START},
+            {"enw", COMMAND_TYPE::EGG_LAID}, {"edi", COMMAND_TYPE::EGG_DEATH},
+            {"ebo", COMMAND_TYPE::EGG_PLAYER_CONNECTED},
+            {"pdi", COMMAND_TYPE::PLAYER_DEATH},
+            {"pgt", COMMAND_TYPE::RESSOURCE_COLLECTING},
+            {"pdr", COMMAND_TYPE::RESSOURCE_DROPPING},
+            {"pbc", COMMAND_TYPE::BROADCAST},
+            {"seg", COMMAND_TYPE::GAME_END},
+            {"smg", COMMAND_TYPE::SERVER_MESSAGE},
+            {"suc", COMMAND_TYPE::SERVER_UNKNOW_COMMAND},
+            {"pex", COMMAND_TYPE::EXPULSION},
+            {"sst", COMMAND_TYPE::TIME_UNIT_MODIFICATION},
+            {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME},
         };
 
         CommandHandler::CommandHandler(
@@ -71,6 +72,7 @@ namespace GUI {
               {COMMAND_TYPE::SERVER_MESSAGE, &CommandHandler::serverMessage},
               {COMMAND_TYPE::TIME_UNIT_MODIFICATION, &CommandHandler::timeUnitModification},
               {COMMAND_TYPE::SERVER_UNKNOW_COMMAND, &CommandHandler::serverUnknowCommand},
+              {COMMAND_TYPE::EXPULSION, &CommandHandler::expulsion},
               {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}}),
               _sendToServerFunc(sendToServer), _connexionCmdRemaining(0)
         {
@@ -535,6 +537,27 @@ namespace GUI {
             return (true);
         }
 
+        bool CommandHandler::expulsion(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string id;
+            std::string trantorianId;
+
+            if (!(ss >> cmd >> id)) {
+                return (false);
+            }
+            trantorianId += playerKey + id;
+            try {
+                auto player = _entityManager->getEntityById(trantorianId);
+                // implement expulsion animation
+                std::cout << "Trantorian expulsion id : " << id << std::endl;
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return false;
+            }
+            return (true);
+        }
 
         bool CommandHandler::handleIdandMapSize(const std::string &command)
         {
