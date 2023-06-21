@@ -49,7 +49,7 @@ class ElevationParticipant:
 
     def checkElevationResponse(self):
         self._clientManager.sendBroadcast(Message.OK.value, [self._emitter])
-        res: Tuple(int, str, List[int], int) = [0, "", [0], 0]
+        res: Tuple[int, str, List[int], int] = (0, "", [0], 0)
         while res[1] != Message.KO.value:
             checkRes = self.checkWaitNextLastOK()
             if checkRes == 1:
@@ -61,7 +61,7 @@ class ElevationParticipant:
 
     def joinEmitter(self) -> bool:
         receivedDir0 = 2
-        res: Tuple(int, str, List[int], int) = [0, "", [0], 0]
+        res: Tuple[int, str, List[int], int] = (0, "", [0], 0)
         while receivedDir0 > 0:
             self._log.debug("join emitter, receivedDir0: " + str(receivedDir0))
             res = self._clientManager.checkBroadcastResponse()
@@ -76,10 +76,11 @@ class ElevationParticipant:
             self._decisionTree.takeFoodIfAtFeet()
             if self._decisionTree.getCurrentFood() < 8:
                 self._decisionTree.takeClosestFood()
+        return True
 
-    def checkBroadcastEmitter(self) -> List[Tuple(int, str, List[int], int)]:
+    def checkBroadcastEmitter(self) -> List[Tuple[int, str, List[int], int]]:
         broadcasts = self._clientManager.checkBroadcast()
-        res: List[Tuple(int, str, List[int], int)] = []
+        res: List[Tuple[int, str, List[int], int]] = []
         for mess in broadcasts:
             if mess[2][0] == 0:
                 if mess[0] == self._emitter:
@@ -94,7 +95,7 @@ class ElevationParticipant:
 
     def waitNextStep(self) -> bool:
         okNb = 0
-        res: Tuple(int, str, List[int], int) = [0, "", [], 0]
+        res: List[Tuple[int, str, List[int], int]] = []
         while okNb < 2:
             res = self.checkBroadcastEmitter()
             for mess in res:
@@ -103,7 +104,7 @@ class ElevationParticipant:
                 elif mess[1] == Message.OK.value:
                     okNb += 1
                 else:
-                    self._log.debug("weird message in wait next step: " + mess[1])
+                    self._log.debug(f"weird message in wait next step: {mess[1]}")
             self._decisionTree.takeClosestFood()
         return True
 
@@ -130,7 +131,7 @@ class ElevationParticipant:
 
     def checkElevationParticipant(self, currentLevel: int) -> bool:
         broadcasts: List[
-            Tuple(int, str, List[int], int)
+            Tuple[int, str, List[int], int]
         ] = self._clientManager.checkBroadcast()
         response: List[int] = []
         if len(broadcasts) == 0:

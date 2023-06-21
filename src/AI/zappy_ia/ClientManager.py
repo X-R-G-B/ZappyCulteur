@@ -44,7 +44,7 @@ class ClientManager:
     def isMyIdInList(self, idList: List[int]) -> bool:
         return self.isIdInList(idList, self._id)
 
-    def checkBroadcast(self) -> List[Tuple(int, str, List[int], int)]:
+    def checkBroadcast(self) -> List[Tuple[int, str, List[int], int]]:
         """
         This function is call to get received broadcast since last get,
             check if client received broadcast from other ia, parse and return it
@@ -55,7 +55,7 @@ class ClientManager:
         outList: List[str] = self._client.outputBroadcast()
         if len(outList) == 0:
             return []
-        resList: List[Tuple(int, str, List[int], int)] = []
+        resList: List[Tuple[int, str, List[int], int]] = []
         for res in outList:
             res = res.split(",")
             direc = int(res[0].split(" ")[1])
@@ -85,7 +85,7 @@ class ClientManager:
 
     def checkBroadcastWithoutNewElevation(
         self,
-    ) -> List[Tuple(int, str, List[int], int)]:
+    ) -> List[Tuple[int, str, List[int], int]]:
         """
         This function is call to get received broadcast since last get without new elevation broadcast,
 
@@ -93,7 +93,7 @@ class ClientManager:
         List of parsed broadcast List[[senderId, message, targets, dir]]
         """
         broadcasts = self.checkBroadcast()
-        res: List[Tuple(int, str, List[int], int)] = []
+        res: List[Tuple[int, str, List[int], int]] = []
         for broadcast in broadcasts:
             if broadcast[1].find(Message.L2.value[:-1]) == -1:
                 res.append(broadcast)
@@ -101,7 +101,7 @@ class ClientManager:
                 self.sendBroadcast(Message.KO.value, [broadcast[0]])
         return res
 
-    def checkBroadcastResponse(self) -> Tuple(int, str, List[int], int):
+    def checkBroadcastResponse(self) -> Tuple[int, str, List[int], int]:
         liste = self.checkBroadcastWithoutNewElevation()
         if len(liste) == 0:
             return (0, "", [0], 0)

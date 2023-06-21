@@ -5,7 +5,7 @@ import sys
 from typing import List, Tuple
 
 
-levelCosts: List[List[Tuple(str, int)]] = [
+levelCosts: List[List[Tuple[str, int]]] = [
     [("Linemate", 1)],
     [("Linemate", 1), ("Deraumere", 1), ("Sibur", 1)],
     [("Linemate", 2), ("Sibur", 1), ("Phiras", 2)],

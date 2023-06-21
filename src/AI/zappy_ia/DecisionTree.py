@@ -8,7 +8,7 @@ from zappy_ia.Log import LogGood
 
 levelParticipantsNb: List[int] = [0, 0, 1, 1, 3, 3, 5, 5]
 
-levelCosts: List[List[Tuple(Element, int)]] = [
+levelCosts: List[List[Tuple[Element, int]]] = [
     [(Element.LINEMATE, 1)],
     [(Element.LINEMATE, 1), (Element.DERAUMERE, 1), (Element.SIBUR, 1)],
     [(Element.LINEMATE, 2), (Element.SIBUR, 1), (Element.PHIRAS, 2)],
@@ -333,7 +333,7 @@ class DecisionTree:
             self.takeElement(Element.FOOD, foodPos)
         self.inventory()
 
-    def checkReceivedMessage(self, res: Tuple(int, str, List[int], int)):
+    def checkReceivedMessage(self, res: Tuple[int, str, List[int], int]):
         self._log.debug("message: " + res[1])
         if res[1] == Message.OK.value:
             if len(self._participantsId) < levelParticipantsNb[self._level]:
@@ -363,7 +363,7 @@ class DecisionTree:
     def waitParticipants(self):
         readyParticipants = 0
         self.inventory()
-        res: List[Tuple(int, str, List[int], int)] = []
+        res: List[Tuple[int, str, List[int], int]] = []
         while (
             readyParticipants < levelParticipantsNb[self._level]
             or self._inputTree["mfood"][0] < 13
@@ -390,7 +390,7 @@ class DecisionTree:
             the ia call others to try elevation
         """
         self._participantsId = []
-        res: List[Tuple(int, str, List[int], int)] = []
+        res: List[Tuple[int, str, List[int], int]] = []
         while len(self._participantsId) < levelParticipantsNb[self._level]:
             self._clientManager.sendBroadcast(list(Message)[self._level].value)
             res = self._clientManager.checkBroadcastWithoutNewElevation()
