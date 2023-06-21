@@ -8,9 +8,12 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <unistd.h>
+#include "circular_buffer.h"
+#include "tlcstrings.h"
 #include "client.h"
 #include "internal.h"
 #include "llog.h"
+#include "tlcllists.h"
 #include "trantorien.h"
 #include "broadcast_events.h"
 
@@ -20,6 +23,24 @@ static void send_new_connection(ntw_t *ntw, ntw_client_t *cl)
 {
     cmd_ebo(ntw, cl);
     cmd_pnw(ntw, cl);
+}
+
+static void send_nb_slot(list_t *tr_available, ntw_client_t *cl,
+    const char *team)
+{
+    int nb_opend = 0;
+    trantorien_t *tr;
+    char buff[512] = {0};
+
+    for (L_EACH(node, tr_available)) {
+        tr = L_DATA(node);
+        if (tr == NULL || x_strcmp(tr->team_name, team) != 0) {
+            continue;
+        }
+        nb_opend++;
+    }
+    snprintf(buff, 511, "%d\n", nb_opend);
+    circular_buffer_write(cl->write_to_outside, buff);
 }
 
 bool update_client_waiting_slot_opened(zappy_t *zappy, ntw_client_t *cl)
@@ -36,7 +57,7 @@ bool update_client_waiting_slot_opened(zappy_t *zappy, ntw_client_t *cl)
     }
     client->state = CONNECTED;
     client->type = AI;
-    send_id(client, cl);
+    send_nb_slot(zappy->trantoriens_available, cl, client->name);
     send_size(zappy->args, cl);
     client->cl.ai.trantorien->id = client->id;
     send_new_connection(zappy->ntw, cl);
