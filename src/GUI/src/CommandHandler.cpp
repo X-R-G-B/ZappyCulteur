@@ -22,20 +22,27 @@
 
 namespace GUI {
     namespace CommandHandler {
+
         static const std::unordered_map<std::string, COMMAND_TYPE>
         commandProtocol = {{"msz", COMMAND_TYPE::MAP_SIZE},
-        {"bct", COMMAND_TYPE::MAP_CONTENT}, {"pnw", COMMAND_TYPE::NEW_PLAYER},
-        {"pnw", COMMAND_TYPE::NEW_PLAYER},
-        {"ppo", COMMAND_TYPE::PLAYER_POSITION},
-        {"pie", COMMAND_TYPE::INCANTATION_END},
-        {"pic", COMMAND_TYPE::INCANTATION_START},
-        {"enw", COMMAND_TYPE::EGG_LAID}, {"edi", COMMAND_TYPE::EGG_DEATH},
-        {"ebo", COMMAND_TYPE::EGG_PLAYER_CONNECTED},
-        {"pdi", COMMAND_TYPE::PLAYER_DEATH},
-        {"pgt", COMMAND_TYPE::RESSOURCE_COLLECTING},
-        {"pdr", COMMAND_TYPE::RESSOURCE_DROPPING},
-        {"seg", COMMAND_TYPE::GAME_END},
-        {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME},
+            {"bct", COMMAND_TYPE::MAP_CONTENT}, {"pnw", COMMAND_TYPE::NEW_PLAYER},
+            {"pnw", COMMAND_TYPE::NEW_PLAYER},
+            {"ppo", COMMAND_TYPE::PLAYER_POSITION},
+            {"pie", COMMAND_TYPE::INCANTATION_END},
+            {"pic", COMMAND_TYPE::INCANTATION_START},
+            {"enw", COMMAND_TYPE::EGG_LAID}, {"edi", COMMAND_TYPE::EGG_DEATH},
+            {"ebo", COMMAND_TYPE::EGG_PLAYER_CONNECTED},
+            {"pdi", COMMAND_TYPE::PLAYER_DEATH},
+            {"pgt", COMMAND_TYPE::RESSOURCE_COLLECTING},
+            {"pdr", COMMAND_TYPE::RESSOURCE_DROPPING},
+            {"pbc", COMMAND_TYPE::BROADCAST},
+            {"seg", COMMAND_TYPE::GAME_END},
+            {"smg", COMMAND_TYPE::SERVER_MESSAGE},
+            {"suc", COMMAND_TYPE::SERVER_UNKNOW_COMMAND},
+            {"pex", COMMAND_TYPE::EXPULSION},
+            {"sgt", COMMAND_TYPE::TIME_UNIT_REQUEST},
+            {"sst", COMMAND_TYPE::TIME_UNIT_MODIFICATION},
+            {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME},
         };
 
         CommandHandler::CommandHandler(
@@ -62,6 +69,12 @@ namespace GUI {
               {COMMAND_TYPE::COMMAND_WELCOME,
               &CommandHandler::receiveFirstConnexion},
               {COMMAND_TYPE::GAME_END, &CommandHandler::endGame},
+              {COMMAND_TYPE::BROADCAST, &CommandHandler::broadcastMessage},
+              {COMMAND_TYPE::SERVER_MESSAGE, &CommandHandler::serverMessage},
+              {COMMAND_TYPE::TIME_UNIT_MODIFICATION, &CommandHandler::timeUnitModification},
+              {COMMAND_TYPE::SERVER_UNKNOW_COMMAND, &CommandHandler::serverUnknowCommand},
+              {COMMAND_TYPE::TIME_UNIT_REQUEST, &CommandHandler::timeUnitRequest},
+              {COMMAND_TYPE::EXPULSION, &CommandHandler::expulsion},
               {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}}),
               _sendToServerFunc(sendToServer), _connexionCmdRemaining(0)
         {
@@ -436,6 +449,12 @@ namespace GUI {
             return true;
         }
 
+        bool CommandHandler::serverUnknowCommand([[maybe_unused]]const std::string &command)
+        {
+            std::cout << "Server did not recognize our command" << std::endl;
+            return (true);
+        }
+
         bool CommandHandler::endGame(const std::string &command)
         {
             std::stringstream ss(command);
@@ -465,6 +484,94 @@ namespace GUI {
             _sendToServerFunc("GRAPHIC\n");
             _connexionCmdRemaining = 2;
             return true;
+        }
+
+        bool CommandHandler::broadcastMessage(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string tmp;
+            std::string message;
+
+            if (!(ss >> cmd)) {
+                return (false);
+            }
+            while (ss >> tmp) {
+                message.append(tmp);
+            }
+            try {
+                // Call the textarea entity to add a new message inside
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return false;
+            }
+            return (true);
+        }
+        
+        bool CommandHandler::timeUnitModification(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::size_t time = 0;
+
+            if (!(ss >> cmd >> time)) {
+                return (false);
+            }
+            std::cout << "Time server modification : " << time << std::endl;
+            return (true);
+        }
+
+
+        bool CommandHandler::timeUnitRequest(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::size_t time;
+
+            if (!(ss >> cmd >> time)) {
+                return (false);
+            }
+            // Change the time unit get
+            return (true);
+        }
+
+        bool CommandHandler::serverMessage(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string tmp;
+            std::string message;
+
+            if (!(ss >> cmd)) {
+                return (false);
+            }
+            while (ss >> tmp) {
+                message.append(tmp);
+            }
+            std::cout << "Message from server : " << message << std::endl;
+            return (true);
+        }
+
+        bool CommandHandler::expulsion(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string id;
+            std::string trantorianId;
+
+            if (!(ss >> cmd >> id)) {
+                return (false);
+            }
+            trantorianId += playerKey + id;
+            try {
+                auto player = _entityManager->getEntityById(trantorianId);
+                // implement expulsion animation
+                std::cout << "Trantorian expulsion id : " << id << std::endl;
+            } catch (const Entities::EntitiesManagerException &e) {
+                std::cerr << e.what() << std::endl;
+                return false;
+            }
+            return (true);
         }
 
         bool CommandHandler::handleIdandMapSize(const std::string &command)
