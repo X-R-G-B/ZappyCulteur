@@ -5,15 +5,17 @@
 ** SFML
 */
 
-#include "SFML.hpp"
 #include <algorithm>
+#include <unordered_map>
 #include <iostream>
 #include "CompQuery.hpp"
+#include "SFML.hpp"
 #include "Floor.hpp"
 #include "IEntity.hpp"
 #include "Music.hpp"
 #include "Sprite.hpp"
-#include <unordered_map>
+#include "InputField.hpp"
+#include "Button.hpp"
 
 static const std::unordered_map<sf::Keyboard::Key, GUI::Event>
 _keyboardMappings = {{sf::Keyboard::Num1, GUI::Event::KEYBOARD_1_PRESSED},
@@ -172,6 +174,10 @@ namespace GUI {
         _entityManager->getComponentsByType(Components::CompType::HUDSPRITE);
         auto texts =
         _entityManager->getComponentsByType(Components::CompType::HUDTEXT);
+        auto inputFields =
+        _entityManager->getComponentsByType(Components::CompType::INPUTFIELD);
+        auto buttons =
+        _entityManager->getComponentsByType(Components::CompType::BUTTON);
 
         for (const auto &sprite : *sprites) {
             auto spritePtr =
@@ -188,6 +194,24 @@ namespace GUI {
                 continue;
             }
             _window.draw(textPtr->getText());
+        }
+        for (const auto &inputField : *inputFields) {
+            auto inputFieldPtr =
+            std::static_pointer_cast<GUI::Components::InputField>(inputField);
+            if (inputFieldPtr == nullptr) {
+                continue;
+            }
+            _window.draw(inputFieldPtr->getSprite());
+            _window.draw(inputFieldPtr->getText());
+        }
+        for (const auto &button : *buttons) {
+            auto buttonPtr =
+            std::static_pointer_cast<GUI::Components::Button>(button);
+            if (buttonPtr == nullptr) {
+                continue;
+            }
+            _window.draw(buttonPtr->getSprite());
+            _window.draw(buttonPtr->getText());
         }
     }
 
@@ -295,8 +319,8 @@ namespace GUI {
         EventsManager &eventsManager = EventsManager::getInstance();
 
         if (eventsManager.isEventTriggered(GUI::Event::WINDOW_CLOSED) == true
-        || eventsManager.isEventTriggered(GUI::Event::KEYBOARD_ESCAPE_PRESSED)
-        == true) {
+        || eventsManager.isEventTriggered(GUI::Event::KEYBOARD_ESCAPE_PRESSED)== true
+        || eventsManager.isEventTriggered(GUI::Event::QUIT_GAME) == true) {
             closeWindow();
         }
     }
@@ -336,32 +360,25 @@ namespace GUI {
         }
         viewCenter = _view.getCenter();
         viewSize = _view.getSize();
-        applyCamMovements(viewCenter, viewSize, mapSize, offset);
+        applyCamMovements(offset);
     }
 
-    void SFML::applyCamMovements(sf::Vector2f viewCenter, sf::Vector2f viewSize,
-    Vector2F mapSize, float offset)
+    void SFML::applyCamMovements(float offset)
     {
         EventsManager &eventsManager = EventsManager::getInstance();
 
-        if (eventsManager.isEventTriggered(GUI::Event::KEYBOARD_Z_PRESSED)
-        == true
-        && viewCenter.y - viewSize.y / 2 > 0) {
+        if (eventsManager.isEventTriggered(GUI::Event::KEYBOARD_Z_PRESSED) == true
+        || eventsManager.isEventTriggered(GUI::Event::KEYBOARD_UP_PRESSED) == true) {
             _view.move(0, -offset);
-        } else if (eventsManager.isEventTriggered(
-                   GUI::Event::KEYBOARD_S_PRESSED)
-        == true
-        && viewCenter.y + viewSize.y / 2 < mapSize.y) {
+        } else if (eventsManager.isEventTriggered(GUI::Event::KEYBOARD_S_PRESSED) == true
+        || eventsManager.isEventTriggered(GUI::Event::KEYBOARD_DOWN_PRESSED) == true) {   
             _view.move(0, offset);
         }
-        if (eventsManager.isEventTriggered(GUI::Event::KEYBOARD_Q_PRESSED)
-        == true
-        && viewCenter.x - viewSize.x / 2 > 0) {
+        if (eventsManager.isEventTriggered(GUI::Event::KEYBOARD_Q_PRESSED) == true
+        || eventsManager.isEventTriggered(GUI::Event::KEYBOARD_LEFT_PRESSED) == true) {
             _view.move(-offset, 0);
-        } else if (eventsManager.isEventTriggered(
-                   GUI::Event::KEYBOARD_D_PRESSED)
-        == true
-        && viewCenter.x + viewSize.x / 2 < mapSize.x) {
+        } else if (eventsManager.isEventTriggered(GUI::Event::KEYBOARD_D_PRESSED) == true
+        || eventsManager.isEventTriggered(GUI::Event::KEYBOARD_RIGHT_PRESSED) == true) {
             _view.move(offset, 0);
         }
     }

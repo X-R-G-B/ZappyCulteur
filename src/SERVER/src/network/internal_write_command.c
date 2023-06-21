@@ -14,6 +14,7 @@
 #include "ntw.h"
 #include "ntw_internal.h"
 #include "tlcllists.h"
+#include "llog.h"
 
 void internal_write_command(ntw_t *ntw, ntw_client_t *cl)
 {
@@ -27,11 +28,14 @@ void internal_write_command(ntw_t *ntw, ntw_client_t *cl)
     }
     to_write_size = strlen(to_write);
     nbwrite = write(cl->fd, to_write, to_write_size);
-    free(to_write);
     if (nbwrite == (size_t) -1) {
         perror("write");
         list_append(ntw->clients_to_remove, cl, NULL, NULL);
+        llog_write_f(LOG_FILE_NETWORK, LLOG_ERROR,
+            "write error for socket fd:%d (message:'%s')", cl->fd, to_write);
     } else {
-        return;
+        llog_write_f(LOG_FILE_NETWORK, LLOG_TRACE,
+            "write success for socket fd:%d (message:'%s')", cl->fd, to_write);
     }
+    free(to_write);
 }

@@ -117,7 +117,7 @@ namespace GUI {
                     continue;
                 }
                 auto entityId = entity->getId();
-                if (entityId == id) {
+                if (entityId == id && quantity > 0) {
                     quantity -= 1;
                 }
             }

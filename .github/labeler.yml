@@ -12,10 +12,10 @@ cicd:
 - .github/workflows/*.yml
 
 SERVER:
-- src/SERVER/*
+- src/SERVER/**
 
 AI:
-- src/AI/*
+- src/AI/**
 
 GUI:
-- src/GUI/*
+- src/GUI/**

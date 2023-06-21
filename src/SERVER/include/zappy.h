@@ -19,6 +19,8 @@
 
     #define NB_FREQ_BEFORE_RESOURCE 20
 
+extern const int level_ressources[LVL_MAX - 1][PLAYER];
+
 struct zappy_s {
     ntw_t *ntw;
     map_t *map;
@@ -26,6 +28,7 @@ struct zappy_s {
     size_t cur_tick;
     size_t before_add_resources;
     list_t *trantoriens_available;
+    bool is_end;
 };
 typedef struct zappy_s zappy_t;
 
@@ -94,5 +97,12 @@ bool broadcast_graphic(ntw_t *ntw, const char *msg);
 ** @return the list of trantorien_t
 **/
 list_t *zappy_create_initial_egg(args_t *args);
+
+/**
+** @brief Check if the game is ended
+** @param zappy
+** @return true if the game is ended
+**/
+bool check_end(zappy_t *zappy, bool is_end);
 
 #endif

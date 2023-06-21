@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include "llog.h"
 #include "tlcstrings.h"
 #include "args.h"
 #include "circular_buffer.h"
@@ -16,24 +18,22 @@
 #include "ntw.h"
 #include "tlcllists.h"
 #include "tlcstdlibs.h"
+#include "llog.h"
 #include "trantorien.h"
 #include "internal.h"
 #include "zappy.h"
 
 static const char *graphic_team = "GRAPHIC";
 
+static const char *format_str_ai = "client AI (team:%s), waiting slot...";
+
 void send_id(client_t *cc, ntw_client_t *cl)
 {
-    char *id_to_str = NULL;
+    char buff[512] = {0};
 
     cc->id = get_id();
-    id_to_str = x_itoa(cc->id);
-    if (id_to_str == NULL) {
-        return;
-    }
-    circular_buffer_write(cl->write_to_outside, id_to_str);
-    free(id_to_str);
-    circular_buffer_write(cl->write_to_outside, "\n");
+    snprintf(buff, 511, "%d\n", cc->id);
+    circular_buffer_write(cl->write_to_outside, buff);
 }
 
 void send_size(args_t *args, ntw_client_t *cl)
@@ -87,9 +87,11 @@ static bool update(char *tmp, ntw_client_t *cl, zappy_t *zappy)
         cc->type = GRAPHIC;
         send_id(cc, cl);
         send_size(zappy->args, cl);
+        llog_write_fd(STDERR_FILENO, LLOG_INFO, "client graphic connected");
     } else {
         cc->state = WAITING_SLOT_OPENED;
         cc->type = AI_NOT_CONNECTED;
+        llog_write_fd(STDERR_FILENO, LLOG_INFO, format_str_ai, cc->name);
     }
     return true;
 }

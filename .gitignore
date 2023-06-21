@@ -1007,3 +1007,5 @@ vgcore.*
 !src/GUI/.clang-format
 *.vscode/
 *.idea
+*.gcno
+*.gcda

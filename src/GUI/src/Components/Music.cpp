@@ -13,7 +13,7 @@ namespace GUI {
         Music::Music(const std::string &id, const std::string &path,
         bool isLooping, bool needToPlay, float volume, CompType type)
             : AComponent(id, type), _volume(volume), _isPlaying(false),
-              _isLooping(isLooping), _needToPlay(needToPlay)
+              _isLooping(isLooping), _needToPlay(needToPlay), _needToStop(false)
         {
             _music.openFromFile(path);
             _music.setLoop(_isLooping);

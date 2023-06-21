@@ -6,13 +6,16 @@
 */
 
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include "ntw.h"
+#include "client.h"
 #include "zappy.h"
 #include "command_reponses.h"
+#include "broadcast_events.h"
 
 int command_fork(trantorien_t *trantorien, zappy_t *zappy,
-ntw_client_t *cl, action_t *action)
+    ntw_client_t *cl, action_t *action)
 {
     trantorien_t *new_trantorien = NULL;
 
@@ -24,6 +27,7 @@ ntw_client_t *cl, action_t *action)
         zappy->map->width, zappy->map->height);
     new_trantorien->x = trantorien->x;
     new_trantorien->y = trantorien->y;
+    new_trantorien->id = get_id();
     if (!new_trantorien ||
         list_append(zappy->trantoriens_available, new_trantorien,
         (void (*)(void *)) &trantorien_destroy, NULL) == NULL) {
@@ -31,5 +35,6 @@ ntw_client_t *cl, action_t *action)
         return EXIT_FAILURE;
     }
     circular_buffer_write(cl->write_to_outside, OK_RESPONSE);
-    return EXIT_FAILURE;
+    cmd_enw(zappy->ntw, new_trantorien, trantorien);
+    return EXIT_SUCCESS;
 }

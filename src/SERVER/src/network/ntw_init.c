@@ -15,27 +15,34 @@
 #include <stdlib.h>
 #include <ifaddrs.h>
 #include <netdb.h>
+#include <unistd.h>
+#include "llog.h"
 #include "ntw.h"
 
 static const size_t socklen = sizeof(struct sockaddr_in);
+
+static const char *format_port = "listening on port:%d";
+
+static const char *format_ip = "available at host:%s";
 
 static void print_info_socket(struct sockaddr_in addr)
 {
     struct ifaddrs *ifaddr = NULL;
     char host[512] = {0};
 
-    printf("INFO: listening on port: %d\n", ntohs(addr.sin_port));
+    llog_write_fd(STDERR_FILENO, LLOG_INFO, format_port, ntohs(addr.sin_port));
+    llog_write_f(LOG_FILE_NETWORK, LLOG_INFO, format_port,
+        ntohs(addr.sin_port));
     if (getifaddrs(&ifaddr) == -1) {
         perror("getifaddrs");
         return;
     }
     for (struct ifaddrs *ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) {
-        if (ifa->ifa_addr == NULL) {
-            continue;
-        }
-        if (ifa->ifa_addr->sa_family == AF_INET && getnameinfo(ifa->ifa_addr,
+        if (ifa->ifa_addr != NULL &&
+            ifa->ifa_addr->sa_family == AF_INET && getnameinfo(ifa->ifa_addr,
                 socklen, host, 511, NULL, 0, NI_NUMERICHOST) == 0) {
-            printf("INFO: available at host: %s\n", host);
+            llog_write_fd(STDERR_FILENO, LLOG_INFO, format_ip, host);
+            llog_write_f(LOG_FILE_NETWORK, LLOG_INFO, format_ip, host);
         }
     }
     freeifaddrs(ifaddr);

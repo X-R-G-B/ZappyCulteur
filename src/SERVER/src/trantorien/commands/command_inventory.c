@@ -27,8 +27,9 @@ int command_inventory(trantorien_t *trantorien, zappy_t *zappy,
 {
     char buff[512] = {0};
 
-    if (trantorien == NULL || zappy == NULL || cl == NULL || action == NULL)
+    if (trantorien == NULL || zappy == NULL || cl == NULL || action == NULL) {
         return EXIT_FAILURE;
+    }
     circular_buffer_write(cl->write_to_outside, "[");
     for (int i = 0; i < MAX_NB_TR_RESSOURCES; i++) {
         if (i != 0) {

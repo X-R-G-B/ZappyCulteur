@@ -45,8 +45,7 @@ namespace GUI {
             void zoomCamera();
             void lookForCloseEvent();
             void playMusics();
-            void applyCamMovements(sf::Vector2f viewCenter,
-            sf::Vector2f viewSize, Vector2F mapSize, float offset);
+            void applyCamMovements(float offset);
             void handleKeyboardEvents(EventsManager &eventsManager);
             void handleMouseEvents(EventsManager &eventsManager);
             void handleMousePosEvents(EventsManager &eventsManager);

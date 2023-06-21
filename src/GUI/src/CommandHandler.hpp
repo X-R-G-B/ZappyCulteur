@@ -42,6 +42,7 @@ namespace GUI {
             GAME_END,
             SERVER_MESSAGE,
             UNKNOW_COMMAND,
+            SERVER_UNKNOW_COMMAND,
             COMMAND_PARAMETER,
             COMMAND_WELCOME
         };
@@ -78,6 +79,13 @@ namespace GUI {
                  * @param commands A vector of commands to process and execute.
                  */
                 void update(const std::vector<std::string> &commands);
+
+                /**
+                 * @brief Return if the connexion is ready to receive.
+                 * @return True if the connexion is ready to receive, false
+                 * otherwise.
+                 */
+                bool getIsReadyToReceive() const;
 
             protected:
             private:
@@ -152,7 +160,21 @@ namespace GUI {
 
                 bool startIncantation(const std::string &command);
 
+                bool endGame(const std::string &command);
+
                 bool endIncantation(const std::string &command);
+
+                bool broadcastMessage(const std::string &command);
+
+                bool serverMessage(const std::string &command);
+          
+                bool serverUnknowCommand(const std::string &command);
+      
+                bool timeUnitRequest(const std::string &command);
+          
+                bool expulsion(const std::string &command);
+          
+                bool timeUnitModification(const std::string &command);
 
                 bool unknowCommand(const std::string &command);
 
@@ -186,6 +208,7 @@ namespace GUI {
                 _toCall;
                 std::function<void(const std::string &)> _sendToServerFunc;
                 std::size_t _connexionCmdRemaining;
+                bool _isReadyToReceive;
         };
     } // namespace CommandHandler
 } // namespace GUI
