@@ -36,6 +36,7 @@ namespace GUI {
         {"pdr", COMMAND_TYPE::RESSOURCE_DROPPING},
         {"pbc", COMMAND_TYPE::BROADCAST},
         {"seg", COMMAND_TYPE::GAME_END},
+        {"smg", COMMAND_TYPE::SERVER_MESSAGE},
         {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME},
         };
 
@@ -64,6 +65,7 @@ namespace GUI {
               &CommandHandler::receiveFirstConnexion},
               {COMMAND_TYPE::GAME_END, &CommandHandler::endGame},
               {COMMAND_TYPE::BROADCAST, &CommandHandler::broadcastMessage},
+              {COMMAND_TYPE::SERVER_MESSAGE, &CommandHandler::serverMessage},
               {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}}),
               _sendToServerFunc(sendToServer), _connexionCmdRemaining(0)
         {
@@ -490,6 +492,24 @@ namespace GUI {
             }
             return (true);
         }
+
+        bool CommandHandler::serverMessage(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string tmp;
+            std::string message;
+
+            if (!(ss >> cmd)) {
+                return (false);
+            }
+            while (ss >> tmp) {
+                message.append(tmp);
+            }
+            std::cout << "Message from server : " << message << std::endl;
+            return (true);
+        }
+
 
         bool CommandHandler::handleIdandMapSize(const std::string &command)
         {
