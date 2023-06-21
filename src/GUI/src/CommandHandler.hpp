@@ -79,6 +79,13 @@ namespace GUI {
                  */
                 void update(const std::vector<std::string> &commands);
 
+                /**
+                 * @brief Return if the connexion is ready to receive.
+                 * @return True if the connexion is ready to receive, false
+                 * otherwise.
+                 */
+                bool getIsReadyToReceive() const;
+
             protected:
             private:
                 /**
@@ -186,6 +193,7 @@ namespace GUI {
                 _toCall;
                 std::function<void(const std::string &)> _sendToServerFunc;
                 std::size_t _connexionCmdRemaining;
+                bool _isReadyToReceive;
         };
     } // namespace CommandHandler
 } // namespace GUI

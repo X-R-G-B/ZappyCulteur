@@ -121,7 +121,8 @@ namespace GUI {
     {
         std::string currentPlayerId;
 
-        if (_timeSinceLastServerAsk > 1) {
+        if (_timeSinceLastServerAsk > 1
+        && _commandHandler->getIsReadyToReceive() == true) {
             _networkManager.sendToServer("mct\n");
             for (const auto &id : _entityManager->getPlayersIds()) {
                 currentPlayerId = id;

@@ -56,7 +56,7 @@ namespace GUI {
               {COMMAND_TYPE::COMMAND_WELCOME,
               &CommandHandler::receiveFirstConnexion},
               {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}}),
-              _sendToServerFunc(sendToServer), _connexionCmdRemaining(0)
+              _sendToServerFunc(sendToServer), _connexionCmdRemaining(0), _isReadyToReceive(false)
         {
         }
 
@@ -434,8 +434,15 @@ namespace GUI {
                 if (_entityManager->doesEntityExist("Floor") == false) {
                     _sendToServerFunc("msz\n");
                 }
+                _isReadyToReceive = true;
             }
             return true;
         }
+
+        bool CommandHandler::getIsReadyToReceive() const
+        {
+            return _isReadyToReceive;
+        }
+
     } // namespace CommandHandler
 } // namespace GUI
