@@ -82,7 +82,7 @@ dnf install SFML-devel SFML
 # Arch-based
 pacman -S python python-pip
 # Debian-based
-apt install python pip
+apt install python3 pip
 # Fedora
 dnf install python pip
 # Windows: available on microsoft store
@@ -100,22 +100,31 @@ make
 <details open>
     <summary>Docker</summary>
 
-- on one terminal:
+- The server (and initialize the docker container) *if you want a graphical interface, please follow the `2.`*
+1. on one terminal:
 ```sh
-docker run -it --rm --name zappy -v "$PWD:/code" -w "/code" docker.io/epitechcontent/epitest-docker
+docker run -it --network=host --rm --name zappy -v "$PWD:/code" -w "/code" docker.io/epitechcontent/epitest-docker
+make
+# ./zappy_server --help
+./zappy_server -p 4042 -x 10 -y 20 -n abc -c 5 -f 50
+```
+2. ont one terminal (**only tested on linux**)
+```bash
+docker run -it --rm --name zappy -v "$PWD:/code" -v "/dev/dri/:/dev/dri/" -v "/tmp/.X11-unix/:/tmp/.X11-unix/" -v "$HOME/.Xauthority:/root/.Xauthority" --network=host  -w "/code" docker.io/epitechcontent/epitest-docker
 make
 # ./zappy_server --help
 ./zappy_server -p 4042 -x 10 -y 20 -n abc -c 5 -f 50
 ```
 
-- on another terminal:
+- The graphical user interface (*only if you followed step `2.`*):
 ```sh
-docker exec -it zappy bash
+docker exec -it -e "DISPLAY=$DISPLAY" zappy bash
+dnf install -y mesa-dri-drivers
 # ./zappy_gui --help
 ./zappy_gui -h 127.0.0.1 -p 4042
 ```
 
-- on another terminal:
+- The player (AI/Bot):
 ```sh
 docker exec -it zappy bash
 # ./zappy_ai --help

@@ -9,11 +9,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ntw.h"
 #include "circular_buffer.h"
+#include "ntw.h"
 #include "map.h"
 #include "internal.h"
-#include "zappy.h"
+#include "tlcstrings.h"
 
 static bool send_pos(ntw_client_t *cl, int x, int y)
 {
@@ -64,7 +64,9 @@ bool cmd_bct(zappy_t *zappy, ntw_client_t *cl, char **cmd_split)
     bool status = true;
 
     if (zappy == NULL || cmd_split[1] == NULL || cmd_split[2] == NULL ||
-            strlen(cmd_split[1]) == 0 || strlen(cmd_split[2]) == 0) {
+            strlen(cmd_split[1]) == 0 || strlen(cmd_split[2]) == 0 ||
+            x_strcontainc("0123456789", cmd_split[1][0]) == 0 ||
+            x_strcontainc("0123456789", cmd_split[2][0]) == 0) {
         return false;
     }
     if (cmd_split[2][strlen(cmd_split[2]) - 1] == '\n') {

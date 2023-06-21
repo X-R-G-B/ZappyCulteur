@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.13)
 
 set(PROJECT_NAME zappy_gui)
 
@@ -17,9 +17,6 @@ set_target_properties(
 )
 
 ##################### CMAKE OPTIONS #######################
-
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(UNIX)
     target_compile_options(
@@ -44,6 +41,12 @@ if(WIN32)
         PRIVATE ws2_32
     )
 endif()
+
+target_compile_features(
+    ${PROJECT_NAME}
+    PRIVATE
+    cxx_std_20
+)
 
 ##################### SRC #################################
 

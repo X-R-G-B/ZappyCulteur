@@ -8,21 +8,21 @@
 #pragma once
 
 #include <chrono>
-#include "Trantorian.hpp"
-#include "Sprite.hpp"
 #include "AEntity.hpp"
+#include "Sprite.hpp"
+#include "Trantorian.hpp"
 
 namespace GUI {
     namespace Entities {
         class Incantation : public AEntity {
             public:
-                Incantation(const std::string &id,
-                    const Vector2F &position,
-                    EntityOrientation orientations);
+                Incantation(const std::string &id, const Vector2F &position,
+                EntityOrientation orientations);
                 ~Incantation();
                 void update(double deltaTime) final;
                 void endIncantation(std::size_t result);
                 void addTrantorian(std::shared_ptr<Trantorian> trantorian);
+
             protected:
             private:
                 void initIncantationSprite();
@@ -31,5 +31,5 @@ namespace GUI {
                 std::vector<std::shared_ptr<Trantorian>> _trantorians;
                 double _timeSinceLastRectChange;
         };
-    }
-}
+    } // namespace Entities
+} // namespace GUI

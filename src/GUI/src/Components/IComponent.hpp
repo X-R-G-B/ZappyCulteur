@@ -18,6 +18,8 @@ namespace GUI {
             TEXT,
             MUSIC,
             SOUND,
+            HUDSPRITE,
+            HUDTEXT,
         };
 
         class IComponent {
@@ -33,5 +35,5 @@ namespace GUI {
                  */
                 virtual CompType getType() const = 0;
         };
-    }
-}
+    } // namespace Components
+} // namespace GUI

@@ -8,6 +8,8 @@ on:
 jobs:
   pyright:
     runs-on: ubuntu-latest
+    env:
+      workdir: ./src/AI
 
     steps:
     - uses: actions/checkout@v3
@@ -21,12 +23,17 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pyright
+        make
+      working-directory: ${{ env.workdir }}
 
     - name: Lint
-      run: cd src/AI && pyright **.py
+      run: pyright ./zappy_ia ./zappy_ai.py
+      working-directory: ${{ env.workdir }}
 
   ruff:
     runs-on: ubuntu-latest
+    env:
+      workdir: ./src/AI
 
     steps:
     - uses: actions/checkout@v3
@@ -42,10 +49,13 @@ jobs:
         pip install ruff
 
     - name: Lint
-      run: cd src/AI && ruff check .
+      run: ruff check .
+      working-directory: ${{ env.workdir }}
 
   black:
     runs-on: ubuntu-latest
+    env:
+      workdir: ./src/AI
 
     steps:
     - uses: actions/checkout@v3
@@ -61,4 +71,5 @@ jobs:
         pip install black
 
     - name: Lint
-      run: cd src/AI && black --check .
+      run: black --check .
+      working-directory: ${{ env.workdir }}

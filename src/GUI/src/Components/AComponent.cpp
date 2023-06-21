@@ -10,16 +10,20 @@
 namespace GUI {
     namespace Components {
 
-        AComponent::AComponent(const std::string &id, CompType type) :
-            _id(id), _type(type) {}
+        AComponent::AComponent(const std::string &id, CompType type)
+            : _id(id), _type(type)
+        {
+        }
 
-        const std::string &AComponent::getId() const {
+        const std::string &AComponent::getId() const
+        {
             return _id;
         }
 
-        CompType AComponent::getType() const {
+        CompType AComponent::getType() const
+        {
             return _type;
         }
 
-    }
-}
+    } // namespace Components
+} // namespace GUI

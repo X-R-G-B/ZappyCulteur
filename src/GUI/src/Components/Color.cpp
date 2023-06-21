@@ -10,16 +10,10 @@
 
 namespace GUI {
     Color::Color(
-        std::uint8_t red,
-        std::uint8_t green,
-        std::uint8_t blue,
-        std::uint8_t alpha
-    ) :
-        _red(red),
-        _green(green),
-        _blue(blue),
-        _alpha(alpha)
-    {}
+    std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha)
+        : _red(red), _green(green), _blue(blue), _alpha(alpha)
+    {
+    }
 
     std::uint8_t Color::getRed() const
     {
@@ -60,4 +54,4 @@ namespace GUI {
     {
         _alpha = alpha;
     }
-}
+} // namespace GUI
