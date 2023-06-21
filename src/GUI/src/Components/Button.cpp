@@ -25,7 +25,7 @@ namespace GUI {
             const std::string &text,
             const Vector2F &position,
             Event event
-        ) : AComponent(id, CompType::BUTTON), _btnText(text), _position(position), _event(event),
+        ) : AComponent(id, CompType::BUTTON), _position(position), _btnText(text), _event(event),
             _state(ButtonState::NONE)
         {
             initSprites();

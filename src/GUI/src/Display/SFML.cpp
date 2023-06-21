@@ -360,32 +360,25 @@ namespace GUI {
         }
         viewCenter = _view.getCenter();
         viewSize = _view.getSize();
-        applyCamMovements(viewCenter, viewSize, mapSize, offset);
+        applyCamMovements(offset);
     }
 
-    void SFML::applyCamMovements(sf::Vector2f viewCenter, sf::Vector2f viewSize,
-    Vector2F mapSize, float offset)
+    void SFML::applyCamMovements(float offset)
     {
         EventsManager &eventsManager = EventsManager::getInstance();
 
-        if (eventsManager.isEventTriggered(GUI::Event::KEYBOARD_Z_PRESSED)
-        == true
-        && viewCenter.y - viewSize.y / 2 > 0) {
+        if (eventsManager.isEventTriggered(GUI::Event::KEYBOARD_Z_PRESSED) == true
+        || eventsManager.isEventTriggered(GUI::Event::KEYBOARD_UP_PRESSED) == true) {
             _view.move(0, -offset);
-        } else if (eventsManager.isEventTriggered(
-                   GUI::Event::KEYBOARD_S_PRESSED)
-        == true
-        && viewCenter.y + viewSize.y / 2 < mapSize.y) {
+        } else if (eventsManager.isEventTriggered(GUI::Event::KEYBOARD_S_PRESSED) == true
+        || eventsManager.isEventTriggered(GUI::Event::KEYBOARD_DOWN_PRESSED) == true) {   
             _view.move(0, offset);
         }
-        if (eventsManager.isEventTriggered(GUI::Event::KEYBOARD_Q_PRESSED)
-        == true
-        && viewCenter.x - viewSize.x / 2 > 0) {
+        if (eventsManager.isEventTriggered(GUI::Event::KEYBOARD_Q_PRESSED) == true
+        || eventsManager.isEventTriggered(GUI::Event::KEYBOARD_LEFT_PRESSED) == true) {
             _view.move(-offset, 0);
-        } else if (eventsManager.isEventTriggered(
-                   GUI::Event::KEYBOARD_D_PRESSED)
-        == true
-        && viewCenter.x + viewSize.x / 2 < mapSize.x) {
+        } else if (eventsManager.isEventTriggered(GUI::Event::KEYBOARD_D_PRESSED) == true
+        || eventsManager.isEventTriggered(GUI::Event::KEYBOARD_RIGHT_PRESSED) == true) {
             _view.move(offset, 0);
         }
     }

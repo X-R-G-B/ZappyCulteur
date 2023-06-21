@@ -86,7 +86,7 @@ namespace GUI {
 
     void NetworkManager::setIp(const std::string &ip)
     {
-        if (ip == "localhost") {
+        if (ip.find("LOCALHOST") != std::string::npos) {
             _ip = "127.0.0.1";
         } else {
             _ip = ip;

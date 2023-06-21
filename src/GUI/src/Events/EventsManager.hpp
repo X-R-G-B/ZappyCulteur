@@ -190,7 +190,7 @@ namespace GUI {
             EventsManager &operator=(const EventsManager &) = delete;
             std::vector<Event> _eventsList;
             Vector2F _mousePos;
-            EventsState _state;
             Vector2F _worldMousePos;
+            EventsState _state;
     };
 } // namespace GUI

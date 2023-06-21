@@ -126,10 +126,8 @@ namespace GUI {
             if (_ipInputField != nullptr) {
                 _ip = _ipInputField->getTextString();
                 cleanInputFields(_ip);
-                return _ip;
-            } else {
-                return "";
             }
+            return _ip;
         }
 
         const std::string &startMenu::getPort()
@@ -137,10 +135,8 @@ namespace GUI {
             if (_portInputField != nullptr) {
                 _port = _portInputField->getTextString();
                 cleanInputFields(_port);
-                return _port;
-            } else {
-                return "";
             }
+            return _port;
         }
 
         bool startMenu::isGameStarted() const
