@@ -34,6 +34,7 @@ namespace GUI {
                 void update(double deltaTime);
                 void killEntitiesByType(EntityType type);
                 void killEntityById(const std::string &id);
+                void killAllEntities();
                 void addEntity(const std::shared_ptr<IEntity> &entity);
                 const std::vector<std::shared_ptr<IEntity>> &
                 getEntities() const;

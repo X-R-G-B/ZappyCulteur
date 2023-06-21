@@ -10,19 +10,22 @@
 #include <sstream>
 #include "Floor.hpp"
 #include "HUD.hpp"
+#include "startMenu.hpp"
+
+static const std::string windowName = "ZappyCulteur";
+
+static constexpr unsigned int height = 1080;
+static constexpr unsigned int width = 1920;
+static constexpr unsigned int framerateLimit = 60;
+
+static const std::string ipFlag = "-h";
+static const std::string portFlag = "-p";
+
+static const std::string defaultIp = "ip";
+static const std::string defaultPort = "port";
+static const std::string MenuEntityID = "startMenu";
 
 namespace GUI {
-    static const std::string windowName = "ZappyCulteur";
-
-    static constexpr unsigned int height = 1080;
-    static constexpr unsigned int width = 1920;
-    static constexpr unsigned int framerateLimit = 60;
-
-    static const std::string ipFlag = "-h";
-    static const std::string portFlag = "-p";
-
-    static const std::string defaultIp = "ip";
-    static const std::string defaultPort = "port";
     App::AppException::AppException(const std::string &msg) : _msg(msg)
     {
     }
@@ -72,7 +75,17 @@ namespace GUI {
 
     void App::launchUserConnectionMenu()
     {
-        std::cout << "Menu will be implemented later." << std::endl;
+        auto startMenu = std::make_shared<GUI::Entities::startMenu>();
+
+        _entityManager->killAllEntities();
+        _entityManager->addEntity(startMenu);
+        while (startMenu->isGameStarted() == false) {
+            _entityManager->update(_deltatime);
+            _displayModule->handleEvents(_deltatime);
+            _displayModule->update(_deltatime);
+        }
+        _networkManager.initConnection(startMenu->getIP(), startMenu->getPort());
+        _entityManager->killEntityById(MenuEntityID);
     }
 
     void App::launchApp()
@@ -82,10 +95,20 @@ namespace GUI {
         } catch (const std::exception &err) {
             throw AppException(err.what());
         }
-        while (_networkManager.isConnected() == false) {
+        if (_networkManager.isConnected() == false) {
             launchUserConnectionMenu();
         }
+        createHUD();
         gameLoop();
+    }
+
+    void App::createHUD()
+    {
+        _entityManager->addEntity(
+        std::make_shared<GUI::Entities::HUD>("HUD", _entityManager));
+        if (_commandHandler == nullptr || _displayModule == nullptr) {
+            throw AppException("Error while initializing app modules");
+        }
     }
 
     // for now, we ask the server for updates every second
@@ -150,26 +173,21 @@ namespace GUI {
         width, height, framerateLimit, WINDOW_MODE::WINDOWED);
         _commandHandler = std::make_unique<CommandHandler::CommandHandler>(
         _entityManager, _networkManager.getSendToServer());
-        _entityManager->addEntity(
-        std::make_shared<GUI::Entities::HUD>("HUD", _entityManager));
-        if (_commandHandler == nullptr || _displayModule == nullptr) {
-            throw AppException("Error while initializing app modules");
-        }
         std::srand(std::time(nullptr));
     }
 
     int App::operator()(int ac, const char **av)
     {
-        if (ac != 1) {
-            try {
+        try {
+            if (ac != 1) {
                 initArgs(av, ac);
                 _networkManager.initConnection(_args[ipFlag], _args[portFlag]);
                 launchApp();
-            } catch (const std::exception &err) {
-                std::cerr << err.what() << std::endl;
+            } else {
+                launchApp();
             }
-        } else {
-            launchApp();
+        } catch (const std::exception &err) {
+            std::cerr << err.what() << std::endl;
         }
         return 0;
     }

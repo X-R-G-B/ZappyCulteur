@@ -147,8 +147,8 @@ namespace GUI {
                 EventsManager::getInstance().getMousePos().y <= _position.y + SIZE_Y) {
                 if (_text.getString() == _placeholder) {
                     _text.setString("");
-                    _isFocused = true;
                 }
+                _isFocused = true;
             } else if (EventsManager::getInstance().isEventTriggered(Event::MOUSE_LEFT_PRESSED) == true) {
                 if (_text.getString() == "") {
                     _text.setString(_placeholder);

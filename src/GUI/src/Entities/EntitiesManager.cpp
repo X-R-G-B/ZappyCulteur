@@ -117,6 +117,11 @@ namespace GUI {
             throw EntitiesManagerException("No entity with this id");
         }
 
+        void EntitiesManager::killAllEntities()
+        {
+            _entities.clear();
+        }
+
         void EntitiesManager::killEntitiesByType(EntityType type)
         {
             for (auto iterator = _entities.begin(); iterator != _entities.end();
