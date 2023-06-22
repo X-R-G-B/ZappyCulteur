@@ -10,10 +10,12 @@
 #include "circular_buffer.h"
 #include "llog.h"
 #include "ntw.h"
+#include "trantorien.h"
 #include "zappy.h"
 #include "internal.h"
 #include "commands/internal.h"
 #include "command_reponses.h"
+#include "broadcast_events.h"
 
 static int (*trantorien_commands[MAX_CMD_CODE])(trantorien_t *, zappy_t *,
     ntw_client_t *, action_t *) = {
@@ -49,6 +51,10 @@ static void move_up(trantorien_t *trantorien, zappy_t *zappy,
         trantorien->actions[i - 1] = trantorien->actions[i];
     }
     trantorien->actions[NB_PARALLEL_ACTION - 1] = NULL;
+    if (trantorien->actions[0] != NULL &&
+            trantorien->actions[0]->code == FORK) {
+        cmd_pfk(zappy->ntw, cl);
+    }
     if (trantorien->actions[0] == NULL ||
             trantorien->actions[0]->code != INCANTATION) {
         return;
