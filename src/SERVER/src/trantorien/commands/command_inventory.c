@@ -33,7 +33,7 @@ int command_inventory(trantorien_t *trantorien, zappy_t *zappy,
     circular_buffer_write(cl->write_to_outside, "[");
     for (int i = 0; i < MAX_NB_TR_RESSOURCES; i++) {
         if (i != 0) {
-            circular_buffer_write(cl->write_to_outside, ",");
+            circular_buffer_write(cl->write_to_outside, ", ");
         }
         snprintf(buff, 511, "%s %d", ressources_name[i],
             trantorien->ressources[i]);

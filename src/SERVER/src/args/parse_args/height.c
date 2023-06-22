@@ -17,7 +17,7 @@ bool parse_arg_height(const char *const arr[], args_t *args)
             args == NULL || arr[1] == NULL) {
         return false;
     }
-    if (args->height != 0 || x_strcontainc("123456789", arr[1][0]) != 1) {
+    if (args->height != 0 || x_strcontainc(OK_IINT, arr[1][0]) != 1) {
         args->is_ok = false;
         return false;
     }

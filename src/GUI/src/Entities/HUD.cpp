@@ -188,7 +188,7 @@ namespace GUI {
                     removeSelectedSprite();
                     removeInfoTexts();
                 } else {
-                    _isTileSelected = true;
+                    _isTileSelected = true; 
                     _selectedTile = tile;
                     removeSelectedSprite();
                     removeInfoTexts();

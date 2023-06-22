@@ -13,6 +13,9 @@ class Client:
         self._client_socket: socket.socket = socket.socket(
             socket.AF_INET, socket.SOCK_STREAM
         )
+        self._dead: bool = False
+        self._error: bool = False
+
         self._server_ip: str = server_ip
         self._isConnected: bool = False
         self._port: int = port
@@ -36,7 +39,12 @@ class Client:
         time.sleep(0.1)
 
     def connect(self):
-        self._client_socket.connect((self._server_ip, self._port))
+        try:
+            self._client_socket.connect((self._server_ip, self._port))
+        except ConnectionRefusedError:
+            print("Connection refused")
+            self._error = True
+            return
         self._isConnected = True
 
         self._client_socket.setblocking(False)
@@ -97,6 +105,10 @@ class Client:
                             self._checkMessage(message[i])
                 else:
                     self._checkMessage(message)
+            else:
+                self._client_socket.close()
+                self._isConnected = False
+                self._dead = True
 
     def _addMessageToSend(self):
         self._sendLock.acquire()

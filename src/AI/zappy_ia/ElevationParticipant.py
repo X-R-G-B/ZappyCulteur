@@ -76,7 +76,7 @@ class ElevationParticipant:
             self._decisionTree.takeFoodIfAtFeet()
             if self._decisionTree.getCurrentFood() < 8:
                 self._decisionTree.takeClosestFood()
-        return True
+        return self.checkElevationResponse()
 
     def checkBroadcastEmitter(self) -> List[Tuple[int, str, List[int], int]]:
         broadcasts = self._clientManager.checkBroadcast()

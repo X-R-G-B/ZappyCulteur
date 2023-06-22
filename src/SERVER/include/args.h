@@ -12,6 +12,8 @@
     #include <stddef.h>
     #include "tlcllists.h"
 
+    #define ARG_MANDATORY_NB 6
+
 struct args_s {
     int port;
     int width;
@@ -19,6 +21,7 @@ struct args_s {
     list_t *teams_name;
     int clients_per_teams;
     int freq;
+    int client_max;
     bool is_ok;
 };
 typedef struct args_s args_t;

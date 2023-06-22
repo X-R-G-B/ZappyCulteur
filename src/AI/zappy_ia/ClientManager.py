@@ -3,6 +3,7 @@ from zappy_ia.Log import LogGood
 from typing import List, Tuple
 from typing import Union
 from zappy_ia.Enums import Message, Element, Command, ServerRes
+import sys
 
 
 class ClientManager:
@@ -13,6 +14,8 @@ class ClientManager:
         self._log: LogGood = log
         self._id: int = id
         self._client: Client = Client(port, machineName)
+        if self._client._error is True:
+            sys.exit(84)
         self.connect()
 
     def stopClient(self):

@@ -8,6 +8,8 @@
 #include "EntitiesManager.hpp"
 #include "Trantorian.hpp"
 #include "Expulsion.hpp"
+#include "InputField.hpp"
+#include "Button.hpp"
 
 namespace GUI {
     namespace Entities {
@@ -25,6 +27,18 @@ namespace GUI {
 
         void EntitiesManager::update(double deltaTime)
         {
+            auto inputField = getComponentsByType(Components::CompType::INPUTFIELD);
+            auto trantorians = getEntitiesByType(EntityType::TRANTORIAN);
+            auto buttons = getComponentsByType(Components::CompType::BUTTON);
+            
+            for (const auto &it : *inputField) {
+                auto component = std::static_pointer_cast<Components::InputField>(it);
+                component->update();
+            }
+            for (const auto &it : *buttons) {
+                auto component = std::static_pointer_cast<Components::Button>(it);
+                component->update();
+            }
             for (auto &entity : _entities) {
                 entity->update(deltaTime);
             }
@@ -117,6 +131,11 @@ namespace GUI {
                 }
             }
             throw EntitiesManagerException("No entity with this id");
+        }
+
+        void EntitiesManager::killAllEntities()
+        {
+            _entities.clear();
         }
 
         void EntitiesManager::killEntitiesByType(EntityType type)

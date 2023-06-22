@@ -56,9 +56,10 @@ static int kill_dead_trnt(zappy_t *zappy)
                 false) {
             continue;
         }
-        list_append(zappy->ntw->clients_to_remove, node->data, NULL, NULL);
+        list_append(zappy->ntw->clients_to_remove, ntw_cl, NULL, NULL);
         nb_rm++;
     }
+    zappy->args->client_max += nb_rm;
     return nb_rm;
 }
 

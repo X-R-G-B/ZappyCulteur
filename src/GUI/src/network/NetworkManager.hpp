@@ -140,6 +140,7 @@ namespace GUI {
             struct sockaddr_in _addr;
             struct timeval _tv = {0, 0};
 
+            unsigned int _portInt;
             std::vector<std::string> _dataToSend;
             std::vector<std::string> _serverMessages;
     };

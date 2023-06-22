@@ -23,13 +23,14 @@ static void set_up_tests(zappy_t **zappy, int nb_client, int port,
 ntw_client_t **graphic)
 {
     static args_t args = {
-    .clients_per_teams = 0,
-    .teams_name = NULL,
-    .freq = 1000,
-    .height = 10,
-    .width = 10,
-    .is_ok = true,
-    .port = 0,
+        .clients_per_teams = 0,
+        .teams_name = NULL,
+        .freq = 1000,
+        .height = 10,
+        .width = 10,
+        .is_ok = true,
+        .port = 0,
+        .client_max = 10,
     };
     args.port = port;
     args.teams_name = list_create();
