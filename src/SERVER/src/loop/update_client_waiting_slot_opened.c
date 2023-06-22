@@ -58,10 +58,9 @@ bool update_client_waiting_slot_opened(zappy_t *zappy, ntw_client_t *cl)
     }
     client->state = CONNECTED;
     client->type = AI;
-    client->id = get_id();
+    client->id = client->cl.ai.trantorien->id;
     send_nb_slot(zappy->trantoriens_available, cl, client->name);
     send_size(zappy->args, cl);
-    client->cl.ai.trantorien->id = client->id;
     send_new_connection(zappy->ntw, cl);
     llog_write_fd(STDERR_FILENO, LLOG_INFO, format_str, client->id);
     return true;

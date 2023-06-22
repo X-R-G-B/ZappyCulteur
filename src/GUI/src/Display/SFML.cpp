@@ -17,6 +17,8 @@
 #include "InputField.hpp"
 #include "Button.hpp"
 
+static const std::string iconPath = "src/GUI/assets/bees/beeLeft.png";
+
 static const std::unordered_map<sf::Keyboard::Key, GUI::Event>
 _keyboardMappings = {{sf::Keyboard::Num1, GUI::Event::KEYBOARD_1_PRESSED},
 {sf::Keyboard::Num2, GUI::Event::KEYBOARD_2_PRESSED},
@@ -94,7 +96,17 @@ namespace GUI {
 
     void SFML::createWindow()
     {
+        bool isIconLoad = true;
+        try {
+            _icon.loadFromFile(iconPath);
+        } catch (const std::exception &e) {
+            std::cerr << e.what() << std::endl;
+            isIconLoad = false;
+        }
         _window.create(sf::VideoMode(_width, _height), _windowTitle, _winStyle);
+        if (isIconLoad) {
+            _window.setIcon(_icon.getSize().x, _icon.getSize().y, _icon.getPixelsPtr());
+        }
         _window.setFramerateLimit(_framerateLimit);
         _isOpen = true;
         _view.setSize(static_cast<float>(_width), static_cast<float>(_height));

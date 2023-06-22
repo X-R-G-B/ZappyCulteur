@@ -175,6 +175,8 @@ namespace GUI {
                 bool badCommandParameter(const std::string &command);
           
                 bool expulsion(const std::string &command);
+
+                bool clientForking(const std::string &command);
           
                 bool timeUnitModification(const std::string &command);
 
