@@ -7,11 +7,23 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <signal.h>
 #include "args.h"
 #include "ntw.h"
 #include "zappy.h"
 #include "client.h"
 #include "broadcast_events.h"
+#include "handle_signal.h"
+
+static void set_signal_handlers(void)
+{
+    struct sigaction sa;
+
+    sa.sa_handler = &handle_signal;
+    sa.sa_flags = 0;
+    sigemptyset(&sa.sa_mask);
+    sigaction(SIGINT, &sa, NULL);
+}
 
 static int server_update(time_t *s_timeout, suseconds_t *m_timeout,
     zappy_t *zappy)
@@ -28,8 +40,7 @@ static int server_update(time_t *s_timeout, suseconds_t *m_timeout,
     }
     ntw_wait_till_events(zappy->ntw, s_timeout, m_timeout);
     ntw_loop(zappy->ntw);
-    is_end = loop(zappy, new_freq);
-    is_end = check_end(zappy, is_end);
+    is_end = check_end(zappy, loop(zappy, new_freq));
     return is_end;
 }
 
@@ -40,7 +51,6 @@ static int server_start(args_t *args)
     time_t s_timeout = 0;
     suseconds_t m_timeout = 0;
 
-    srand(time(NULL));
     zappy = zappy_init(args);
     if (zappy == NULL) {
         return (84);
@@ -48,7 +58,9 @@ static int server_start(args_t *args)
     s_timeout = (zappy->args->freq == 1) ? 1 : 0;
     m_timeout = (zappy->args->freq != 1) ?
         (1.0 / zappy->args->freq) * 1000000 : 0;
-    while (is_end == false) {
+    set_signal_handlers();
+    while (is_end == false
+        && SIGNAL_FLAG == false && zappy->ntw->error != ERROR) {
         is_end = server_update(&s_timeout, &m_timeout, zappy);
     }
     zappy_destroy(zappy);
