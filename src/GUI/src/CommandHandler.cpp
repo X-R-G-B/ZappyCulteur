@@ -499,7 +499,9 @@ namespace GUI {
             if (!(ss >> cmd >> id)) {
                 return (false);
             }
-            message = ss.str();
+            while (ss >> tmp) {
+                message.append(tmp + " ");
+            }
             try {
                 auto entity = _entityManager->getEntityById(playerKey + id);
                 auto trantorian =
