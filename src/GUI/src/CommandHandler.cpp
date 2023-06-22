@@ -16,6 +16,7 @@
 #include "Ressources.hpp"
 #include "Trantorian.hpp"
 #include "Incantation.hpp"
+#include "Expulsion.hpp"
 #include "EndScreen.hpp"
 #include "IEntity.hpp"
 #include "Egg.hpp"
@@ -43,6 +44,7 @@ namespace GUI {
             {"sgt", COMMAND_TYPE::TIME_UNIT_REQUEST},
             {"sst", COMMAND_TYPE::TIME_UNIT_MODIFICATION},
             {"sbp", COMMAND_TYPE::COMMAND_PARAMETER},
+            {"pfk", COMMAND_TYPE::EGG_LAYING},
             {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME},
         };
 
@@ -77,6 +79,7 @@ namespace GUI {
               {COMMAND_TYPE::TIME_UNIT_REQUEST, &CommandHandler::timeUnitRequest},
               {COMMAND_TYPE::EXPULSION, &CommandHandler::expulsion},
               {COMMAND_TYPE::COMMAND_PARAMETER, &CommandHandler::badCommandParameter},
+              {COMMAND_TYPE::EGG_LAYING, &CommandHandler::clientForking},
               {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}}),
               _sendToServerFunc(sendToServer), _connexionCmdRemaining(0), _isReadyToReceive(false)
         {
@@ -492,17 +495,22 @@ namespace GUI {
         {
             std::stringstream ss(command);
             std::string cmd;
+            std::string id;
             std::string tmp;
             std::string message;
 
-            if (!(ss >> cmd)) {
+            if (!(ss >> cmd >> id)) {
                 return (false);
             }
             while (ss >> tmp) {
-                message.append(tmp);
+                message.append(tmp + " ");
             }
             try {
-                // Call the textarea entity to add a new message inside
+                auto entity = _entityManager->getEntityById(playerKey + id);
+                auto trantorian =
+                std::static_pointer_cast<Entities::Trantorian>(entity);
+                trantorian->setMessage(message);
+                trantorian->resetMessage();
             } catch (const Entities::EntitiesManagerException &e) {
                 std::cerr << e.what() << std::endl;
                 return false;
@@ -573,12 +581,27 @@ namespace GUI {
             trantorianId += playerKey + id;
             try {
                 auto player = _entityManager->getEntityById(trantorianId);
-                // implement expulsion animation
-                std::cout << "Trantorian expulsion id : " << id << std::endl;
+                auto expulsionEntity = std::make_shared<Entities::Expulsion>(
+                    id, player->getPosition());
+                expulsionEntity->initExpulsionSprite();
+                _entityManager->addEntity(expulsionEntity);
             } catch (const Entities::EntitiesManagerException &e) {
                 std::cerr << e.what() << std::endl;
                 return false;
             }
+            return (true);
+        }
+
+        bool CommandHandler::clientForking(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string id;
+
+            if (!(ss >> cmd >> id)) {
+                return (false);
+            }
+            std::cout << "Trantorian " << id << " is forking." << std::endl;
             return (true);
         }
 

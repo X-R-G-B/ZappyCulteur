@@ -22,7 +22,7 @@ bool cmd_pnw(ntw_t *ntw, ntw_client_t *cl);
 ** @param cl
 ** @return bool
 **/
-bool cmd_pex(ntw_t *ntw, ntw_client_t *cl, trantorien_t *tr);
+bool cmd_pex(ntw_t *ntw, trantorien_t *tr);
 
 /**
 ** @brief broadcast event pbc (player broadcast)

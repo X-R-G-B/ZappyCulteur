@@ -7,6 +7,7 @@
 
 #include "EntitiesManager.hpp"
 #include "Trantorian.hpp"
+#include "Expulsion.hpp"
 #include "InputField.hpp"
 #include "Button.hpp"
 
@@ -28,6 +29,7 @@ namespace GUI {
         {
             auto inputField = getComponentsByType(Components::CompType::INPUTFIELD);
             auto trantorians = getEntitiesByType(EntityType::TRANTORIAN);
+            auto expulsions = getEntitiesByType(EntityType::EXPULSION);
             auto buttons = getComponentsByType(Components::CompType::BUTTON);
             
             for (const auto &it : *inputField) {
@@ -45,6 +47,13 @@ namespace GUI {
                 auto entity =
                 std::static_pointer_cast<Entities::Trantorian>(it);
                 if (entity->getDispawned()) {
+                    killEntityById(entity->getId());
+                }
+            }
+            for (const auto &it : *expulsions) {
+                auto entity =
+                std::static_pointer_cast<Entities::Expulsion>(it);
+                if (entity->getExpulsed()) {
                     killEntityById(entity->getId());
                 }
             }

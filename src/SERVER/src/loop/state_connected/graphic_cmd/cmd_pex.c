@@ -12,6 +12,7 @@
 #include "client.h"
 #include "trantorien.h"
 #include "zappy.h"
+#include "broadcast_events.h"
 
 bool cmd_pex(ntw_t *ntw, trantorien_t *tr)
 {

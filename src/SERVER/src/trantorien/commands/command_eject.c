@@ -73,7 +73,7 @@ static void send_eject_broadcast(ntw_t *ntw, ntw_client_t *cl,
         tr->actions[0] = NULL;
         circular_buffer_write(cl->write_to_outside, KO_EJECT_RESPONSE);
     }
-    cmd_pex(ntw, cl, tr);
+    cmd_pex(ntw, tr);
     circular_buffer_write(cl->write_to_outside, EJECT_RESPONSE);
 }
 
