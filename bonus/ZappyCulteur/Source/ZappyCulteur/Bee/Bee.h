@@ -76,6 +76,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Material")
 	TSoftObjectPtr<UMaterial> level8Material;
 
+	UFUNCTION(BlueprintCallable, Category = "Bee")
+	void KillBee();
+
 protected:
 	virtual void BeginPlay() override;
 

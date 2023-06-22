@@ -103,6 +103,7 @@ void ABee::SetBeeLevel(int32 level)
 {
 	m_beeLevel = level;
 	UMaterial* material = nullptr;
+
 	switch (level)
 	{
 	case 1:
@@ -143,6 +144,11 @@ void ABee::SetBeeLevel(int32 level)
             MeshComponent->SetMaterial(1, material);
         }
     }
+}
+
+void ABee::KillBee()
+{
+	Destroy();
 }
 
 void ABee::InitBee(FString id, FString team, int32 level, int32 orientation, int32 x, int32 y)
