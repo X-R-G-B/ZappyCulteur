@@ -26,6 +26,7 @@ static void set_up_tests(zappy_t **zappy, int nb_client, int port)
         .width = 10,
         .is_ok = true,
         .port = 0,
+        .client_max = 10,
     };
     args.port = port;
     args.teams_name = list_create();
@@ -73,5 +74,5 @@ Test(loop_cmd_ai_inventory, inventory_cmd)
     }
     char *str = circular_buffer_read(client->write_to_outside);
     cr_assert_not_null(str);
-    cr_assert_str_eq(str, "[food 14,linemate 0,deraumere 2,sibur 3,mendiane 4,phiras 5,thystame 6]\n");
+    cr_assert_str_eq(str, "[food 14, linemate 0, deraumere 2, sibur 3, mendiane 4, phiras 5, thystame 6]\n");
 }
