@@ -17,6 +17,7 @@ static bool add_trantorien_team(list_t *list, const char *team_name,
 
     for (int i = 0; i < args->clients_per_teams; i++) {
         trantorien = trantorien_init(team_name, args->width, args->height);
+        trantorien->id = get_id();
         if (trantorien == NULL) {
             return false;
         }
