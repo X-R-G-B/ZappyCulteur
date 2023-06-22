@@ -495,17 +495,22 @@ namespace GUI {
         {
             std::stringstream ss(command);
             std::string cmd;
+            std::string id;
             std::string tmp;
             std::string message;
 
-            if (!(ss >> cmd)) {
+            if (!(ss >> cmd >> id)) {
                 return (false);
             }
             while (ss >> tmp) {
-                message.append(tmp);
+                message.append(tmp + " ");
             }
             try {
-                // Call the textarea entity to add a new message inside
+                auto entity = _entityManager->getEntityById(playerKey + id);
+                auto trantorian =
+                std::static_pointer_cast<Entities::Trantorian>(entity);
+                trantorian->setMessage(message);
+                trantorian->resetMessage();
             } catch (const Entities::EntitiesManagerException &e) {
                 std::cerr << e.what() << std::endl;
                 return false;
