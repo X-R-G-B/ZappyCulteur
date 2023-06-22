@@ -68,7 +68,7 @@ static bool parse_args(int ac, const char *const av[], args_t *args)
             args->is_ok = false;
         }
     }
-    check_all[6] = '\0';
+    check_all[ARG_MANDATORY_NB] = '\0';
     if (x_strcmp(check_all, ok_flags) != 0) {
         args->is_ok = false;
     }

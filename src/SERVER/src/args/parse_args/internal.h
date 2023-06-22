@@ -23,6 +23,8 @@
 
     #define DEFAULT_ARG_C_MAX 150
 
+    #define OK_IINT "123456789"
+
 bool parse_arg_port(const char *const arr[], args_t *args);
 bool parse_arg_width(const char *const arr[], args_t *args);
 bool parse_arg_height(const char *const arr[], args_t *args);

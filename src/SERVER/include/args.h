@@ -12,6 +12,8 @@
     #include <stddef.h>
     #include "tlcllists.h"
 
+    #define ARG_MANDATORY_NB 6
+
 struct args_s {
     int port;
     int width;

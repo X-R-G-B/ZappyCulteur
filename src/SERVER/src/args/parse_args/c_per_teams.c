@@ -19,7 +19,7 @@ bool parse_arg_c_per_teams(const char *const arr[], args_t *args)
         return false;
     }
     if (args->clients_per_teams != 0 ||
-            x_strcontainc("123456789", arr[1][0]) != 1) {
+            x_strcontainc(OK_IINT, arr[1][0]) != 1) {
         args->is_ok = false;
         return false;
     }

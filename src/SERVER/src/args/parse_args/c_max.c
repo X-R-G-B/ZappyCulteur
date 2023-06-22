@@ -17,7 +17,7 @@ bool parse_arg_c_max(const char *const arr[], args_t *args)
         return false;
     }
     if (args->client_max != DEFAULT_ARG_C_MAX ||
-            x_strcontainc("123456789", arr[1][0]) != 1) {
+            x_strcontainc(OK_IINT, arr[1][0]) != 1) {
         args->is_ok = false;
         return false;
     }
