@@ -9,13 +9,13 @@ mfood,mlinemate,mderaumere,msibur,mmendiane,mphiras,mthystame,lfood,llinemate,ld
 3,3,3,2,2,0,1,1,0,1,0,0,1,1,1,Take food
 10,2,2,0,2,1,3,0,1,1,0,1,1,1,1,Take mendiane
 9,0,3,1,2,3,3,0,0,0,1,1,0,1,0,Take mendiane
-12,3,0,3,1,2,3,0,0,1,1,0,0,0,1,Take deraumere
+12,3,0,3,1,2,3,0,0,1,1,0,0,0,1,Take sibur
 8,0,1,0,1,2,3,1,0,1,1,0,0,0,1,Take sibur
 7,3,0,1,1,3,2,1,1,0,0,0,1,1,1,Take food
-15,3,0,3,3,3,3,1,0,1,0,1,0,0,1,Take deraumere
+15,3,0,3,3,3,3,1,0,1,0,1,0,0,1,Take mendiane
 4,3,1,1,3,2,3,1,1,0,1,1,0,0,1,Take food
 11,0,1,1,2,3,3,1,0,0,0,0,1,1,1,Take food
-9,0,0,1,1,2,1,1,0,1,0,1,0,1,1,Take deraumere
+9,0,0,1,1,2,1,1,0,1,0,1,0,1,1,Take mendiane
 8,3,3,1,1,0,2,1,0,1,0,1,1,0,1,Take mendiane
 8,1,0,3,1,0,2,1,1,0,1,1,0,0,1,Take mendiane
 5,3,0,1,2,1,0,0,1,0,0,0,1,1,1,Find food
@@ -25,7 +25,7 @@ mfood,mlinemate,mderaumere,msibur,mmendiane,mphiras,mthystame,lfood,llinemate,ld
 5,0,1,0,1,1,1,1,1,1,0,0,0,0,1,Take food
 15,2,3,1,0,2,3,0,0,0,0,1,1,1,1,Take mendiane
 10,1,0,2,3,1,2,0,0,0,0,1,1,1,1,Find food
-11,3,0,1,3,3,3,0,0,1,0,1,1,1,1,Take deraumere
+11,3,0,1,3,3,3,0,0,1,0,1,1,1,1,Take mendiane
 4,3,1,1,2,0,0,1,0,1,1,1,0,1,1,Take food
 6,1,3,1,3,3,0,1,1,1,0,0,0,0,1,Elevation
 6,3,2,1,3,1,2,0,0,0,1,1,1,1,1,Elevation
@@ -37,7 +37,7 @@ mfood,mlinemate,mderaumere,msibur,mmendiane,mphiras,mthystame,lfood,llinemate,ld
 2,0,0,1,2,0,1,0,1,0,1,0,1,0,1,Find food
 1,0,1,0,1,3,2,1,1,1,0,0,0,0,1,Take food
 5,2,3,1,2,1,0,0,1,1,1,1,1,1,1,Find food
-9,2,0,1,0,2,1,0,1,1,0,0,1,0,1,Take deraumere
+9,2,0,1,0,2,1,0,1,1,0,0,1,0,1,Take linemate
 7,3,2,2,1,3,2,0,1,0,1,0,1,1,1,Find food
 13,0,2,1,1,3,1,1,0,1,0,0,1,1,1,Take food
 4,1,0,1,0,0,1,1,0,1,0,1,1,0,1,Take food
@@ -73,20 +73,20 @@ mfood,mlinemate,mderaumere,msibur,mmendiane,mphiras,mthystame,lfood,llinemate,ld
 8,1,1,1,2,1,1,1,0,0,0,0,1,1,1,Take food
 11,0,1,0,0,0,3,0,1,1,1,0,0,1,1,Take linemate
 1,0,3,1,3,2,3,1,0,0,1,0,0,0,1,Take food
-8,1,0,1,3,3,3,1,1,1,1,0,1,0,1,Take deraumere
+8,1,0,1,3,3,3,1,1,1,1,0,1,0,1,Take sibur
 4,3,0,2,1,2,3,1,0,0,1,0,0,0,1,Take food
-8,2,1,0,0,3,2,1,0,1,1,0,1,0,1,Take deraumere
+8,2,1,0,0,3,2,1,0,1,1,0,1,0,1,Take sibur
 7,1,3,0,1,0,2,0,1,0,0,1,1,1,1,Take mendiane
-12,1,0,0,1,3,0,1,1,1,1,0,1,1,1,Take deraumere
+12,1,0,0,1,3,0,1,1,1,1,0,1,1,1,Take sibur
 7,3,1,3,1,0,1,0,1,1,1,0,1,0,1,Find food
-7,0,0,0,0,0,1,0,0,1,0,1,1,0,1,Take deraumere
+7,0,0,0,0,0,1,0,0,1,0,1,1,0,1,Take mendiane
 1,2,1,2,3,1,0,1,1,1,0,0,1,1,1,Take food
 5,3,2,2,2,3,2,0,0,1,0,0,1,1,1,Find food
-9,1,1,3,2,2,0,1,0,1,1,1,0,0,1,Take deraumere
+9,1,1,3,2,2,0,1,0,1,1,1,0,0,1,Take mendiane
 14,2,2,1,2,1,2,0,0,0,1,1,1,0,1,Take mendiane
 5,1,3,1,2,3,3,0,1,0,1,1,0,0,1,Find food
-8,0,0,3,3,0,0,1,0,1,0,1,0,1,1,Take deraumere
-6,2,1,1,2,0,0,1,0,1,1,1,1,0,1,Take deraumere
+8,0,0,3,3,0,0,1,0,1,0,1,0,1,1,Take mendiane
+6,2,1,1,2,0,0,1,0,1,1,1,1,0,1,Take mendiane
 4,1,1,1,2,3,2,1,0,1,0,1,1,0,1,Take food
 10,1,3,2,0,3,1,0,1,0,1,0,0,0,1,Find food
 3,3,1,3,1,3,2,1,1,0,1,1,1,1,1,Take food
@@ -99,7 +99,7 @@ mfood,mlinemate,mderaumere,msibur,mmendiane,mphiras,mthystame,lfood,llinemate,ld
 10,2,2,0,2,1,3,1,1,1,0,0,0,0,1,Take food
 11,2,0,1,1,2,3,0,1,0,1,0,0,0,1,Find food
 7,2,0,2,0,1,3,0,1,1,1,0,1,1,1,Take deraumere
-14,1,0,0,2,2,2,1,0,1,1,1,0,0,1,Take deraumere
+14,1,0,0,2,2,2,1,0,1,1,1,0,0,1,Take sibur
 14,0,1,2,0,1,3,0,0,1,0,1,1,0,1,Take mendiane
 1,1,0,1,0,1,1,0,0,1,0,0,0,1,0,Find food
 7,2,0,3,1,3,0,0,0,0,1,1,1,0,1,Take mendiane
@@ -133,7 +133,7 @@ mfood,mlinemate,mderaumere,msibur,mmendiane,mphiras,mthystame,lfood,llinemate,ld
 8,1,3,1,1,3,0,1,0,0,1,1,0,0,1,Take mendiane
 5,1,2,0,2,2,3,0,1,0,1,1,1,1,1,Find food
 3,1,0,1,3,2,1,0,1,1,1,1,1,0,1,Find food
-6,1,0,2,1,2,3,0,1,1,1,1,0,1,1,Take deraumere
+6,1,0,2,1,2,3,0,1,1,1,1,0,1,1,Take mendiane
 14,1,2,1,1,0,2,0,1,0,0,0,0,0,1,Find food
 4,0,3,1,3,2,0,1,1,0,0,1,0,1,1,Take food
 4,1,0,0,1,0,0,1,1,0,1,1,1,0,1,Take food
@@ -150,7 +150,7 @@ mfood,mlinemate,mderaumere,msibur,mmendiane,mphiras,mthystame,lfood,llinemate,ld
 8,1,1,1,2,3,0,0,0,0,0,1,1,0,1,Take mendiane
 1,1,3,0,0,3,0,1,0,1,0,0,0,1,1,Take food
 10,0,2,3,0,3,0,0,0,0,0,0,0,1,1,Find food
-6,0,0,2,2,0,2,1,0,1,0,1,1,0,1,Take deraumere
+6,0,0,2,2,0,2,1,0,1,0,1,1,0,1,Take mendiane
 14,2,2,1,2,1,0,0,0,0,0,0,1,1,1,Find food
 14,2,0,2,3,3,1,0,1,0,0,1,0,1,1,Find food
 15,2,1,3,2,3,2,1,0,1,0,1,1,0,1,Take mendiane
@@ -166,7 +166,7 @@ mfood,mlinemate,mderaumere,msibur,mmendiane,mphiras,mthystame,lfood,llinemate,ld
 6,3,0,2,3,2,0,1,1,0,1,1,1,0,1,Take food
 3,3,1,2,3,1,2,0,1,0,0,0,0,1,1,Find food
 1,0,2,1,0,2,0,1,1,0,1,0,0,1,1,Take food
-8,1,0,3,0,2,3,0,0,1,1,1,1,0,1,Take deraumere
+8,1,0,3,0,2,3,0,0,1,1,1,1,0,1,Take mendiane
 1,2,3,3,0,3,2,1,1,1,1,0,0,0,1,Take food
 13,2,1,3,1,0,0,0,1,0,1,0,1,1,1,Find food
 2,2,1,1,0,3,2,0,0,1,1,0,1,0,1,Find food
@@ -188,8 +188,8 @@ mfood,mlinemate,mderaumere,msibur,mmendiane,mphiras,mthystame,lfood,llinemate,ld
 13,3,0,3,3,2,0,0,1,1,1,1,1,1,1,Take deraumere
 14,0,0,0,0,0,2,0,0,0,0,0,1,1,1,Find food
 8,1,1,3,0,3,0,1,1,0,0,1,0,1,1,Take mendiane
-12,1,0,3,1,2,0,0,0,1,1,0,0,1,1,Take deraumere
-15,2,0,3,1,3,3,0,0,1,0,1,1,0,1,Take deraumere
+12,1,0,3,1,2,0,0,0,1,1,0,0,1,1,Take sibur
+15,2,0,3,1,3,3,0,0,1,0,1,1,0,1,Take mendiane
 8,3,0,3,1,2,2,1,0,0,0,0,1,0,1,Take food
 13,0,3,2,0,0,3,1,1,1,0,0,0,1,1,Take linemate
 14,3,3,1,3,3,2,0,1,1,0,0,1,1,1,Elevation
@@ -198,5 +198,5 @@ mfood,mlinemate,mderaumere,msibur,mmendiane,mphiras,mthystame,lfood,llinemate,ld
 10,0,0,1,3,3,0,1,1,0,1,0,1,1,1,Take linemate
 2,2,1,3,2,2,2,1,1,0,0,0,1,1,1,Take food
 2,0,0,3,3,0,0,1,0,1,0,1,1,0,1,Take food
-8,1,1,0,1,1,2,0,1,1,0,1,1,0,1,Take deraumere
+8,1,1,0,1,1,2,0,1,1,0,1,1,0,1,Take mendiane
 
