@@ -13,6 +13,8 @@ class Client:
         self._client_socket: socket.socket = socket.socket(
             socket.AF_INET, socket.SOCK_STREAM
         )
+        self._dead: bool = False
+
         self._server_ip: str = server_ip
         self._isConnected: bool = False
         self._port: int = port

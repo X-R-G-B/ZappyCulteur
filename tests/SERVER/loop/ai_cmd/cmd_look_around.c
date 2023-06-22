@@ -26,6 +26,7 @@ static void set_up_tests(zappy_t **zappy, int nb_client, int port)
         .width = 10,
         .is_ok = true,
         .port = 0,
+        .client_max = 10,
     };
     args.port = port;
     args.teams_name = list_create();

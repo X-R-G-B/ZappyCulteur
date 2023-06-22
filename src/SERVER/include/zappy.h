@@ -105,4 +105,13 @@ list_t *zappy_create_initial_egg(args_t *args);
 **/
 bool check_end(zappy_t *zappy, bool is_end);
 
+/**
+** @brief Connect after graphic send events
+**
+** @param cc client afiliated to ntw_client
+** @param cl ntw client
+** @param zappy the module
+**/
+void connect_graphic_client(client_t *cc, ntw_client_t *cl, zappy_t *zappy);
+
 #endif

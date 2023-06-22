@@ -24,6 +24,7 @@ Test(zappy_t, init_destroy)
         .width = 10,
         .is_ok = true,
         .port = 7041,
+        .client_max = 10,
     };
 
     zappy = zappy_init(&args);
@@ -42,6 +43,7 @@ Test(zappy_t, init_destroy_check)
         .width = 15,
         .is_ok = true,
         .port = 7042,
+        .client_max = 10,
     };
 
     zappy = zappy_init(&args);
