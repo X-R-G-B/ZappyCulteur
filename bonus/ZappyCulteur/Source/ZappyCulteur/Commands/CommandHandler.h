@@ -21,6 +21,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FIncantationStartDelegate, int32, 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FIncantationEndDelegate, int32, x, int32, y, FString, result);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerDeadDelegate, FString, playerId);
+
 UENUM(BlueprintType)
 enum class ECommandType 
 {
@@ -71,6 +73,7 @@ class ZAPPYCULTEUR_API UCommandHandler : public UObject
 		void launchRessourceCreation(const TArray<FString>& parameters);
 		void launchIncantation(const TArray<FString>& parameters);
 		void launchEndIncantation(const TArray<FString>& parameters);
+		void launchDeathPlayer(const TArray<FString>& parameters);
 
 		const TMap<FString, TFunction<void(const TArray<FString>&)>> m_commandMap;
 
@@ -94,6 +97,9 @@ class ZAPPYCULTEUR_API UCommandHandler : public UObject
 
 		UPROPERTY(BlueprintAssignable, Category = "Update")
 		FIncantationEndDelegate OnIncantationEndEvent;
+
+		UPROPERTY(BlueprintAssignable, Category = "Update")
+		FPlayerDeadDelegate OnPlayerDeadEvent;
 
 		int32 m_mapWidth = 0;
 		int32 m_mapLength = 0;

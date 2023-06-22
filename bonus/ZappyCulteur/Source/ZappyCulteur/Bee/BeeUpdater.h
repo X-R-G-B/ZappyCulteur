@@ -36,6 +36,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Update")
     void stopBeesIncantation(int32 x, int32 y, FString result);
 
+    UFUNCTION(BlueprintCallable, Category = "Dead")
+    void killBeeFromId(FString playerId);
+
 private:
     void AddIncantationData(int32 x, int32 y, int32 level, FString playerId);
     void RemoveIncantationData(int32 x, int32 y, FString playerId);

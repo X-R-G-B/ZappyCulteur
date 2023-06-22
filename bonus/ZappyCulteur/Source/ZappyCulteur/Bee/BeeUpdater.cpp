@@ -4,7 +4,6 @@
 
 void UBeeUpdater::startBeesIncantation(int32 x, int32 y, int32 level, FString playerId)
 {
-    UE_LOG(LogTemp, Warning, TEXT("UBeeUpdater::startBeesIncantation"));
     UWorld* world = GetWorld();
     TArray<AActor*> actors;
 
@@ -16,6 +15,22 @@ void UBeeUpdater::startBeesIncantation(int32 x, int32 y, int32 level, FString pl
         {
             bee->StartIncantation();
             AddIncantationData(x, y, level, playerId);
+        }
+    }
+}
+
+void UBeeUpdater::killBeeFromId(FString playerId)
+{
+    UWorld* world = GetWorld();
+    TArray<AActor*> actors;
+
+    UGameplayStatics::GetAllActorsOfClass(world, ABee::StaticClass(), actors);
+    for (AActor* actor : actors)
+    {
+        ABee* bee = Cast<ABee>(actor);
+        if (bee->GetBeeId() == playerId)
+        {
+            bee->KillBee();
         }
     }
 }

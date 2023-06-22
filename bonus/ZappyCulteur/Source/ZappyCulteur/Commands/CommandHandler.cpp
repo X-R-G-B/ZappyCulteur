@@ -36,7 +36,8 @@ UCommandHandler::UCommandHandler() :
         { "ppo", [this](const TArray<FString>& parameters) { this->launchPlayerPosition(parameters); } },
         { "bct", [this](const TArray<FString>& parameters) { this->launchRessourceCreation(parameters); } },
         { "pic", [this](const TArray<FString>& parameters) { this->launchIncantation(parameters); } },
-        { "pie", [this](const TArray<FString>& parameters) { this->launchEndIncantation(parameters); } }
+        { "pie", [this](const TArray<FString>& parameters) { this->launchEndIncantation(parameters); } },
+        { "pdi", [this](const TArray<FString>& parameters) { this->launchDeathPlayer(parameters); } }
     })
 {}
 
@@ -73,6 +74,18 @@ void UCommandHandler::handleCommand(const FString& command)
             askForMapSize();
         }
     }
+}
+
+void UCommandHandler::launchDeathPlayer(const TArray<FString>& parameters)
+{
+    FString id;
+
+    if (parameters.Num() != 2)
+    {
+        return;
+    }
+    id = parameters[1];
+    OnPlayerDeadEvent.Broadcast(id);
 }
 
 void UCommandHandler::launchRessourceCreation(const TArray<FString>& parameters)
