@@ -27,35 +27,6 @@ static const char *graphic_team = "GRAPHIC";
 
 static const char *format_str_ai = "client AI (team:%s), waiting slot...";
 
-void send_id(client_t *cc, ntw_client_t *cl)
-{
-    char buff[512] = {0};
-
-    cc->id = get_id();
-    snprintf(buff, 511, "%d\n", cc->id);
-    circular_buffer_write(cl->write_to_outside, buff);
-}
-
-void send_size(args_t *args, ntw_client_t *cl)
-{
-    char *size_to_str = NULL;
-
-    size_to_str = x_itoa(args->width);
-    if (size_to_str == NULL) {
-        return;
-    }
-    circular_buffer_write(cl->write_to_outside, size_to_str);
-    free(size_to_str);
-    circular_buffer_write(cl->write_to_outside, " ");
-    size_to_str = x_itoa(args->height);
-    if (size_to_str == NULL) {
-        return;
-    }
-    circular_buffer_write(cl->write_to_outside, size_to_str);
-    free(size_to_str);
-    circular_buffer_write(cl->write_to_outside, "\n");
-}
-
 bool check_client_team_ok(zappy_t *zappy, char *team_name)
 {
     if (x_strlen(team_name) >= 1
@@ -85,8 +56,7 @@ static bool update(char *tmp, ntw_client_t *cl, zappy_t *zappy)
     if (strcmp(tmp, graphic_team) == 0) {
         cc->state = CONNECTED;
         cc->type = GRAPHIC;
-        send_id(cc, cl);
-        send_size(zappy->args, cl);
+        connect_graphic_client(cc, cl, zappy);
         llog_write_fd(STDERR_FILENO, LLOG_INFO, "client graphic connected");
     } else {
         cc->state = WAITING_SLOT_OPENED;
