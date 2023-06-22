@@ -69,6 +69,7 @@ fclean:				$(TARGET_ai)_fclean
 	$(RM) $(TARGET_server)
 	$(RM) $(TARGET_gui)
 	$(RM) $(TARGET_ai)
+	$(RM) .ai_client.log .gui_client.log .network.log .server.log
 
 # ----------------------------------------------------------------------------
 # RE
