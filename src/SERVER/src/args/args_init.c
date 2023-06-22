@@ -8,7 +8,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
+#include "llog.h"
 #include "args.h"
 #include "parse_args/internal.h"
 #include "tlcstrings.h"
@@ -22,7 +24,8 @@ static const char *const arr[NB_OPT_ARGS] = {
     ARG_HEIGHT,
     ARG_FREQ,
     ARG_C_PER_TEAMS,
-    ARG_TEAM_NAME
+    ARG_TEAM_NAME,
+    ARG_C_MAX,
 };
 
 static bool (*funcs[NB_OPT_ARGS])(const char *const arr[], args_t *args) = {
@@ -31,7 +34,8 @@ static bool (*funcs[NB_OPT_ARGS])(const char *const arr[], args_t *args) = {
     parse_arg_height,
     parse_arg_freq,
     parse_arg_c_per_teams,
-    parse_arg_team_name
+    parse_arg_team_name,
+    parse_arg_c_max
 };
 
 static bool check_exec_parse(const char *const av[], args_t *args,
@@ -43,6 +47,7 @@ static bool check_exec_parse(const char *const av[], args_t *args,
         if (strcmp(av[0], arr[j]) == 0) {
             is_ok = funcs[j](av, args);
             checklist[j] = ok_flag;
+            llog_write_fd(STDERR_FILENO, LLOG_DEBUG, "parsing cmd:%s", av[0]);
             return is_ok;
         }
     }
@@ -52,7 +57,6 @@ static bool check_exec_parse(const char *const av[], args_t *args,
 static bool parse_args(int ac, const char *const av[], args_t *args)
 {
     bool is_an_opt = true;
-    int nb = 0;
     char check_all[NB_OPT_ARGS + 1] = {0};
 
     for (int i = 1; i < ac && args->is_ok == true; i += 1) {
@@ -63,9 +67,9 @@ static bool parse_args(int ac, const char *const av[], args_t *args)
         if (is_an_opt == false) {
             args->is_ok = false;
         }
-        nb++;
     }
-    if (nb != 6 || x_strcmp(check_all, ok_flags) != 0) {
+    check_all[ARG_MANDATORY_NB] = '\0';
+    if (x_strcmp(check_all, ok_flags) != 0) {
         args->is_ok = false;
     }
     return args->is_ok;
@@ -93,6 +97,7 @@ args_t *args_init(int ac, const char *const av[])
     }
     memset(args, 0, sizeof(args_t));
     args->port = -1;
+    args->client_max = DEFAULT_ARG_C_MAX;
     args->is_ok = true;
     if (ac == 1) {
         set_default_args(args);

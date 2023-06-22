@@ -2,29 +2,27 @@
 ** EPITECH PROJECT, 2023
 ** zappy server args parse
 ** File description:
-** height
+** client max
 */
 
 #include <stdbool.h>
-#include "tlcstdlibs.h"
 #include "tlcstrings.h"
-#include "args.h"
+#include "tlcstdlibs.h"
 #include "internal.h"
 
-bool parse_arg_c_per_teams(const char *const arr[], args_t *args)
+bool parse_arg_c_max(const char *const arr[], args_t *args)
 {
-    if (arr == NULL || arr[0] == NULL ||
-            x_strcmp(arr[0], ARG_C_PER_TEAMS) != 0 ||
+    if (arr == NULL || arr[0] == NULL || x_strcmp(arr[0], ARG_C_MAX) != 0 ||
             args == NULL || arr[1] == NULL) {
         return false;
     }
-    if (args->clients_per_teams != 0 ||
+    if (args->client_max != DEFAULT_ARG_C_MAX ||
             x_strcontainc(OK_IINT, arr[1][0]) != 1) {
         args->is_ok = false;
         return false;
     }
-    args->clients_per_teams = x_atoi(arr[1]);
-    if (args->clients_per_teams <= 0) {
+    args->client_max = x_atoi(arr[1]);
+    if (args->client_max == 0 || args->client_max < -1) {
         args->is_ok = false;
         return false;
     }

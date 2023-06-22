@@ -44,6 +44,7 @@ RESET				:=		'\033[0m'
 
 # ARGS -----------------------------------------------------------------------
 SRC_ARGS_PARSE	:=															\
+							c_max.c											\
 							c_per_teams.c									\
 							freq.c											\
 							height.c										\
@@ -125,6 +126,7 @@ SRC_LOOP_CONN	:=			$(addprefix state_connected/, $(SRC_LOOP_CONN))
 
 SRC_LOOP		:=															\
 							$(SRC_LOOP_CONN)								\
+							get_updated_from_events.c						\
 							kill_dead_ai.c									\
 							loop.c											\
 							update_client_not_connected.c					\
@@ -276,8 +278,8 @@ $(LIBS_DIR)_fclean:										$(LIBS_DIR)
 
 fclean:													clean
 fclean:													$(LIBS_DIR)_fclean
-	@$(RM) $(TARGET)
-	@$(RM) $(TTARGET) $(T_SRC:.c=.gcno) $(T_SRC:.c=.gcda)
+	$(RM) $(TARGET) $(TTARGET) $(T_SRC:.c=.gcno) $(T_SRC:.c=.gcda)
+	$(RM) .ai_client.log .gui_client.log .network.log .server.log
 	@$(ECHO) $(CYAN)'==< FCLEANED >==:'$(RESET)
 
 re:														fclean

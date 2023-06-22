@@ -15,11 +15,11 @@ bool cmd_enw(ntw_t *ntw, trantorien_t *tr, trantorien_t *parent)
 {
     char buff[512] = {0};
 
-    if (ntw == NULL || tr == NULL || parent == NULL) {
+    if (ntw == NULL || tr == NULL) {
         return false;
     }
-    snprintf(buff, 511, "enw %d %d %d %d\n",
-        tr->id, parent->id, tr->x, tr->y);
+    snprintf(buff, 511, "enw %d %d %d %d\n", tr->id,
+        (parent == NULL) ? -1 : parent->id, tr->x, tr->y);
     broadcast_graphic(ntw, buff);
     return true;
 }

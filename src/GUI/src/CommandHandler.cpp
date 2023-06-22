@@ -42,6 +42,7 @@ namespace GUI {
             {"pex", COMMAND_TYPE::EXPULSION},
             {"sgt", COMMAND_TYPE::TIME_UNIT_REQUEST},
             {"sst", COMMAND_TYPE::TIME_UNIT_MODIFICATION},
+            {"sbp", COMMAND_TYPE::COMMAND_PARAMETER},
             {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME},
         };
 
@@ -75,6 +76,7 @@ namespace GUI {
               {COMMAND_TYPE::SERVER_UNKNOW_COMMAND, &CommandHandler::serverUnknowCommand},
               {COMMAND_TYPE::TIME_UNIT_REQUEST, &CommandHandler::timeUnitRequest},
               {COMMAND_TYPE::EXPULSION, &CommandHandler::expulsion},
+              {COMMAND_TYPE::COMMAND_PARAMETER, &CommandHandler::badCommandParameter},
               {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}}),
               _sendToServerFunc(sendToServer), _connexionCmdRemaining(0), _isReadyToReceive(false)
         {
@@ -549,6 +551,12 @@ namespace GUI {
                 message.append(tmp);
             }
             std::cout << "Message from server : " << message << std::endl;
+            return (true);
+        }
+
+        bool CommandHandler::badCommandParameter([[maybe_unused]]const std::string &command)
+        {
+            std::cout << "Sending bad parameters to server." << std::endl;
             return (true);
         }
 

@@ -1,0 +1,119 @@
+name: Check Build
+
+on:
+  push:
+    branches: [ dev, main ]
+
+jobs:
+#-----------------------------------------------------------------------------
+# Ubuntu
+#-----------------------------------------------------------------------------
+  server-ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install Deps
+      run: |
+        sudo apt update
+        sudo apt install make --fix-missing
+
+    - name: Build
+      run: make zappy_server
+
+  gui-ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install Deps
+      run: |
+        sudo apt update
+        sudo apt install make cmake libsfml-dev --fix-missing
+
+    - name: Build
+      run: make zappy_gui
+
+  ai-ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install Deps
+      run: |
+        sudo apt update
+        sudo apt install make python3 pip --fix-missing
+
+    - name: Build
+      run: make zappy_ai
+#-----------------------------------------------------------------------------
+# Fedora Epitech
+#-----------------------------------------------------------------------------
+  server-fedora-epitech:
+    runs-on: ubuntu-latest
+    container: epitechcontent/epitest-docker:latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install Deps
+      run: echo no deps
+
+    - name: Build
+      run: make zappy_server
+
+  gui-fedora-epitech:
+    runs-on: ubuntu-latest
+    container: epitechcontent/epitest-docker:latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install Deps
+      run: echo no deps
+
+    - name: Build
+      run: make zappy_gui
+
+  ai-fedora-epitech:
+    runs-on: ubuntu-latest
+    container: epitechcontent/epitest-docker:latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install Deps
+      run: echo no deps
+
+    - name: Build
+      run: make zappy_ai
+#-----------------------------------------------------------------------------
+# Windows
+#-----------------------------------------------------------------------------
+  gui-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install Deps
+      run: echo no deps
+
+    - name: Build
+      run: |
+        cd src/GUI
+        mkdir build
+        cd build
+        cmake ..
+        cmake --build .
+        cd ..
