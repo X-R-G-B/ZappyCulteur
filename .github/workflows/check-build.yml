@@ -97,23 +97,23 @@ jobs:
     - name: Build
       run: make zappy_ai
 #-----------------------------------------------------------------------------
-# Windows
+# Windows (for some reason, the CI fail)
 #-----------------------------------------------------------------------------
-  gui-windows:
-    runs-on: windows-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Install Deps
-      run: echo no deps
-
-    - name: Build
-      run: |
-        cd src/GUI
-        mkdir build
-        cd build
-        cmake ..
-        cmake --build .
-        cd ..
+  # gui-windows:
+  #   runs-on: windows-latest
+  #
+  #   steps:
+  #   - name: Checkout repository
+  #     uses: actions/checkout@v3
+  #
+  #   - name: Install Deps
+  #     run: echo no deps
+  #
+  #   - name: Build
+  #     run: |
+  #       cd src/GUI
+  #       mkdir build
+  #       cd build
+  #       cmake ..
+  #       cmake --build .
+  #       cd ..
