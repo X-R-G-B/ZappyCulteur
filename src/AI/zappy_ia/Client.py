@@ -4,6 +4,7 @@ import socket
 import select
 import threading
 import time
+import sys
 from typing import List
 from zappy_ia.Enums import Message
 
@@ -38,7 +39,11 @@ class Client:
         time.sleep(0.1)
 
     def connect(self):
-        self._client_socket.connect((self._server_ip, self._port))
+        try:
+            self._client_socket.connect((self._server_ip, self._port))
+        except ConnectionRefusedError:
+            print("Connection refused")
+            sys.exit(84)
         self._isConnected = True
 
         self._client_socket.setblocking(False)
