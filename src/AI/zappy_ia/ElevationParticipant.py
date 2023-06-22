@@ -36,7 +36,7 @@ class ElevationParticipant:
             self._clientManager.requestClient(message)
         self._log.debug("sendAllCommand end")
 
-    def checkWaitNextLastOK(self) -> int:
+    def checkWaitLastOK(self) -> int:
         out = self._clientManager.output()
         if out == ServerRes.ELEVATION_UNDERWAY.value:
             out = self._clientManager.waitOutput()
@@ -47,11 +47,11 @@ class ElevationParticipant:
                 return 2
         return 0
 
-    def checkElevationResponse(self):
+    def checkElevationResponse(self) -> bool:
         self._clientManager.sendBroadcast(Message.OK.value, [self._emitter])
         res: Tuple[int, str, List[int], int] = (0, "", [0], 0)
         while res[1] != Message.KO.value:
-            checkRes = self.checkWaitNextLastOK()
+            checkRes = self.checkWaitLastOK()
             if checkRes == 1:
                 return self.errorReturn()
             elif checkRes == 2:
@@ -145,11 +145,6 @@ class ElevationParticipant:
                 self._emitter = broadcast_[0]
                 response.append(broadcast_[0])
                 self._clientManager.sendBroadcast(Message.OK.value, [self._emitter])
-            elif broadcast_[0] in response:
-                continue
-            else:
-                response.append(broadcast_[0])
-                self._clientManager.sendBroadcast(Message.KO.value, [broadcast_[0]])
         if self._emitter != 0:
             return self.elevationParticipant()
         return self.errorReturn()
