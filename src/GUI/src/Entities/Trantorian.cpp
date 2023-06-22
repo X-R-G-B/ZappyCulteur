@@ -98,8 +98,10 @@ namespace GUI {
             auto text = std::static_pointer_cast<GUI::Components::Text>(comp);
             if (text->getId() == _id + teamTextSuffix) {
                 text->setPosition({_position.x, _position.y + teamYOffset});
-            } else {
+            } else if (text->getId() == _id + levelTextSuffix) {
                 text->setPosition({_position.x, _position.y - levelYOffset});
+            } else {
+                text->setPosition({_position.x, _position.y - messageYOffset});
             }
         }
 
@@ -192,7 +194,7 @@ namespace GUI {
             _components.pop_back();
             _components.push_back(std::make_shared<GUI::Components::Text>(
                 _id + messageTextSuffix, _message,
-                Vector2F(_position.x, _position.y + messageYOffset), color,
+                Vector2F(_position.x, _position.y - messageYOffset), color,
                 messageFontSize));
         }
 
@@ -212,7 +214,7 @@ namespace GUI {
             _entityCompType.push_back(Components::CompType::TEXT);
             _components.push_back(std::make_shared<GUI::Components::Text>(
                 _id + messageTextSuffix, _message,
-                Vector2F(_position.x, _position.y + messageYOffset), color,
+                Vector2F(_position.x, _position.y - messageYOffset), color,
                 messageFontSize));
             _entityCompType.push_back(Components::CompType::TEXT);
         }

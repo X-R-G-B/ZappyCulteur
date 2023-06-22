@@ -42,9 +42,9 @@ namespace GUI {
                 static constexpr int beeAnimationDead = 2;
                 static constexpr int levelFontSize = 26;
                 static constexpr int teamFontSize = 20;
-                static constexpr float levelYOffset = 30;
+                static constexpr float levelYOffset = 35;
                 static constexpr int messageFontSize = 20;
-                static constexpr float messageYOffset = 120;
+                static constexpr float messageYOffset = 50;
                 static constexpr unsigned int beeWidth = 60;
                 static constexpr unsigned int beeHeight = 60;
                 static constexpr float teamYOffset = beeHeight - 5;
