@@ -50,7 +50,8 @@ SRC_ARGS_PARSE	:=															\
 							height.c										\
 							port.c											\
 							team_name.c										\
-							width.c
+							width.c											\
+							c_help.c
 SRC_ARGS_PARSE	:=			$(addprefix parse_args/, $(SRC_ARGS_PARSE))
 
 SRC_ARGS		:=															\
@@ -215,6 +216,7 @@ SRC				:=															\
 							zappy_destroy.c									\
 							zappy_find_trantorien_by_id.c					\
 							zappy_init.c									\
+							zappy_server_update.c							\
 							handle_signal.c
 SRC				:=			$(addprefix src/, $(SRC))
 

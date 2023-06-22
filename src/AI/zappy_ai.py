@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from zappy_ia.Log import clearDirectory
 from zappy_ia.IA import IA
 import argparse
 import sys
@@ -33,5 +32,4 @@ if __name__ == "__main__":
     teamName = args.n
     machineName = args.h
 
-    clearDirectory("log")
     bee = IA(port, machineName, teamName)

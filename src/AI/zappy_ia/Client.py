@@ -3,7 +3,6 @@
 import socket
 import select
 import threading
-import time
 from typing import List
 from zappy_ia.Enums import Message
 
@@ -36,7 +35,9 @@ class Client:
 
         self._thread: threading.Thread = threading.Thread(target=self.connect)
         self._thread.start()
-        time.sleep(0.1)
+
+    def isDead(self) -> bool:
+        return self._dead
 
     def connect(self):
         try:
@@ -63,7 +64,7 @@ class Client:
         self._client_socket.close()
 
     def _checkMessage(self, message: str):
-        if message.find(Message.CODE.value) != -1:
+        if Message.CODE.value in message:
             self._broadcastLock.acquire()
             if message.count("\n") == 1:
                 self._broadcastReceived.insert(0, message[:-1])
@@ -72,6 +73,10 @@ class Client:
                     if mess != "":
                         self._broadcastReceived.insert(0, mess)
             self._broadcastLock.release()
+        elif ServerRes.DEAD.value in message:
+            self._dead = True
+        elif ServerRes.BROADCAST.value in message and Message.CODE.value not in message:
+            return
         elif message:
             self._receivedLock.acquire()
             if len(self._messReceived) == 0 or self._messReceived[0].count("\n") > 0:
@@ -151,7 +156,6 @@ class Client:
             self._broadcastLock.release()
         else:
             self._broadcastLock.release()
-        time.sleep(0.1)
         return res
 
     def output(self) -> str:
@@ -165,7 +169,6 @@ class Client:
                 self._messReceived = self._messReceived[:-1]
         else:
             self._receivedLock.release()
-        time.sleep(0.1)
         return res
 
     def stopClient(self):

@@ -20,6 +20,10 @@
 <details open>
     <summary>in English</summary>
 
+The Zappy (Culteur) is a game in the form of a board without edges (cyclic), where 'trantoriens' (the bees) will move in order to recover resources allowing them
+to survive and evolve in the but to reach level 8 to win his team.
+Trantorians have the ability to eject.
+
 The aim is to make a game playable by AIs.
 
 It is divided into 3 parts:
@@ -31,6 +35,10 @@ It is divided into 3 parts:
 
 <details>
     <summary>en Français</summary>
+
+Le Zappy(Culteur) est un jeu sous forme de plateau sans bords (cyclique), ou des 'trantoriens' (les abeilles) vont se déplacer afin de récupérer des ressources leur perméttants
+de survivre et d'évoluer dans le but d'atteindre le niveau 8 pour faire gagner son équipe.
+Les trantoriens ont la possibilité d'éjécter.
 
 Le but est de faire un jeu jouable par des IA.
 

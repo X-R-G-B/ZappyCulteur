@@ -33,6 +33,13 @@ struct zappy_s {
 typedef struct zappy_s zappy_t;
 
 /**
+** @brief Start and run the server
+** @param args
+** @return 0 if no error
+**/
+int server_start(args_t *args);
+
+/**
 ** @brief Initialize a zappy
 **
 ** @param args the arguments

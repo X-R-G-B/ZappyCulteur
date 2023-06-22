@@ -20,6 +20,7 @@ class ServerRes(Enum):
     KO = "ko\n"
     ELEVATION_UNDERWAY = "Elevation underway\n"
     DEAD = "dead\n"
+    BROADCAST = "message"
 
 
 class Element(Enum):

@@ -96,15 +96,8 @@ namespace GUI {
 
     void SFML::createWindow()
     {
-        bool isIconLoad = true;
-        try {
-            _icon.loadFromFile(iconPath);
-        } catch (const std::exception &e) {
-            std::cerr << e.what() << std::endl;
-            isIconLoad = false;
-        }
         _window.create(sf::VideoMode(_width, _height), _windowTitle, _winStyle);
-        if (isIconLoad) {
+        if (_icon.loadFromFile(iconPath)) {
             _window.setIcon(_icon.getSize().x, _icon.getSize().y, _icon.getPixelsPtr());
         }
         _window.setFramerateLimit(_framerateLimit);
