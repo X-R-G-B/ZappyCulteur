@@ -215,6 +215,7 @@ SRC				:=															\
 							zappy_destroy.c									\
 							zappy_find_trantorien_by_id.c					\
 							zappy_init.c									\
+							zappy_server_update.c							\
 							handle_signal.c
 SRC				:=			$(addprefix src/, $(SRC))
 
