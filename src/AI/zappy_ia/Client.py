@@ -99,6 +99,10 @@ class Client:
                             self._checkMessage(message[i])
                 else:
                     self._checkMessage(message)
+            else:
+                self._client_socket.close()
+                self._isConnected = False
+                self._dead = True
 
     def _addMessageToSend(self):
         self._sendLock.acquire()
