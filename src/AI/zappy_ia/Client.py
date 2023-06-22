@@ -4,7 +4,6 @@ import socket
 import select
 import threading
 import time
-import sys
 from typing import List
 from zappy_ia.Enums import Message
 
@@ -15,6 +14,7 @@ class Client:
             socket.AF_INET, socket.SOCK_STREAM
         )
         self._dead: bool = False
+        self._error: bool = False
 
         self._server_ip: str = server_ip
         self._isConnected: bool = False
@@ -43,7 +43,8 @@ class Client:
             self._client_socket.connect((self._server_ip, self._port))
         except ConnectionRefusedError:
             print("Connection refused")
-            sys.exit(84)
+            self._error = True
+            return
         self._isConnected = True
 
         self._client_socket.setblocking(False)
