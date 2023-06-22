@@ -5,6 +5,7 @@
 #include "Particles/ParticleSystem.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "UObject/SoftObjectPtr.h"
+#include "Materials/Material.h"
 #include "Bee.generated.h"
 
 UCLASS(Blueprintable)
@@ -50,6 +51,30 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bee")
 	TSoftObjectPtr<UParticleSystem> incantationParticule;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Material")
+	TSoftObjectPtr<UMaterial> level1Material;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Material")
+	TSoftObjectPtr<UMaterial> level2Material;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Material")
+	TSoftObjectPtr<UMaterial> level3Material;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Material")
+	TSoftObjectPtr<UMaterial> level4Material;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Material")
+	TSoftObjectPtr<UMaterial> level5Material;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Material")
+	TSoftObjectPtr<UMaterial> level6Material;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Material")
+	TSoftObjectPtr<UMaterial> level7Material;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Material")
+	TSoftObjectPtr<UMaterial> level8Material;
 
 protected:
 	virtual void BeginPlay() override;

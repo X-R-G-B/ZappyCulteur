@@ -40,5 +40,6 @@ private:
     void AddIncantationData(int32 x, int32 y, int32 level, FString playerId);
     void RemoveIncantationData(int32 x, int32 y, FString playerId);
     bool IsIncantationDataExist(int32 x, int32 y, FString playerId);
+    int32 GetReachedBeeLevel(int32 x, int32 y, FString playerId);
     TArray<FIncantation> m_incantations;
 };

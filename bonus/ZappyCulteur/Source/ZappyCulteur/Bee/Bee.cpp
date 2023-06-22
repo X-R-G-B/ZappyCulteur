@@ -1,6 +1,7 @@
 #include "Bee.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Components/SkeletalMeshComponent.h"
 
 ABee::ABee()
 {
@@ -101,6 +102,48 @@ void ABee::SetBeeTeam(FString team)
 void ABee::SetBeeLevel(int32 level)
 {
 	m_beeLevel = level;
+	UMaterial* material = nullptr;
+
+	switch (level)
+	{
+	case 1:
+		material = level1Material.LoadSynchronous();
+		break;
+	case 2:
+		material = level2Material.LoadSynchronous();
+		break;
+	case 3:
+		material = level3Material.LoadSynchronous();
+		break;
+	case 4:
+		material = level4Material.LoadSynchronous();
+		break;
+	case 5:
+		material = level5Material.LoadSynchronous();
+		break;
+	case 6:
+		material = level6Material.LoadSynchronous();
+		break;
+	case 7:
+		material = level7Material.LoadSynchronous();
+		break;
+	case 8:
+		material = level8Material.LoadSynchronous();
+		break;
+	default:
+		break;
+	}
+	
+	TArray<USkeletalMeshComponent*> SkeletalMeshComponents;
+    GetComponents<USkeletalMeshComponent>(SkeletalMeshComponents);
+
+    for (USkeletalMeshComponent* MeshComponent : SkeletalMeshComponents)
+    {
+        if (MeshComponent->GetName() == "BeeBody")
+        {
+            MeshComponent->SetMaterial(1, material);
+        }
+    }
 }
 
 void ABee::InitBee(FString id, FString team, int32 level, int32 orientation, int32 x, int32 y)
