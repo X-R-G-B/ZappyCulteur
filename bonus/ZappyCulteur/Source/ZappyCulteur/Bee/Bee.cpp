@@ -32,6 +32,11 @@ void ABee::Tick(float DeltaTime)
 		FRotator newRotation = FRotator(0, rotation.Yaw, 0);
 		SetActorRotation(newRotation);
 	}
+
+	if (m_isIncantating && m_IncantationEmitter)
+	{
+		m_IncantationEmitter->SetWorldLocation(GetActorLocation());
+	}
 }
 
 void ABee::StartIncantation()
