@@ -4,7 +4,6 @@
 #include "GameFramework/Pawn.h"
 #include "BeeUpdater.generated.h"
 
-
 USTRUCT(BlueprintType)
 struct FIncantation
 {

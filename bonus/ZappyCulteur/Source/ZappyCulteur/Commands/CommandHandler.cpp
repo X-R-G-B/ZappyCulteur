@@ -151,13 +151,19 @@ void UCommandHandler::launchEndIncantation(const TArray<FString>& parameters)
     int32 x = 0, y = 0;
     FString result;
 
-    if (parameters.Num() != 4)
+    if (parameters.Num() != 4 && parameters.Num() != 5)
     {
         return;
     }
     x = FCString::Atoi(*parameters[1]);
     y = FCString::Atoi(*parameters[2]);
-    result = parameters[3];
+    if (parameters.Num() == 4)
+    {
+        result = parameters[3];
+    } else if (parameters.Num() == 5)
+    {
+        result = parameters[4];
+    }
     OnIncantationEndEvent.Broadcast(x, y, result);
 }
 
