@@ -27,19 +27,24 @@ namespace GUI {
                 const std::size_t &getLevel() const;
                 void setTeam(const std::string &team);
                 const std::string &getTeam() const;
+                void setMessage(const std::string &message);
+                const std::string &getMessage();
                 void setToGo(const Vector2F &toGo);
                 const std::chrono::seconds getDispawnTime();
                 void setDead(bool dead);
                 bool getDead();
                 void setDispawned(bool dispawn);
                 bool getDispawned();
+                void resetMessage();
 
             private:
                 static constexpr int beeSpeed = 200;
                 static constexpr int beeAnimationDead = 2;
                 static constexpr int levelFontSize = 26;
                 static constexpr int teamFontSize = 20;
-                static constexpr float levelYOffset = 30;
+                static constexpr float levelYOffset = 35;
+                static constexpr int messageFontSize = 20;
+                static constexpr float messageYOffset = 50;
                 static constexpr unsigned int beeWidth = 60;
                 static constexpr unsigned int beeHeight = 60;
                 static constexpr float teamYOffset = beeHeight - 5;
@@ -52,6 +57,7 @@ namespace GUI {
                 void initSprites();
                 size_t _level;
                 std::string _team;
+                std::string _message;
                 sf::Texture _texture;
                 Vector2F _direction;
                 Vector2F _toGo;
