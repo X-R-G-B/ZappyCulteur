@@ -14,6 +14,7 @@ class Client:
             socket.AF_INET, socket.SOCK_STREAM
         )
         self._dead: bool = False
+        self._error: bool = False
 
         self._server_ip: str = server_ip
         self._isConnected: bool = False
@@ -38,7 +39,12 @@ class Client:
         time.sleep(0.1)
 
     def connect(self):
-        self._client_socket.connect((self._server_ip, self._port))
+        try:
+            self._client_socket.connect((self._server_ip, self._port))
+        except ConnectionRefusedError:
+            print("Connection refused")
+            self._error = True
+            return
         self._isConnected = True
 
         self._client_socket.setblocking(False)
