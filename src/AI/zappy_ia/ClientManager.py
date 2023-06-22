@@ -116,9 +116,6 @@ class ClientManager:
         self._log.info("Received: " + res)
         return res
 
-    def isDead(self) -> bool:
-        return self._client.isDead()
-
     def requestClient(
         self, command: Union[Command, str], arg: Union[Element, str] = ""
     ) -> str:

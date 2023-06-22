@@ -69,7 +69,7 @@ class Client:
             self._broadcastLock.release()
         elif ServerRes.DEAD.value in message:
             self._dead = True
-        elif ServerRes.BROADCAST.value in message and not Message.CODE.value in message:
+        elif ServerRes.BROADCAST.value in message and Message.CODE.value not in message:
             return
         elif message:
             self._receivedLock.acquire()

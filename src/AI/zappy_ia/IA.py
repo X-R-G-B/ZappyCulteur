@@ -5,7 +5,6 @@ from zappy_ia.ElevationParticipant import ElevationParticipant
 from zappy_ia.Enums import Command
 import random
 from datetime import datetime
-import os
 
 
 class IA:
@@ -41,7 +40,7 @@ class IA:
                 if self._toFork is True and self._decisionTree.getFood() > 8:
                     self._clientManager.requestClient(Command.FORK)
                     self._toFork = False
-                if self._clientManager.isDead() == True:
+                if self._clientManager.isDead() is True:
                     self._log.info("IS DEAD")
                     break
                 if (

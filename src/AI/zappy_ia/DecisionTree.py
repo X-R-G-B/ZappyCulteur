@@ -296,7 +296,7 @@ class DecisionTree:
     def chooseElevation(self):
         if self._level == 1:
             self.elevation()
-        elif self.checkStonesForElevation() == True:
+        elif self.checkStonesForElevation() is True:
             self.elevationEmitter()
 
     def loadTree(self):
@@ -318,7 +318,7 @@ class DecisionTree:
         self._participantsId = []
 
     def elevation(self):
-        if self.checkStonesForElevation() == False:
+        if self.checkStonesForElevation() is False:
             return
         for costTuple in levelCosts[self._level - 1]:
             for _ in range(costTuple[1]):

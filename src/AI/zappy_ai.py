@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from zappy_ia.Log import clearDirectory
 from zappy_ia.IA import IA
 import argparse
 import sys
