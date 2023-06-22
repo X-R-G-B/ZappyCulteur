@@ -16,6 +16,7 @@
 #include "Ressources.hpp"
 #include "Trantorian.hpp"
 #include "Incantation.hpp"
+#include "Expulsion.hpp"
 #include "EndScreen.hpp"
 #include "IEntity.hpp"
 #include "Egg.hpp"
@@ -575,8 +576,10 @@ namespace GUI {
             trantorianId += playerKey + id;
             try {
                 auto player = _entityManager->getEntityById(trantorianId);
-                // implement expulsion animation
-                std::cout << "Trantorian expulsion id : " << id << std::endl;
+                auto expulsionEntity = std::make_shared<Entities::Expulsion>(
+                    id, player->getPosition());
+                expulsionEntity->initExpulsionSprite();
+                _entityManager->addEntity(expulsionEntity);
             } catch (const Entities::EntitiesManagerException &e) {
                 std::cerr << e.what() << std::endl;
                 return false;
