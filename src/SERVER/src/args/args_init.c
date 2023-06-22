@@ -26,6 +26,7 @@ static const char *const arr[NB_OPT_ARGS] = {
     ARG_C_PER_TEAMS,
     ARG_TEAM_NAME,
     ARG_C_MAX,
+    ARG_HELP
 };
 
 static bool (*funcs[NB_OPT_ARGS])(const char *const arr[], args_t *args) = {
@@ -35,7 +36,8 @@ static bool (*funcs[NB_OPT_ARGS])(const char *const arr[], args_t *args) = {
     parse_arg_freq,
     parse_arg_c_per_teams,
     parse_arg_team_name,
-    parse_arg_c_max
+    parse_arg_c_max,
+    help_flag
 };
 
 static bool check_exec_parse(const char *const av[], args_t *args,
