@@ -17,12 +17,13 @@ namespace GUI {
         static const std::string bodySpriteSuffix = "BodySprite";
         static const std::string levelTextSuffix = "LevelText";
         static const std::string teamTextSuffix = "TeamText";
+        static const std::string messageTextSuffix = "MessageText";
         static const std::size_t beeLayer = 50;
         Trantorian::Trantorian(const std::string &id, const std::string &team,
         const Vector2F &position, EntityOrientation orientation, size_t level)
             : AEntity(id, position, Vector2F(0, 0), Vector2F(1, 1),
             EntityType::TRANTORIAN, orientation),
-              _level(level), _team(team), _toGo(position), _speed(beeSpeed),
+              _level(level), _team(team), _message(""), _toGo(position), _speed(beeSpeed),
               _isDead(false), _isDispawned(false),
               _timeDispawn(beeAnimationDead)
         {
@@ -161,6 +162,16 @@ namespace GUI {
             return (_timeDispawn);
         }
 
+        const std::string &Trantorian::getMessage()
+        {
+            return (_message);
+        }
+
+        void Trantorian::setMessage(const std::string &message)
+        {
+            _message = message;
+        }
+
         void Trantorian::initSprites()
         {
             try {
@@ -174,6 +185,17 @@ namespace GUI {
             }
         }
 
+        void Trantorian::resetMessage()
+        {
+            GUI::Color color(255, 255, 0, 255);
+
+            _components.pop_back();
+            _components.push_back(std::make_shared<GUI::Components::Text>(
+                _id + messageTextSuffix, _message,
+                Vector2F(_position.x, _position.y + messageYOffset), color,
+                messageFontSize));
+        }
+
         void Trantorian::createTextComponent()
         {
             GUI::Color color(255, 255, 0, 255);
@@ -182,10 +204,16 @@ namespace GUI {
             _id + levelTextSuffix, std::to_string(_level),
             Vector2F(_position.x, _position.y - levelYOffset), color,
             levelFontSize));
+            _entityCompType.push_back(Components::CompType::TEXT);
             _components.push_back(
             std::make_shared<GUI::Components::Text>(_id + teamTextSuffix, _team,
             Vector2F(_position.x, _position.y + teamYOffset), color,
             teamFontSize));
+            _entityCompType.push_back(Components::CompType::TEXT);
+            _components.push_back(std::make_shared<GUI::Components::Text>(
+                _id + messageTextSuffix, _message,
+                Vector2F(_position.x, _position.y + messageYOffset), color,
+                messageFontSize));
             _entityCompType.push_back(Components::CompType::TEXT);
         }
     } // namespace Entities
