@@ -102,8 +102,6 @@ class ClientManager:
         for broadcast in broadcasts:
             if broadcast[1].find(Message.L2.value[:-1]) == -1:
                 res.append(broadcast)
-            else:
-                self.sendBroadcast(Message.KO.value, [broadcast[0]])
         return res
 
     def checkBroadcastResponse(self) -> Tuple[int, str, List[int], int]:
