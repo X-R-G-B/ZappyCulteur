@@ -4,7 +4,7 @@ import socket
 import select
 import threading
 from typing import List
-from zappy_ia.Enums import Message
+from zappy_ia.Enums import Message, ServerRes
 
 
 class Client:
