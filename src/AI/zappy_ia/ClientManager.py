@@ -19,8 +19,10 @@ class ClientManager:
         self._client.stopClient()
 
     def output(self) -> str:
-        res = self._client.output()
-        return res
+        return self._client.output()
+
+    def isDead(self) -> bool:
+        return self._client.isDead()
 
     def connect(self):
         res = self.output()
@@ -108,21 +110,14 @@ class ClientManager:
         return liste[0]
 
     def waitOutput(self) -> str:
-        i = 0
         res = ""
         while res == "":
             res = self.output()
-            i += 1
-            if i > 15:
-                self._log.debug("15 check without response")
-                i = 0
         self._log.info("Received: " + res)
         return res
 
     def isDead(self) -> bool:
         return self._client.isDead()
-
-    def input(self, command: Union[Command, str], arg: Union[Element, str] = ""):
 
     def requestClient(
         self, command: Union[Command, str], arg: Union[Element, str] = ""

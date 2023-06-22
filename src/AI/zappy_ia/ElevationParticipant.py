@@ -145,11 +145,6 @@ class ElevationParticipant:
                 self._emitter = broadcast_[0]
                 response.append(broadcast_[0])
                 self._clientManager.sendBroadcast(Message.OK.value, [self._emitter])
-            elif broadcast_[0] in response:
-                continue
-            else:
-                response.append(broadcast_[0])
-                self._clientManager.sendBroadcast(Message.KO.value, [broadcast_[0]])
         if self._emitter != 0:
             return self.elevationParticipant()
         return self.errorReturn()
