@@ -19,8 +19,10 @@ int main(int ac, const char *const av[])
         args_destroy(args);
         return (84);
     }
-    args_debug(args);
-    status = server_start(args);
+    if (args->is_help != true) {
+        args_debug(args);
+        status = server_start(args);
+    }
     args_destroy(args);
     return (status);
 }

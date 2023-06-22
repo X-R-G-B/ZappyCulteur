@@ -1,4 +1,5 @@
 import joblib
+from datetime import datetime
 import sys
 import pandas as pd
 from typing import Dict, List, Tuple
@@ -87,13 +88,19 @@ class DecisionTree:
         self._level += 1
         self.loadTree()
 
-    def getCurrentFood(self) -> int:
+    def getFood(self) -> int:
         return self._inputTree["mfood"][0]
+
+    def getCurrentFood(self) -> int:
+        self.inventory()
+        return self.getFood()
 
     def predict(self):
         self.inventory()
         self.lookForTree()
+        curTime = datetime.now()
         predictions = self._levelTree.predict(pd.DataFrame(self._inputTree))
+        self._log.debug("predict time: : " + str(datetime.now() - curTime))
         for prediction in predictions:
             self._log.info("Pred:" + prediction)
             self._outputTree[prediction]()
@@ -147,6 +154,16 @@ class DecisionTree:
         try:
             rescpy = res
             res = res.split("[")[1].split("]")[0]
+
+            i = 0
+            for tile in res.split(","):
+                self._lastLook.append([])
+                for elem in tile.split(" "):
+                    if elem == "":
+                        self._lastLook[i].append(Element.EMPTY)
+                    else:
+                        self._lastLook[i].append(Element(elem))
+                i += 1
         except IndexError:
             print(
                 f"ID : {self._clientManager._id} crashed in look when received : ",
@@ -154,16 +171,6 @@ class DecisionTree:
             )
             self._clientManager.stopClient()
             return
-
-        i = 0
-        for tile in res.split(","):
-            self._lastLook.append([])
-            for elem in tile.split(" "):
-                if elem == "":
-                    self._lastLook[i].append(Element.EMPTY)
-                else:
-                    self._lastLook[i].append(Element(elem))
-            i += 1
 
     def pathFinding(self, pos: int):
         """
@@ -280,10 +287,16 @@ class DecisionTree:
                 self.takeElement(Element.FOOD, pos)
             i += 1
 
+    def checkStonesForElevation(self) -> bool:
+        for costTuple in levelCosts[self._level - 1]:
+            if costTuple[1] > self._inputTree["m" + costTuple[0].value][0]:
+                return False
+        return True
+
     def chooseElevation(self):
         if self._level == 1:
             self.elevation()
-        else:
+        elif self.checkStonesForElevation() is True:
             self.elevationEmitter()
 
     def loadTree(self):
@@ -305,9 +318,9 @@ class DecisionTree:
         self._participantsId = []
 
     def elevation(self):
+        if self.checkStonesForElevation() is False:
+            return
         for costTuple in levelCosts[self._level - 1]:
-            if costTuple[1] > self._inputTree["m" + costTuple[0].value][0]:
-                return
             for _ in range(costTuple[1]):
                 self._clientManager.requestClient(
                     Command.SET_OBJECT, costTuple[0].value
@@ -331,7 +344,6 @@ class DecisionTree:
             self.findFood()
         else:
             self.takeElement(Element.FOOD, foodPos)
-        self.inventory()
 
     def checkReceivedMessage(self, res: Tuple[int, str, List[int], int]):
         self._log.debug("message: " + res[1])
@@ -359,11 +371,12 @@ class DecisionTree:
             for mess in res:
                 if mess[1] == Message.OK.value:
                     arrivedParticipants += 1
+                    self._log.debug("arrived Participants: " + str(arrivedParticipants))
 
     def waitParticipants(self):
         readyParticipants = 0
-        self.inventory()
         res: List[Tuple[int, str, List[int], int]] = []
+        self.inventory()
         while (
             readyParticipants < levelParticipantsNb[self._level]
             or self._inputTree["mfood"][0] < 13
@@ -373,10 +386,10 @@ class DecisionTree:
             for mess in res:
                 if mess[1] == Message.OK.value:
                     if self._clientManager.isIdInList(self._participantsId, mess[0]):
+                        readyParticipants += 1
                         self._log.debug(
                             "readyParticipants nb: " + str(readyParticipants)
                         )
-                        readyParticipants += 1
                     else:
                         self._log.debug("resp ko in waitparticipant")
                         self._clientManager.sendBroadcast(Message.KO.value, [mess[0]])
@@ -389,6 +402,10 @@ class DecisionTree:
         This function is call by decision tree when the ia have the stones for elevation,
             the ia call others to try elevation
         """
+        res = self._clientManager.checkBroadcast()
+        for mess in res:
+            if mess[1] == "levelup" + str(self._level):
+                return
         self._participantsId = []
         res: List[Tuple[int, str, List[int], int]] = []
         while len(self._participantsId) < levelParticipantsNb[self._level]:

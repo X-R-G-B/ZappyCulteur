@@ -23,6 +23,7 @@ struct args_s {
     int freq;
     int client_max;
     bool is_ok;
+    bool is_help;
 };
 typedef struct args_s args_t;
 

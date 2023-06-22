@@ -22,8 +22,10 @@ class ClientManager:
         self._client.stopClient()
 
     def output(self) -> str:
-        res = self._client.output()
-        return res
+        return self._client.output()
+
+    def isDead(self) -> bool:
+        return self._client.isDead()
 
     def connect(self):
         res = self.output()
@@ -111,14 +113,9 @@ class ClientManager:
         return liste[0]
 
     def waitOutput(self) -> str:
-        i = 0
         res = ""
         while res == "":
             res = self.output()
-            i += 1
-            if i > 15:
-                self._log.debug("15 check without response")
-                i = 0
         self._log.info("Received: " + res)
         return res
 
@@ -145,8 +142,6 @@ class ClientManager:
             argToSend = arg.value
         else:
             argToSend = arg
-        if self.output() == ServerRes.DEAD:
-            self._log.info("Received: DEAD")
         self._log.info("[Send: " + toSend.split("\n")[0] + " " + argToSend + "]\n")
         self._client.input(toSend, argToSend)
         res = self.waitOutput()
