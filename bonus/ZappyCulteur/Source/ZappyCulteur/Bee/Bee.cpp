@@ -103,7 +103,6 @@ void ABee::SetBeeLevel(int32 level)
 {
 	m_beeLevel = level;
 	UMaterial* material = nullptr;
-
 	switch (level)
 	{
 	case 1:
