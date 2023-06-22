@@ -29,6 +29,7 @@ namespace GUI {
         {
             auto inputField = getComponentsByType(Components::CompType::INPUTFIELD);
             auto trantorians = getEntitiesByType(EntityType::TRANTORIAN);
+            auto expulsions = getEntitiesByType(EntityType::EXPULSION);
             auto buttons = getComponentsByType(Components::CompType::BUTTON);
             
             for (const auto &it : *inputField) {
@@ -42,8 +43,6 @@ namespace GUI {
             for (auto &entity : _entities) {
                 entity->update(deltaTime);
             }
-            auto trantorians = getEntitiesByType(EntityType::TRANTORIAN);
-            auto expulsions = getEntitiesByType(EntityType::EXPULSION);
             for (const auto &it : *trantorians) {
                 auto entity =
                 std::static_pointer_cast<Entities::Trantorian>(it);
