@@ -43,6 +43,7 @@ namespace GUI {
             {"sgt", COMMAND_TYPE::TIME_UNIT_REQUEST},
             {"sst", COMMAND_TYPE::TIME_UNIT_MODIFICATION},
             {"sbp", COMMAND_TYPE::COMMAND_PARAMETER},
+            {"pfk", COMMAND_TYPE::EGG_LAYING},
             {"WELCOME", COMMAND_TYPE::COMMAND_WELCOME},
         };
 
@@ -77,6 +78,7 @@ namespace GUI {
               {COMMAND_TYPE::TIME_UNIT_REQUEST, &CommandHandler::timeUnitRequest},
               {COMMAND_TYPE::EXPULSION, &CommandHandler::expulsion},
               {COMMAND_TYPE::COMMAND_PARAMETER, &CommandHandler::badCommandParameter},
+              {COMMAND_TYPE::EGG_LAYING, &CommandHandler::clientForking},
               {COMMAND_TYPE::UNKNOW_COMMAND, &CommandHandler::unknowCommand}}),
               _sendToServerFunc(sendToServer), _connexionCmdRemaining(0), _isReadyToReceive(false)
         {
@@ -579,6 +581,19 @@ namespace GUI {
                 std::cerr << e.what() << std::endl;
                 return false;
             }
+            return (true);
+        }
+
+        bool CommandHandler::clientForking(const std::string &command)
+        {
+            std::stringstream ss(command);
+            std::string cmd;
+            std::string id;
+
+            if (!(ss >> cmd >> id)) {
+                return (false);
+            }
+            std::cout << "Trantorian " << id << " is forking." << std::endl;
             return (true);
         }
 
