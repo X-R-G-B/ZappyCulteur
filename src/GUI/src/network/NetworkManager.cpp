@@ -25,7 +25,9 @@ namespace GUI {
 
     NetworkManager::~NetworkManager()
     {
-        deconnectFromServer();
+        if (_isConnected) {
+            deconnectFromServer();
+        }
 #ifdef _WIN32
         WSACleanup();
 #endif
