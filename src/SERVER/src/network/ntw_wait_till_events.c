@@ -6,12 +6,12 @@
 */
 
 #include <stdbool.h>
-#include <sys/select.h>
 #include <stdio.h>
 #include "tlcmaths.h"
+#include "tlcllists.h"
 #include "circular_buffer.h"
 #include "ntw.h"
-#include "tlcllists.h"
+#include "handle_signal.h"
 
 static void set_ntw_fds(ntw_t *ntw)
 {

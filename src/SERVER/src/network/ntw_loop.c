@@ -59,7 +59,9 @@ static void events_clients(ntw_t *ntw)
 
 void ntw_loop(ntw_t *ntw)
 {
-
+    if (ntw->error == ERROR) {
+        return;
+    }
     if (FD_ISSET(ntw->main_sock, &ntw->read_fds)) {
         accept_new_connection(ntw);
     }
