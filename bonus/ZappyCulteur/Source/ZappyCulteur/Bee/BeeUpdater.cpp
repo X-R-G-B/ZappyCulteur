@@ -54,12 +54,28 @@ bool UBeeUpdater::IsIncantationDataExist(int32 x, int32 y, FString playerId)
     return false;
 }
 
+int32 UBeeUpdater::GetReachedBeeLevel(int32 x, int32 y, FString playerId)
+{
+    for (int32 i = 0; i < m_incantations.Num(); ++i)
+    {
+        if (m_incantations[i].x == x && m_incantations[i].y == y && m_incantations[i].playerId == playerId)
+        {
+            return m_incantations[i].level;
+        }
+    }
+    return 0;
+}
+
 void UBeeUpdater::stopBeesIncantation(int32 x, int32 y, FString result)
 {
-    UE_LOG(LogTemp, Warning, TEXT("UBeeUpdater::stopBeesIncantation"));
     UWorld* world = GetWorld();
     TArray<AActor*> actors;
+    bool isSuccessful = true;
 
+    if (result.Contains("ko"))
+    {
+        isSuccessful = false;
+    }
     UGameplayStatics::GetAllActorsOfClass(world, ABee::StaticClass(), actors);
     for (AActor* actor : actors)
     {
@@ -67,6 +83,10 @@ void UBeeUpdater::stopBeesIncantation(int32 x, int32 y, FString result)
         if (IsIncantationDataExist(x, y, bee->GetBeeId()))
         {
             bee->StopIncantation();
+            if (isSuccessful)
+            {
+                bee->SetBeeLevel(GetReachedBeeLevel(x, y, bee->GetBeeId()) + 1);
+            }
             RemoveIncantationData(x, y, bee->GetBeeId());
         }
     }
