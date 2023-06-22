@@ -5,7 +5,7 @@ import select
 import threading
 import time
 from typing import List
-from zappy_ia.Enums import Message, ServerRes
+from zappy_ia.Enums import Message
 
 
 class Client:
