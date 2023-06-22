@@ -12,7 +12,7 @@
 #include "trantorien.h"
 #include "broadcast_events.h"
 
-bool cmd_fork(zappy_t *zappy, ntw_client_t *cl,
+bool cmd_fork(__attribute__((unused)) zappy_t *zappy, ntw_client_t *cl,
     __attribute__((unused)) char **cmd_split)
 {
     client_t *cc = cl->data;
@@ -20,6 +20,5 @@ bool cmd_fork(zappy_t *zappy, ntw_client_t *cl,
     if (trantorien_add_act(cc->cl.ai.trantorien, FORK) == false) {
         return false;
     }
-    cmd_pfk(zappy->ntw, cl);
     return true;
 }
