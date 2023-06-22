@@ -51,6 +51,7 @@ namespace GUI {
             void handleMousePosEvents(EventsManager &eventsManager);
             sf::Event _event;
             sf::Uint32 _winStyle;
+            sf::Image _icon;
             sf::RenderWindow _window;
             Components::CompQuery _compQuery;
             std::shared_ptr<Entities::EntitiesManager> _entityManager;
