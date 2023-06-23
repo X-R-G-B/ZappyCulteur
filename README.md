@@ -168,25 +168,53 @@ docker exec -it zappy bash
 ## Graphic-Helper
 
 ### FOOD:
+<details> <summary> view image.. </summary>
+
 ![honey](https://github.com/X-R-G-B/ZappyCulteur/assets/91657273/3763b0fd-0241-4ac0-9f7f-ad0bc69ca963)
 
+</details>
+
 ### LINEMATE:
+<details> <summary> view image.. </summary>
+
 ![rocks](https://github.com/X-R-G-B/ZappyCulteur/assets/91657273/463cb2c3-4e47-425c-8fe9-20c2df6af3a0)
 
+</details>
+
 ### DERAUMERE:
+<details> <summary> view image.. </summary>
+
 ![flower](https://github.com/X-R-G-B/ZappyCulteur/assets/91657273/598e9532-88db-4717-b454-011ef0860e5f)
 
+</details>
+
 ### SIBUR:
+<details> <summary> view image.. </summary>
+
 ![rose](https://github.com/X-R-G-B/ZappyCulteur/assets/91657273/35f6af23-b21e-4c9d-a083-f780a1116097)
 
+</details>
+
 ### MENDIANE:
+<details> <summary> view image.. </summary>
+
 ![hibiscus](https://github.com/X-R-G-B/ZappyCulteur/assets/91657273/23754955-b090-41a6-b22b-935b80871066)
 
+</details>
+
 ### PHIRAS:
+<details> <summary> view image.. </summary>
+
 ![camellia](https://github.com/X-R-G-B/ZappyCulteur/assets/91657273/0bed9ff3-663c-4033-a262-861d1c877b1e)
 
+</details>
+
 ### THYSTAME:
+<details> <summary> view image.. </summary>
+
 ![dahlia](https://github.com/X-R-G-B/ZappyCulteur/assets/91657273/7505394d-ae49-40eb-bd05-f27fd4f5d618)
+
+</details>
 
 ## Contributors
 
@@ -195,4 +223,10 @@ docker exec -it zappy bash
 
 ## Gource
 
-![source](/bonus/assets/zappyculteur.mp4)
+![source (on the repo)](/bonus/assets/zappyculteur.mp4)
+
+<details> <summary> otherwise, here is the link to the video posted on youtube -> </summary>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_HRDMiiJqSk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+</details>
