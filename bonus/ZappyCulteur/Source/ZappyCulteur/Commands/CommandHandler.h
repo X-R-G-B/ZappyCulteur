@@ -23,6 +23,16 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FIncantationEndDelegate, int32, x
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerDeadDelegate, FString, playerId);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTeamNameDelegate, FString, teamName);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGameEndDelegate, FString, teamName);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEggLayedDelegate, FString, eggId, FString, playerId);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FRessourceDropDelegate, int32, tilex, int32, tiley, int32, ressourceType);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FRessourceCollectionDelegate, int32, tilex, int32, tiley, int32, ressourceType);
+
 UENUM(BlueprintType)
 enum class ECommandType 
 {
@@ -74,6 +84,12 @@ class ZAPPYCULTEUR_API UCommandHandler : public UObject
 		void launchIncantation(const TArray<FString>& parameters);
 		void launchEndIncantation(const TArray<FString>& parameters);
 		void launchDeathPlayer(const TArray<FString>& parameters);
+		void launchTeamNameAddition(const TArray<FString>& parameters);
+		void launchEndOfGame(const TArray<FString>& parameters);
+		void launchEggLaying(const TArray<FString>& parameters);
+		void launchKillEgg(const TArray<FString>& parameters);
+		void launchRessourceDropping(const TArray<FString>& parameters);
+		void launchRessourceCollecting(const TArray<FString>& parameters);
 
 		const TMap<FString, TFunction<void(const TArray<FString>&)>> m_commandMap;
 
@@ -100,6 +116,21 @@ class ZAPPYCULTEUR_API UCommandHandler : public UObject
 
 		UPROPERTY(BlueprintAssignable, Category = "Update")
 		FPlayerDeadDelegate OnPlayerDeadEvent;
+
+		UPROPERTY(BlueprintAssignable, Category = "Update")
+		FTeamNameDelegate OnTeamNameEvent;
+
+		UPROPERTY(BlueprintAssignable, Category = "Update")
+		FGameEndDelegate OnGameEndEvent;
+
+		UPROPERTY(BlueprintAssignable, Category = "Update")
+		FEggLayedDelegate OnEggLayingEvent;
+
+		UPROPERTY(BlueprintAssignable, Category = "Update")
+		FRessourceDropDelegate OnRessourceDroppingEvent;
+
+		UPROPERTY(BlueprintAssignable, Category = "Update")
+		FRessourceCollectionDelegate OnRessourceCollectingEvent;
 
 		int32 m_mapWidth = 0;
 		int32 m_mapLength = 0;

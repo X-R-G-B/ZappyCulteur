@@ -10,6 +10,7 @@ void UAskServer::update(float deltaTime)
     {
         m_timeSinceLastAsk = 0;
         askForBees();
+        askForRessources();
     }
 }
 
@@ -34,4 +35,9 @@ void UAskServer::askForBees()
             }
         }
     }
+}
+
+void UAskServer::askForRessources()
+{
+    askServerDelegate.Broadcast("mct");
 }

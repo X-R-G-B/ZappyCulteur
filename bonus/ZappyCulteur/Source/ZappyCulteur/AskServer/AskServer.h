@@ -19,6 +19,7 @@ class ZAPPYCULTEUR_API UAskServer : public UObject
 
 	private:
 		void askForBees();
+		void askForRessources();
 
 		UPROPERTY(BlueprintAssignable, Category = "Network")
 		FAskServerForInfos askServerDelegate;

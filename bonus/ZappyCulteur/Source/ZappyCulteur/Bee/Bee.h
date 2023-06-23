@@ -5,6 +5,7 @@
 #include "Particles/ParticleSystem.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "UObject/SoftObjectPtr.h"
+#include "Engine/StaticMesh.h"
 #include "Materials/Material.h"
 #include "Bee.generated.h"
 
