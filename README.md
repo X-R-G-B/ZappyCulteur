@@ -223,6 +223,4 @@ docker exec -it zappy bash
 
 ## Gource
 
-![source (on the repo)](/bonus/assets/zappyculteur.mp4)
-
 ![source (on the repo)](https://raw.githubusercontent.com/X-R-G-B/ZappyCulteur/dev/bonus/assets/ZappyCulteurGource.mp4)
