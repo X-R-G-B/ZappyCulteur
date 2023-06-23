@@ -1,32 +1,10 @@
 #include "CommandHandler.h"
 #include "Kismet/GameplayStatics.h"
 #include "../Bee/Bee.h"
+#include "../Egg/Egg.h"
 
 /*static const TMap<FString, ECommandType> CommandMap = {
-    { "msz", ECommandType::MAP_SIZE },
-    { "bct", ECommandType::TILE_CONTENT },
-    { "tna", ECommandType::NAME_OF_TEAM },
-    { "pnw", ECommandType::PLAYER_CONNECTION },
-    { "ppo", ECommandType::PLAYER_POSITION },
-    { "plv", ECommandType::PLAYER_LEVEL },
-    { "pin", ECommandType::PLAYER_INVENTORY },
-    { "pex", ECommandType::EXPULSION },
-    { "pbc", ECommandType::BROADCAST },
-    { "pic", ECommandType::START_INCANTATION },
-    { "pie", ECommandType::END_INCANTATION },
-    { "pfk", ECommandType::EGG_LAYING },
-    { "pdr", ECommandType::RESOURCE_DROPPING },
-    { "pgt", ECommandType::RESOURCE_COLLECTING },
-    { "pdi", ECommandType::PLAYER_DEATH },
-    { "enw", ECommandType::EGG_LAYING_BY_PLAYER },
     { "ebo", ECommandType::PLAYER_CONNECTION_FOR_AN_EGG },
-    { "edi", ECommandType::EGG_DEATH },
-    { "sgt", ECommandType::TIME_UNIT_REQUEST },
-    { "sst", ECommandType::TIME_UNIT_MODIFICATION },
-    { "seg", ECommandType::END_OF_GAME },
-    { "smg", ECommandType::MESSAGE_FROM_SERVER },
-    { "suc", ECommandType::UNKNOWN_COMMAND },
-    { "sbp", ECommandType::COMMAND_PARAMETER }
 };*/
 
 UCommandHandler::UCommandHandler() :
@@ -37,9 +15,47 @@ UCommandHandler::UCommandHandler() :
         { "bct", [this](const TArray<FString>& parameters) { this->launchRessourceCreation(parameters); } },
         { "pic", [this](const TArray<FString>& parameters) { this->launchIncantation(parameters); } },
         { "pie", [this](const TArray<FString>& parameters) { this->launchEndIncantation(parameters); } },
-        { "pdi", [this](const TArray<FString>& parameters) { this->launchDeathPlayer(parameters); } }
+        { "pdi", [this](const TArray<FString>& parameters) { this->launchDeathPlayer(parameters); } },
+        { "tna", [this](const TArray<FString>& parameters) { this->launchTeamNameAddition(parameters); } },
+        { "seg", [this](const TArray<FString>& parameters) { this->launchEndOfGame(parameters); } },
+        { "enw", [this](const TArray<FString>& parameters) { this->launchEggLaying(parameters); } },
+        { "edi", [this](const TArray<FString>& parameters) { this->launchKillEgg(parameters); } },
+        { "pdr", [this](const TArray<FString>& parameters) { this->launchRessourceDropping(parameters); } },
+        { "pgt", [this](const TArray<FString>& parameters) { this->launchRessourceCollecting(parameters); } }
     })
 {}
+
+void UCommandHandler::launchEndOfGame(const TArray<FString>& parameters)
+{
+    FString teamName;
+
+    if (parameters.Num() != 2)
+    {
+        return;
+    }
+    teamName = parameters[1];
+    OnGameEndEvent.Broadcast(teamName);
+}
+
+void UCommandHandler::launchKillEgg(const TArray<FString>& parameters)
+{
+    UWorld* world = GetWorld();
+    TArray<AActor*> actors;
+
+    if (parameters.Num() != 2)
+    {
+        return;
+    }
+    UGameplayStatics::GetAllActorsOfClass(world, AEgg::StaticClass(), actors);
+    for (AActor* actor : actors)
+    {
+        AEgg* egg = Cast<AEgg>(actor);
+        if (egg->GetEggId() == parameters[1])
+        {
+            egg->KillEgg();
+        }
+    }
+}
 
 void UCommandHandler::initConnection()
 {
@@ -74,6 +90,31 @@ void UCommandHandler::handleCommand(const FString& command)
             askForMapSize();
         }
     }
+}
+
+void UCommandHandler::launchTeamNameAddition(const TArray<FString>& parameters)
+{
+    FString teamName;
+
+    if (parameters.Num() != 2)
+    {
+        return;
+    }
+    teamName = parameters[1];
+    OnTeamNameEvent.Broadcast(teamName);
+}
+
+void UCommandHandler::launchEggLaying(const TArray<FString>& parameters)
+{
+    FString eggId, playerId;
+
+    if (parameters.Num() != 5)
+    {
+        return;
+    }
+    eggId = parameters[1];
+    playerId = parameters[2];
+    OnEggLayingEvent.Broadcast(eggId, playerId);
 }
 
 void UCommandHandler::launchDeathPlayer(const TArray<FString>& parameters)
@@ -284,6 +325,74 @@ void UCommandHandler::launchPlayerPosition(const TArray<FString>& parameters)
             {
                 Bee->GoToPosition(x * m_grassBlockSize, y * m_grassBlockSize, orientation);
                 break;
+            }
+        }
+    }
+}
+
+void UCommandHandler::launchRessourceDropping(const TArray<FString>& parameters)
+{
+    UWorld* world = GetWorld();
+    FString playerId;
+    int32 ressourceType = 0;
+
+    if (parameters.Num() != 3)
+    {
+        return;
+    }
+    playerId = parameters[1];
+    ressourceType = FCString::Atoi(*parameters[2]);
+    if (ressourceType < 0 || ressourceType > 6)
+    {
+        return;
+    }
+    if (world)
+    {
+        TArray<AActor*> FoundActors;
+
+        UGameplayStatics::GetAllActorsOfClass(world, ABee::StaticClass(), FoundActors);
+        for (auto& Actor : FoundActors)
+        {
+            ABee* Bee = Cast<ABee>(Actor);
+            if (Bee && Bee->GetBeeId() == playerId)
+            {
+                FVector2D tilesNb = Bee->GetBeeTileNumber();
+                OnRessourceDroppingEvent.Broadcast(tilesNb.X, tilesNb.Y, ressourceType);
+                return;
+            }
+        }
+    }
+}
+
+void UCommandHandler::launchRessourceCollecting(const TArray<FString>& parameters)
+{
+    UWorld* world = GetWorld();
+    FString playerId;
+    int32 ressourceType = 0;
+
+    if (parameters.Num() != 3)
+    {
+        return;
+    }
+    playerId = parameters[1];
+    ressourceType = FCString::Atoi(*parameters[2]);
+    if (ressourceType < 0 || ressourceType > 6)
+    {
+        return;
+    }
+    if (world)
+    {
+        TArray<AActor*> FoundActors;
+
+        UGameplayStatics::GetAllActorsOfClass(world, ABee::StaticClass(), FoundActors);
+        for (auto& Actor : FoundActors)
+        {
+            ABee* Bee = Cast<ABee>(Actor);
+            if (Bee && Bee->GetBeeId() == playerId)
+            {
+                FVector2D tilesNb = Bee->GetBeeTileNumber();
+                OnRessourceCollectingEvent.Broadcast(tilesNb.X, tilesNb.Y, ressourceType);
+                return;
             }
         }
     }
