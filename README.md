@@ -225,8 +225,4 @@ docker exec -it zappy bash
 
 ![source (on the repo)](/bonus/assets/zappyculteur.mp4)
 
-<details> <summary> otherwise, here is the link to the video posted on youtube -> </summary>
-
 <iframe width="560" height="315" src="https://www.youtube.com/embed/_HRDMiiJqSk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-
-</details>
