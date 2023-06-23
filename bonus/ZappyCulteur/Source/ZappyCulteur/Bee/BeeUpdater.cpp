@@ -35,6 +35,25 @@ void UBeeUpdater::killBeeFromId(FString playerId)
     }
 }
 
+void UBeeUpdater::spawnEgg(FString eggId, FString playerId)
+{
+    UWorld* world = GetWorld();
+    TArray<AActor*> actors;
+
+    UGameplayStatics::GetAllActorsOfClass(world, ABee::StaticClass(), actors);
+    for (AActor* actor : actors)
+    {
+        ABee* bee = Cast<ABee>(actor);
+        if (bee->GetBeeId() == playerId)
+        {
+            FVector beePosition = bee->GetActorLocation();
+            beePosition.Z = 200;
+            OnEggCreationEvent.Broadcast(eggId, beePosition);
+            return;
+        }
+    }
+}
+
 void UBeeUpdater::AddIncantationData(int32 x, int32 y, int32 level, FString playerId)
 {
     FIncantation incantation;

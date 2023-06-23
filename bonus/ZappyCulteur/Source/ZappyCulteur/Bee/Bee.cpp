@@ -166,6 +166,11 @@ void ABee::GoToPosition(int32 x, int32 y, int32 orientation)
 	m_isMoving = true;
 	m_beeOrientation = orientation;
 	m_toGoPosition = FVector(x, y, m_beeHeight);
+	if (FVector::Dist(GetActorLocation(), m_toGoPosition) > 800)
+	{
+		SetActorLocation(m_toGoPosition);
+		m_isMoving = false;
+	}
 }
 
 FVector2D ABee::GetBeeTileNumber() const

@@ -11,23 +11,34 @@ class UZappyGameInstance : public UGameInstance
 
 	public:
 
-	UFUNCTION(BlueprintCallable, Category="Network")
+	UFUNCTION(BlueprintCallable, Category="Network Variable")
 	FString GetIP() const;
 
-	UFUNCTION(BlueprintCallable, Category="Network")
+	UFUNCTION(BlueprintCallable, Category="Network Variable")
 	int32 GetPort() const;
 
-	UFUNCTION(BlueprintCallable, Category="Network")
+	UFUNCTION(BlueprintCallable, Category="Network Variable")
 	void SetIP(FString NewIP);
 
-	UFUNCTION(BlueprintCallable, Category="Network")
+	UFUNCTION(BlueprintCallable, Category="Network Variable")
 	void SetPort(int32 NewPort);
+
+	UFUNCTION(BlueprintCallable, Category="EndGame")
+	void SetWinningTeam(FString NewWinningTeam);
+
+	UFUNCTION(BlueprintCallable, Category="EndGame")
+	FString GetWinningTeam() const;
+
+	UFUNCTION(BlueprintCallable, Category="Team")
+	void AddTeam(FString NewTeam);
+
+	UFUNCTION(BlueprintCallable, Category="Team")
+	TArray<FString> GetTeams() const;
 
 	private:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Network", meta = (AllowPrivateAccess = "true"))
     FString IP = "localhost";
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Network", meta = (AllowPrivateAccess = "true"))
     int32 Port = 9999;
+	FString WinningTeam = "Unknown";
+	TArray<FString> m_teams;
 };
