@@ -1,0 +1,7 @@
+-Isrc/
+-Isrc/Maths/
+-Isrc/Events/
+-Isrc/Display/
+-Isrc/network/
+-Isrc/Entities/
+-Isrc/Components/
