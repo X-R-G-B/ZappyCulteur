@@ -229,3 +229,7 @@ docker exec -it zappy bash
 ## Trailer
 
 ![source (on the repo)](https://raw.githubusercontent.com/X-R-G-B/ZappyCulteur/dev/bonus/assets/ZappyCulteurTrailer.mp4)
+
+## Git-Story
+
+![source (ont the repo)](https://raw.githubusercontent.com/X-R-G-B/ZappyCulteur/dev/bonus/assets/ZappyGitStory.mp4)
