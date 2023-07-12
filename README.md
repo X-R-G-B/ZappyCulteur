@@ -238,4 +238,4 @@ docker exec -it zappy bash
 
 ## Oral-Presentation
 
-![canva link read only](https://www.canva.com/design/DAFmmS_mvwg/EL9bT7aIxQkTMwe1hhwf2A/view)
+[canva link read only](https://www.canva.com/design/DAFmmS_mvwg/EL9bT7aIxQkTMwe1hhwf2A/view)
