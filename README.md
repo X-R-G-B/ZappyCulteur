@@ -16,6 +16,8 @@
 - [Contributors](#Contributors)
 - [Gource](#Gource)
 - [Trailer](#Trailer)
+- [Git Story](#Git-Story)
+- [Oral Presentation](#Oral-Presentation)
 
 ## Introduction
 
@@ -233,3 +235,7 @@ docker exec -it zappy bash
 ## Git-Story
 
 ![source (ont the repo)](https://raw.githubusercontent.com/X-R-G-B/ZappyCulteur/dev/bonus/assets/ZappyGitStory.mp4)
+
+## Oral-Presentation
+
+![canva link read only](https://www.canva.com/design/DAFmmS_mvwg/EL9bT7aIxQkTMwe1hhwf2A/view)
